@@ -23,7 +23,9 @@ export const MapSection = forwardRef<HTMLDivElement, Props>(function MapSection(
   mapRef,
 ) {
   const [tileError, setTileError] = useState(false)
-  const hasDemo = places.status === 'success' && places.data.some((p) => p.is_demo)
+  const loaded = places.status === 'success' ? places.data : []
+  const demoCount = loaded.filter((p) => p.is_demo).length
+  const realCount = loaded.length - demoCount
 
   let map: ReactNode
   if (places.status === 'loading') {
@@ -57,14 +59,41 @@ export const MapSection = forwardRef<HTMLDivElement, Props>(function MapSection(
           </p>
         </header>
 
-        {hasDemo && (
+        {demoCount > 0 && (
           <p className="notice notice--warning" role="note">
             <AlertIcon className="notice__icon" />
-            <span>
-              <strong>Kurgusal demo konumları.</strong> Haritadaki işaretler test amaçlıdır ve gerçek bir eserin
-              konumunu göstermez.
-            </span>
+            {realCount === 0 ? (
+              <span>
+                <strong>Kurgusal demo konumları.</strong> Haritadaki tüm işaretler test amaçlıdır ve gerçek bir eserin
+                konumunu göstermez.
+              </span>
+            ) : (
+              <span>
+                <strong>Bazı konumlar kurgusal.</strong> Haritadaki {loaded.length} işaretten {demoCount} tanesi
+                kurgusal demo kaydıdır ve gerçek bir eserin konumunu göstermez. Bu işaretler kesikli çerçeveli, içi
+                boş simgeyle gösterilir; diğer {realCount} işaret backend’de gerçek eser kaydı olarak işaretlidir.
+              </span>
+            )}
           </p>
+        )}
+
+        {demoCount > 0 && (
+          <ul className="map-legend" aria-label="Harita işaretlerinin açıklaması">
+            {realCount > 0 && (
+              <li>
+                <span className="map-legend__swatch map-marker" aria-hidden="true">
+                  <span className="map-marker__pin" />
+                </span>
+                Gerçek eser kaydı
+              </li>
+            )}
+            <li>
+              <span className="map-legend__swatch map-marker map-marker--demo" aria-hidden="true">
+                <span className="map-marker__pin" />
+              </span>
+              Kurgusal demo konumu (kesikli çerçeve, içi boş)
+            </li>
+          </ul>
         )}
 
         {tileError && (
