@@ -1,7 +1,7 @@
 import { API_BASE_URL, type ApiError } from '../api/client'
 import { AlertIcon } from './Icons'
 
-function describe(error: ApiError): string {
+export function describeApiError(error: ApiError): string {
   switch (error.kind) {
     case 'network':
       return 'Sunucuya ulaşılamadı. Backend kapalı olabilir ya da internet bağlantınızda sorun olabilir.'
@@ -18,15 +18,17 @@ interface Props {
   title: string
   error: ApiError
   onRetry?: () => void
+  /** `false` ise `role="alert"` kullanılmaz (arka planda yüklenen, kullanıcının o an bakmadığı bölümler için). */
+  live?: boolean
 }
 
-export function ApiErrorMessage({ title, error, onRetry }: Props) {
+export function ApiErrorMessage({ title, error, onRetry, live = true }: Props) {
   return (
-    <div className="notice notice--error" role="alert">
+    <div className="notice notice--error" role={live ? 'alert' : undefined}>
       <AlertIcon className="notice__icon" />
       <div>
         <p className="notice__title">{title}</p>
-        <p>{describe(error)}</p>
+        <p>{describeApiError(error)}</p>
         {error.kind === 'network' && <p className="notice__meta">API adresi: {API_BASE_URL}</p>}
         {onRetry && (
           <button type="button" className="button button--secondary" onClick={onRetry}>

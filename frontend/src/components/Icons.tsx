@@ -50,15 +50,6 @@ export function CompassIcon(props: IconProps) {
   )
 }
 
-export function LockIcon(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <rect x="5" y="11" width="14" height="9" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </Icon>
-  )
-}
-
 export function CloseIcon(props: IconProps) {
   return (
     <Icon {...props}>
@@ -91,6 +82,42 @@ export function ArchIcon(props: IconProps) {
       <path d="M4 21V11a8 8 0 0 1 16 0v10" />
       <path d="M8 21v-8a4 4 0 0 1 8 0v8" />
       <path d="M2.5 21h19" />
+    </Icon>
+  )
+}
+
+export function CheckCircleIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8 12.5l2.7 2.7L16.5 9.5" />
+    </Icon>
+  )
+}
+
+export function HourglassIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9M16 3c0 5-8 5-8 9s8 4 8 9" />
+    </Icon>
+  )
+}
+
+/** Kesikli daire: henüz tamamlanmamış görev. */
+export function PendingCircleIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" strokeDasharray="3 3" />
+    </Icon>
+  )
+}
+
+export function ScrollIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M7 4h11a2 2 0 0 1 2 2v1h-4" />
+      <path d="M16 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1h10" />
+      <path d="M7 4a2 2 0 0 0-2 2v11M9 9h4M9 12.5h4" />
     </Icon>
   )
 }

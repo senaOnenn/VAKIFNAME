@@ -1,5 +1,6 @@
 import { vi } from 'vitest'
-import type { Place } from '../api/types'
+import type { Passport, Place, Stamp } from '../api/types'
+import { getDemoUserId } from '../demoUser'
 
 // Yalnızca testler için kurgusal kayıtlar; gerçek eserleri temsil etmez.
 export const PLACES: Place[] = [
@@ -44,15 +45,16 @@ export const REAL_TYPE_PLACE: Place = {
   is_demo: false,
 }
 
-type Route ={ status?: number; body: unknown } | Error
-export type Routes = Record<string, Route | (() => Route)>
+type Route = { status?: number; body: unknown } | Error
+/** Fonksiyon olan yollar istek ayrıntılarını (yöntem, gövde) alır ve yanıtı geciktirmek için Promise döndürebilir. */
+export type Routes = Record<string, Route | ((init?: RequestInit) => Route | Promise<Route>)>
 
 /** `fetch` yerine geçer; URL yoluna göre yanıt döndürür. Tanımsız yol için 404. */
 export function stubFetch(routes: Routes) {
-  const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+  const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const path = new URL(String(input)).pathname
     const entry = routes[path]
-    const route = typeof entry === 'function' ? entry() : entry
+    const route = typeof entry === 'function' ? await entry(init) : entry
     if (route instanceof Error) throw route
     const { status = 200, body } = route ?? { status: 404, body: { detail: 'Not Found' } }
     return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } })
@@ -61,7 +63,19 @@ export function stubFetch(routes: Routes) {
   return fetchMock
 }
 
+export const passportPath = (userId = getDemoUserId()) => `/users/${userId}/passport`
+
+export function passportBody(stamps: Stamp[] = [], userId = getDemoUserId()): Passport {
+  return { user_id: userId, total_stamps: stamps.length, stamps }
+}
+
+export function stampFor(place: Place, earnedAt = '2026-10-12T10:30:00Z'): Stamp {
+  return { place_id: place.id, place_name: place.name, earned_at: earnedAt }
+}
+
+/** Eser uç noktaları ve demo oyuncunun boş pasaportu. */
 export const placeRoutes = (places: Place[] = PLACES): Routes => ({
   '/places': { body: places },
   ...Object.fromEntries(places.map((p) => [`/places/${p.id}`, { body: p }])),
+  [passportPath()]: { body: passportBody() },
 })
