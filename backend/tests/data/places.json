@@ -1,0 +1,24 @@
+[
+  {
+    "id": "test-a",
+    "name": "Test Mekânı A",
+    "city": "Test Şehri",
+    "description": "Yalnızca otomatik testler için kurgusal kayıt.",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "check_in_radius_m": 100,
+    "is_demo": true
+  },
+  {
+    "id": "test-b",
+    "name": "Test Mekânı B",
+    "city": "Test Şehri",
+    "description": "Yalnızca otomatik testler için kurgusal kayıt.",
+    "latitude": 10.0,
+    "longitude": 20.0,
+    "check_in_radius_m": 50,
+    "source_title": "Örnek Kaynak",
+    "source_url": "https://example.org/kaynak",
+    "is_demo": true
+  }
+]
