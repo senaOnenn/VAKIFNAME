@@ -158,3 +158,53 @@ describe('check-in ve pasaport istemcisi', () => {
     await expect(getPassport('demo-1')).rejects.toMatchObject({ kind: 'invalid-response' })
   })
 })
+
+describe('eser verisi doğrulaması (görev yarıçapı ve koordinatlar)', () => {
+  /** JSON'da taşınamayan değerleri (NaN, Infinity) de deneyebilmek için gövdeyi doğrudan döndürür. */
+  function stubBody(body: unknown) {
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, status: 200, json: async () => body }) as Response))
+  }
+  const withField = (field: string, value: unknown) => ({ ...PLACES[0], [field]: value })
+
+  it('geçerli, pozitif görev yarıçapını kabul eder', async () => {
+    stubBody([withField('check_in_radius_m', 0.5), withField('check_in_radius_m', 250)])
+    await expect(getPlaces()).resolves.toHaveLength(2)
+  })
+
+  it('kaynak alanları boş (null) ya da metin olabilir', async () => {
+    stubBody([PLACES[0], PLACES[1]])
+    await expect(getPlaces()).resolves.toEqual([PLACES[0], PLACES[1]])
+  })
+
+  it('görev yarıçapı eksikse eseri reddeder', async () => {
+    const { check_in_radius_m: _omitted, ...withoutRadius } = PLACES[0]
+    stubBody([withoutRadius])
+    await expect(getPlaces()).rejects.toMatchObject({ kind: 'invalid-response' })
+  })
+
+  it.each([
+    ['null', null],
+    ['metin', '100'],
+    ['NaN', Number.NaN],
+    ['Infinity', Number.POSITIVE_INFINITY],
+    ['sıfır', 0],
+    ['negatif', -5],
+  ])('görev yarıçapı %s ise reddeder (liste ve tekil eser)', async (_label, value) => {
+    stubBody([withField('check_in_radius_m', value)])
+    await expect(getPlaces()).rejects.toMatchObject({ kind: 'invalid-response' })
+    stubBody(withField('check_in_radius_m', value))
+    await expect(getPlace(PLACES[0].id)).rejects.toMatchObject({ kind: 'invalid-response' })
+  })
+
+  it.each([
+    ['latitude', 91],
+    ['latitude', Number.NaN],
+    ['longitude', -181],
+    ['longitude', '0'],
+    ['source_title', 42],
+    ['source_url', {}],
+  ])('%s = %s geçersiz kabul edilir', async (field, value) => {
+    stubBody([withField(field, value)])
+    await expect(getPlaces()).rejects.toMatchObject({ kind: 'invalid-response' })
+  })
+})

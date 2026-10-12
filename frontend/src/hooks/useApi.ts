@@ -33,6 +33,11 @@ export function useApi<T>(load: (signal: AbortSignal) => Promise<T>, key: string
     // `load` her render'da yeni olabilir; yeniden yükleme `key` ve `attempt` ile tetiklenir.
   }, [key, attempt])
 
-  const reload = useCallback(() => setAttempt((n) => n + 1), [])
+  // Yükleme durumu yenileme isteğiyle aynı render'da gelir; yenilemeyi tetikleyen olaydan önceki eski veri,
+  // yeni yanıt gelene kadar güncelmiş gibi okunamaz.
+  const reload = useCallback(() => {
+    setState({ status: 'loading' })
+    setAttempt((n) => n + 1)
+  }, [])
   return { ...state, reload }
 }

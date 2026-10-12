@@ -128,8 +128,10 @@ describe('görevler ekranı', () => {
 
     expect(within(panel()).getByRole('heading', { name: B.name })).toBeInTheDocument()
     expect(panel()).toHaveFocus()
-    expect(within(questList()).getByRole('button', { name: `Göreve başla: ${B.name}` })).toHaveAttribute('aria-pressed', 'true')
-    expect(within(questList()).getByRole('button', { name: `Göreve başla: ${A.name}` })).toHaveAttribute('aria-pressed', 'false')
+    // Aç/kapa düğmesi değil: açık görev `aria-current` ile belirtilir.
+    expect(within(questList()).getByRole('button', { name: `Göreve başla: ${B.name}` })).toHaveAttribute('aria-current', 'true')
+    expect(within(questList()).getByRole('button', { name: `Göreve başla: ${A.name}` })).not.toHaveAttribute('aria-current')
+    expect(within(questList()).getByRole('button', { name: `Göreve başla: ${B.name}` })).not.toHaveAttribute('aria-pressed')
     expect(within(panel()).getByRole('note')).toHaveTextContent(
       /Demo check-in\..*Tarayıcı konumun istenmez.*\(0\.01000, 0\.01000\).*gerçek bir ziyaretin kanıtı değildir/,
     )
@@ -170,7 +172,8 @@ describe('check-in sonuçları', () => {
     expect(within(stamps).getByRole('heading', { name: A.name })).toBeInTheDocument()
     expect(questCard(A.name)).toHaveTextContent('Görev durumu: Tamamlandı')
     expect(questCard(B.name)).toHaveTextContent('Görev durumu: Henüz tamamlanmadı')
-    expect(questAnnouncer()).toHaveTextContent(`${A.name} görevi tamamlandı. Pasaportuna mühür eklendi.`)
+    // Son durum, check-in sonrası yeniden okunan pasaportla birlikte duyurulur.
+    await waitFor(() => expect(questAnnouncer()).toHaveTextContent(`${A.name} görevi tamamlandı. Pasaportuna mühür eklendi.`))
   })
 
   it('already_completed: aynı görev tekrarlanınca ikinci mühür gösterilmez', async () => {
@@ -184,7 +187,7 @@ describe('check-in sonuçları', () => {
     expect(await within(panel()).findByText('Bu görev daha önce tamamlanmıştı.')).toBeInTheDocument()
     expect(within(panel()).queryByText('Görev tamamlandı!')).not.toBeInTheDocument()
     expect(panel().querySelector('.quest-success')).toBeNull()
-    expect(questAnnouncer()).toHaveTextContent('daha önce tamamlanmıştı. Yeni mühür eklenmedi.')
+    await waitFor(() => expect(questAnnouncer()).toHaveTextContent('daha önce tamamlanmıştı. Yeni mühür eklenmedi.'))
     await waitFor(() => expect(totalStamps()).toBe('1'))
     expect(within(within(passportSection()).getByRole('list', { name: 'Kazanılan mühürler' })).getAllByRole('listitem')).toHaveLength(1)
   })
@@ -199,7 +202,7 @@ describe('check-in sonuçları', () => {
     expect(notice.closest('.notice')).toHaveTextContent(/1\.234,5 m uzakta.*yarıçap 100 m.*mühür kazanılmadı/)
     expect(within(panel()).queryByText('Görev tamamlandı!')).not.toBeInTheDocument()
     expect(panel().querySelector('.quest-success')).toBeNull()
-    expect(questAnnouncer()).toHaveTextContent('konum görev alanı dışında')
+    await waitFor(() => expect(questAnnouncer()).toHaveTextContent('konum görev alanı dışında'))
     await waitFor(() => expect(questCard(A.name)).toHaveTextContent('Görev durumu: Henüz tamamlanmadı'))
     expect(totalStamps()).toBe('0')
   })
@@ -215,9 +218,12 @@ describe('check-in sonuçları', () => {
     await userEvent.click(demoButton())
 
     const title = await within(panel()).findByText('Check-in tamamlanamadı')
-    expect(title.closest('.notice')).toHaveTextContent(/İç sunucu hatası.*Mühür eklenmedi/)
+    // "Mühür yok" ancak check-in sonrası yeniden okunan pasaportla doğrulandıktan sonra söylenir.
+    expect(title.closest('.notice')).toHaveTextContent(/İç sunucu hatası.*Pasaport kontrol edildi: bu eser için mühür yok/)
     expect(within(panel()).queryByText('Görev tamamlandı!')).not.toBeInTheDocument()
-    expect(questAnnouncer()).toHaveTextContent('check-in tamamlanamadı, mühür eklenmedi')
+    await waitFor(() =>
+      expect(questAnnouncer()).toHaveTextContent('check-in tamamlanamadı. Pasaport kontrol edildi, bu eser için mühür yok'),
+    )
     await waitFor(() => expect(questCard(A.name)).toHaveTextContent('Görev durumu: Hata'))
     expect(totalStamps()).toBe('0')
 
@@ -363,6 +369,188 @@ describe('dijital pasaport', () => {
     expect(within(passportSection()).getByRole('button', { name: 'Pasaportu yenile' })).toHaveFocus()
     await waitFor(() => expect(totalStamps()).toBe('1'))
     expect(questCard(A.name)).toHaveTextContent('Görev durumu: Tamamlandı')
+  })
+})
+
+describe('check-in yanıtı kaybolursa sonuç pasaportla uzlaştırılır', () => {
+  /** Sunucu isteği işler (gerekirse mühür ekler) ama yanıt istemciye ulaşmaz. */
+  const lostResponse =
+    (backend: ReturnType<typeof fakeBackend>, place: Place, processed = () => true) =>
+    (init?: RequestInit) => {
+      if (processed()) backend.checkIn(place, init)
+      return new TypeError('Failed to fetch')
+    }
+  const passportRoute = (backend: ReturnType<typeof fakeBackend>) => backend.routes[passportPath()] as () => { body: unknown }
+  const noContradiction = () => {
+    expect(within(panel()).queryByText(/Mühür eklenmedi/)).not.toBeInTheDocument()
+    expect(within(panel()).queryByText(/mühür yok/)).not.toBeInTheDocument()
+  }
+
+  it('sunucu işledi, yanıt kayboldu, pasaportta mühür var → önce doğrulanıyor, sonra tamamlandı; çelişkili hata yok', async () => {
+    const backend = fakeBackend()
+    const original = passportRoute(backend)
+    let release!: () => void
+    const gate = new Promise<void>((resolve) => (release = resolve))
+    let calls = 0
+    await renderApp({
+      ...backend.routes,
+      [checkInPath(A)]: lostResponse(backend, A),
+      [passportPath()]: async () => {
+        if (++calls === 2) await gate
+        return original()
+      },
+    })
+    await startQuest(A)
+    await userEvent.click(demoButton())
+
+    // Pasaport yanıtı gelene kadar sonuç belirsizdir; kazanıldığı da kazanılmadığı da söylenmez.
+    expect(await within(panel()).findByText('İşlem sonucu doğrulanamadı.')).toBeInTheDocument()
+    expect(within(panel()).getByText(/pasaport kontrol ediliyor/)).toBeInTheDocument()
+    noContradiction()
+    expect(within(panel()).queryByText('Görev tamamlandı!')).not.toBeInTheDocument()
+    expect(questCard(A.name)).toHaveTextContent('Görev durumu: Tekrar kontrol ediliyor')
+    expect(questAnnouncer()).toHaveTextContent('check-in yanıtı alınamadı. İşlem sonucu doğrulanamadı, pasaport kontrol ediliyor.')
+
+    release()
+    expect(await within(panel()).findByText('Görev tamamlanmış')).toBeInTheDocument()
+    expect(within(panel()).queryByText('Check-in tamamlanamadı')).not.toBeInTheDocument()
+    noContradiction()
+    expect(questCard(A.name)).toHaveTextContent('Görev durumu: Tamamlandı')
+    expect(totalStamps()).toBe('1')
+    await waitFor(() => expect(questAnnouncer()).toHaveTextContent('pasaport görevin tamamlandığını doğruladı'))
+  })
+
+  it('yanıt kayboldu ve pasaport da yüklenemedi → sonuç belirsiz kalır; tekrar deneme ikinci mühür oluşturmaz', async () => {
+    const backend = fakeBackend()
+    const original = passportRoute(backend)
+    let passportDown = false
+    await renderApp({
+      ...backend.routes,
+      [checkInPath(A)]: (init) => {
+        // İlk deneme: sunucu mührü ekler ama yanıt kaybolur ve pasaport servisi de geçici olarak yanıt vermez.
+        if (!passportDown && backend.requests.length === 0) {
+          passportDown = true
+          return lostResponse(backend, A)(init)
+        }
+        passportDown = false
+        return backend.checkIn(A, init)
+      },
+      [passportPath()]: () => (passportDown ? { status: 503, body: { detail: 'Geçici hata' } } : original()),
+    })
+    await startQuest(A)
+    await userEvent.click(demoButton())
+
+    const title = await within(panel()).findByText('İşlem sonucu doğrulanamadı')
+    expect(title.closest('.notice')).toHaveTextContent(/Mührün eklenip eklenmediği şu anda bilinmiyor/)
+    expect(title.closest('.notice')).toHaveTextContent(/ikinci mühür oluşturulmaz/)
+    noContradiction()
+    expect(within(panel()).queryByText(/Görev tamamlan/)).not.toBeInTheDocument()
+    expect(within(passportSection()).queryByText('Toplam mühür')).not.toBeInTheDocument()
+    await waitFor(() => expect(questAnnouncer()).toHaveTextContent('mührün eklenip eklenmediği bilinmiyor'))
+
+    // Tekrar deneme güvenlidir: backend aynı görev için var olan mührü döndürür.
+    await userEvent.click(within(panel()).getByRole('button', { name: 'Tekrar dene' }))
+    expect(await within(panel()).findByText('Bu görev daha önce tamamlanmıştı.')).toBeInTheDocument()
+    await waitFor(() => expect(totalStamps()).toBe('1'))
+    expect(within(within(passportSection()).getByRole('list', { name: 'Kazanılan mühürler' })).getAllByRole('listitem')).toHaveLength(1)
+    expect(backend.requests).toHaveLength(2)
+  })
+
+  it('yanıt kayboldu ve pasaportta mühür yok → hata ve güvenli tekrar deneme; ardından gerçek başarı', async () => {
+    const backend = fakeBackend()
+    let lost = true
+    await renderApp({
+      ...backend.routes,
+      [checkInPath(A)]: (init) => (lost ? lostResponse(backend, A, () => false)(init) : backend.checkIn(A, init)),
+    })
+    await startQuest(A)
+    await userEvent.click(demoButton())
+
+    const title = await within(panel()).findByText('Check-in tamamlanamadı')
+    expect(title.closest('.notice')).toHaveTextContent(/Sunucuya ulaşılamadı.*Pasaport kontrol edildi: bu eser için mühür yok/)
+    expect(questCard(A.name)).toHaveTextContent('Görev durumu: Hata')
+    expect(totalStamps()).toBe('0')
+    await waitFor(() => expect(questAnnouncer()).toHaveTextContent('check-in tamamlanamadı. Pasaport kontrol edildi, bu eser için mühür yok'))
+
+    lost = false
+    await userEvent.click(within(panel()).getByRole('button', { name: 'Tekrar dene' }))
+    expect(await within(panel()).findByText('Görev tamamlandı!')).toBeInTheDocument()
+    await waitFor(() => expect(totalStamps()).toBe('1'))
+  })
+
+  it('check-in sürerken başlayan eski pasaport yanıtı “mühür yok” kanıtı sayılmaz', async () => {
+    const backend = fakeBackend()
+    const original = passportRoute(backend)
+    let releaseCheckIn!: () => void
+    const checkInGate = new Promise<void>((resolve) => (releaseCheckIn = resolve))
+    let releaseOld!: () => void
+    const oldGate = new Promise<void>((resolve) => (releaseOld = resolve))
+    let calls = 0
+    await renderApp({
+      ...backend.routes,
+      [checkInPath(A)]: async (init) => {
+        await checkInGate
+        return lostResponse(backend, A)(init)
+      },
+      [passportPath()]: async () => {
+        // 2. istek check-in sürerken başlar ve mühür eklenmeden önceki durumu döndürür.
+        if (++calls === 2) {
+          const before = original()
+          await oldGate
+          return before
+        }
+        return original()
+      },
+    })
+    await startQuest(A)
+    await userEvent.click(demoButton())
+    await userEvent.click(within(passportSection()).getByRole('button', { name: 'Pasaportu yenile' }))
+    await waitFor(() => expect(calls).toBe(2))
+
+    releaseCheckIn()
+    expect(await within(panel()).findByText('Görev tamamlanmış')).toBeInTheDocument()
+    releaseOld()
+    await oldGate
+    await new Promise((r) => setTimeout(r, 0))
+    expect(within(panel()).getByText('Görev tamamlanmış')).toBeInTheDocument()
+    noContradiction()
+    expect(totalStamps()).toBe('1')
+  })
+
+  it('D1: check-in onaylandı ama pasaport yenilenemedi → anlaşılır uyarı ve pasaportu yeniden yükleme', async () => {
+    const backend = fakeBackend()
+    const original = passportRoute(backend)
+    let calls = 0
+    await renderApp({
+      ...backend.routes,
+      [passportPath()]: () => (++calls === 2 ? { status: 500, body: { detail: 'boom' } } : original()),
+    })
+    await startQuest(A)
+    await userEvent.click(demoButton())
+
+    const title = await within(panel()).findByText('Check-in onaylandı, pasaport yenilenemedi')
+    expect(title.closest('.notice')).toHaveTextContent(/mühür pasaportunda henüz gösterilemiyor/)
+    expect(questCard(A.name)).toHaveTextContent('Görev durumu: Hata')
+    await waitFor(() => expect(questAnnouncer()).toHaveTextContent('check-in onaylandı, ancak pasaport yenilenemedi'))
+
+    await userEvent.click(within(panel()).getByRole('button', { name: 'Pasaportu yeniden yükle' }))
+    expect(await within(panel()).findByText('Görev tamamlandı!')).toBeInTheDocument()
+    await waitFor(() => expect(totalStamps()).toBe('1'))
+    expect(questCard(A.name)).toHaveTextContent('Görev durumu: Tamamlandı')
+  })
+})
+
+describe('geçersiz eser verisi', () => {
+  it('görev yarıçapı geçersizse uygulama çökmez; anlaşılır hata gösterilir ve görev uydurulmaz', async () => {
+    const broken = PLACES.map((p, i) => (i === 0 ? { ...p, check_in_radius_m: 0 } : p))
+    stubFetch({ ...placeRoutes(), '/places': { body: broken } })
+    render(<App />)
+    const alert = await screen.findByRole('alert')
+    expect(alert).toHaveTextContent('Eserler yüklenemedi')
+    expect(alert).toHaveTextContent('beklenmeyen bir yanıt')
+    expect(await within(questSection()).findByText(/görevler şu anda gösterilemiyor/)).toBeInTheDocument()
+    expect(within(questSection()).queryByRole('list', { name: 'Görev listesi' })).not.toBeInTheDocument()
+    expect(screen.getByRole('navigation', { name: 'Ana menü' })).toBeInTheDocument()
   })
 })
 

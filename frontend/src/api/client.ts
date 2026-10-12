@@ -74,6 +74,10 @@ async function request(path: string, signal?: AbortSignal, json?: unknown): Prom
   }
 }
 
+const isFiniteNumber = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
+const isOptionalString = (v: unknown) => v === null || v === undefined || typeof v === 'string'
+
+/** Backend `Place` sözleşmesi: koordinatlar WGS84 aralığında, görev yarıçapı pozitif ve sonlu olmalı. */
 function isPlace(value: unknown): value is Place {
   if (!value || typeof value !== 'object') return false
   const p = value as Record<string, unknown>
@@ -82,8 +86,16 @@ function isPlace(value: unknown): value is Place {
     typeof p.name === 'string' &&
     typeof p.city === 'string' &&
     typeof p.description === 'string' &&
-    typeof p.latitude === 'number' &&
-    typeof p.longitude === 'number' &&
+    isFiniteNumber(p.latitude) &&
+    p.latitude >= -90 &&
+    p.latitude <= 90 &&
+    isFiniteNumber(p.longitude) &&
+    p.longitude >= -180 &&
+    p.longitude <= 180 &&
+    isFiniteNumber(p.check_in_radius_m) &&
+    p.check_in_radius_m > 0 &&
+    isOptionalString(p.source_title) &&
+    isOptionalString(p.source_url) &&
     typeof p.is_demo === 'boolean'
   )
 }

@@ -6,7 +6,7 @@ import { DemoBadge } from './DemoBadge'
 import { MapPinIcon } from './Icons'
 import { QuestPanel } from './QuestPanel'
 import { QuestStatusBadge } from './QuestStatusBadge'
-import { questStatus } from './questStatus'
+import { checkInOutcome, questStatus } from './questStatus'
 
 interface Props {
   places: ApiState<Place[]>
@@ -15,6 +15,7 @@ interface Props {
   activeId: string | null
   onStart: (placeId: string) => void
   onCheckIn: (place: Place) => void
+  onReloadPassport: () => void
 }
 
 export function questButtonId(placeId: string) {
@@ -22,11 +23,12 @@ export function questButtonId(placeId: string) {
 }
 
 export const QuestSection = forwardRef<HTMLElement, Props>(function QuestSection(
-  { places, passport, checkIns, activeId, onStart, onCheckIn },
+  { places, passport, checkIns, activeId, onStart, onCheckIn, onReloadPassport },
   panelRef,
 ) {
   const loaded = places.status === 'success' ? places.data : []
   const active = loaded.find((p) => p.id === activeId) ?? null
+  const activeCheckIn = active ? checkIns[active.id] : undefined
 
   return (
     <section id="gorevler" className="section" aria-labelledby="gorevler-title">
@@ -75,7 +77,8 @@ export const QuestSection = forwardRef<HTMLElement, Props>(function QuestSection
                         type="button"
                         className="button button--primary"
                         aria-label={`Göreve başla: ${place.name}`}
-                        aria-pressed={isActive}
+                        // Aç/kapa düğmesi değildir; listede o an açık olan görevi belirtir.
+                        aria-current={isActive ? 'true' : undefined}
                         onClick={() => onStart(place.id)}
                       >
                         Göreve başla
@@ -89,8 +92,10 @@ export const QuestSection = forwardRef<HTMLElement, Props>(function QuestSection
               ref={panelRef}
               place={active}
               status={active ? questStatus(active.id, passport, checkIns[active.id]) : null}
-              checkIn={active ? checkIns[active.id] : undefined}
+              checkIn={activeCheckIn}
+              outcome={active && activeCheckIn ? checkInOutcome(active.id, passport, activeCheckIn) : null}
               onCheckIn={onCheckIn}
+              onReloadPassport={onReloadPassport}
             />
           </div>
         )}

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { getPassport, getPlaces } from './api/client'
 import type { Place } from './api/types'
 import { describeApiError } from './components/ApiErrorMessage'
@@ -10,6 +10,7 @@ import { PlaceDetail } from './components/PlaceDetail'
 import { PlaceList } from './components/PlaceList'
 import { PassportSection } from './components/PassportSection'
 import { QuestSection } from './components/QuestSection'
+import { checkInOutcome, type CheckInOutcome } from './components/questStatus'
 import { getDemoUserId } from './demoUser'
 import { useApi } from './hooks/useApi'
 import { useCheckIn, type CheckInState } from './hooks/useCheckIn'
@@ -32,16 +33,29 @@ function selectionMessage(place: Place) {
   return `${place.name} seçildi, ${place.city}.${demo} Ayrıntılar eser ayrıntıları panelinde.`
 }
 
-/** Check-in sonucu için ekran okuyucu metni. Başarı yalnızca backend onayıyla bildirilir. */
-function checkInMessage(place: Place, result: CheckInState): string {
-  if (result.status === 'error') return `${place.name}: check-in tamamlanamadı, mühür eklenmedi. ${describeApiError(result.error)}`
-  if (result.status !== 'done') return ''
-  switch (result.response.status) {
-    case 'completed':
+/** Check-in sonucu için ekran okuyucu metni; paneldeki uzlaştırılmış sonuçla aynı durumu bildirir. */
+function checkInMessage(place: Place, outcome: CheckInOutcome, result?: CheckInState): string {
+  const reason = result?.status === 'error' ? ` ${describeApiError(result.error)}` : ''
+  switch (outcome) {
+    case 'pending':
+      return ''
+    case 'verifying':
+      return `${place.name}: check-in yanıtı alınamadı. İşlem sonucu doğrulanamadı, pasaport kontrol ediliyor.${reason}`
+    case 'unknown':
+      return `${place.name}: işlem sonucu doğrulanamadı. Check-in yanıtı alınamadı ve pasaport yüklenemedi; mührün eklenip eklenmediği bilinmiyor.${reason}`
+    case 'not-earned':
+      return `${place.name}: check-in tamamlanamadı. Pasaport kontrol edildi, bu eser için mühür yok.${reason}`
+    case 'confirmed':
+      return `${place.name}: check-in yanıtı alınamadı, ancak pasaport görevin tamamlandığını doğruladı.`
+    case 'earned':
       return `${place.name} görevi tamamlandı. Pasaportuna mühür eklendi.`
-    case 'already_completed':
+    case 'already':
       return `${place.name} görevi daha önce tamamlanmıştı. Yeni mühür eklenmedi.`
-    case 'out_of_range':
+    case 'earned-unverified':
+      return `${place.name}: check-in onaylandı, ancak pasaport yenilenemedi.`
+    case 'stale':
+      return `${place.name}: check-in onaylanmıştı, ancak güncel pasaportta bu mühür görünmüyor.`
+    case 'out-of-range':
       return `${place.name}: konum görev alanı dışında. Görev tamamlanmadı, mühür kazanılmadı.`
   }
 }
@@ -60,16 +74,36 @@ export default function App() {
   // Her yeni sonuç ayrı bir düğümle yazılır; aynı metin art arda gelse de ekran okuyucu yeniden duyurur.
   const [questAnnouncement, setQuestAnnouncement] = useState<{ id: number; text: string } | null>(null)
 
+  // Sonucu duyurulmayı bekleyen check-in'ler. Son durum, check-in'den sonra yeniden yüklenen pasaportla birlikte duyurulur.
+  const [awaitingAnnouncement, setAwaitingAnnouncement] = useState<string[]>([])
+  const announceQuest = useCallback(
+    (text: string) => setQuestAnnouncement((prev) => ({ id: (prev?.id ?? 0) + 1, text })),
+    [],
+  )
+
   const onCheckInSettled = useCallback(
     (placeId: string, result: CheckInState) => {
       // Pasaport her denemeden sonra backend'den yeniden okunur; mühür arayüzde tahminle eklenmez.
       reloadPassport()
+      setAwaitingAnnouncement((ids) => (ids.includes(placeId) ? ids : [...ids, placeId]))
       const place = places.status === 'success' ? places.data.find((p) => p.id === placeId) : undefined
-      if (place) setQuestAnnouncement((prev) => ({ id: (prev?.id ?? 0) + 1, text: checkInMessage(place, result) }))
+      if (place && result.status === 'error') announceQuest(checkInMessage(place, 'verifying', result))
     },
-    [reloadPassport, places],
+    [reloadPassport, places, announceQuest],
   )
   const checkIns = useCheckIn(userId, onCheckInSettled)
+
+  useEffect(() => {
+    if (awaitingAnnouncement.length === 0 || passport.status === 'loading' || places.status !== 'success') return
+    const messages = awaitingAnnouncement.flatMap((placeId) => {
+      const place = places.data.find((p) => p.id === placeId)
+      const result = checkIns.states[placeId]
+      if (!place || !result || result.status === 'pending') return []
+      return [checkInMessage(place, checkInOutcome(placeId, passport, result), result)]
+    })
+    setAwaitingAnnouncement([])
+    if (messages.length) announceQuest(messages.join(' '))
+  }, [awaitingAnnouncement, passport, places, checkIns.states, announceQuest])
 
   const startQuest = useCallback((placeId: string) => {
     setActiveQuestId(placeId)
@@ -137,6 +171,7 @@ export default function App() {
           activeId={activeQuestId}
           onStart={startQuest}
           onCheckIn={checkIns.run}
+          onReloadPassport={reloadPassport}
         />
         <PassportSection userId={userId} passport={passport} />
         <p id="map-selection-status" className="visually-hidden" role="status" aria-atomic="true">
