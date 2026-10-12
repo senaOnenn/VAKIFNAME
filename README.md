@@ -45,6 +45,26 @@ Eserler `data/places.json` dosyasından okunur. Farklı bir dosya kullanmak içi
 
 Şu anki kayıtların tamamı **kurgusaldır** (`is_demo: true`). Koordinatları okyanus üzerindedir ve gerçek bir eseri temsil etmez. Gerçek eser kayıtları yalnızca doğrulanabilir bir kaynakla (`source_title`, `source_url`) ve `is_demo: false` olarak eklenmelidir.
 
+### CORS (tarayıcıdan erişim)
+
+Tarayıcıda çalışan bir frontend'in API'yi çağırabilmesi için origin'i izin listesinde olmalıdır. `VAKIFNAME_CORS_ORIGINS` tanımlı değilse yalnızca yerel geliştirme origin'lerine izin verilir:
+
+`http://localhost:3000`, `http://localhost:5173`, `http://127.0.0.1:3000`, `http://127.0.0.1:5173`
+
+Farklı origin'ler için virgülle ayrılmış **tam** adresler verin (şema, alan adı ve port birebir eşleşmelidir). Bu değişken tanımlandığında varsayılan liste kullanılmaz. `*` kabul edilmez.
+
+```bash
+# Linux / macOS
+export VAKIFNAME_CORS_ORIGINS="https://vakifname.example,http://localhost:5173"
+```
+
+```powershell
+# Windows (PowerShell)
+$env:VAKIFNAME_CORS_ORIGINS = "https://vakifname.example,http://localhost:5173"
+```
+
+CORS yalnızca tarayıcıların hangi sitelerden istek atabileceğini belirler. Bir kimlik doğrulama veya erişim kontrolü mekanizması **değildir**: `curl` gibi tarayıcı dışı istemciler origin listesinden bağımsız olarak API'ye erişebilir.
+
 ### Bilinen sınırlamalar (MVP)
 
 - **İlerleme bellekte tutulur:** Sunucu yeniden başlatıldığında tüm mühürler silinir. Birden fazla worker ile çalıştırıldığında her worker'ın kendi verisi olur.

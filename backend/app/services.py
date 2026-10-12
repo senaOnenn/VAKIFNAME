@@ -57,14 +57,16 @@ def check_in(place: Place, user_id: str, latitude: float, longitude: float, prog
 
     Koordinatlar doğrulanmaz; bu yalnızca MVP simülasyonudur ve GPS sahteciliğini engellemez.
     """
-    distance = round(haversine_m(latitude, longitude, place.latitude, place.longitude), 1)
-    common = {"place_id": place.id, "distance_m": distance, "allowed_radius_m": place.check_in_radius_m}
+    # Karar yuvarlanmamış mesafeyle verilir; yalnızca yanıtta gösterilen değer yuvarlanır.
+    distance = haversine_m(latitude, longitude, place.latitude, place.longitude)
+    shown_distance = round(distance, 1)
+    common = {"place_id": place.id, "distance_m": shown_distance, "allowed_radius_m": place.check_in_radius_m}
 
     if distance > place.check_in_radius_m:
         return CheckInResponse(
             success=False,
             status=CheckInStatus.OUT_OF_RANGE,
-            message=f"Bildirilen konum eserin {place.check_in_radius_m:g} m yarıçapı dışında ({distance:g} m).",
+            message=f"Bildirilen konum eserin {place.check_in_radius_m:g} m yarıçapı dışında ({shown_distance:g} m).",
             **common,
         )
 

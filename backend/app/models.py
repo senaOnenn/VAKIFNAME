@@ -4,8 +4,8 @@ from typing import Annotated, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, StringConstraints
 
-Latitude = Annotated[float, Field(ge=-90, le=90, description="Enlem (WGS84)")]
-Longitude = Annotated[float, Field(ge=-180, le=180, description="Boylam (WGS84)")]
+Latitude = Annotated[float, Field(ge=-90, le=90, allow_inf_nan=False, description="Enlem (WGS84)")]
+Longitude = Annotated[float, Field(ge=-180, le=180, allow_inf_nan=False, description="Boylam (WGS84)")]
 PlaceId = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=64)]
 UserId = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=64)]
 
