@@ -4,12 +4,13 @@ import type { Place } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { ApiErrorMessage } from './ApiErrorMessage'
 import { DemoBadge } from './DemoBadge'
-import { ArchIcon, CloseIcon, CompassIcon, ExternalLinkIcon, MapPinIcon } from './Icons'
+import { ArchIcon, CloseIcon, CompassIcon, ExternalLinkIcon, MapPinIcon, ScrollIcon } from './Icons'
 
 interface Props {
   selectedId: string | null
   onClose: () => void
   onShowOnMap: () => void
+  onGoToQuest: (placeId: string) => void
 }
 
 function isSafeUrl(url: string) {
@@ -33,7 +34,7 @@ function Source({ place }: { place: Place }) {
   return <dd>{title}</dd>
 }
 
-function PlaceDetailContent({ placeId, onClose, onShowOnMap }: Props & { placeId: string }) {
+function PlaceDetailContent({ placeId, onClose, onShowOnMap, onGoToQuest }: Props & { placeId: string }) {
   const place = useApi((signal) => getPlace(placeId, signal), placeId)
 
   if (place.status === 'loading') {
@@ -109,9 +110,14 @@ function PlaceDetailContent({ placeId, onClose, onShowOnMap }: Props & { placeId
         </div>
       </dl>
 
-      <button type="button" className="button button--secondary" onClick={onShowOnMap}>
-        <CompassIcon /> Haritada göster
-      </button>
+      <div className="detail__actions">
+        <button type="button" className="button button--primary" onClick={() => onGoToQuest(p.id)}>
+          <ScrollIcon /> Bu eserin görevine git
+        </button>
+        <button type="button" className="button button--secondary" onClick={onShowOnMap}>
+          <CompassIcon /> Haritada göster
+        </button>
+      </div>
     </article>
   )
 }

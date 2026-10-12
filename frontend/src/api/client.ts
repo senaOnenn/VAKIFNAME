@@ -1,4 +1,4 @@
-import type { Place } from './types'
+import type { CheckInResponse, CheckInStatus, Passport, Place, Stamp } from './types'
 
 const DEFAULT_API_BASE_URL = 'http://127.0.0.1:8000'
 const REQUEST_TIMEOUT_MS = 10_000
@@ -31,7 +31,7 @@ function detailMessage(body: unknown): string | undefined {
   return undefined
 }
 
-async function request(path: string, signal?: AbortSignal): Promise<unknown> {
+async function request(path: string, signal?: AbortSignal, json?: unknown): Promise<unknown> {
   const controller = new AbortController()
   let timedOut = false
   const timer = setTimeout(() => {
@@ -46,7 +46,13 @@ async function request(path: string, signal?: AbortSignal): Promise<unknown> {
     let response: Response
     try {
       response = await fetch(`${API_BASE_URL}${path}`, {
-        headers: { Accept: 'application/json' },
+        ...(json === undefined
+          ? { headers: { Accept: 'application/json' } }
+          : {
+              method: 'POST',
+              headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+              body: JSON.stringify(json),
+            }),
         signal: controller.signal,
       })
     } catch (error) {
@@ -95,5 +101,75 @@ export async function getPlaces(signal?: AbortSignal): Promise<Place[]> {
 export async function getPlace(placeId: string, signal?: AbortSignal): Promise<Place> {
   const body = await request(`/places/${encodeURIComponent(placeId)}`, signal)
   if (!isPlace(body)) throw invalid()
+  return body
+}
+
+function isStamp(value: unknown): value is Stamp {
+  if (!value || typeof value !== 'object') return false
+  const s = value as Record<string, unknown>
+  return (
+    typeof s.place_id === 'string' &&
+    typeof s.place_name === 'string' &&
+    typeof s.earned_at === 'string' &&
+    !Number.isNaN(Date.parse(s.earned_at))
+  )
+}
+
+const CHECK_IN_STATUSES: readonly CheckInStatus[] = ['completed', 'already_completed', 'out_of_range']
+
+/** Yanıtın biçimini ve kendi içindeki tutarlılığını doğrular: mühür yalnızca başarılı durumlarda ve aynı esere ait olmalı. */
+function isCheckInResponse(value: unknown, placeId: string): value is CheckInResponse {
+  if (!value || typeof value !== 'object') return false
+  const r = value as Record<string, unknown>
+  if (
+    typeof r.success !== 'boolean' ||
+    !CHECK_IN_STATUSES.includes(r.status as CheckInStatus) ||
+    typeof r.message !== 'string' ||
+    r.place_id !== placeId ||
+    typeof r.distance_m !== 'number' ||
+    typeof r.allowed_radius_m !== 'number'
+  ) {
+    return false
+  }
+  const stamp = r.stamp ?? null
+  if (r.status === 'out_of_range') return r.success === false && stamp === null
+  return r.success === true && isStamp(stamp) && stamp.place_id === placeId
+}
+
+function isPassport(value: unknown, userId: string): value is Passport {
+  if (!value || typeof value !== 'object') return false
+  const p = value as Record<string, unknown>
+  return (
+    p.user_id === userId &&
+    Array.isArray(p.stamps) &&
+    p.stamps.every(isStamp) &&
+    typeof p.total_stamps === 'number' &&
+    p.total_stamps === p.stamps.length
+  )
+}
+
+/**
+ * `POST /quests/{place_id}/check-in`. Koordinatlar istemcinin bildirdiği değerlerdir; backend bunları doğrulamaz.
+ * `out_of_range` hata değil, normal bir yanıttır.
+ */
+export async function checkIn(
+  placeId: string,
+  userId: string,
+  latitude: number,
+  longitude: number,
+  signal?: AbortSignal,
+): Promise<CheckInResponse> {
+  const body = await request(`/quests/${encodeURIComponent(placeId)}/check-in`, signal, {
+    user_id: userId,
+    latitude,
+    longitude,
+  })
+  if (!isCheckInResponse(body, placeId)) throw invalid()
+  return { ...body, stamp: body.stamp ?? null }
+}
+
+export async function getPassport(userId: string, signal?: AbortSignal): Promise<Passport> {
+  const body = await request(`/users/${encodeURIComponent(userId)}/passport`, signal)
+  if (!isPassport(body, userId)) throw invalid()
   return body
 }

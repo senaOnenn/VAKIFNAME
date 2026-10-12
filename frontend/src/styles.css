@@ -25,6 +25,8 @@
   --amber-ink: #5a3f05;
   --danger-bg: #f8e1dc;
   --danger-ink: #7a2114;
+  --success-bg: #e3f0e8;
+  --success-ink: #0d3b2e;
 
   --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -210,12 +212,6 @@ svg {
   border: 1px solid #e3cc8c;
 }
 
-.badge--soon {
-  background: rgb(247 241 227 / 14%);
-  color: var(--parchment-100);
-  font-weight: 600;
-}
-
 /* ---------- Bildirimler ---------- */
 .notice {
   display: flex;
@@ -260,6 +256,12 @@ svg {
   background: var(--danger-bg);
   border-color: #eab9ae;
   color: var(--danger-ink);
+}
+
+.notice--success {
+  background: var(--success-bg);
+  border-color: #a9cdb9;
+  color: var(--success-ink);
 }
 
 /* ---------- Üst bar ---------- */
@@ -328,20 +330,6 @@ svg {
 
 .nav__link:hover {
   background: rgb(247 241 227 / 12%);
-}
-
-.nav__soon {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 44px;
-  padding: 0 0.6rem;
-  color: rgb(247 241 227 / 78%);
-  cursor: not-allowed;
-}
-
-.nav__soon-icon {
-  font-size: 0.95rem;
 }
 
 /* ---------- Karşılama ---------- */
@@ -812,8 +800,390 @@ svg {
   font-weight: 600;
 }
 
-.detail .button {
+.detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* ---------- Görevler ---------- */
+.quest-layout {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.quest-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 1rem;
+  align-content: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quest-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 1.1rem 1.25rem 1.25rem;
+  border-radius: var(--radius-lg);
+  background: var(--parchment-50);
+  border: 1px solid var(--parchment-200);
+  border-top: 4px solid var(--emerald-800);
+  box-shadow: var(--shadow);
+}
+
+/* Aktif görev renkle birlikte kalın altın çerçeve ve buton durumu (aria-pressed) ile belirtilir. */
+.quest-card--active {
+  border-color: var(--gold-600);
+  border-top-color: var(--gold-400);
+  box-shadow:
+    0 0 0 2px var(--gold-400),
+    var(--shadow-lift);
+}
+
+.quest-card__meta,
+.quest-panel__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quest-card__meta {
+  justify-content: space-between;
+}
+
+.quest-card__title {
+  font-size: 1.2rem;
+  color: var(--emerald-950);
+  overflow-wrap: anywhere;
+}
+
+.quest-card__description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+}
+
+.quest-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+.quest-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.quest-status--not-completed {
+  color: var(--ink-muted);
+  background: var(--parchment-100);
+}
+
+.quest-status--completed {
+  color: var(--success-ink);
+  background: var(--success-bg);
+}
+
+.quest-status--checking {
+  color: var(--amber-ink);
+  background: var(--amber-bg);
+}
+
+.quest-status--error {
+  color: var(--danger-ink);
+  background: var(--danger-bg);
+}
+
+.quest-panel {
+  min-width: 0;
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  background: #fff;
+  border: 1px solid var(--parchment-200);
+  box-shadow: var(--shadow);
+  scroll-margin-top: calc(var(--header-height) + 1rem);
+}
+
+.quest-panel__content {
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+
+.quest-panel__content > * {
+  max-width: 100%;
+}
+
+.quest-panel__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+}
+
+.quest-panel__title {
+  font-size: 1.5rem;
+  color: var(--emerald-950);
+  overflow-wrap: anywhere;
+}
+
+.quest-panel .notice {
+  margin: 0;
+}
+
+.button[aria-disabled='true'] {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.quest-success {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.quest-success > div {
+  flex: 1 1 14rem;
+}
+
+.quest-success__seal {
+  flex: none;
+  font-size: 4.5rem;
+  animation: seal-press 0.6s var(--ease) both;
+}
+
+@keyframes seal-press {
+  from {
+    opacity: 0;
+    transform: scale(1.35) rotate(-12deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Mühür (özgün soyut tasarım) ---------- */
+.seal__rim {
+  fill: var(--gold-400);
+  stroke: var(--gold-600);
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+
+.seal__ring {
+  fill: var(--emerald-900);
+  stroke: var(--gold-300);
+  stroke-width: 2;
+}
+
+.seal__star {
+  fill: none;
+  stroke: var(--gold-300);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.seal__arch {
+  fill: none;
+  stroke: var(--parchment-50);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Kazanılmamış mühür: renksiz, kesikli kontur. */
+.seal--empty .seal__rim,
+.seal--empty .seal__ring {
+  fill: none;
+  stroke: var(--parchment-300);
+}
+
+.seal--empty .seal__star,
+.seal--empty .seal__arch {
+  stroke: var(--parchment-300);
+}
+
+/* ---------- Pasaport ---------- */
+.passport {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  border-radius: var(--radius-lg);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 0 0, rgb(217 178 95 / 18%), transparent 40%),
+    radial-gradient(circle at 100% 100%, rgb(217 178 95 / 14%), transparent 45%),
+    var(--parchment-100);
+  border: 1px solid var(--parchment-300);
+  box-shadow:
+    inset 0 0 0 6px var(--parchment-50),
+    inset 0 0 0 7px var(--gold-400),
+    var(--shadow);
+}
+
+.passport__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--gold-400);
+}
+
+.passport__emblem {
+  flex: none;
+  font-size: 3.5rem;
+}
+
+.passport__brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--emerald-700);
+}
+
+.passport__title {
+  font-size: clamp(1.5rem, 4.5vw, 2.1rem);
+  color: var(--emerald-900);
+}
+
+.passport__holder {
+  margin: 0;
+}
+
+.passport__holder dt {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.passport__holder dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.passport__holder code {
+  font-size: 0.9rem;
+  color: var(--emerald-900);
+}
+
+.passport__note,
+.passport__footnote {
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+}
+
+.passport__footnote {
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--parchment-300);
+}
+
+.passport__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.passport .notice {
+  margin: 0;
+}
+
+.passport__total {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
   justify-self: start;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: var(--emerald-900);
+  color: var(--parchment-50);
+}
+
+.passport__total-label {
+  font-weight: 600;
+}
+
+.passport__total-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gold-300);
+}
+
+.passport__empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  border: 2px dashed var(--parchment-300);
+  border-radius: var(--radius);
+}
+
+.passport__empty-seal {
+  font-size: 4rem;
+}
+
+.stamp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stamp {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  padding: 1rem;
+  text-align: center;
+  border-radius: var(--radius);
+  background: var(--parchment-50);
+  border: 1px solid var(--parchment-300);
+}
+
+.stamp__seal {
+  font-size: 4.5rem;
+}
+
+.stamp__name {
+  font-size: 1.05rem;
+  color: var(--emerald-950);
+  overflow-wrap: anywhere;
+}
+
+.stamp__date {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
 }
 
 /* ---------- Alt bilgi ---------- */
@@ -848,6 +1218,16 @@ svg {
     position: sticky;
     top: calc(var(--header-height) + 1rem);
   }
+
+  .quest-layout {
+    grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+    align-items: start;
+  }
+
+  .quest-panel {
+    position: sticky;
+    top: calc(var(--header-height) + 1rem);
+  }
 }
 
 /* Dar ekranda üst bar sabitlenmez (içeriği örtmesin) ve menü öğeleri gizlenmeden alt satıra kayar. */
@@ -873,15 +1253,12 @@ svg {
     padding: 0 0.6rem;
   }
 
-  .nav__soon {
-    padding: 0 0.6rem;
-  }
-
   .section {
     scroll-margin-top: 0;
   }
 
-  .detail-panel {
+  .detail-panel,
+  .quest-panel {
     scroll-margin-top: 1rem;
   }
 }
@@ -901,5 +1278,9 @@ svg {
 
   .place-card:hover {
     transform: none;
+  }
+
+  .quest-success__seal {
+    animation: none;
   }
 }

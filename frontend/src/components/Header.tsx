@@ -1,6 +1,11 @@
-import { EmblemIcon, LockIcon } from './Icons'
+import { EmblemIcon } from './Icons'
 
-const COMING_SOON = ['Görevler', 'Pasaport']
+const NAV_LINKS = [
+  { href: '#kesfet', label: 'Keşfet' },
+  { href: '#harita', label: 'Harita' },
+  { href: '#gorevler', label: 'Görevler' },
+  { href: '#pasaport', label: 'Pasaport' },
+]
 
 export function Header() {
   return (
@@ -12,23 +17,11 @@ export function Header() {
         </a>
         <nav aria-label="Ana menü">
           <ul className="nav">
-            <li>
-              <a className="nav__link" href="#kesfet">
-                Keşfet
-              </a>
-            </li>
-            <li>
-              <a className="nav__link" href="#harita">
-                Harita
-              </a>
-            </li>
-            {COMING_SOON.map((label) => (
-              // Bağlantı veya buton değil: henüz geliştirilmedi ve tıklanamaz.
-              <li key={label} className="nav__soon">
-                <LockIcon className="nav__soon-icon" />
-                <span>{label}</span>
-                <span className="badge badge--soon">Yakında</span>
-                <span className="visually-hidden">(henüz kullanılamıyor)</span>
+            {NAV_LINKS.map(({ href, label }) => (
+              <li key={href}>
+                <a className="nav__link" href={href}>
+                  {label}
+                </a>
               </li>
             ))}
           </ul>

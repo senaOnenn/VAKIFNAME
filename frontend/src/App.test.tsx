@@ -48,17 +48,16 @@ describe('ana sayfa', () => {
     await screen.findByRole('list', { name: 'Eser listesi' })
   })
 
-  it('henüz geliştirilmeyen Görevler ve Pasaport bölümlerini tıklanabilir göstermez', async () => {
+  it('ana menüde Keşfet, Harita, Görevler ve Pasaport bölümlerine çalışan bağlantılar verir', async () => {
     stubFetch(placeRoutes())
-    render(<App />)
+    const { container } = render(<App />)
     const nav = screen.getByRole('navigation', { name: 'Ana menü' })
-    expect(within(nav).getByRole('link', { name: 'Keşfet' })).toHaveAttribute('href', '#kesfet')
-    expect(within(nav).getByRole('link', { name: 'Harita' })).toHaveAttribute('href', '#harita')
-    for (const label of ['Görevler', 'Pasaport']) {
-      expect(within(nav).queryByRole('link', { name: new RegExp(label) })).not.toBeInTheDocument()
-      expect(within(nav).queryByRole('button', { name: new RegExp(label) })).not.toBeInTheDocument()
-      expect(within(nav).getByText(label).closest('li')).toHaveTextContent(/Yakında.*henüz kullanılamıyor/)
+    const targets = { Keşfet: '#kesfet', Harita: '#harita', Görevler: '#gorevler', Pasaport: '#pasaport' }
+    for (const [label, href] of Object.entries(targets)) {
+      expect(within(nav).getByRole('link', { name: label })).toHaveAttribute('href', href)
+      expect(container.querySelector(href)).toBeInTheDocument()
     }
+    expect(within(nav).queryByText('Yakında')).not.toBeInTheDocument()
     await screen.findByRole('list', { name: 'Eser listesi' })
   })
 })

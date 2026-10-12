@@ -73,7 +73,7 @@ CORS yalnızca tarayıcıların hangi sitelerden istek atabileceğini belirler. 
 
 ## Frontend'i çalıştırma
 
-React + TypeScript + Vite ile yazılmış web arayüzü `frontend/` klasöründedir. Eser verilerini doğrudan backend'den (`GET /places`, `GET /places/{place_id}`) alır; frontend içinde sabit eser listesi yoktur.
+React + TypeScript + Vite ile yazılmış web arayüzü `frontend/` klasöründedir. Eser, görev ve pasaport verilerini doğrudan backend'den alır; frontend içinde sabit eser listesi yoktur.
 
 Gereksinim: Node.js `20.19+` veya `22.12+`. Önce backend'i yukarıdaki gibi `http://127.0.0.1:8000` adresinde başlatın.
 
@@ -118,6 +118,14 @@ Harita, OpenStreetMap karolarını internet üzerinden yükler. Bağlantı yoksa
 
 OpenStreetMap'in genel karo sunucusu geliştirme ve demo içindir. Yüksek trafikli yayında [kullanım politikasına](https://operations.osmfoundation.org/policies/tiles/) uygun bir karo sağlayıcı kullanılmalıdır.
 
+### Görevler ve dijital pasaport
+
+Her eser için bir keşif görevi vardır. "Demo konumuyla görevi dene" butonu, eserin backend kaydındaki koordinatlarla `POST /quests/{place_id}/check-in` isteği gönderir; tarayıcı konumu (GPS) istenmez ve kullanılmaz. Demo check-in gerçek bir ziyaretin kanıtı değildir.
+
+Pasaport (`GET /users/{user_id}/passport`) ve görev durumları yalnızca backend verisinden gösterilir; mühürler tarayıcıda saklanmaz. Backend ilerlemeyi bellekte tuttuğu için sunucu yeniden başlatılınca mühürler silinir ve arayüz de bunu boş pasaport olarak gösterir.
+
+`user_id`, her tarayıcı sekmesi oturumu için üretilen rastgele bir demo kimliğidir (`sessionStorage`). Kullanıcı hesabı veya kimlik doğrulama **değildir**; kişisel bilgi istenmez.
+
 ### Henüz olmayanlar
 
-Görevler (check-in), dijital pasaport ve RAG sohbeti bu sürümde arayüze eklenmedi; menüde "Yakında" olarak işaretlidir.
+Gerçek kullanıcı hesapları, gerçek konum doğrulaması ve RAG sohbeti bu sürümde yoktur.
