@@ -1,0 +1,96 @@
+import type { SVGProps } from 'react'
+
+type IconProps = SVGProps<SVGSVGElement>
+
+function Icon({ children, ...props }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="1em"
+      height="1em"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      {children}
+    </svg>
+  )
+}
+
+/** Sekiz köşeli yıldız: logo ve süsleme için soyut geometrik motif. */
+export function EmblemIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 2.5l2.6 4.2 4.8-1.1-1.1 4.8 4.2 2.6-4.2 2.6 1.1 4.8-4.8-1.1L12 21.5l-2.6-4.2-4.8 1.1 1.1-4.8L1.5 13l4.2-2.6-1.1-4.8 4.8 1.1z" />
+      <circle cx="12" cy="12" r="3.2" />
+    </Icon>
+  )
+}
+
+export function MapPinIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" />
+      <circle cx="12" cy="10" r="2.4" />
+    </Icon>
+  )
+}
+
+export function CompassIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M15.5 8.5l-2 5-5 2 2-5z" />
+    </Icon>
+  )
+}
+
+export function LockIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="5" y="11" width="14" height="9" rx="2" />
+      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+    </Icon>
+  )
+}
+
+export function CloseIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M6 6l12 12M18 6L6 18" />
+    </Icon>
+  )
+}
+
+export function ExternalLinkIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+    </Icon>
+  )
+}
+
+export function AlertIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3l9.5 17h-19z" />
+      <path d="M12 10v4M12 17.2v.1" />
+    </Icon>
+  )
+}
+
+/** Genel kemer silueti: görseli olmayan eserler için yer tutucu, belirli bir yapıyı temsil etmez. */
+export function ArchIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 21V11a8 8 0 0 1 16 0v10" />
+      <path d="M8 21v-8a4 4 0 0 1 8 0v8" />
+      <path d="M2.5 21h19" />
+    </Icon>
+  )
+}

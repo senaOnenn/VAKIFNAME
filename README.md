@@ -70,3 +70,54 @@ CORS yalnızca tarayıcıların hangi sitelerden istek atabileceğini belirler. 
 - **İlerleme bellekte tutulur:** Sunucu yeniden başlatıldığında tüm mühürler silinir. Birden fazla worker ile çalıştırıldığında her worker'ın kendi verisi olur.
 - **Konum doğrulanmaz:** Check-in, istemcinin bildirdiği koordinatlara güvenir. Bu bir simülasyondur; GPS sahteciliğini engellemez ve kullanıcının eseri gerçekten ziyaret ettiğini kanıtlamaz.
 - **Kimlik doğrulama yoktur:** `user_id` serbest metindir.
+
+## Frontend'i çalıştırma
+
+React + TypeScript + Vite ile yazılmış web arayüzü `frontend/` klasöründedir. Eser verilerini doğrudan backend'den (`GET /places`, `GET /places/{place_id}`) alır; frontend içinde sabit eser listesi yoktur.
+
+Gereksinim: Node.js `20.19+` veya `22.12+`. Önce backend'i yukarıdaki gibi `http://127.0.0.1:8000` adresinde başlatın.
+
+### Linux / macOS
+
+```bash
+cd frontend
+cp .env.example .env
+npm install
+npm run dev
+```
+
+### Windows (PowerShell)
+
+```powershell
+cd frontend
+Copy-Item .env.example .env
+npm install
+npm run dev
+```
+
+Arayüz `http://localhost:5173` adresinde açılır.
+
+| Komut | Açıklama |
+|---|---|
+| `npm run dev` | Geliştirme sunucusu (`http://localhost:5173`) |
+| `npm test` | Vitest + React Testing Library testleri (ağ erişimi gerekmez) |
+| `npm run build` | Tür denetimi ve üretim derlemesi (`frontend/dist`) |
+| `npm run preview` | Üretim derlemesini `http://localhost:5173` adresinde sunar |
+
+### Yapılandırma
+
+| Değişken | Varsayılan | Açıklama |
+|---|---|---|
+| `VITE_API_BASE_URL` | `http://127.0.0.1:8000` | Backend adresi. Derleme sırasında koda gömülür; gizli bilgi koymayın. |
+
+Frontend 5173 portunda çalışır çünkü bu port backend'in varsayılan CORS listesinde bulunur. Frontend'i başka bir adreste yayınlarsanız o adresi backend'de `VAKIFNAME_CORS_ORIGINS` ile tanımlayın.
+
+### Harita
+
+Harita, OpenStreetMap karolarını internet üzerinden yükler. Bağlantı yoksa harita altlığı görünmez ama eser listesi ve ayrıntılar çalışmaya devam eder. Mevcut kayıtlar kurgusal olduğu için harita üzerinde "Kurgusal demo konumları" uyarısı gösterilir.
+
+OpenStreetMap'in genel karo sunucusu geliştirme ve demo içindir. Yüksek trafikli yayında [kullanım politikasına](https://operations.osmfoundation.org/policies/tiles/) uygun bir karo sağlayıcı kullanılmalıdır.
+
+### Henüz olmayanlar
+
+Görevler (check-in), dijital pasaport ve RAG sohbeti bu sürümde arayüze eklenmedi; menüde "Yakında" olarak işaretlidir.
