@@ -1,8 +1,9 @@
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { PLACES } from '../test/fixtures'
-import PlaceMap from './PlaceMap'
+import type { Place } from '../api/types'
+import { PLACES, REAL_TYPE_PLACE } from '../test/fixtures'
+import PlaceMap, { markerLabel } from './PlaceMap'
 
 // Leaflet tıklamada kaydırma konumunu window.scrollTo ile korur; jsdom bunu desteklemez.
 beforeEach(() => {
@@ -10,11 +11,15 @@ beforeEach(() => {
 })
 
 // Gerçek Leaflet bileşeni jsdom'da çalışır; jsdom görsel yüklemediği için harita karoları ağa istek atmaz.
-function renderMap(selectedId: string | null = null) {
+function renderMap(selectedId: string | null = null, places: Place[] = PLACES) {
   const onSelect = vi.fn()
-  const view = render(<PlaceMap places={PLACES} selectedId={selectedId} onSelect={onSelect} onTileError={() => {}} />)
-  const marker = (name: string) => view.container.querySelector<HTMLElement>(`.leaflet-marker-icon[title="${name}"]`)
-  return { ...view, onSelect, marker }
+  const ui = (id: string | null) => <PlaceMap places={places} selectedId={id} onSelect={onSelect} onTileError={() => {}} />
+  const view = render(ui(selectedId))
+  const marker = (name: string) => {
+    const place = places.find((p) => p.name === name)!
+    return view.container.querySelector<HTMLElement>(`.leaflet-marker-icon[title="${markerLabel(place)}"]`)
+  }
+  return { ...view, onSelect, marker, rerenderWith: (id: string | null) => view.rerender(ui(id)) }
 }
 
 describe('PlaceMap', () => {
@@ -51,6 +56,34 @@ describe('PlaceMap', () => {
     expect(marker('Test Mekânı A')).toHaveClass('map-marker--selected')
     expect(marker('Test Mekânı B')).not.toHaveClass('map-marker--selected')
     await waitFor(() => expect(container.querySelector('.leaflet-popup-content')).toHaveTextContent('Test Mekânı A'))
+  })
+
+  it('klavyeyle seçimden sonra işaretleyici vurgulanır ve odak işaretleyicide kalır', async () => {
+    const { marker, onSelect, rerenderWith } = renderMap()
+    const el = marker('Test Mekânı A')!
+    el.focus()
+    await userEvent.keyboard('{Enter}')
+    expect(onSelect).toHaveBeenCalledWith('test-a')
+    rerenderWith('test-a') // Üst bileşenin seçimi geri vermesi
+    expect(marker('Test Mekânı A')).toBe(el)
+    expect(el).toHaveClass('map-marker--selected')
+    expect(el).toHaveFocus()
+  })
+
+  // REAL_TYPE_PLACE kurgusal bir test kaydıdır; yalnızca `is_demo: false` gösterimini sınar.
+  it('demo ve gerçek-tipli işaretleyicileri ad, sınıf ve açılır pencere metniyle ayırır', async () => {
+    const places = [PLACES[0], REAL_TYPE_PLACE]
+    const { container, marker } = renderMap(null, places)
+
+    const demo = container.querySelector('.leaflet-marker-icon[title="Test Mekânı A (kurgusal demo konumu)"]')
+    expect(demo).toHaveClass('map-marker--demo')
+    const real = container.querySelector('.leaflet-marker-icon[title="Test Mekânı G"]')
+    expect(real).not.toBeNull()
+    expect(real).not.toHaveClass('map-marker--demo')
+
+    await userEvent.click(marker('Test Mekânı G')!)
+    await waitFor(() => expect(container.querySelector('.leaflet-popup-content')).toHaveTextContent('Gerçek eser kaydı'))
+    expect(container.querySelector('.leaflet-popup-content')).not.toHaveTextContent('Kurgusal')
   })
 
   it('OpenStreetMap atfını gösterir', () => {

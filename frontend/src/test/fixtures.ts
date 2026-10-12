@@ -29,7 +29,22 @@ export const PLACES: Place[] = [
   },
 ]
 
-type Route = { status?: number; body: unknown } | Error
+// `is_demo: false` taşıyan kurgusal test kaydı. Yalnızca "gerçek eser kaydı" gösterimini test etmek içindir;
+// tarihî bakımdan doğrulanmış gerçek bir eser değildir ve kaynağı yoktur.
+export const REAL_TYPE_PLACE: Place = {
+  id: 'test-gercek-tipli',
+  name: 'Test Mekânı G',
+  city: 'Test Şehri',
+  description: 'Gerçek-tipli kurgusal test kaydı.',
+  latitude: 0.02,
+  longitude: 0.02,
+  check_in_radius_m: 75,
+  source_title: null,
+  source_url: null,
+  is_demo: false,
+}
+
+type Route ={ status?: number; body: unknown } | Error
 export type Routes = Record<string, Route | (() => Route)>
 
 /** `fetch` yerine geçer; URL yoluna göre yanıt döndürür. Tanımsız yol için 404. */

@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { API_BASE_URL } from './api/client'
 import type { PlaceMapProps } from './components/PlaceMap'
-import { PLACES, placeRoutes, stubFetch } from './test/fixtures'
+import { PLACES, REAL_TYPE_PLACE, placeRoutes, stubFetch } from './test/fixtures'
 
 // Leaflet jsdom'da ayrıca test edilir (PlaceMap.test.tsx); burada harita, işaretleyicileri buton olarak gösteren
 // hafif bir yer tutucuyla değiştirilir. `mapShouldCrash` harita hatası senaryosunu simüle eder.
@@ -220,5 +220,118 @@ describe('harita bölümü', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Detayları gör: Test Mekânı A' }))
     const panel = screen.getByRole('complementary', { name: 'Eser ayrıntıları' })
     expect(await within(panel).findByRole('heading', { name: 'Test Mekânı A' })).toBeInTheDocument()
+  })
+})
+
+const announcer = () => document.getElementById('map-selection-status')!
+const detailPanel = () => screen.getByRole('complementary', { name: 'Eser ayrıntıları' })
+
+describe('harita seçimi duyurusu', () => {
+  it('işaretleyici klavyeyle seçilince duyuru günceller, odak işaretleyicide kalır ve panel aynı eseri gösterir', async () => {
+    await renderLoaded()
+    expect(announcer()).toHaveAttribute('role', 'status')
+    expect(announcer()).toBeEmptyDOMElement()
+
+    const marker = await screen.findByRole('button', { name: 'İşaretleyici: Test Mekânı A' })
+    marker.focus()
+    await userEvent.keyboard('{Enter}')
+
+    expect(announcer()).toHaveTextContent(
+      'Test Mekânı A seçildi, Test Şehri. Kurgusal demo kaydı. Ayrıntılar eser ayrıntıları panelinde.',
+    )
+    expect(marker).toHaveFocus()
+    expect(await within(detailPanel()).findByRole('heading', { name: 'Test Mekânı A' })).toBeInTheDocument()
+  })
+
+  it('başka eser seçilince duyuru değişir; aynı eseri yeniden seçmek duyuruyu tekrarlamaz', async () => {
+    await renderLoaded()
+    await userEvent.click(await screen.findByRole('button', { name: 'İşaretleyici: Test Mekânı A' }))
+    await userEvent.click(screen.getByRole('button', { name: 'İşaretleyici: Test Mekânı B' }))
+    expect(announcer()).toHaveTextContent(/^Test Mekânı B seçildi, Örnek Şehir\./)
+    expect(await within(detailPanel()).findByRole('heading', { name: 'Test Mekânı B' })).toBeInTheDocument()
+
+    const mutations: MutationRecord[] = []
+    const observer = new MutationObserver((records) => mutations.push(...records))
+    observer.observe(announcer(), { childList: true, subtree: true, characterData: true })
+    await userEvent.click(screen.getByRole('button', { name: 'İşaretleyici: Test Mekânı B' }))
+    await Promise.resolve()
+    observer.disconnect()
+    expect(mutations).toHaveLength(0)
+  })
+
+  it('karttan seçim duyuru yapmaz, odağı panele taşır ve önceki harita duyurusunu temizler', async () => {
+    await renderLoaded()
+    await userEvent.click(await screen.findByRole('button', { name: 'İşaretleyici: Test Mekânı A' }))
+    expect(announcer()).toHaveTextContent('Test Mekânı A seçildi')
+
+    await userEvent.click(screen.getByRole('button', { name: 'Detayları gör: Test Mekânı B' }))
+    expect(announcer()).toBeEmptyDOMElement()
+    expect(detailPanel()).toHaveFocus()
+    expect(await within(detailPanel()).findByRole('heading', { name: 'Test Mekânı B' })).toBeInTheDocument()
+  })
+
+  it('geri tuşuyla seçim değişince eski duyuru panelle çelişecek şekilde kalmaz', async () => {
+    await renderLoaded()
+    await userEvent.click(await screen.findByRole('button', { name: 'İşaretleyici: Test Mekânı A' }))
+    await userEvent.click(screen.getByRole('button', { name: 'İşaretleyici: Test Mekânı B' }))
+    window.history.back()
+    expect(await within(detailPanel()).findByRole('heading', { name: 'Test Mekânı A' })).toBeInTheDocument()
+    expect(window.location.search).toBe('?eser=test-a')
+    expect(announcer()).toBeEmptyDOMElement()
+  })
+
+  // REAL_TYPE_PLACE kurgusal bir test kaydıdır; yalnızca `is_demo: false` gösterimini sınar.
+  it('gerçek-tipli kayıt duyurusunda demo ifadesi yer almaz', async () => {
+    await renderLoaded(placeRoutes([REAL_TYPE_PLACE]))
+    await userEvent.click(await screen.findByRole('button', { name: 'İşaretleyici: Test Mekânı G' }))
+    expect(announcer()).toHaveTextContent('Test Mekânı G seçildi, Test Şehri. Ayrıntılar eser ayrıntıları panelinde.')
+    expect(announcer()).not.toHaveTextContent('Kurgusal')
+  })
+})
+
+// Bu bölümdeki REAL_TYPE_PLACE, `is_demo: false` taşıyan kurgusal bir test kaydıdır; doğrulanmış gerçek bir eser değildir.
+describe('demo ve gerçek kayıt etiketleri', () => {
+  const mapSection = () => screen.getByRole('region', { name: 'Keşif Haritası' })
+  const legend = () => within(mapSection()).queryByRole('list', { name: 'Harita işaretlerinin açıklaması' })
+
+  it('tamamı demo ise tüm işaretlerin kurgusal olduğunu belirtir', async () => {
+    await renderLoaded()
+    expect(within(mapSection()).getByRole('note')).toHaveTextContent(
+      /Kurgusal demo konumları\. Haritadaki tüm işaretler test amaçlıdır/,
+    )
+    const items = within(legend()!).getAllByRole('listitem')
+    expect(items).toHaveLength(1)
+    expect(items[0]).toHaveTextContent('Kurgusal demo konumu (kesikli çerçeve, içi boş)')
+  })
+
+  it('tamamı gerçek-tipli ise demo uyarısı ve açıklama göstermez', async () => {
+    await renderLoaded(placeRoutes([REAL_TYPE_PLACE]))
+    expect(within(mapSection()).queryByRole('note')).not.toBeInTheDocument()
+    expect(legend()).not.toBeInTheDocument()
+    expect(screen.getByRole('contentinfo')).not.toHaveTextContent(/tüm eser kayıtları kurgusal/i)
+  })
+
+  it('karışık kayıtlarda yalnızca demo işaretlerinin kurgusal olduğunu açıklar', async () => {
+    await renderLoaded(placeRoutes([...PLACES, REAL_TYPE_PLACE]))
+    const note = within(mapSection()).getByRole('note')
+    expect(note).toHaveTextContent(/Bazı konumlar kurgusal\./)
+    expect(note).toHaveTextContent(/3 işaretten 2 tanesi\s+kurgusal demo kaydıdır/)
+    expect(note).toHaveTextContent(/diğer 1 işaret backend’de gerçek eser kaydı olarak işaretlidir/)
+    expect(note).not.toHaveTextContent('tüm işaretler')
+
+    const items = within(legend()!).getAllByRole('listitem')
+    expect(items.map((li) => li.textContent)).toEqual(['Gerçek eser kaydı', 'Kurgusal demo konumu (kesikli çerçeve, içi boş)'])
+
+    const list = screen.getByRole('list', { name: 'Eser listesi' })
+    expect(within(within(list).getByRole('article', { name: 'Test Mekânı G' })).queryByText('Kurgusal demo')).not.toBeInTheDocument()
+    expect(within(within(list).getByRole('article', { name: 'Test Mekânı A' })).getByText('Kurgusal demo')).toBeInTheDocument()
+  })
+
+  it('boş listede demo uyarısı ve açıklama göstermez', async () => {
+    stubFetch({ '/places': { body: [] } })
+    render(<App />)
+    await screen.findByText(/Henüz listelenecek eser yok/)
+    expect(within(mapSection()).queryByRole('note')).not.toBeInTheDocument()
+    expect(legend()).not.toBeInTheDocument()
   })
 })

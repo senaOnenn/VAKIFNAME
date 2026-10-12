@@ -21,17 +21,24 @@ function prefersReducedMotion() {
 
 // Görsel dosyası gerektirmeyen işaretleyiciler; paketleyicide eksik ikon sorununu da önler.
 // Bir kez oluşturulur; her render'da yeni ikon verilseydi Leaflet gereksiz yere setIcon çağırırdı.
-const createMarkerIcon = (selected: boolean) =>
+const createMarkerIcon = (demo: boolean, selected: boolean) =>
   L.divIcon({
-    className: `map-marker${selected ? ' map-marker--selected' : ''}`,
+    className: ['map-marker', demo && 'map-marker--demo', selected && 'map-marker--selected'].filter(Boolean).join(' '),
     html: '<span class="map-marker__pin"></span>',
     // 44x44 dokunma alanı; görünen iğne bunun içinde çizilir ve ucu (22, 42) noktasındadır.
     iconSize: [44, 44],
     iconAnchor: [22, 42],
     popupAnchor: [0, -36],
   })
-const MARKER_ICON = createMarkerIcon(false)
-const SELECTED_MARKER_ICON = createMarkerIcon(true)
+const MARKER_ICONS = {
+  real: { idle: createMarkerIcon(false, false), selected: createMarkerIcon(false, true) },
+  demo: { idle: createMarkerIcon(true, false), selected: createMarkerIcon(true, true) },
+}
+
+/** İşaretleyicinin erişilebilir adı; demo durumu yalnızca görsel farkla değil metinle de belirtilir. */
+export function markerLabel(place: Place) {
+  return place.is_demo ? `${place.name} (kurgusal demo konumu)` : place.name
+}
 
 function FitToPlaces({ places }: { places: Place[] }) {
   const map = useMap()
@@ -72,9 +79,9 @@ export default function PlaceMap({ places, selectedId, onSelect, onTileError }: 
         <Marker
           key={place.id}
           position={[place.latitude, place.longitude]}
-          icon={place.id === selectedId ? SELECTED_MARKER_ICON : MARKER_ICON}
-          title={place.name}
-          alt={place.name}
+          icon={MARKER_ICONS[place.is_demo ? 'demo' : 'real'][place.id === selectedId ? 'selected' : 'idle']}
+          title={markerLabel(place)}
+          alt={markerLabel(place)}
           riseOnHover
           zIndexOffset={place.id === selectedId ? 1000 : 0}
           eventHandlers={{
@@ -96,12 +103,8 @@ export default function PlaceMap({ places, selectedId, onSelect, onTileError }: 
             <strong>{place.name}</strong>
             <br />
             {place.city}
-            {place.is_demo && (
-              <>
-                <br />
-                <em>Kurgusal demo konumu</em>
-              </>
-            )}
+            <br />
+            <em>{place.is_demo ? 'Kurgusal demo konumu' : 'Gerçek eser kaydı'}</em>
           </Popup>
         </Marker>
       ))}

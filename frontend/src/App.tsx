@@ -1,5 +1,6 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { getPlaces } from './api/client'
+import type { Place } from './api/types'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { MapSection } from './components/MapSection'
@@ -20,11 +21,22 @@ function focusAndReveal(element: HTMLElement | null) {
   element.scrollIntoView?.({ behavior: scrollBehavior(), block: 'start' })
 }
 
+/** Haritadan yapılan seçim için ekran okuyucu metni. */
+function selectionMessage(place: Place) {
+  const demo = place.is_demo ? ' Kurgusal demo kaydı.' : ''
+  return `${place.name} seçildi, ${place.city}.${demo} Ayrıntılar eser ayrıntıları panelinde.`
+}
+
 export default function App() {
   const places = useApi(getPlaces, 'places')
   const [selectedId, select] = useSelectedPlace()
   const detailRef = useRef<HTMLElement>(null)
   const mapRef = useRef<HTMLDivElement>(null)
+  // Haritadan seçimde odak işaretleyicide kalır; değişiklik bu canlı bölgeyle duyurulur. Karttan seçimde odak
+  // panele taşındığı için duyuru yapılmaz. Seçim başka yoldan (kart, geri/ileri) değişince duyuru temizlenir,
+  // böylece canlı bölge hiçbir zaman paneldeki eserden farklı bir eseri göstermez.
+  const [mapAnnouncement, setMapAnnouncement] = useState<{ placeId: string; text: string } | null>(null)
+  if (mapAnnouncement && mapAnnouncement.placeId !== selectedId) setMapAnnouncement(null)
 
   const selectFromCard = useCallback(
     (placeId: string) => {
@@ -32,6 +44,15 @@ export default function App() {
       focusAndReveal(detailRef.current)
     },
     [select],
+  )
+
+  const selectFromMap = useCallback(
+    (placeId: string) => {
+      select(placeId)
+      const place = places.status === 'success' ? places.data.find((p) => p.id === placeId) : undefined
+      if (place) setMapAnnouncement({ placeId, text: selectionMessage(place) })
+    },
+    [select, places],
   )
 
   const closeDetail = useCallback(() => {
@@ -53,7 +74,7 @@ export default function App() {
           ref={mapRef}
           places={places}
           selectedId={selectedId}
-          onSelect={select}
+          onSelect={selectFromMap}
           detail={
             <PlaceDetail
               ref={detailRef}
@@ -63,6 +84,9 @@ export default function App() {
             />
           }
         />
+        <p id="map-selection-status" className="visually-hidden" role="status" aria-atomic="true">
+          {mapAnnouncement?.text}
+        </p>
       </main>
       <footer className="site-footer">
         <div className="container">
@@ -70,7 +94,7 @@ export default function App() {
             <strong>VAKIFNAME</strong> · Team HisGuard · KÖK &amp; KOD Hackathonu
           </p>
           <p className="site-footer__note">
-            Bu sürümdeki tüm eser kayıtları kurgusal demo verisidir. Harita verileri © OpenStreetMap katkıcıları.
+            Kurgusal demo kayıtları arayüzde açıkça etiketlenir. Harita verileri © OpenStreetMap katkıcıları.
           </p>
         </div>
       </footer>
