@@ -1,0 +1,38 @@
+[
+  {
+    "id": "demo-mekan-a",
+    "name": "Demo Mekân A",
+    "city": "Demo Şehir",
+    "description": "KURGUSAL TEST KAYDI. Gerçek bir eseri temsil etmez; koordinatlar okyanus üzerinde (0°, 0°) seçilmiştir.",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "check_in_radius_m": 100,
+    "source_title": null,
+    "source_url": null,
+    "is_demo": true
+  },
+  {
+    "id": "demo-mekan-b",
+    "name": "Demo Mekân B",
+    "city": "Demo Şehir",
+    "description": "KURGUSAL TEST KAYDI. Gerçek bir eseri temsil etmez; koordinatlar okyanus üzerinde seçilmiştir.",
+    "latitude": 0.01,
+    "longitude": 0.01,
+    "check_in_radius_m": 150,
+    "source_title": null,
+    "source_url": null,
+    "is_demo": true
+  },
+  {
+    "id": "demo-mekan-c",
+    "name": "Demo Mekân C",
+    "city": "Demo Şehir",
+    "description": "KURGUSAL TEST KAYDI. Gerçek bir eseri temsil etmez; koordinatlar okyanus üzerinde seçilmiştir.",
+    "latitude": -0.02,
+    "longitude": 0.015,
+    "check_in_radius_m": 50,
+    "source_title": null,
+    "source_url": null,
+    "is_demo": true
+  }
+]
