@@ -4,7 +4,8 @@ import type { Place } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { ApiErrorMessage } from './ApiErrorMessage'
 import { DemoBadge } from './DemoBadge'
-import { ArchIcon, CloseIcon, CompassIcon, ExternalLinkIcon, MapPinIcon, ScrollIcon } from './Icons'
+import { ArchitectureDrawing } from './ArchitectureDrawing'
+import { CloseIcon, CompassIcon, ExternalLinkIcon, MapPinIcon, ScrollIcon } from './Icons'
 
 interface Props {
   selectedId: string | null
@@ -67,10 +68,14 @@ function PlaceDetailContent({ placeId, onClose, onShowOnMap, onGoToQuest }: Prop
   const p = place.data
   return (
     <article className="detail" aria-labelledby="detail-title">
-      <div className="detail__visual" aria-hidden="true">
-        <ArchIcon />
+      <p className="sheet-top" aria-hidden="true">
+        <span>VAKIFNAME</span>
+        <span>Eser fişi</span>
+      </p>
+      <div className="detail__visual">
+        <ArchitectureDrawing variant="revakli" />
       </div>
-      <p className="detail__visual-caption">Bu eser için henüz görsel eklenmedi.</p>
+      <p className="detail__visual-caption">Bu eser için henüz görsel eklenmedi; çizim temsilidir.</p>
 
       <header className="detail__header">
         <h3 id="detail-title" className="detail__title">

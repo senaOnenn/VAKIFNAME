@@ -126,6 +126,12 @@ Pasaport (`GET /users/{user_id}/passport`) ve görev durumları yalnızca backen
 
 `user_id`, her tarayıcı sekmesi oturumu için üretilen rastgele bir demo kimliğidir (`sessionStorage`). Kullanıcı hesabı veya kimlik doğrulama **değildir**; kişisel bilgi istenmez.
 
+### Tasarım
+
+Arayüz "Bursa'nın Kayıp Vakfiyesi" kültür atlası tasarımını izler: parşömen zemin, koyu zümrüt yeşili, bakır vurgu ve lacivert/altın pasaport kapağı. Eser kartlarındaki çizgisel mimari çizimler temsilidir; belirli bir eserin rölövesi veya fotoğrafı değildir ve ekranda böyle etiketlenir. Fotoğraflar, lisans ve eser eşleştirmesi onaylanmadan kullanılmaz.
+
+Başlık yazı tipi Cormorant Garamond'dur (SIL Open Font License 1.1). Yalnızca Latin ve Türkçe karakterleri içeren bir WOFF2 alt kümesi olarak `src/assets/fonts/` altında tutulur; lisans metni `public/fonts/OFL-Cormorant-Garamond.txt` ile derlemeye eklenir.
+
 ### Henüz olmayanlar
 
 Gerçek kullanıcı hesapları, gerçek konum doğrulaması ve RAG sohbeti bu sürümde yoktur.

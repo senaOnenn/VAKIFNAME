@@ -58,6 +58,14 @@ export function CloseIcon(props: IconProps) {
   )
 }
 
+export function MenuIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M3 7h18M3 12h18M3 17h18" />
+    </Icon>
+  )
+}
+
 export function ExternalLinkIcon(props: IconProps) {
   return (
     <Icon {...props}>
@@ -71,17 +79,6 @@ export function AlertIcon(props: IconProps) {
     <Icon {...props}>
       <path d="M12 3l9.5 17h-19z" />
       <path d="M12 10v4M12 17.2v.1" />
-    </Icon>
-  )
-}
-
-/** Genel kemer silueti: görseli olmayan eserler için yer tutucu, belirli bir yapıyı temsil etmez. */
-export function ArchIcon(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M4 21V11a8 8 0 0 1 16 0v10" />
-      <path d="M8 21v-8a4 4 0 0 1 8 0v8" />
-      <path d="M2.5 21h19" />
     </Icon>
   )
 }

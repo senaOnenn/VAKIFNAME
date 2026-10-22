@@ -62,6 +62,26 @@ describe('ana sayfa', () => {
   })
 })
 
+describe('yeni tasarım', () => {
+  it('eser kartlarındaki çizimleri temsili olarak etiketler ve gerçek görsel göstermez', async () => {
+    const { list } = await renderLoaded()
+    for (const place of PLACES) {
+      const card = within(list).getByRole('article', { name: place.name })
+      expect(within(card).getByText('Temsili çizim · Eser görseli değildir')).toBeInTheDocument()
+      expect(card.querySelector('img')).toBeNull()
+    }
+  })
+
+  it('oyun akışını anlatır ve alt menüde bölümlere bağlantı verir', async () => {
+    await renderLoaded()
+    expect(screen.getByRole('heading', { level: 2, name: /Merak et\.\s*İzini sür\./ })).toBeInTheDocument()
+    expect(screen.getByText('Bursa’nın Kayıp Vakfiyesi · Yaşayan Miras Oyunu')).toBeInTheDocument()
+    const footerNav = screen.getByRole('navigation', { name: 'Alt menü' })
+    expect(within(footerNav).getByRole('link', { name: 'Dijital pasaport' })).toHaveAttribute('href', '#pasaport')
+    expect(within(footerNav).getByRole('link', { name: 'Görevler' })).toHaveAttribute('href', '#gorevler')
+  })
+})
+
 describe('eser listesi', () => {
   it('eserleri backend GET /places uç noktasından yükler', async () => {
     const { fetchMock } = await renderLoaded()

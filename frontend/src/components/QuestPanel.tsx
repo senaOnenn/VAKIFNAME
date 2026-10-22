@@ -185,6 +185,10 @@ export const QuestPanel = forwardRef<HTMLElement, Props>(function QuestPanel({ p
     <aside ref={ref} className="quest-panel" aria-label="Aktif görev" tabIndex={-1}>
       {place && status ? (
         <div className="quest-panel__content">
+          <p className="sheet-top" aria-hidden="true">
+            <span>VAKIFNAME</span>
+            <span>Görev fişi</span>
+          </p>
           <p className="quest-panel__eyebrow">
             <ScrollIcon /> Aktif görev
           </p>
