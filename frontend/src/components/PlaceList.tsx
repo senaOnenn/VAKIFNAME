@@ -1,6 +1,7 @@
 import type { ApiState } from '../hooks/useApi'
 import type { Place } from '../api/types'
 import { ApiErrorMessage } from './ApiErrorMessage'
+import { drawingVariantFor } from './ArchitectureDrawing'
 import { PlaceCard } from './PlaceCard'
 
 interface Props {
@@ -43,9 +44,14 @@ export function PlaceList({ places, selectedId, onSelect, onRetry }: Props) {
               {places.data.length} eser listelendi.
             </p>
             <ul className="card-grid" aria-label="Eser listesi">
-              {places.data.map((place) => (
+              {places.data.map((place, index) => (
                 <li key={place.id}>
-                  <PlaceCard place={place} selected={place.id === selectedId} onSelect={onSelect} />
+                  <PlaceCard
+                    place={place}
+                    selected={place.id === selectedId}
+                    drawing={drawingVariantFor(index)}
+                    onSelect={onSelect}
+                  />
                 </li>
               ))}
             </ul>

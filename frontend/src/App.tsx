@@ -4,6 +4,7 @@ import type { Place } from './api/types'
 import { describeApiError } from './components/ApiErrorMessage'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
+import { HowItWorks } from './components/HowItWorks'
 import { MapSection } from './components/MapSection'
 import { cardButtonId } from './components/PlaceCard'
 import { PlaceDetail } from './components/PlaceDetail'
@@ -147,6 +148,7 @@ export default function App() {
       <Header />
       <main id="top">
         <Hero />
+        <HowItWorks />
         <PlaceList places={places} selectedId={selectedId} onSelect={selectFromCard} onRetry={places.reload} />
         <MapSection
           ref={mapRef}
@@ -182,12 +184,35 @@ export default function App() {
         </p>
       </main>
       <footer className="site-footer">
-        <div className="container">
-          <p>
-            <strong>VAKIFNAME</strong> · Team HisGuard · KÖK &amp; KOD Hackathonu
-          </p>
-          <p className="site-footer__note">
-            Kurgusal demo kayıtları arayüzde açıkça etiketlenir. Harita verileri © OpenStreetMap katkıcıları.
+        <div className="container site-footer__grid">
+          <div>
+            <p className="site-footer__brand">VAKIFNAME</p>
+            <p>Geçmişin İzinde, Bilginin Işığında.</p>
+            <p className="site-footer__note">Team HisGuard · KÖK &amp; KOD Hackathonu</p>
+          </div>
+          <nav aria-label="Alt menü">
+            <p className="site-footer__heading">Keşfetmeye devam et</p>
+            <ul className="site-footer__links">
+              <li>
+                <a href="#kesfet">Eserler</a>
+              </li>
+              <li>
+                <a href="#gorevler">Görevler</a>
+              </li>
+              <li>
+                <a href="#pasaport">Dijital pasaport</a>
+              </li>
+            </ul>
+          </nav>
+          <div>
+            <p className="site-footer__heading">Bilgi, kaynağıyla değerlidir.</p>
+            <p className="site-footer__note">
+              Kurgusal demo kayıtları arayüzde açıkça etiketlenir. Çizimler temsilidir, eser fotoğrafı değildir. Harita
+              verileri © OpenStreetMap katkıcıları.
+            </p>
+          </div>
+          <p className="site-footer__wordmark" aria-hidden="true">
+            VAKIFNAME
           </p>
         </div>
       </footer>

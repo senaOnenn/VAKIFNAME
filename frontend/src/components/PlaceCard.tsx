@@ -1,10 +1,12 @@
 import type { Place } from '../api/types'
 import { DemoBadge } from './DemoBadge'
-import { ArchIcon, MapPinIcon } from './Icons'
+import { ArchitectureDrawing, type DrawingVariant } from './ArchitectureDrawing'
+import { MapPinIcon } from './Icons'
 
 interface Props {
   place: Place
   selected: boolean
+  drawing: DrawingVariant
   onSelect: (placeId: string) => void
 }
 
@@ -12,12 +14,13 @@ export function cardButtonId(placeId: string) {
   return `place-card-${placeId}`
 }
 
-export function PlaceCard({ place, selected, onSelect }: Props) {
+export function PlaceCard({ place, selected, drawing, onSelect }: Props) {
   const headingId = `place-card-title-${place.id}`
   return (
     <article className={`place-card${selected ? ' place-card--selected' : ''}`} aria-labelledby={headingId}>
-      <div className="place-card__visual" aria-hidden="true">
-        <ArchIcon />
+      <div className="place-card__visual">
+        <ArchitectureDrawing variant={drawing} />
+        <span className="art-label">Temsili çizim · Eser görseli değildir</span>
       </div>
       <div className="place-card__body">
         <div className="place-card__meta">
@@ -39,7 +42,7 @@ export function PlaceCard({ place, selected, onSelect }: Props) {
           aria-pressed={selected}
           onClick={() => onSelect(place.id)}
         >
-          Detayları gör
+          Detayları gör <span aria-hidden="true">↗</span>
         </button>
       </div>
     </article>
