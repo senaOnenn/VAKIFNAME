@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Tasarım aktarım prototipi (yalnızca yerel referans)
+/imports/chatgpt_sites_v1/
