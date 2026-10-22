@@ -1,0 +1,6 @@
+# Dahili V20 RAG ve manifest araçları. Genel backend için GEREKMEZ; ayrı bir sanal ortama kurun.
+-r requirements.txt
+numpy>=2.0,<3.0
+faiss-cpu>=1.8,<2.0
+sentence-transformers>=3.0,<7.0
+pypdf>=5.0,<7.0

@@ -218,3 +218,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Dahili tarihsel veri: asla commit edilmez (bkz. README, "Dahili V20 veri katmanı").
+# Veri repository dışında, /var/lib/vakifname-internal altında tutulur; bunlar yanlışlıkla
+# repo köküne kopyalanabilecek bilinen konumlardır.
+/VAKIFNAME_SERVER_TRANSFER/
+/vakifname-internal/
