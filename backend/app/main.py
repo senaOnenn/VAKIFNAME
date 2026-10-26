@@ -14,7 +14,7 @@ from .ask.service import AskService
 from .ask_routes import RateLimiter, router as ask_router
 from .guide.lexicon import TurkishLexicon
 from .guide.privacy import FaceScreen
-from .guide.provider import DEFAULT_BASE_URL, OpenRouterProvider
+from .guide.registry import DEFAULT_MODELS, build_provider, log_selection
 from .guide.service import GuideService, GuideSettings, budget_from_env
 from .guide_routes import BodyLimit, InFlight, TesterSessions, guide_mode, router as guide_router
 from .monument_routes import router as monument_router
@@ -124,9 +124,14 @@ def create_app(
     # yalnızca dosyadan okunur (bkz. app/guide/secret.py); yoksa rehber mevcut kaynaklı aramaya düşer. Yalnızca `:free`
     # modeller çağrılır; `VAKIFNAME_GUIDE_ALLOW_PAID_MODEL=1` bilinçli olarak verilmedikçe ücretli modele geçilmez.
     app.state.guide_mode = guide_mode()
-    provider = OpenRouterProvider(os.environ.get("VAKIFNAME_GUIDE_BASE_URL", DEFAULT_BASE_URL),
-                                  allow_paid=os.environ.get("VAKIFNAME_GUIDE_ALLOW_PAID_MODEL") == "1",
-                                  reasoning=os.environ.get("VAKIFNAME_GUIDE_REASONING", "off"))
+    # Sağlayıcı seçimi tek yerden: bkz. app/guide/registry.py ve backend/.env.example (VAKIFNAME_GUIDE_PROVIDER, _FALLBACK).
+    # Giriş/anahtar yoksa başka sağlayıcıya sessizce geçilmez; geçersiz ad açılışta hata verir.
+    guide_settings = GuideSettings.from_env()
+    provider, provider_name, _ = build_provider()
+    if not os.environ.get("VAKIFNAME_GUIDE_MODEL") and provider_name in DEFAULT_MODELS:
+        guide_settings.text_model = DEFAULT_MODELS[provider_name]
+    if app.state.guide_mode != "off":
+        log_selection(provider, guide_settings.text_model)
     # Türkçe sözlük (zeyrek; ~9 sn, ~200 MB; arka planda yüklenir): rehberde bozuk sözcük denetimi, Esere Sor'da yazım
     # düzeltmesinin doğru yazılmış ama katalogda geçmeyen sözcükleri ("nereli", "şehirden") değiştirmemesi için. Rehber
     # ve Esere Sor ikisi de kapalıysa yüklenmez. Yüklenene kadar düzeltme yalnızca katalog sözlüğüyle çalışır.
@@ -134,7 +139,7 @@ def create_app(
                and os.environ.get("VAKIFNAME_GUIDE_LEXICON", "on").strip().lower() not in ("0", "off", "false", "no") else None)
     if lexicon is not None:
         app.state.ask.word_check = lexicon.is_word
-    app.state.guide = GuideService(app.state.ask, provider, budget_from_env(), GuideSettings.from_env(), face_screen=FaceScreen(),
+    app.state.guide = GuideService(app.state.ask, provider, budget_from_env(), guide_settings, face_screen=FaceScreen(),
                                    lexicon=lexicon)
     g_min, g_hour, g_global = (int(x) for x in os.environ.get("VAKIFNAME_GUIDE_RATE", "6/60/10").split("/"))
     app.state.guide_limiter = RateLimiter(per_minute=g_min, per_hour=g_hour, global_per_minute=g_global)

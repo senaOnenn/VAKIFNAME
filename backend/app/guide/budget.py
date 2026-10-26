@@ -135,7 +135,7 @@ class CircuitBreaker:
             if kind == "quota":
                 self._open_until = now + max(self.long_cooldown_s, self.until_reset())
                 return
-            if kind in ("no_key", "auth", "insecure_permissions", "invalid", "paid_model_blocked", "paid_usage_detected",
+            if kind in ("no_key", "auth", "not_logged_in", "not_subscription", "insecure_permissions", "invalid", "paid_model_blocked", "paid_usage_detected",
                         "model_mismatch"):
                 self._open_until = now + self.long_cooldown_s
                 return

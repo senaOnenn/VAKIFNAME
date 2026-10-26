@@ -37,6 +37,8 @@ PHOTO_NOTICE = ("Fotoğraf, konum ve cihaz bilgileri silinip yerel yüz taramas�
 
 ERROR_MESSAGES = {
     "no_key": "Yapay zekâ rehberi henüz yapılandırılmadı.",
+    "not_logged_in": "Yapay zekâ rehberi için sağlayıcı hesabında oturum açık değil.",
+    "not_subscription": "Yapay zekâ rehberi abonelik girişiyle değil, API girişiyle açık; güvenlik için devre dışı.",
     "insecure_permissions": "Yapay zekâ rehberi yapılandırması güvenli değil; devre dışı.",
     "invalid": "Yapay zekâ rehberi yapılandırması geçersiz.",
     "auth": "Yapay zekâ sağlayıcısı kimlik doğrulamasını reddetti.",
@@ -443,7 +445,8 @@ class GuideService:
                 "text_model": self.settings.text_model, "vision_model": self.settings.vision_model or self.settings.text_model,
                 "photo_enabled": self.photo_enabled(), "budget": self.budget.status(), "circuit": self.breaker.state(),
                 "deadline_s": self.settings.deadline_s,
-                "lexicon": getattr(self.lexicon, "state", "disabled")}
+                "lexicon": getattr(self.lexicon, "state", "disabled"),
+                "account": (self.provider.describe() if hasattr(self.provider, "describe") else {}) if self.provider else {}}
 
 
 NOT_MATCHED = "Bu görsel kayıtlı Bursa eserleriyle güvenilir şekilde eşleştirilemedi."
