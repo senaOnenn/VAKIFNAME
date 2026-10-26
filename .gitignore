@@ -227,3 +227,20 @@ __marimo__/
 # repo köküne kopyalanabilecek bilinen konumlardır.
 /VAKIFNAME_SERVER_TRANSFER/
 /vakifname-internal/
+
+# Dışa aktarıcının ürettiği genel katalog anlık görüntüsü ve inceleme veritabanları (dağıtım çıktısı).
+/data/public_catalog/
+*.sqlite3
+
+# Giriş videosu ve diğer büyük medya depoda tutulmaz; sunucuda ../vakifname-video-assets/ altındadır
+# (bkz. frontend/heroVideo.ts). Derleme çıktısındaki kopya (dist/media/) zaten yok sayılır.
+*.mp4
+*.webm
+*.mov
+/frontend/public/media/
+
+# Lisansı doğrulanmamış içe aktarılan görseller (ör. kitaplardan çıkarılmış fotoğraflar): repoya girmez.
+data/import/
+
+# Uçtan uca betiklerin yanlış dizine (ör. tanımsız yol) yazdığı ekran görüntüleri.
+/frontend/undefined/
