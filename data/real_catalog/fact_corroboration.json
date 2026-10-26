@@ -1,0 +1,2268 @@
+{
+  "schema_version": "vakifname-fact-corroboration-v1",
+  "generated_at": "2026-10-24",
+  "prepared_by": "Claude Code (otomatik masa başı araştırma; editör kararı değildir)",
+  "policy": {
+    "public_text": "Yayın metni yalnızca bağımsız kaynakla desteklenen kısmı içerir ve kaynak kitabın cümlelerini kopyalamaz.",
+    "excerpts": "Kaynak alıntıları yalnızca iç inceleme içindir; genel kataloğa yazılmaz.",
+    "approval": "Bu dosya hiçbir onay içermez. Yayın, kayıtlı editör kararı (fact_editorial + fact_publication) ile olur.",
+    "page_check": "80 olgunun tamamında kaynak kitap alıntısının belirtilen fiziksel PDF sayfasında bulunduğu yeniden doğrulandı (71 birebir, 9 kelime örtüşmesi %67–100)."
+  },
+  "sources": [
+    {
+      "source_id": "IS-KP-0001",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Bursa Ulu Cami (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KP-0003",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Muradiye Camii (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/muradiye-camii",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KPE-0003",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "II. Murat (Muradiye) Cami (Kültür Envanteri)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/ii-murat-muradiye--cami",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KPE-0005",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Muradiye Medresesi (Kültür Envanteri)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/muradiye-medresesi",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KP-0007",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "II. Murad Türbesi (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/ii-murad-turbesi",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KP-0008",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Cem Sultan Türbesi (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/cem-sultan-turbesi",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KPM-0008",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Şehzade Sultan Mustafa ve Sultan Cem Türbesi (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/sehzade-sultan-mustafa-ve-sultan-cem-turbesi",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KP-0009",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Koza Han (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/koza-han",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KPE-0009",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Koza Han Mescidi (Kültür Envanteri)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/koza-han-mescidi",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-TDV-0009",
+      "kind": "scholarly_encyclopedia",
+      "publisher": "TDV İslâm Ansiklopedisi",
+      "title": "Koza Hanı (Semavi Eyice, 2002)",
+      "url": "https://islamansiklopedisi.org.tr/koza-hani",
+      "accessed_at": "2026-10-24",
+      "access_note": "Sayfa otomatik indirmeyi engelliyor (HTTP 403); içerik arama dizini özetinden alındı. Editör maddeyi tarayıcıda açıp doğrulamalıdır."
+    },
+    {
+      "source_id": "IS-KP-0013",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Pirinç Han (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/pirinc-han",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-AB-0013",
+      "kind": "municipal_heritage",
+      "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+      "title": "Pirinç Han (Han-ı Cedid-i Sani)",
+      "url": "https://alanbaskanligi.bursa.bel.tr/pirinc-han-han-i-cedid-i-sani-han-i-cedid-i-evvel/",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-TDV-0013",
+      "kind": "scholarly_encyclopedia",
+      "publisher": "TDV İslâm Ansiklopedisi",
+      "title": "Pirinç Hanı (Doğan Yavaş, 2007)",
+      "url": "https://islamansiklopedisi.org.tr/pirinc-hani",
+      "accessed_at": "2026-10-24",
+      "access_note": "Sayfa otomatik indirmeyi engelliyor (HTTP 403); içerik arama dizini özetinden alındı. Editör maddeyi tarayıcıda açıp doğrulamalıdır."
+    },
+    {
+      "source_id": "IS-KP-0014",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Yıldırım Bayezid Bedesteni (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/yildirim-beyazid-bedesteni",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-AB-0014",
+      "kind": "municipal_heritage",
+      "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+      "title": "Bedesten",
+      "url": "https://alanbaskanligi.bursa.bel.tr/bedesten/",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KP-0019",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Osman Gazi Türbesi (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KP-0020",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Orhan Gazi Türbesi (Gezilecek Yerler)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/orhangazi-turbesi",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KPE-0020",
+      "kind": "official_portal",
+      "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+      "title": "Orhan Gazi Türbesi (Kültür Envanteri)",
+      "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/orhan-gazi-turbesi",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-AB-TURBE",
+      "kind": "municipal_heritage",
+      "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+      "title": "Osman Gazi ve Orhan Gazi Türbeleri",
+      "url": "https://alanbaskanligi.bursa.bel.tr/osman-gazi-ve-orhan-gazi-turbeleri/",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-AB-MURADIYE",
+      "kind": "municipal_heritage",
+      "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+      "title": "Muradiye (Sultan II. Murad) Külliyesi",
+      "url": "https://alanbaskanligi.bursa.bel.tr/muradiye-sultan-ii-murad-kulliyesi/",
+      "accessed_at": "2026-10-24",
+      "access_note": null
+    },
+    {
+      "source_id": "IS-KURE-ULUCAMI",
+      "kind": "scholarly_encyclopedia",
+      "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+      "title": "“Ulucami” maddesi — Bursa Ulucamii bölümü",
+      "url": "https://kureansiklopedi.com/tr/detay/ulucami",
+      "accessed_at": "2026-10-24",
+      "access_note": "TDV İslâm Ansiklopedisi sitesi otomatik erişimi engellediği için (HTTP 403) madde metni, aynı maddeyi yazar adıyla yayımlayan KÜRE Ansiklopedi sayfasından okundu. Editör TDV sayfasını tarayıcıda karşılaştırabilir. TDV adresi: https://islamansiklopedisi.org.tr/ulucami"
+    },
+    {
+      "source_id": "IS-KURE-MURADIYE",
+      "kind": "scholarly_encyclopedia",
+      "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+      "title": "Doğan Yavaş, “Murâdiye Külliyesi” (Bursa)",
+      "url": "https://kureansiklopedi.com/tr/detay/muradiye-kulliyesi-3",
+      "accessed_at": "2026-10-24",
+      "access_note": "TDV İslâm Ansiklopedisi sitesi otomatik erişimi engellediği için (HTTP 403) madde metni, aynı maddeyi yazar adıyla yayımlayan KÜRE Ansiklopedi sayfasından okundu. Editör TDV sayfasını tarayıcıda karşılaştırabilir. TDV adresi: https://islamansiklopedisi.org.tr/muradiye-kulliyesi--bursa"
+    },
+    {
+      "source_id": "IS-KURE-CEM",
+      "kind": "scholarly_encyclopedia",
+      "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+      "title": "Semavi Eyice, “Cem Sultan Türbesi”",
+      "url": "https://kureansiklopedi.com/tr/detay/cem-sultan-turbesi-2",
+      "accessed_at": "2026-10-24",
+      "access_note": "TDV İslâm Ansiklopedisi sitesi otomatik erişimi engellediği için (HTTP 403) madde metni, aynı maddeyi yazar adıyla yayımlayan KÜRE Ansiklopedi sayfasından okundu. Editör TDV sayfasını tarayıcıda karşılaştırabilir. TDV adresi: https://islamansiklopedisi.org.tr/cem-sultan-turbesi"
+    },
+    {
+      "source_id": "IS-KURE-KOZA",
+      "kind": "scholarly_encyclopedia",
+      "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+      "title": "Semavi Eyice, “Koza Hanı” (tam metin)",
+      "url": "https://kureansiklopedi.com/tr/detay/koza-hani",
+      "accessed_at": "2026-10-24",
+      "access_note": "TDV İslâm Ansiklopedisi sitesi otomatik erişimi engellediği için (HTTP 403) madde metni, aynı maddeyi yazar adıyla yayımlayan KÜRE Ansiklopedi sayfasından okundu. Editör TDV sayfasını tarayıcıda karşılaştırabilir. TDV adresi: https://islamansiklopedisi.org.tr/koza-hani"
+    },
+    {
+      "source_id": "IS-KURE-PIRINC",
+      "kind": "scholarly_encyclopedia",
+      "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+      "title": "Doğan Yavaş, “Pirinç Hanı” (tam metin)",
+      "url": "https://kureansiklopedi.com/tr/detay/pirinc-hani",
+      "accessed_at": "2026-10-24",
+      "access_note": "TDV İslâm Ansiklopedisi sitesi otomatik erişimi engellediği için (HTTP 403) madde metni, aynı maddeyi yazar adıyla yayımlayan KÜRE Ansiklopedi sayfasından okundu. Editör TDV sayfasını tarayıcıda karşılaştırabilir. TDV adresi: https://islamansiklopedisi.org.tr/pirinc-hani"
+    },
+    {
+      "source_id": "IS-KURE-BEDESTEN",
+      "kind": "scholarly_encyclopedia",
+      "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+      "title": "Semavi Eyice, “Bedesten” — Bursa Bedesteni bölümü",
+      "url": "https://kureansiklopedi.com/tr/detay/bedesten-2",
+      "accessed_at": "2026-10-24",
+      "access_note": "TDV İslâm Ansiklopedisi sitesi otomatik erişimi engellediği için (HTTP 403) madde metni, aynı maddeyi yazar adıyla yayımlayan KÜRE Ansiklopedi sayfasından okundu. Editör TDV sayfasını tarayıcıda karşılaştırabilir. TDV adresi: https://islamansiklopedisi.org.tr/bedesten"
+    },
+    {
+      "source_id": "IS-KURE-ORHAN",
+      "kind": "scholarly_encyclopedia",
+      "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+      "title": "Doğan Yavaş, “Orhan Gazi Türbesi”",
+      "url": "https://kureansiklopedi.com/tr/detay/orhan-gazi-turbesi",
+      "accessed_at": "2026-10-24",
+      "access_note": "TDV İslâm Ansiklopedisi sitesi otomatik erişimi engellediği için (HTTP 403) madde metni, aynı maddeyi yazar adıyla yayımlayan KÜRE Ansiklopedi sayfasından okundu. Editör TDV sayfasını tarayıcıda karşılaştırabilir. TDV adresi: https://islamansiklopedisi.org.tr/orhan-gazi-turbesi"
+    },
+    {
+      "source_id": "IS-WHMP-2021",
+      "kind": "municipal_heritage",
+      "publisher": "Bursa Büyükşehir Belediyesi — Bursa Alan Başkanlığı (hazırlayan: Dizayn Turizm)",
+      "title": "Bursa and Cumalıkızık World Heritage Site Management Plan 2021–2026",
+      "url": "https://antalya.ktb.gov.tr/Eklenti/93128,uyp-bursa-and-cumalikizik-management-planpdf.pdf",
+      "accessed_at": "2026-10-24",
+      "access_note": "Kültür ve Turizm Bakanlığı sunucusundaki İngilizce PDF; sayfa numaraları PDF sayfasıdır."
+    },
+    {
+      "source_id": "IS-UU-ALTUN-2024",
+      "kind": "academic_thesis",
+      "publisher": "Bursa Uludağ Üniversitesi, Sosyal Bilimler Enstitüsü",
+      "title": "Fatma Gül Altun, Arşiv Belgeleri Işığında Bursa Murâdiye Külliyesi (doktora tezi, 2024)",
+      "url": "https://acikerisim.uludag.edu.tr/items/6647e05b-ae8c-4308-abe0-d26b9b8b9151",
+      "accessed_at": "2026-10-24",
+      "access_note": "Açık erişim PDF. Alıntılarda basılı sayfa ve PDF sayfası birlikte verildi; tez Osmanlı arşiv belgelerini (BOA, Bursa şer‘iyye sicilleri) aktarır."
+    },
+    {
+      "source_id": "IS-UU-YEKE-2024",
+      "kind": "academic_thesis",
+      "publisher": "Bursa Uludağ Üniversitesi, Fen Bilimleri Enstitüsü",
+      "title": "Saliha Tupal Yeke, Bursa Muradiye Külliyesi Türbelerinde Gerçekleştirilen Koruma ve Onarım Müdahalelerinin Tarihsel Arka Planı (doktora tezi, 2024)",
+      "url": "https://acikerisim.uludag.edu.tr/items/a7299c72-c430-471d-97f2-c0f176e50676",
+      "accessed_at": "2026-10-24",
+      "access_note": "Açık erişim PDF. Alıntılarda basılı sayfa ve PDF sayfası birlikte verildi."
+    },
+    {
+      "source_id": "IS-NEWS-MYNET-2012",
+      "kind": "news_report",
+      "publisher": "Mynet (özel haber, 20.10.2012)",
+      "title": "Yunan İşgalinin İzleri Cami Duvarından Çıktı",
+      "url": "https://www.mynet.com/ozel-haber-yunan-isgalinin-izleri-cami-duvarindan-cikti-180100490133",
+      "accessed_at": "2026-10-24",
+      "access_note": "Basın haberi; resmî belge değildir. Haberdeki bilgi restoratör beyanına dayanır."
+    }
+  ],
+  "facts": [
+    {
+      "fact_id": "BUR-0001-F001",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0001",
+          "excerpt": "Yıldırım Bayezid zamanında, 1396-1400 yılları arasında yapılmıştır. … Minber kapısı üzerindeki kitabe, caminin bitiş tarihini Hicri 802 (1399-1400) olarak göstermektedir."
+        }
+      ],
+      "public_title": "Yıldırım Bayezid'in camisi",
+      "public_text": "Ulu Cami'yi Sultan Yıldırım Bayezid yaptırmıştır. Minber kapısının üstündeki kitabeye göre yapı Hicrî 802 yılında, yani 1399–1400'de tamamlanmıştır.",
+      "notes": "Banisi ve bitiş tarihi Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Bursa Ulu Cami'yi hangi padişah yaptırmıştır?",
+        "choices": [
+          "II. Murad",
+          "Fatih Sultan Mehmed",
+          "Yıldırım Bayezid",
+          "Orhan Gazi"
+        ],
+        "answer_index": 2,
+        "explanation": "Ulu Cami, Yıldırım Bayezid döneminde yapılmış ve 1399–1400'de tamamlanmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0001-F002",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-ULUCAMI",
+          "excerpt": "Mimarı kesin olarak bilinmemekle beraber Ali Neccâr ya da Hacı İvaz Paşa tarafından inşa edildiği düşünülmektedir. Bursa salnâmelerinde … binayı yapan mimarın Rum olduğu … doğruluk derecesi tartışılabilir."
+        }
+      ],
+      "public_title": "Ulu Cami'nin mimarı kim?",
+      "public_text": "Ulu Cami'yi kimin tasarladığı kesin olarak bilinmiyor. Araştırmacılar en çok Ali Neccâr ile Hacı İvaz Paşa'nın adlarını anıyor; ancak bu adlar bir kitabe ya da belgeyle kanıtlanmış değil, yalnızca birer ihtimal. Eski Bursa salnamelerinde mimarın Rum olduğuna dair bir kayıt da geçer, fakat bu bilginin güvenilirliği tartışmalıdır.",
+      "notes": "Belirsizlik korunarak yayına hazırlandı. Mimar adları kesin bilgi olarak değil, ihtimal olarak sunuluyor.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-644617a3e8f7eb61",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "TDV İslâm Ansiklopedisi “Ulucami” maddesi bağımsız kaynak olarak eklendi.",
+          "Mimar adayları yayın metninde açıkça ihtimal olarak sunuldu; kesinlik ifadesi kullanılmadı."
+        ],
+        "removed_details": [
+          "Konyalı Mimar Hacı Alâaddin ve “esir düşen gayrimüslim mimar” adaylığı (bağımsız kaynakta yok)."
+        ],
+        "pending_evidence": [
+          "Editör notunda Kültür Portalı ve Bursa Alan Başkanlığı'nın Ali Neccâr'ı andığı belirtiliyor; bu oturumda okunan Kültür Portalı Ulu Cami sayfasında mimar adı geçmedi, bu yüzden o sayfa kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0001-F003",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0001",
+          "excerpt": "Ulu Cami'nin ilk imamı, Mevlid'in yazarı Süleyman Çelebi'dir."
+        }
+      ],
+      "public_title": "İlk imam: Süleyman Çelebi",
+      "public_text": "Caminin ilk imamı, halk arasında Mevlid diye bilinen eserin yazarı Süleyman Çelebi'dir.",
+      "notes": "Kültür Portalı ile birebir örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Ulu Cami'nin ilk imamı kimdir?",
+        "choices": [
+          "Somuncu Baba",
+          "Molla Fenârî",
+          "Emir Sultan",
+          "Süleyman Çelebi"
+        ],
+        "answer_index": 3,
+        "explanation": "İlk imam, Mevlid'in yazarı Süleyman Çelebi'dir. Somuncu Baba ise ilk namazı kıldıran kişi olarak anılır."
+      }
+    },
+    {
+      "fact_id": "BUR-0001-F004",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0001",
+          "excerpt": "55 x 69 metre ölçülerinde, dikdörtgen planlı bir yapıdır. … On iki ayak üzerine yirmi kubbe ile üzeri örtülmüş"
+        }
+      ],
+      "public_title": "Yirmi kubbeli dev yapı",
+      "public_text": "Yaklaşık 55 × 69 metrelik dikdörtgen bir plana oturan cami, on iki ayağa dayanan yirmi kubbeyle örtülüdür.",
+      "notes": "Ölçüler ve kubbe sayısı Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Ulu Cami'nin üstünü kaç kubbe örter?",
+        "choices": [
+          "12",
+          "9",
+          "16",
+          "20"
+        ],
+        "answer_index": 3,
+        "explanation": "Cami, on iki ayağa oturan yirmi kubbeyle örtülüdür."
+      }
+    },
+    {
+      "fact_id": "BUR-0001-F005",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0001",
+          "excerpt": "Minber, … Antepli Hacı Mehmet b. Abdülaziz el Dukki'nin eseridir. … tutkal ve çivi kullanılmadan geometrik şekilde oyularak birbirine geçme tekniği ile"
+        }
+      ],
+      "public_title": "Çivisiz minber",
+      "public_text": "Ceviz ağacından yapılan minber, parçaların çivi ve tutkal kullanılmadan birbirine geçirildiği kündekâri tekniğiyle yapılmıştır. Ustası Abdülaziz oğlu Hacı Mehmed'dir; adı kaynaklarda Muhammed biçiminde de geçer.",
+      "notes": "Usta adının yazımı farklı: kitap 'Hacı Muhammed bin Abdülazîz ibnü'd-Dakkî', Kültür Portalı 'Hacı Mehmet b. Abdülaziz el Dukki'.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Ulu Cami minberinde hangi teknik kullanılmıştır?",
+        "choices": [
+          "Kündekâri",
+          "Çini mozaik",
+          "Kalem işi",
+          "Malakâri"
+        ],
+        "answer_index": 0,
+        "explanation": "Minber, parçaların çivi ve tutkal olmadan birbirine geçirildiği kündekâri tekniğiyle yapılmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0001-F006",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-ULUCAMI",
+          "excerpt": "Mihraptaki süslemeler 1862 yılında Bursa'ya sürgün edilen Tevfik Paşa tarafından yaptırılmıştır. Mihrabı çevreleyen dört frizden biri kûfî yazı kuşağı, biri stilize motif kuşağı, diğer ikisi bitkisel süsleme kuşağı halinde düzenlenmiştir. … rûmîlerden teşekkül eden büyük bir kandil motifi"
+        }
+      ],
+      "public_title": "Mihraptaki 19. yüzyıl süslemeleri",
+      "public_text": "Ulu Cami'nin mihrabındaki bugünkü süslemeler 19. yüzyıla aittir. 1862'de Bursa'ya sürgün edilen Tevfik Paşa, mihrabı çevreleyen kûfî yazılı kuşağı, stilize ve bitkisel motifli kuşakları ve ortadaki büyük kandil motifini yaptırdı. Tevfik Paşa'nın adı mihrabın kendisiyle değil, onun sonradan yapılan bu süslemeleriyle bağlantılıdır.",
+      "notes": "Tevfik Paşa'nın rolü süslemelerle sınırlandırıldı. Kültür Portalı mihrabın yapımına ilişkin farklı bir bilgi veriyor (1751, Mehmet usta); metin mihrabın yapım tarihini anmıyor.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-ef223d6f79b7cd48",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "TDV İslâm Ansiklopedisi “Ulucami” maddesi bağımsız kaynak olarak eklendi; doğrulama durumu “yalnızca kitapta”dan “tutarsızlık notuyla doğrulandı”ya güncellendi.",
+          "Yayın metni Tevfik Paşa'nın mihrabı değil, sonraki süslemelerini yaptırdığını açıkça belirtiyor."
+        ],
+        "removed_details": [],
+        "pending_evidence": [
+          "Editör notunda anılan Bursa Büyükşehir Belediyesi yayını bu oturumda açılamadı; kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0001-F007",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0001",
+          "excerpt": "Zarif sekiz sütun üzerine oturan yüksek ve sade müezzin mahfili, 1549 yılında yaptırılmıştır."
+        }
+      ],
+      "public_title": "1549 tarihli müezzin mahfili",
+      "public_text": "Sekiz sütun üzerinde yükselen sade müezzin mahfili 1549 yılında yaptırılmıştır.",
+      "notes": "Yalnızca mahfilin tarihi doğrulandı. Şair Rahîmî'nin kıtası ve 'camide tarihi bilinen en eski kitabe' iddiası bağımsız kaynakta yok; yayın metnine alınmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0001-F008",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0001",
+          "excerpt": "caminin ortasındaki kubbenin üstü açıktır. Son yıllarda bu açıklık camla kaplanmıştır. … Kubbenin altında yer alan bu şadırvanın on altı köşeli havuzu"
+        }
+      ],
+      "public_title": "Açık kubbe ve şadırvan",
+      "public_text": "Ortadaki kubbenin tepesi açık bırakılmış, altına on altı köşeli havuzu olan bir şadırvan yapılmıştır. Bu açıklık son yıllarda camla kapatılmıştır.",
+      "notes": "Kültür Portalı ile örtüşüyor; camla kapatılma bilgisi portaldan eklendi.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Ulu Cami'nin ortasındaki açık kubbenin altında ne bulunur?",
+        "choices": [
+          "Hünkâr mahfili",
+          "Şadırvan",
+          "Minber",
+          "Mihrap"
+        ],
+        "answer_index": 1,
+        "explanation": "Ortadaki kubbenin altında on altı köşeli havuzu olan bir şadırvan vardır."
+      }
+    },
+    {
+      "fact_id": "BUR-0001-F009",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0001",
+          "excerpt": "İki minaresi olan caminin batıdaki minaresi Yıldırım Bayezid, doğudaki minaresi ise Çelebi Sultan Mehmed zamanında yaptırılmıştır."
+        }
+      ],
+      "public_title": "İki minare, iki dönem",
+      "public_text": "Batı minaresi Yıldırım Bayezid döneminde yapılmıştır. Doğu minaresinin Çelebi Mehmed döneminde tamamlandığı kabul edilir; kaynak kitap Yavuz Sultan Selim dönemini de olasılık olarak anar.",
+      "notes": "Kültür Portalı doğu minaresini kesin olarak Çelebi Mehmed'e veriyor; kitap tahmin olarak iki dönem sayıyor. Kesinlik 'uncertain' olarak korunmalı.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0001-F010",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0001",
+          "excerpt": "Timur istilasında tahrip edilen cami, bu yıllarda tamir edilmiş, en büyük onarımı ise 1855 depreminden sonra yapılmıştır."
+        }
+      ],
+      "public_title": "1855 depremi sonrası onarım",
+      "public_text": "Timur istilasında zarar gören cami tarih boyunca birçok kez onarılmıştır. En kapsamlı onarımı 1855 depreminden sonra yapılmıştır.",
+      "notes": "1862'de yeniden ibadete açılma bilgisi bağımsız kaynakta yok; yayın metnine alınmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": {
+        "question": "Ulu Cami en kapsamlı onarımını hangi olaydan sonra geçirmiştir?",
+        "choices": [
+          "Timur istilası",
+          "Kapalıçarşı yangını",
+          "Birinci Dünya Savaşı",
+          "1855 depremi"
+        ],
+        "answer_index": 3,
+        "explanation": "Kültür Portalı'na göre en büyük onarım 1855 depreminden sonra yapılmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0003-F001",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0003",
+          "excerpt": "kapı kemeri üzerindeki yapım kitabesinden II. Murat tarafından 1425-26 yıllarında yaptırıldığı anlaşılmaktadır."
+        },
+        {
+          "source_id": "IS-AB-MURADIYE",
+          "excerpt": "Sultan II. Murad tarafından 1425 yılında yaptırılmaya başlanan külliye"
+        }
+      ],
+      "public_title": "II. Murad'ın camisi",
+      "public_text": "Kapı kemerinin üstündeki yapım kitabesine göre Muradiye Camii'ni Sultan II. Murad 1425–1426 yıllarında yaptırmıştır.",
+      "notes": "Kültür Portalı ve Alan Başkanlığı ile örtüşüyor. Bu olgunun editör onayı (fact_editorial) gerçek veritabanında zaten kayıtlı.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Muradiye Camii'ni hangi padişah yaptırmıştır?",
+        "choices": [
+          "Yıldırım Bayezid",
+          "Fatih Sultan Mehmed",
+          "Orhan Gazi",
+          "II. Murad"
+        ],
+        "answer_index": 3,
+        "explanation": "Yapım kitabesine göre cami 1425–1426'da Sultan II. Murad tarafından yaptırılmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0003-F002",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-MURADIYE",
+          "excerpt": "Külliyenin ana binası olup beş gözlü son cemaat yeri, arka arkaya iki büyük kubbeli harim kısmı ve iki yanda birer kubbeli tabhâneye sahiptir."
+        },
+        {
+          "source_id": "IS-UU-YEKE-2024",
+          "excerpt": "s. 40 (PDF 66): Zaviyeli camiler plan tipine dahil edilen yapının … Kapalı avlunun iki tarafında eyvan şeklinde konumlandırılmış tabhaneler, güney bölümünde ise harim yer almaktadır."
+        }
+      ],
+      "public_title": "Tabhaneli bir sultan camisi",
+      "public_text": "Muradiye Camii, erken Osmanlı döneminin “zaviyeli” ya da “tabhaneli” denen cami tipindedir. Girişten sonra gelen orta mekânın iki yanında, yolcuları ve dervişleri ağırlamak için yapılmış kubbeli odalar (tabhaneler) yer alır. Caminin önünde ise beş gözlü bir son cemaat yeri uzanır.",
+      "notes": "Plan şeması ve beş gözlü son cemaat yeri iki bağımsız kaynakla doğrulandı.",
+      "recommended_action": "approve_publication",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-0187bfae024fa139",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "TDV İslâm Ansiklopedisi “Murâdiye Külliyesi” maddesi ve Yeke (2024) doktora tezi bağımsız kaynak olarak eklendi.",
+          "Özgün Türkçe yayın metni hazırlandı."
+        ],
+        "removed_details": [],
+        "pending_evidence": [
+          "Editör notunda anılan Visit Bursa ve Bursa Alan Başkanlığı sayfaları bu oturumda bu ayrıntı için açılamadı; kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0003-F003",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KPE-0003",
+          "excerpt": "Muradiye Camisi'nin duvarları üç sıra tuğla, bir sıra moloz taşı ve dikey tuğla ile örülmüş"
+        }
+      ],
+      "public_title": "Tuğla ve taş duvarlar",
+      "public_text": "Caminin duvarları, erken Osmanlı Bursa yapılarında sık görülen düzende üç sıra tuğla ile bir sıra taşın dönüşümlü dizilmesiyle örülmüştür.",
+      "notes": "Kültür envanteri kaydı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Muradiye Camii'nin duvarlarında hangi örgü düzeni görülür?",
+        "choices": [
+          "Ahşap karkas",
+          "Üç sıra tuğla, bir sıra taş",
+          "Yalnız kesme taş",
+          "Yalnız tuğla"
+        ],
+        "answer_index": 1,
+        "explanation": "Duvarlar üç sıra tuğla ve bir sıra taşın dönüşümlü dizilmesiyle örülmüştür."
+      }
+    },
+    {
+      "fact_id": "BUR-0003-F004",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-UU-ALTUN-2024",
+          "excerpt": "s. 54 (PDF 72), 1155/1743 tarihli sicil kaydı (BŞS B 124): … uzun zamandır kullanılmayan ve boş olan tabhânelerin duvarları kaldırılarak ibadet mekânına dâhil edilmeleri suretiyle caminin genişletilmesi elzem haline gelmiştir."
+        },
+        {
+          "source_id": "IS-UU-ALTUN-2024",
+          "excerpt": "s. 62–63 (PDF 80–81): 1315/1897 yılında caminin genişletme tamirinin yapılmakta olduğu … genişletme tamiri tamamlanan caminin açılış merasimi (12 Ocak 1898) … 1903 tarihli belge: “cenahlar güşâdıyla tevsî‘an ta‘mirâtı”."
+        }
+      ],
+      "public_title": "Yan odaların ibadet alanına katılması",
+      "public_text": "Zamanla işlevini yitiren yan odalar (tabhaneler), harimden ayıran duvarları kaldırılarak caminin ibadet alanına katıldı; böylece kalabalık cemaate daha geniş bir mekân açıldı. Osmanlı arşiv belgeleri hem 18. yüzyıla hem de 19. yüzyılın sonuna ait genişletme çalışmalarından söz ettiği için bu dönüşümün tam olarak hangi yıl yapıldığı kesinleşmiş değildir.",
+      "notes": "Editör kararı uygulandı: dönüşüm tarih verilmeden anlatılıyor, 1897 duvarların kaldırılma yılı olarak yazılmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-51fc036694c7864e",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Altun (2024) doktora tezi bağımsız kaynak olarak eklendi.",
+          "Yayın metni tarih vermeden, tabhanelerin ibadet alanına katıldığını anlatacak biçimde yeniden yazıldı."
+        ],
+        "removed_details": [
+          "1897 yılının duvarların kaldırılma yılı olarak verilmesi.",
+          "“II. Abdülhamid'in iradesiyle” ifadesi."
+        ],
+        "pending_evidence": [
+          "Editörün değerlendirmesi için yeni kanıt: Altun'un aktardığı belgelere göre 1743'te tabhane duvarlarının kaldırılması için keşif yapılmış, 1897–98'de ise padişah iradesiyle bir genişletme onarımı tamamlanmıştır. Duvarların hangi tarihte kaldırıldığı bu iki kayıttan kesin olarak çıkarılamıyor."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0003-F005",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KPE-0003",
+          "excerpt": "iç mekanda mihrabın yanındaki duvarlarda altıgen lacivert ve firuze çiniler kullanılmıştır."
+        },
+        {
+          "source_id": "IS-KP-0003",
+          "excerpt": "ana mekanın duvarlarının alt kısmı; lacivert ve firuze renkli altıgen çinilerle süslüdür."
+        }
+      ],
+      "public_title": "Altıgen çiniler",
+      "public_text": "Mihrabın çevresindeki duvarlar altıgen çinilerle kaplıdır. Çinilerin rengi kaynaklarda farklı tanımlanır: resmî kayıtlar lacivert ve firuze, kaynak kitap zümrüt yeşili der.",
+      "notes": "Renk tanımı farklı: kitap 'zümrüt yeşili', Kültür Portalı 'lacivert ve firuze'.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0003-F006",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KPE-0003",
+          "excerpt": "Caminin günümüzdeki mihrabı ve minberi özgün olmayıp, 1790 yılında yapılmış rokoko üslubundadır."
+        }
+      ],
+      "public_title": "Rokoko mihrap",
+      "public_text": "Bugünkü mihrap ve minber özgün değildir; 1790'da rokoko üslubunda yeniden yapılmıştır.",
+      "notes": "Kültür envanteri ile örtüşüyor; gezilecek yer sayfası yenilemenin 18. yüzyıldaki bir yangından sonra yapıldığını ekliyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Muradiye Camii'nin bugünkü mihrabı hangi üsluptadır?",
+        "choices": [
+          "Rokoko",
+          "Selçuklu",
+          "Gotik",
+          "Art nouveau"
+        ],
+        "answer_index": 0,
+        "explanation": "Mihrap ve minber 1790'da rokoko üslubunda yeniden yapılmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0003-F007",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-UU-YEKE-2024",
+          "excerpt": "s. 23 (PDF 49), Parvillée'nin 1874 tarihli kitabından aktarım: “1863'te Bursa kentindeki harap halindeki bazı binalarını restore, ya da daha çok takviye etmek üzere Osmanlı hükümetinden görevlendirildim. Yeşil Cami, I. Mehmet Türbesi, Orhan Camii, Muradiye Camii, Ulu Cami … padişahın komiseri Ahmet Vefik Efendi'nin emri ile benim gerçekleştirdiğim çalışmalar yapıldı”."
+        },
+        {
+          "source_id": "IS-UU-YEKE-2024",
+          "excerpt": "s. 192 (PDF 218): Léon Parvillée, Yeşil Cami, Yeşil Türbe'nin yanı sıra Muradiye Camii'nin onarımlarında görev almıştır."
+        }
+      ],
+      "public_title": "Depremden sonra gelen Fransız usta",
+      "public_text": "1855 depreminde zarar gören Bursa anıtlarının onarımı için Fransız mimar ve dekoratör Léon Parvillée görevlendirildi. Parvillée, 1874'te yayımladığı kitabında 1863'te Osmanlı hükümetince bu işe atandığını ve Ahmed Vefik'in talimatıyla çalıştığı yapılar arasında Muradiye Camii'nin de bulunduğunu yazar. Camide yaptığı müdahalelerin ayrıntıları ise kaynaklarda tek tek belgelenmiş değildir.",
+      "notes": "Parvillée'nin Muradiye Camii'nde çalıştığı kendi beyanıyla doğrulandı. Küçük tutarsızlık: kitap “Vali Ahmet Vefik Paşa döneminde” diyor; Parvillée 1863'te Ahmed Vefik'i “padişahın komiseri” olarak anıyor (valiliği daha sonradır).",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-de72b702f7191564",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Yeke (2024) doktora tezi (Parvillée'nin kendi beyanının aktarımı) bağımsız kaynak olarak eklendi.",
+          "Yayın metni restorasyon ayrıntısı vermeden, görevlendirme ve Muradiye'de çalıştığı bilgisiyle sınırlandı."
+        ],
+        "removed_details": [
+          "“Vali” unvanı (1863'teki görevi komiserlikti)."
+        ],
+        "pending_evidence": [
+          "Editör notunda anılan Uludağ Üniversitesi arşivindeki çalışma büyük olasılıkla bu tezdir; farklı bir yayınsa ayrıca eklenmelidir."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0003-F008",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-NEWS-MYNET-2012",
+          "excerpt": "Muradiye II. Murat Camii'nin restorasyonu sırasında kazınan duvarın altından Yunan sancağı damgasının çıkması … Söz konusu caminin işgal sırasında Yunan ordusu tarafından depo olarak kullanıldı[ğı] … Restoratör: “buraların karargah olarak kullanıldığını düşünüyoruz.”"
+        }
+      ],
+      "public_title": "Duvarın altından çıkan işgal izi",
+      "public_text": "2012'deki restorasyon sırasında caminin bir duvarındaki sıva kazındığında altından bir Yunan sancağı işareti çıktı. Basına yansıyan haberlere göre bu iz, Bursa'nın 1920–1922 yıllarındaki işgali sırasında caminin Yunan askerlerince depo olarak kullanılmasından kalıyor; restoratörler yapının karargâh olarak da kullanılmış olabileceğini söyledi. Bu kullanım haberlere ve restorasyon gözlemlerine dayanıyor, resmî bir belgeyle kesinleşmiş değil.",
+      "notes": "Haberde aktarılan bilgi olarak, belirsizliği belirtilerek hazırlandı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-111a2fedd34015ea",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "20 Ekim 2012 tarihli basın haberi bağımsız kaynak olarak eklendi.",
+          "Yayın metni kesin tarihî hüküm yerine haberlerde aktarılan bir bilgi olarak yazıldı."
+        ],
+        "removed_details": [
+          "Kesin hüküm biçimindeki “depo olarak kullanıldığı sonucu” anlatımı."
+        ],
+        "pending_evidence": [
+          "Editör notunda anılan Bursa'da Bugün (20.10.2012) ve Anadolu Ajansı (28.10.2012) haberleri bu oturumda açılamadı; eklenen haber aynı tarihli özel haberdir.",
+          "Depo kullanımını doğrulayan resmî belge bulunamadı."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0005-F001",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KPE-0005",
+          "excerpt": "16,80 x 16,80 metre ölçüsündeki iç avluya geçilir. … Revakların ardında ondört oda bulunur."
+        }
+      ],
+      "public_title": "Revaklı kare avlu",
+      "public_text": "Medrese, revaklarla çevrili yaklaşık 17 × 17 metrelik kare bir iç avlunun etrafında tek eyvanlı bir plana sahiptir. Öğrenci odalarının sayısı kaynaklarda farklı verilir (14 ya da 16).",
+      "notes": "Oda sayısı farklı: kitap 16 hücre, Kültür Portalı 14 oda diyor. Avlu ölçüsü 17 m / 16,80 m olarak örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Muradiye Medresesi'nin iç avlusu yaklaşık hangi ölçüdedir?",
+        "choices": [
+          "55 × 69 m",
+          "5 × 5 m",
+          "40 × 40 m",
+          "17 × 17 m"
+        ],
+        "answer_index": 3,
+        "explanation": "Revaklı iç avlu yaklaşık 17 × 17 metredir (Kültür Portalı: 16,80 m)."
+      }
+    },
+    {
+      "fact_id": "BUR-0005-F002",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-UU-ALTUN-2024",
+          "excerpt": "s. 266 (PDF 284): Medresenin 16 odası bulunduğuna göre ilk dönemlerde 2 odanın bekâr müderris ve muîde ayrıldığı tahmin edilmektedir."
+        },
+        {
+          "source_id": "IS-KURE-MURADIYE",
+          "excerpt": "Caminin batısında yer alan medrese on altı hücresi … Her odada bir ocak, bir pencere ve duvarlarda üçer niş, köşe odalarında ise ikişer pencere ve altışar niş bulunmaktadır."
+        }
+      ],
+      "public_title": "Hocalar için ayrılan odalar",
+      "public_text": "Medresenin on altı hücresinden ikisinin, ilk dönemlerde dersleri yöneten müderris ile ona yardım eden muide ayrıldığı düşünülüyor. Bu bir tahmindir: vakıf kayıtlarında öğrenci sayısı 14–15 olarak geçtiği için araştırmacılar kalan odaların hocalara verildiği sonucuna varıyor. Hangi hücrelerin bu amaçla kullanıldığı kesin olarak bilinmiyor.",
+      "notes": "“Düşünülmektedir” niteliği korundu; oda konumu (güney köşeler) yayın metnine alınmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-4053c9237cdf835b",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Altun (2024) doktora tezi ve TDV “Murâdiye Külliyesi” maddesi bağımsız kaynak olarak eklendi.",
+          "Yayın metninde yorumun tahmin olduğu açıkça belirtildi."
+        ],
+        "removed_details": [
+          "Bu odaların güney köşelerdeki daha geniş hücreler olduğu ayrıntısı (bağımsız kaynakta yok)."
+        ],
+        "pending_evidence": [
+          "Editör notunda anılan Bursa'da Zaman dergisi (Ocak 2015, sayı 13) bu oturumda açılamadı; kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0005-F003",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-UU-ALTUN-2024",
+          "excerpt": "s. 70 (PDF 88): Arşiv belgelerinde medrese ile ilgili … 1603-1951 yılları arasında toplam 18 adet tamir vesikası tespit edilmiştir. … 1012/1603 … 1031/1622'de medresenin kubbe kurşunlarının … onarılmıştır."
+        },
+        {
+          "source_id": "IS-UU-ALTUN-2024",
+          "excerpt": "s. 72 (PDF 90): 15 Cemâziyelâhir 1260/2 Temmuz 1844 tarihli vesikada … medreseye ait 3 odanın kurşunları altındaki ahşap döşemeleri, dokuz odanın iç mekân döşemeleri … tamir"
+        }
+      ],
+      "public_title": "Yüzyıllar boyunca süren onarımlar",
+      "public_text": "Arşiv belgeleri Muradiye Medresesi'nin 17. yüzyılın başından 20. yüzyılın ortasına kadar defalarca onarıldığını gösteriyor. Bu onarımlardan biri 2 Temmuz 1844 tarihli bir keşif kaydında ayrıntılı olarak anlatılır: medresenin bazı odalarının kurşun örtü altındaki ahşap döşemeleri ve iç döşemeleri yenilenmiştir.",
+      "notes": "Yalnızca birebir doğrulanan 1844 onarımı tarihle verildi; 1781 tarihi editör kararıyla çıkarıldı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-06b1d4ee43397598",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Altun (2024) doktora tezi (Osmanlı arşiv belgelerinin dökümü) bağımsız kaynak olarak eklendi.",
+          "Yayın metni doğrulanan 1844 onarımı ve genel onarım geçmişiyle sınırlandı."
+        ],
+        "removed_details": [
+          "1781 onarım tarihi (editör kararı).",
+          "1623 tarihi (aşağıdaki tutarsızlık nedeniyle)."
+        ],
+        "pending_evidence": [
+          "Tutarsızlık: Editör notu 1623'ün desteklendiğini söylüyor; Altun'un çizelgesinde bu dönemdeki kayıt 1031/1622 tarihli. 1623 tarihi birebir doğrulanmadığı için yayın metnine alınmadı.",
+          "Editörün değerlendirmesi için: Altun 1196 Hicrî yılına (Aralık 1781 – Aralık 1782) ait bir medrese onarım kaydı aktarıyor; kitaptaki 1781 bu kayda karşılık geliyor olabilir."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0005-F004",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-MURADIYE",
+          "excerpt": "1855 depreminde cami hafifçe zedelenmiş, minaresi yarılmış, türbe kubbesi ayrılmış, medresenin dershane ve duvarları zarar gördüğü için büyük bir onarım geçirmiştir."
+        }
+      ],
+      "public_title": "1855 depreminin izleri",
+      "public_text": "1855'teki büyük Bursa depremi Muradiye Medresesi'ni de etkiledi. Ders verilen dershane bölümü ve medresenin duvarları hasar gördü ve yapı ardından kapsamlı bir onarımdan geçti.",
+      "notes": "Yayın metni bağımsız kaynakta açıkça geçen hasarla (dershane ve duvarlar) sınırlandırıldı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-6c9c8a1c16e198d0",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "TDV İslâm Ansiklopedisi “Murâdiye Külliyesi” maddesi bağımsız kaynak olarak eklendi.",
+          "Yayın metni desteklenen hasar bilgisiyle sınırlandırıldı."
+        ],
+        "removed_details": [
+          "Dershane duvarlarındaki çatlaklar, dökülen sıvalar ve yıkılan ocak bacaları ayrıntısı."
+        ],
+        "pending_evidence": [
+          "Editör notunda anılan BOA EV. 15785 belgesi (Bursa'da Zaman aktarımı) bu oturumda açılamadı; kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0005-F005",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KPE-0005",
+          "excerpt": "Muradiye Medresesi 1951 yılındaki tamirattan bu yana Verem Savaş Dispanseri olarak hizmet vermektedir."
+        }
+      ],
+      "public_title": "Bir dönem dispanser",
+      "public_text": "Medrese, 1951'deki onarımdan sonra uzun yıllar Verem Savaş Dispanseri olarak kullanılmıştır.",
+      "notes": "Kültür Portalı ile örtüşüyor. Portal bilgisi güncel değil (bkz. F006 ve D-0005-02).",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Muradiye Medresesi 1951'den sonra hangi amaçla kullanıldı?",
+        "choices": [
+          "Verem Savaş Dispanseri",
+          "Postane",
+          "İlkokul",
+          "Kervansaray"
+        ],
+        "answer_index": 0,
+        "explanation": "Medrese 1951'deki onarımdan sonra Verem Savaş Dispanseri olarak kullanılmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0005-F006",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-WHMP-2021",
+          "excerpt": "PDF s. 115: Muradiye Madrasa has been restored by Bursa Metropolitan Municipality and serves the public after being functionalized as a Museum for Muradiye Qur'an and Hand Writings in 2019. — PDF s. 119: It was restored by Bursa Metropolitan Municipality and functionalized in 2019, through the Municipality, as the Muradiye Quran and Manuscript Museum."
+        },
+        {
+          "source_id": "IS-UU-ALTUN-2024",
+          "excerpt": "s. 70 (PDF 88): … 18 Ocak 2019 tarihinden itibaren de Kur'ân ve El Yazmaları Müzesi olarak hizmet vermektedir."
+        }
+      ],
+      "public_title": "Medreseden müzeye",
+      "public_text": "Uzun yıllar verem savaş dispanseri ve kanser tarama merkezi gibi sağlık kuruluşu olarak kullanılan medrese, Bursa Büyükşehir Belediyesi tarafından restore edildi ve 2019'da Muradiye Kur'an ve El Yazmaları Müzesi olarak ziyarete açıldı.",
+      "notes": "Açılış yılı iki bağımsız kaynakla doğrulandı. Kitaptaki 2014–2016 restorasyon tarihi bağımsız kaynakta geçmediği için metne alınmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-2fc8f10a13a7589b",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Dünya Mirası Alan Yönetim Planı (2021–2026) ve Altun (2024) bağımsız kaynak olarak eklendi; “yalnızca kaynak kitapta” değerlendirmesi güncellendi."
+        ],
+        "removed_details": [
+          "2014–2016 restorasyon yılları."
+        ],
+        "pending_evidence": [
+          "Editör notunda anılan belediyenin resmî açılış duyurusu bu oturumda bulunamadı; yerine yönetim planı kullanıldı."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0007-F001",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0007",
+          "excerpt": "kitabede II. Murad'ın 1451 yılında ölümü üzerine vasiyetine uygun olarak oğlu Fatih Sultan Mehmet tarafından yaptırıldığı yazmaktadır."
+        }
+      ],
+      "public_title": "Oğlunun yaptırdığı türbe",
+      "public_text": "Kapı üzerindeki kitabeye göre türbe, Sultan II. Murad'ın 1451'deki ölümünden sonra vasiyetine uygun olarak oğlu Fatih Sultan Mehmed tarafından yaptırılmıştır.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "II. Murad Türbesi'ni kim yaptırmıştır?",
+        "choices": [
+          "Fatih Sultan Mehmed",
+          "II. Bayezid",
+          "Orhan Gazi",
+          "Yavuz Sultan Selim"
+        ],
+        "answer_index": 0,
+        "explanation": "Türbe, II. Murad'ın vasiyeti üzerine oğlu Fatih Sultan Mehmed tarafından yaptırılmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0007-F002",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0007",
+          "excerpt": "II. Murad'ın vasiyeti üzerine türbenin kubbesinin üzeri açık bırakılmış bu açıklığın altında bulunan mermer lahitin üzeri toprakla örtülmüştür."
+        }
+      ],
+      "public_title": "Gökyüzüne açık mezar",
+      "public_text": "II. Murad'ın vasiyeti gereği türbenin kubbesinin ortası açık bırakılmış, mezarın üstü toprakla örtülmüştür.",
+      "notes": "Çelişki: kitap sanduka/lahit kullanılmadığını ve bunun Bursa'daki tek örnek olduğunu yazıyor; Kültür Portalı mermer bir lahdin toprakla örtüldüğünü söylüyor. Bu ayrıntı yayın metnine alınmadı.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "II. Murad'ın vasiyeti gereği türbenin kubbesi nasıl bırakılmıştır?",
+        "choices": [
+          "Altınla kaplı",
+          "Çiniyle kaplı",
+          "Ahşapla örtülü",
+          "Ortası açık"
+        ],
+        "answer_index": 3,
+        "explanation": "Vasiyet gereği kubbenin ortası açık bırakılmış, mezarın üstü toprakla örtülmüştür."
+      }
+    },
+    {
+      "fact_id": "BUR-0007-F003",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0007",
+          "excerpt": "Türbede başka mezar bulunmamaktadır. … doğusunda bulunan pencere kapıya dönüştürülerek bu kısma yeni bir yapı ilave edilmiştir."
+        }
+      ],
+      "public_title": "Tek başına bir sultan",
+      "public_text": "Asıl türbe mekânında II. Murad'dan başka mezar yoktur. Ailesinin bazı üyelerinin sandukaları, sonradan eklenen bitişik bölümdedir.",
+      "notes": "Kültür Portalı ile örtüşüyor; bitişik bölüm bilgisi portaldan eklendi.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0007-F004",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0007",
+          "excerpt": "türbenin kapısı üzerinde bulunan kitabede …"
+        }
+      ],
+      "public_title": "Kapı kitabesi",
+      "public_text": "Türbenin kapısının üstünde, yapılış öyküsünü anlatan bir kitabe bulunur.",
+      "notes": "Kitabenin ölçüleri, hat türü ve satır sayısı bağımsız kaynakta yok; yayın metnine alınmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0007-F005",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0007",
+          "excerpt": "Türbe iki sıra tuğla bir sıra moloz taş dizisi ile inşa edilmiştir."
+        }
+      ],
+      "public_title": "Almaşık duvar",
+      "public_text": "Türbenin duvarları, bir sıra taş ile iki sıra tuğlanın dönüşümlü kullanıldığı almaşık teknikle örülmüştür.",
+      "notes": "Taşın türü farklı: kitap 'kesme taş', Kültür Portalı 'moloz taş'. Yayın metni taş türünü belirtmiyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0007-F006",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-MURADIYE",
+          "excerpt": "İçinde hiçbir süslemenin bulunmadığı türbe, 13,45 × 13,45 m. ile 6,90 × 6,90 m. ebadında iç içe geçmiş iki kareden oluşmaktadır, arada 3,25 m. genişliğinde bir galeri vardır."
+        }
+      ],
+      "public_title": "İç içe iki kare",
+      "public_text": "II. Murad Türbesi'nin planı iç içe iki kareden oluşur: dıştaki kare yaklaşık 13,45 × 13,45 metre, içteki 6,90 × 6,90 metredir. İki kare arasında 3,25 metre genişliğinde bir galeri dolaşır. Sultanın vasiyeti uyarınca hafızların Kur'an okuması için düşünülen bu galeri, ortadaki üstü açık mekânı çevreler.",
+      "notes": "Ölçüler ve galeri genişliği bağımsız kaynakla birebir doğrulandı.",
+      "recommended_action": "approve_publication",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-0bd2f2f6c2a7e935",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "TDV İslâm Ansiklopedisi “Murâdiye Külliyesi” maddesi bağımsız kaynak olarak eklendi; özgün yayın metni hazırlandı."
+        ],
+        "removed_details": [],
+        "pending_evidence": []
+      }
+    },
+    {
+      "fact_id": "BUR-0007-F007",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-MURADIYE",
+          "excerpt": "Orta bölüm, hem kaideleri hem başlıkları devşirme dört sütun ve dört pâye üzerine sivri kemerlerle oturan tromplu kubbe ile örtülüdür."
+        },
+        {
+          "source_id": "IS-UU-ALTUN-2024",
+          "excerpt": "s. 91 (PDF 109), dipnot 507: Türbede dört adet devşirme Bizans sütun başlığı ve gövdesine yer verilmiştir (Gabriel, Bir Türk Başkenti Bursa, 1/116)."
+        }
+      ],
+      "public_title": "Bizans'tan gelen sütunlar",
+      "public_text": "Türbenin ortasındaki kubbe, sivri kemerlerle birbirine bağlanan dört sütun ve dört payeye oturur. Bu sütunların hem kaideleri hem de başlıkları türbe için yeni yapılmamış; Bizans döneminden kalma yapılardan getirilip yeniden kullanılmış (devşirme) parçalardır.",
+      "notes": "Devşirme oluşu TDV'de, Bizans dönemine ait olduğu Altun (Gabriel'e dayanarak) tarafından belirtiliyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-435be3c2c4064d1f",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "TDV “Murâdiye Külliyesi” maddesi ve Altun (2024) bağımsız kaynak olarak eklendi; “yalnızca kaynak kitapta” değerlendirmesi güncellendi."
+        ],
+        "removed_details": [],
+        "pending_evidence": [
+          "Editör notunda anılan Kültür Portalı “II. Murad ve Alaaddin Türbeleri” kaydı ve Bursa turizm portalı bu oturumda açılamadı (turizm portalı ana sayfaya yönlendiriyor); kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0007-F008",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-WHMP-2021",
+          "excerpt": "PDF s. 119, Murad II Mausoleum: … As of 2014, its restoration has been completed."
+        },
+        {
+          "source_id": "IS-UU-YEKE-2024",
+          "excerpt": "s. 262 (PDF 288): 2012-2015 restorasyon çalışmaları sırasında mihrap ve kubbe ortasında yer alan açıklık çevresinde iki farklı katmanda kalem işleri ortaya çıkarılmıştır. Beyaz badananın hemen altındaki katmanda H. 1274 / M. 1858 yıllarında yapılan bezemeler yer almaktadır."
+        }
+      ],
+      "public_title": "Badananın altından çıkan nakışlar",
+      "public_text": "II. Murad Türbesi'nin restorasyonu, Dünya Mirası Alan Yönetim Planı'na göre 2014'te tamamlandı. Külliyenin türbelerinde 2012–2015 arasında yürütülen bu çalışmalarda, II. Murad Türbesi'nin beyaz badanasının altından iki ayrı katman kalem işi bezeme çıktı. Üstteki katmanın 1857–58 yıllarında yapıldığı belirlendi.",
+      "notes": "“Son restorasyon” ifadesi kullanılmadı; yalnızca 2014'te tamamlanan restorasyon ve bu çalışmada ortaya çıkan kalem işleri anlatıldı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-9ea04a5523f587d7",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Dünya Mirası Alan Yönetim Planı (2021–2026) ve Yeke (2024) bağımsız kaynak olarak eklendi.",
+          "“Son restorasyon” yerine 2014'te tamamlanan restorasyon anlatıldı."
+        ],
+        "removed_details": [
+          "Hasarlı saçağın onarıldığı ve kubbe kurşunlarının yenilendiği ayrıntısı (bağımsız kaynakta bu açıklıkta yok)."
+        ],
+        "pending_evidence": []
+      }
+    },
+    {
+      "fact_id": "BUR-0008-F001",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KPM-0008",
+          "excerpt": "Şehzade Mustafa … 1474 yılında … ölünce, Bursa'ya getirilerek önce amcası Alaattin Bey'in türbesine, sonra 1479 yılında yapılan kendi türbesine gömülmüştür."
+        }
+      ],
+      "public_title": "Aslında Şehzade Mustafa için",
+      "public_text": "Bugün Cem Sultan Türbesi diye bilinen yapı, Fatih Sultan Mehmed'in oğlu Şehzade Mustafa için 1479'da yapılmıştır.",
+      "notes": "Kültür Portalı ile örtüşüyor. Açık sorun SOURCE-KINSHIP-BUR-0008-001 önce çözülmeli (bkz. sorun önerisi).",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Cem Sultan Türbesi aslında kimin için yapılmıştır?",
+        "choices": [
+          "Şehzade Mahmud",
+          "Şehzade Mustafa",
+          "Cem Sultan",
+          "II. Murad"
+        ],
+        "answer_index": 1,
+        "explanation": "Yapı 1479'da Fatih'in oğlu Şehzade Mustafa için yapılmış; Cem Sultan 1499'da buraya defnedilmiştir."
+      }
+    },
+    {
+      "fact_id": "BUR-0008-F002",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0008",
+          "excerpt": "1495 yılında İtalya'da ölmüştür. 1499 yılında naaşı Bursa'ya getirilerek Muradiye semtindeki türbeye gömülmüştür."
+        },
+        {
+          "source_id": "IS-KPM-0008",
+          "excerpt": "Şimdiye kadar ayrı ayrı türbelerde sanılan Mustafa ve Cem bir arada gömülüdür."
+        }
+      ],
+      "public_title": "Cem Sultan'ın dönüşü",
+      "public_text": "Avrupa'da sürgündeyken ölen Cem Sultan'ın naaşı 1499'da Bursa'ya getirilmiş ve kardeşi Şehzade Mustafa'nın türbesine defnedilmiştir. Yapı zamanla onun adıyla anılmaya başlanmıştır.",
+      "notes": "Kitap Cem'i Mustafa'nın 'yeğeni' olarak anıyor; ikisi de Fatih'in oğludur (kardeş). Yayın metni 'kardeş' der. Açık sorun SOURCE-KINSHIP-BUR-0008-001 önce çözülmeli.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Cem Sultan'ın naaşı hangi yıl Bursa'ya getirilmiştir?",
+        "choices": [
+          "1499",
+          "1481",
+          "1451",
+          "1855"
+        ],
+        "answer_index": 0,
+        "explanation": "1495'te İtalya'da ölen Cem Sultan'ın naaşı 1499'da Bursa'ya getirilmiştir."
+      }
+    },
+    {
+      "fact_id": "BUR-0008-F003",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KPM-0008",
+          "excerpt": "Türbeye daha sonra sıra ile Fatih'in oğullarından Sultan Abdullah, Sultan Cem 1499 ve Alem Şah gömülmüştür."
+        }
+      ],
+      "public_title": "Dört şehzade",
+      "public_text": "Türbede Şehzade Mustafa, Cem Sultan, Şehzade Abdullah ve Şehzade Alemşah gömülüdür.",
+      "notes": "Gömülü kişiler Kültür Portalı ile örtüşüyor (portal Abdullah ve Alemşah'ı da 'Fatih'in oğulları' arasında sayıyor; kitap onları II. Bayezid'in oğulları olarak veriyor — yayın metni baba adı vermiyor).",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0008-F004",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KPM-0008",
+          "excerpt": "bir sıra taş, bir sıra tuğla dizisi ile örülmüş, altıgen planlı olup, altıgen bir kasnağa oturan dıştan kurşunla kaplı tek kubbe ile örtülmüştür. Giriş revakının her tarafı som mermerden"
+        }
+      ],
+      "public_title": "Altıgen plan",
+      "public_text": "Altıgen planlı türbe taş ve tuğladan örülmüştür. Altıgen bir kasnağa oturan kubbesinin dışı kurşunla kaplıdır; girişte mermer bir revak vardır.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Cem Sultan Türbesi'nin planı hangi biçimdedir?",
+        "choices": [
+          "Kare",
+          "Daire",
+          "Sekizgen",
+          "Altıgen"
+        ],
+        "answer_index": 3,
+        "explanation": "Türbe altıgen planlıdır ve altıgen bir kasnağa oturan kubbeyle örtülüdür."
+      }
+    },
+    {
+      "fact_id": "BUR-0008-F005",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0008",
+          "excerpt": "Türbenin duvarlarının alt kısmında üzerleri altın yaldızlı firuze ve lacivert çiniler, üst kısımlar kalem işi ile süslenmiştir."
+        }
+      ],
+      "public_title": "Yaldızlı çiniler",
+      "public_text": "Duvarların alt bölümü altın yaldızlı firuze ve lacivert altıgen çinilerle, üst bölümü kalem işiyle süslenmiştir.",
+      "notes": "Çinilerin yüksekliği (2,35 m) bağımsız kaynakta yok; yayın metnine alınmadı.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Cem Sultan Türbesi'nin duvar çinileri hangi renklerdedir?",
+        "choices": [
+          "Kırmızı ve sarı",
+          "Siyah ve beyaz",
+          "Yeşil ve mor",
+          "Firuze ve lacivert"
+        ],
+        "answer_index": 3,
+        "explanation": "Duvarların alt kısmı altın yaldızlı firuze ve lacivert çinilerle kaplıdır."
+      }
+    },
+    {
+      "fact_id": "BUR-0008-F006",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-CEM",
+          "excerpt": "Kubbe eteğinde besmele-i şerif ile Âyetü'l-kürsî yazılıdır. Kubbe sathını hatâyî ve rûmî motifler kaplar. … Mihrabın iki yanında alınlık içinde müsennâ birer besmele ile altlarında celî sülüsle “Allahü hâliku külli şey' ve hüve âlâ külli şey'” ibaresi yazılmıştır."
+        }
+      ],
+      "public_title": "Kubbedeki yazı kuşağı",
+      "public_text": "Türbenin kubbesi kalem işi nakışlarla bezelidir: kubbe yüzeyini hatâyî ve rûmî motifler kaplar, kubbenin eteğinde ise besmele ile birlikte Âyetü'l-kürsî yazılıdır. Mihrabın iki yanında birbirinin ayna görüntüsü gibi (müsennâ) yazılmış birer besmele, bunların altında da celî sülüs hatla yazılmış bir ibare yer alır.",
+      "notes": "Doğrulanan süsleme özellikleriyle sınırlandırıldı; altı kartuş ayrıntısı çıkarıldı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-bf4ec4337447302d",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Semavi Eyice'nin TDV “Cem Sultan Türbesi” maddesi bağımsız kaynak olarak eklendi.",
+          "Yayın metni doğrulanan süsleme özellikleriyle sınırlandırıldı."
+        ],
+        "removed_details": [
+          "Âyetü'l-kürsî'nin altı kartuş içinde yazıldığı ayrıntısı (TDV'de altı “rozet” geçiyor, kartuş sayısı geçmiyor)."
+        ],
+        "pending_evidence": [
+          "Editör notunda anılan Bursa Büyükşehir Belediyesi yayını bu oturumda açılamadı; kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0009-F001",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0009",
+          "excerpt": "II. Bayezid tarafından İstanbul'daki cami ve medresesine gelir sağlamak amacıyla yaptırılmıştır."
+        }
+      ],
+      "public_title": "Bir vakıf hanı",
+      "public_text": "Koza Han'ı Sultan II. Bayezid, İstanbul'daki külliyesine gelir sağlamak için yaptırmıştır.",
+      "notes": "Kültür Portalı ile örtüşüyor. TDV maddesi Rıfkı Melûl Meriç'in vakfiye bağlantısına itirazını aktarır.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Koza Han'ın gelirleri nereye aktarılmak üzere yapılmıştır?",
+        "choices": [
+          "Bursa Ulu Cami'ye",
+          "Edirne Sarayı'na",
+          "Mekke vakıflarına",
+          "İstanbul'daki II. Bayezid külliyesine"
+        ],
+        "answer_index": 3,
+        "explanation": "II. Bayezid hanı, İstanbul'daki külliyesine gelir sağlamak için yaptırmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0009-F002",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0009",
+          "excerpt": "1490-1491 yıllarında inşa edilen yapının mimarı …"
+        },
+        {
+          "source_id": "IS-TDV-0009",
+          "excerpt": "1505 tarihli vakfiye suretine göre inşaata Mart 1490'da başlanmış, han 29 Eylül 1491'de açılmıştır (arama dizini özeti)."
+        }
+      ],
+      "public_title": "1490–1491",
+      "public_text": "Han 1490–1491 yıllarında inşa edilmiştir. Kaynak kitap yapımın Mart 1489'da başladığını yazar; başlangıç yılı kaynaklar arasında farklıdır.",
+      "notes": "D-0009-01: kitap Mart 1489, Kültür Portalı ve TDV 1490 diyor. Bitiş 1491'de örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Koza Han hangi yıllarda inşa edilmiştir?",
+        "choices": [
+          "1507–1508",
+          "1425–1426",
+          "1490–1491",
+          "1396–1400"
+        ],
+        "answer_index": 2,
+        "explanation": "Resmî kaynaklara göre Koza Han 1490–1491'de inşa edilmiştir."
+      }
+    },
+    {
+      "fact_id": "BUR-0009-F003",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-KOZA",
+          "excerpt": "Koza Hanı 1950 yıllarına doğru büyük ölçüde bir restorasyon geçirmiş ve bütün parazit eklerden temizlendikten başka gerek han gerek avlusundaki mescid aslî mimarilerine uygun biçimde ihya edilmiştir."
+        },
+        {
+          "source_id": "IS-KPE-0009",
+          "excerpt": "Koza Han Mescidi envanter kaydı — Yapılan Onarımlar: 1630, 1671, 1784, 1946, 2007"
+        }
+      ],
+      "public_title": "1950'ye doğru yapılan büyük restorasyon",
+      "public_text": "Koza Han, 1950'ye doğru kapsamlı bir restorasyondan geçti: sonradan eklenen yapılar temizlendi, han ve avlusundaki mescit özgün mimarisine uygun biçimde yeniden düzenlendi. Avludaki köşk mescidin onarımı ise daha erken bir tarihle de anılır; Kültür envanteri mescidin onarımları arasında 1946 yılını sayar.",
+      "notes": "Hanın genel restorasyonu ile mescidin onarımı ayrı anlatıldı; kurumun çalışması 1950'lere tarihlenmedi.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-b9ec4a6d30456107",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Semavi Eyice'nin TDV “Koza Hanı” maddesinin tam metni ve Kültür envanteri mescit kaydı bağımsız kaynak olarak eklendi.",
+          "Hanın genel restorasyonu ile mescidin onarımı ayrı anlatıldı."
+        ],
+        "removed_details": [
+          "Bursa Eski Eserleri Sevenler Kurumu'nun ahşap üst kat revakını ve ahırları 1950'li yıllarda tamir ettiği ifadesi."
+        ],
+        "pending_evidence": [
+          "Tutarsızlık: Editör notu mescit onarımını akademik kaynaklara dayanarak 1948'e tarihlendiriyor; Kültür envanteri 1946 veriyor. 1948'i veren akademik kaynak bu oturumda bulunamadı.",
+          "Bursa Eski Eserleri Sevenler Kurumu'nun rolü bağımsız kaynakla doğrulanamadı."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0009-F004",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0009",
+          "excerpt": "yapının mimarı Abdullah bin Pulad Şah'tır."
+        },
+        {
+          "source_id": "IS-KPE-0009",
+          "excerpt": "Yapan Abdul-Ula Bin Pulad Şah"
+        },
+        {
+          "source_id": "IS-TDV-0009",
+          "excerpt": "Mimarı Abdülâlî b. Puladşah (arama dizini özeti)."
+        }
+      ],
+      "public_title": "Mimar Pulad Şah oğlu",
+      "public_text": "Hanın mimarı Pulad Şah oğlu Abdülûlâ'dır; adı kaynaklarda Abdullah ve Abdülali biçimlerinde de yazılır.",
+      "notes": "D-0009-02: ad yazımı farklı. Bina emini Şücâ bin Karaca bağımsız kaynakta yok; yayın metnine alınmadı.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0009-F005",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0009",
+          "excerpt": "Yapıya, doğudan bitişik olan tek katlı, avlulu bina Koza Han'ın ahırlar kısmıdır ve İç Koza Han olarak bilinir."
+        }
+      ],
+      "public_title": "Avlu ve İç Koza Han",
+      "public_text": "Han, iki katlı odaların çevrelediği geniş bir avlu ile doğusuna bitişik tek katlı ahır bölümünden oluşur. Bu bölüm bugün İç Koza Han olarak bilinir.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0009-F006",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-KOZA",
+          "excerpt": "Koza Hanı, klasik plana uygun olarak bir avlu etrafında çevrelenmiş altlı üstlü odalardan ve bir ahır-depodan teşekkül etmiştir. Ahır tek katlıdır. … Ahır ise moloz taştan inşa edilmiştir. … Ahır ise ortası avlulu revaklarla çevrili tek katlı bir yapıdır."
+        },
+        {
+          "source_id": "IS-WHMP-2021",
+          "excerpt": "PDF s. 83, Inner Koza Khan: … an area within Koza Khan designated for barns. The one-story building's courtyard is accessible through a 3.66 metered opening from the eastern façade of Koza Khan. Today, the space is used for eating and drinking purposes."
+        }
+      ],
+      "public_title": "İç Koza Han: ahır bölümü",
+      "public_text": "Koza Han'ın, yük hayvanlarının barındırıldığı bir ahır bölümü de vardır. “İç Koza Han” diye de anılan bu bölüm, ortasında avlu bulunan, revaklarla çevrili, tek katlı ve moloz taştan bir yapıdır; avlusuna hanın doğu cephesindeki bir açıklıktan girilir. Bugün yeme içme mekânı olarak kullanılıyor.",
+      "notes": "Doğrulanan mimari bilgilerle sınırlandırıldı; 45 paye sayısı yayımlanmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-63f824cd9e67703d",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "TDV “Koza Hanı” maddesi ve Dünya Mirası Alan Yönetim Planı bağımsız kaynak olarak eklendi.",
+          "Yayın metni ahır bölümünün doğrulanan özellikleriyle sınırlandırıldı."
+        ],
+        "removed_details": [
+          "Ahırın kırk beş paye ile taşındığı ayrıntısı (bağımsız kaynakta yok)."
+        ],
+        "pending_evidence": []
+      }
+    },
+    {
+      "fact_id": "BUR-0009-F007",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0009",
+          "excerpt": "İç avlunun ortasında sekiz ayak üzerine oturtulmuş bir köşk mescit ve üst kattaki ibadet mekanının altında bir şadırvan yer almaktadır."
+        },
+        {
+          "source_id": "IS-KPE-0009",
+          "excerpt": "Şadırvan üstünde bulunan mescit, tümüyle kesme taştan yapılmıştır."
+        }
+      ],
+      "public_title": "Avludaki köşk mescit",
+      "public_text": "Avlunun ortasında, sekiz ayak üzerine oturan ve altında şadırvan bulunan bir köşk mescit yer alır.",
+      "notes": "Kültür Portalı'nın iki kaydı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Koza Han avlusunun ortasında ne bulunur?",
+        "choices": [
+          "Hamam",
+          "Köşk mescit",
+          "Saat kulesi",
+          "Türbe"
+        ],
+        "answer_index": 1,
+        "explanation": "Avlunun ortasında altında şadırvan bulunan bir köşk mescit vardır."
+      }
+    },
+    {
+      "fact_id": "BUR-0009-F008",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-KOZA",
+          "excerpt": "Eski bir belgede bu mescidin yanında günümüzde izi kalmayan ahşaptan ikinci bir mescidin daha olduğu bildirilmekteyse de herhalde esas mescid cemaate yetmediği için bir devirde böyle bir ek yapı inşa edilmiştir."
+        }
+      ],
+      "public_title": "Kaybolan ahşap mescit",
+      "public_text": "Hanın avlusundaki sekizgen köşk mescidin yanında bir zamanlar ahşaptan ikinci bir mescit daha bulunuyordu. Bu bilgi eski bir belgeden gelir; ek mescidin, asıl mescit cemaate yetmediği için yapıldığı düşünülür. Ahşap mescitten bugün hiçbir iz kalmamıştır.",
+      "notes": "Bilginin tarihî bir belgeye dayandığı yayın metninde belirtildi.",
+      "recommended_action": "approve_publication",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-38e1fa730b3f9ad7",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Semavi Eyice'nin TDV “Koza Hanı” maddesinin tam metni bağımsız kaynak olarak eklendi.",
+          "Yayın metninde bilginin eski bir belgeye dayandığı belirtildi."
+        ],
+        "removed_details": [],
+        "pending_evidence": [
+          "Editör notunda anılan Diyanet Haber (Prof. Dr. Hasan Basri Öcalan) bu oturumda açılamadı; kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0009-F009",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KPE-0009",
+          "excerpt": "Koza Han Mescidi envanter kaydı — Yapılan Onarımlar: 1630, 1671, 1784, 1946, 2007"
+        },
+        {
+          "source_id": "IS-KURE-KOZA",
+          "excerpt": "Han 1082 (1671-72), 1199 (1785) yıllarında ve başka tarihlerde tamir edilmiş, üzeri kubbeli iken kurşunları sökülmüş, kubbeleri kaldırılmış, çatı yapılarak yerli kiremitle örtülmüştür."
+        }
+      ],
+      "public_title": "Kayıtlardaki onarımlar",
+      "public_text": "Koza Han ve avlusundaki mescit yüzyıllar boyunca defalarca onarıldı. Kültür envanteri mescit için 1630, 1671, 1784, 1946 ve 2007 yıllarındaki onarımları kaydeder. Ansiklopedi kayıtlarına göre han da 1671-72 ve 1785 yıllarında tamir görmüş; bu onarımlardan birinde kubbelerin kurşunu sökülerek çatı kiremitle örtülmüştür.",
+      "notes": "Desteklenen onarım yıllarıyla yeniden düzenlendi; 1630 tarihli belgenin içeriğine ilişkin özel iddia yayımlanmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-9d20bf63bdfcc221",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Kültür envanteri mescit kaydı ve TDV “Koza Hanı” maddesi bağımsız kaynak olarak eklendi.",
+          "Yayın metni desteklenen onarım yıllarıyla yeniden düzenlendi."
+        ],
+        "removed_details": [
+          "1630 tarihli belgenin hanın suyollarının onarımına ilişkin olduğu ve üst katta altı tuvalet bulunduğu ayrıntısı."
+        ],
+        "pending_evidence": [
+          "Editörün değerlendirmesi için olası karışıklık: TDV “Pirinç Hanı” maddesi 1040 (1630-31) yılında Pirinç Hanı'nın helâ giderlerinin onarıldığını yazıyor. Kitaptaki 1630 tuvalet bilgisi Pirinç Hanı'na ait olabilir.",
+          "Editör notunda anılan Vakıflar Dergisi makalesi bu oturumda bulunamadı; kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0009-F010",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0009",
+          "excerpt": "Eskiden olduğu gibi günümüzde de ticari faaliyetler için yoğun olarak kullanılan Koza Han"
+        }
+      ],
+      "public_title": "Yaşayan bir çarşı",
+      "public_text": "Koza Han, yapıldığı günden bu yana ticaret için kullanılmaktadır.",
+      "notes": "Katlara göre kullanım (ipek ticareti, çay bahçesi) bağımsız kaynakta yok; yayın metnine alınmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0013-F001",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0013",
+          "excerpt": "II. Bayezid tarafından, İstanbul'daki cami ve imaretine gelir sağlamak amacıyla yaptırılmıştır."
+        },
+        {
+          "source_id": "IS-AB-0013",
+          "excerpt": "II. Bayezid tarafından İstanbul'daki cami ve imaretine gelir sağlamak amacıyla … yaptırılmıştır."
+        }
+      ],
+      "public_title": "II. Bayezid'in ikinci hanı",
+      "public_text": "Pirinç Han'ı Sultan II. Bayezid, İstanbul'daki camisine ve imaretine gelir sağlamak amacıyla yaptırmıştır.",
+      "notes": "Kültür Portalı ve Alan Başkanlığı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Pirinç Han'ı hangi padişah yaptırmıştır?",
+        "choices": [
+          "Yıldırım Bayezid",
+          "II. Murad",
+          "Orhan Gazi",
+          "II. Bayezid"
+        ],
+        "answer_index": 3,
+        "explanation": "Pirinç Han, II. Bayezid tarafından İstanbul'daki camisine gelir sağlamak için yaptırılmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0013-F002",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-AB-0013",
+          "excerpt": "Mimarları Sultan Şah oğlu Yakup Şah ve Abdullah oğlu Ali'dir."
+        },
+        {
+          "source_id": "IS-KP-0013",
+          "excerpt": "Mimarları Sultan Şah oğlu Yakup Şah ve Abdullah oğlu Ali'dir."
+        }
+      ],
+      "public_title": "Mimarlar",
+      "public_text": "Hanın mimarı Sultan Şah oğlu Yakub Şah, yardımcısı Abdullah oğlu Ali'dir.",
+      "notes": "Resmî kaynaklarla örtüşüyor (resmî kaynaklar ikisini 'mimarlar' olarak birlikte anar).",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Pirinç Han'ın mimarı kimdir?",
+        "choices": [
+          "Mimar Sinan",
+          "Hacı İvaz Paşa",
+          "Mimar Kasım",
+          "Yakub Şah"
+        ],
+        "answer_index": 3,
+        "explanation": "Hanın mimarı Sultan Şah oğlu Yakub Şah, yardımcısı Abdullah oğlu Ali'dir."
+      }
+    },
+    {
+      "fact_id": "BUR-0013-F003",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-TDV-0013",
+          "excerpt": "İnşaata 913 Muharreminde (Mayıs 1507) başlanmış, 914 Rebîülevvelinde (Temmuz 1508) tamamlanmıştır (arama dizini özeti)."
+        },
+        {
+          "source_id": "IS-KP-0013",
+          "excerpt": "Pirinç Han, 1490-1508 yılları arasında … yaptırılmıştır."
+        }
+      ],
+      "public_title": "1507–1508",
+      "public_text": "Hanın inşaatı Mayıs 1507'de başlamış ve Temmuz 1508'de tamamlanmıştır. Resmî kaynaklar yapım dönemini daha geniş tutarak 1490–1508 olarak verir.",
+      "notes": "Kesin tarihler TDV maddesine (arama özeti) dayanıyor; editör TDV sayfasını açıp doğrulamalı. Kültür Portalı ve Alan Başkanlığı 1490–1508 aralığı veriyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0013-F004",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-AB-0013",
+          "excerpt": "büyük bir kare avlunun çevresinde üst katta elli odadan, alt katta ise kırk yedi odadan oluşmakta, odaların önünde iki kat boyunca revaklar bulunmaktadır."
+        }
+      ],
+      "public_title": "Kare avlulu iki katlı han",
+      "public_text": "Han, büyük ve kare bir avlunun çevresine dizilen iki katlı odalardan oluşur; odaların önünde iki kat boyunca revaklar uzanır.",
+      "notes": "Oda sayıları çelişiyor: kitap alt kat 30 / üst kat 48, Alan Başkanlığı alt kat 47 / üst kat 50 diyor. Sayılar yayın metnine alınmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0013-F005",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0013",
+          "excerpt": "1855 depreminde zarar gören hanın restorasyonu, 1983-2004 yılları arasında tamamlanmıştır."
+        },
+        {
+          "source_id": "IS-AB-0013",
+          "excerpt": "Pirinç Han'da 1983 yılında başlayan restorasyon çalışmaları 2004 yılında tamamlanmıştır."
+        }
+      ],
+      "public_title": "Yirmi yıllık restorasyon",
+      "public_text": "1855 depreminde zarar gören han, 1983'te başlayıp 2004'te tamamlanan uzun bir restorasyondan geçmiştir.",
+      "notes": "Resmî kaynaklarla örtüşüyor; kitabın 'yaklaşık yirmi yıl' ifadesi 1983–2004 aralığıyla uyumlu.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Pirinç Han'ın büyük restorasyonu hangi yıl tamamlanmıştır?",
+        "choices": [
+          "1983",
+          "2004",
+          "1855",
+          "1960"
+        ],
+        "answer_index": 1,
+        "explanation": "1983'te başlayan restorasyon 2004'te tamamlanmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0013-F006",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-AB-0013",
+          "excerpt": "Eski kayıtlarda Han-ı Cedid-i Sani, Han-ı Cedid-i Evvel isimleriyle anılan Pirinç Han"
+        },
+        {
+          "source_id": "IS-TDV-0013",
+          "excerpt": "Koza Hanı Hân-ı Cedîd-i Evvel, Pirinç Hanı ise Hân-ı Cedîd-i Sânî diye anılır (arama dizini özeti)."
+        }
+      ],
+      "public_title": "İkinci yeni han",
+      "public_text": "Koza Han'dan sonra yapıldığı için eski kayıtlarda 'Hân-ı Cedîd-i Sânî' yani 'ikinci yeni han' adıyla anılır.",
+      "notes": "D-0013-01: Alan Başkanlığı 'Evvel' adını da Pirinç Han'a veriyor; kitap ve TDV 'Evvel'i Koza Han'a veriyor. '17. yüzyıldan itibaren Pirinç Hanı adı' bilgisi bağımsız kaynakta yok.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Pirinç Han eski kayıtlarda hangi adla anılır?",
+        "choices": [
+          "Beylik Han",
+          "Emir Han",
+          "Fidan Han",
+          "Hân-ı Cedîd-i Sânî"
+        ],
+        "answer_index": 3,
+        "explanation": "Koza Han'dan sonra yapıldığı için 'ikinci yeni han' anlamında Hân-ı Cedîd-i Sânî denir."
+      }
+    },
+    {
+      "fact_id": "BUR-0013-F007",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-PIRINC",
+          "excerpt": "Bu odalar binanın doğu, kuzey ve güney cephelerini dolanmaktadır; batı cephesinin boydan boya beşik tonozla geçilmiş olması burasının ahır kısmı olduğunu göstermektedir. … 1088 (1677) tarihli bir belgeden … ahırın kemer ayaklarının … tamir edildiği"
+        }
+      ],
+      "public_title": "Batı kanadındaki ahır",
+      "public_text": "Pirinç Han'ın odaları doğu, kuzey ve güney kanatlarını dolanır; batı kanadı ise baştan sona tek bir beşik tonozla örtülüdür. Araştırmacılar bu farklı örtünün, batı bölümünün hayvanlar için ahır olarak kullanıldığına işaret ettiğini düşünüyor. 1677 tarihli bir onarım kaydında ahırın kemer ayaklarından söz edilmesi de handa bir ahır bulunduğunu doğrular.",
+      "notes": "Mimari yoruma dayanan ihtiyatlı anlatım korundu.",
+      "recommended_action": "approve_publication",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-855f64fbf9219e6f",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Doğan Yavaş'ın TDV “Pirinç Hanı” maddesinin tam metni bağımsız kaynak olarak eklendi.",
+          "Yayın metninde ahır kullanımının mimari bir yorum olduğu belirtildi."
+        ],
+        "removed_details": [],
+        "pending_evidence": []
+      }
+    },
+    {
+      "fact_id": "BUR-0013-F008",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-AB-0013",
+          "excerpt": "kuzeydoğu köşesi, 1903-1906 yıllarında Hamidiye Caddesi açılırken kesilmiştir."
+        }
+      ],
+      "public_title": "Cadde için kesilen köşe",
+      "public_text": "Hanın kuzeydoğu köşesi, 1903–1906 yıllarında Hamidiye Caddesi açılırken kesilmiştir.",
+      "notes": "Kitap caddeyi 'Cumhuriyet Caddesi' olarak anıyor ve altı odanın yıkıldığını yazıyor; oda sayısı bağımsız kaynakta yok.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0013-F009",
+      "verdict": "source_book_only",
+      "corroborations": [],
+      "public_title": null,
+      "public_text": null,
+      "notes": "1677 onarımı ve harcanan akçe bağımsız kaynakta yok.",
+      "recommended_action": "needs_independent_source",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0013-F010",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-PIRINC",
+          "excerpt": "XVII. yüzyılda âdet olduğu üzere bu hanın da kurşunlarının satılarak üzerinin kiremitle kaplandığını bazı müellifler belirtirlerse de bununla ilgili bir belgeye henüz rastlanmamıştır."
+        }
+      ],
+      "public_title": "Belgesiz bir çatı rivayeti",
+      "public_text": "Bazı yazarlara göre Pirinç Han'ın kurşun çatı örtüsü 17. yüzyılda, o dönemin yaygın uygulamasına uygun olarak satılmış ve çatı kiremitle kaplanmıştır. Ancak bunu doğrulayan bir arşiv belgesi bugüne kadar bulunamadı; bu yüzden bilgi kesinleşmiş bir onarım olayı değil, belgesiz bir görüş olarak aktarılır.",
+      "notes": "Belgesiz tarihî görüş olarak hazırlandı.",
+      "recommended_action": "approve_publication",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-a3facebf90b22a97",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Doğan Yavaş'ın TDV “Pirinç Hanı” maddesi bağımsız kaynak olarak eklendi.",
+          "Yayın metni bilgiyi belgesiz bir görüş olarak sunuyor."
+        ],
+        "removed_details": [],
+        "pending_evidence": []
+      }
+    },
+    {
+      "fact_id": "BUR-0014-F001",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0014",
+          "excerpt": "Yıldırım Bayezid tarafından 14. yüzyılın sonunda yapılmış olup, Osmanlı İmparatorluğu zamanında yapılan ilk bedestendir."
+        }
+      ],
+      "public_title": "Osmanlı'nın ilk bedesteni",
+      "public_text": "Yıldırım Bayezid'in 14. yüzyılın sonunda yaptırdığı bedesten, Osmanlı döneminde yapılan ilk bedestendir.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Bursa Bedesteni hangi bakımdan önemlidir?",
+        "choices": [
+          "Bursa'nın en eski camisidir",
+          "İlk Osmanlı sarayıdır",
+          "İlk Osmanlı darphanesidir",
+          "Osmanlı döneminde yapılan ilk bedestendir"
+        ],
+        "answer_index": 3,
+        "explanation": "Kültür Portalı'na göre Osmanlı döneminde yapılan ilk bedestendir."
+      }
+    },
+    {
+      "fact_id": "BUR-0014-F002",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0014",
+          "excerpt": "Bankacılığın ve borsacılığın çekirdeğini oluşturan bu yapı, ülkedeki en değerli mallarının alınıp, satıldığı ve kıymetli eşyaların saklandığı bir yer olarak kullanılmıştır."
+        },
+        {
+          "source_id": "IS-AB-0014",
+          "excerpt": "ülkenin en değerli mallarının alınıp, satıldığı ve kıymetli eşyaların saklandığı bir yer"
+        }
+      ],
+      "public_title": "Değerli malların güvenli çarşısı",
+      "public_text": "Bedesten, en değerli malların alınıp satıldığı ve güvenle saklandığı bir ticaret merkeziydi; bu yönüyle dönemin bankacılık ve borsacılığının çekirdeği sayılır.",
+      "notes": "'Vakfa gelir sağlama' amacı bağımsız kaynakta yok; yayın metnine alınmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0014-F003",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KURE-BEDESTEN",
+          "excerpt": "Bursa Bedesteni. … Enlemesine uzanan dikdörtgen mekân, altı masif pâye ile on dört bölüme ayrılmıştır. … (Edirne Bedesteni için) Burada da tek sıra halinde altı pâye ile on dört bölüm meydana gelmesi ve binanın on dört kubbe ile örtülü oluşu benzerliği çok açık duruma sokar."
+        }
+      ],
+      "public_title": "Altı paye, on dört kubbe",
+      "public_text": "Bedestenin içi, enine uzanan dikdörtgen bir salondur. Ortada tek sıra halinde dizilen altı kalın paye bu salonu on dört bölüme ayırır ve her bölümün üstü bir kubbeyle örtülüdür; yapının çatısını böylece toplam on dört kubbe oluşturur.",
+      "notes": "Paye ve bölüm sayısı TDV'de Bursa Bedesteni için açıkça geçiyor; on dört kubbe, TDV'nin Edirne Bedesteni ile karşılaştırmasında belirtiliyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-c1a2bcfa5ebde3b3",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Semavi Eyice'nin TDV “Bedesten” maddesi bağımsız kaynak olarak eklendi; “yalnızca kaynak kitapta” değerlendirmesi güncellendi."
+        ],
+        "removed_details": [],
+        "pending_evidence": [
+          "Editör notunda anılan Bursa Büyükşehir Belediyesi yayınları bu oturumda açılamadı; kaynak olarak eklenmedi."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0014-F004",
+      "verdict": "source_book_only",
+      "corroborations": [],
+      "public_title": null,
+      "public_text": null,
+      "notes": "Taş ve tuğla malzeme bilgisi bağımsız kaynakla doğrulanamadı; yayına önerilmiyor.",
+      "recommended_action": "needs_independent_source",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-5f22425b582279b4",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Editör notundaki kaynak arandı; bağımsız doğrulama bulunamadığı için kayıt kanıt bekliyor olarak bırakıldı."
+        ],
+        "removed_details": [],
+        "pending_evidence": [
+          "Editör notunda anılan Sakarya Üniversitesi arşivindeki araştırma bu oturumda açılamadı (arşiv bağlantısı HTTP 404 döndü). Kültür Portalı, Bursa Alan Başkanlığı ve TDV “Bedesten” maddesinde yapının duvar malzemesi geçmiyor.",
+          "Araştırmanın künyesi ve sayfası editör tarafından iletilirse kayıt yeniden hazırlanabilir."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0014-F005",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0014",
+          "excerpt": "Bedesten, Bursa'nın Kapalı Çarşı yangını sırasında (1956) yanmış, kullanılamaz hale gelmiş ve 1960 yılında restorasyon geçirmiştir."
+        }
+      ],
+      "public_title": "Yangın ve 1960 restorasyonu",
+      "public_text": "Kapalıçarşı yangınında ağır hasar gören bedesten 1960 yılında restore edilmiştir. Yangının yılı kaynaklarda farklıdır (1956 ve 1958).",
+      "notes": "D-0014-01: kitap 1958, Kültür Portalı 1956 diyor. Restorasyon yılı (1960) örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0014-F006",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0014",
+          "excerpt": "Günümüzde Kuyumcular Çarşısı olarak kullanılmaktadır."
+        },
+        {
+          "source_id": "IS-AB-0014",
+          "excerpt": "Yapı, günümüzde kuyumcular çarşısı olarak kullanılmaktadır."
+        }
+      ],
+      "public_title": "Bugün kuyumcular çarşısı",
+      "public_text": "Bedesten bugün kuyumcular çarşısı olarak kullanılmaktadır.",
+      "notes": "Resmî kaynaklarla örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Bedesten bugün hangi çarşı olarak kullanılıyor?",
+        "choices": [
+          "Baharatçılar çarşısı",
+          "Sahaflar çarşısı",
+          "Kuyumcular çarşısı",
+          "İpekçiler çarşısı"
+        ],
+        "answer_index": 2,
+        "explanation": "Bedesten bugün kuyumcular çarşısıdır."
+      }
+    },
+    {
+      "fact_id": "BUR-0019-F001",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0019",
+          "excerpt": "Bursa kuşatması sırasında Gümüşlü Kümbet olarak zikrettiği yere gömülmeyi vasiyet etmiştir. Orhan Gazi, 1326 yılında Bursa'yı fethetmiş; babasının Söğüt'te bulunan kabrini … bu gümüş kubbeli yapıya taşıtmıştır."
+        }
+      ],
+      "public_title": "Gümüşlü Kümbet vasiyeti",
+      "public_text": "Kaynaklara göre Osman Gazi, Bursa kuşatması sırasında 'Gümüşlü Kümbet' denen yapıya gömülmeyi vasiyet etmiştir. Bursa'yı 1326'da alan oğlu Orhan Gazi, babasının naaşını Söğüt'ten buraya taşıtmıştır.",
+      "notes": "Kültür Portalı ile örtüşüyor; anlatının rivayet niteliği ('kaynaklara göre') korunmalı.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Osman Gazi'nin naaşını Bursa'ya kim taşıtmıştır?",
+        "choices": [
+          "I. Murad",
+          "Yıldırım Bayezid",
+          "II. Murad",
+          "Orhan Gazi"
+        ],
+        "answer_index": 3,
+        "explanation": "Bursa'yı 1326'da alan Orhan Gazi, babasının naaşını Söğüt'ten Gümüşlü Kümbet'e taşıtmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0019-F002",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0019",
+          "excerpt": "Osman Gazi'nin gömülü olduğu Bizans dönemine ait yuvarlak planlı bina, 1801 yılında bir yangın nedeniyle zarar görmüş"
+        }
+      ],
+      "public_title": "1801 yangını",
+      "public_text": "Osman Gazi'nin gömülü olduğu yuvarlak planlı Bizans yapısı 1801'deki bir yangında zarar görmüştür.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0019-F003",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0019",
+          "excerpt": "1855 depreminde ise yanındaki Orhan Gazi Türbesi ile birlikte tamamen yıkılmıştır."
+        }
+      ],
+      "public_title": "1855 depremi",
+      "public_text": "Türbe 1855 depreminde ağır hasar görmüştür. Yıkımın boyutu kaynaklarda farklı anlatılır: Kültür Portalı tamamen yıkıldığını, kaynak kitaptaki arşiv belgesi tamamen yıkılmadığını belirtir.",
+      "notes": "D-0019-01: yıkımın boyutu çelişiyor; yayın metni iki görüşü de belirtiyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0019-F004",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0019",
+          "excerpt": "Her iki türbe de 1863 yılında Sultan Abdülaziz tarafından, dönemin sanatsal üslubu etkisinde yeniden yaptırılmış"
+        }
+      ],
+      "public_title": "Abdülaziz'in yeniden yaptırdığı türbe",
+      "public_text": "Bugünkü türbeyi 1863'te Sultan Abdülaziz yeniden yaptırmıştır.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Osman Gazi Türbesi'nin bugünkü binasını kim yaptırmıştır?",
+        "choices": [
+          "Orhan Gazi",
+          "II. Abdülhamid",
+          "Sultan Abdülaziz",
+          "II. Mahmud"
+        ],
+        "answer_index": 2,
+        "explanation": "Bugünkü türbe 1863'te Sultan Abdülaziz tarafından yeniden yaptırılmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0019-F005",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0019",
+          "excerpt": "Osman Gazi Türbesi, sekizgen planlıdır. Kubbe ile örtülü olan yapı, kesme küfeki taşlarla örülü"
+        }
+      ],
+      "public_title": "Sekizgen türbe",
+      "public_text": "Türbe sekizgen planlıdır ve kubbeyle örtülüdür.",
+      "notes": "Kültür Portalı ile örtüşüyor; OSM yapı izi de sekiz köşeli.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Osman Gazi Türbesi'nin planı hangi biçimdedir?",
+        "choices": [
+          "Kare",
+          "Altıgen",
+          "Dikdörtgen",
+          "Sekizgen"
+        ],
+        "answer_index": 3,
+        "explanation": "Türbe sekizgen planlıdır."
+      }
+    },
+    {
+      "fact_id": "BUR-0019-F006",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0019",
+          "excerpt": "Türbenin ortasındaki sedef kakmalı, ahşap sanduka Osman Gazi'ye aittir. Sandukanın etrafı sedef kakmalı korkuluklarla çevrilmiştir."
+        }
+      ],
+      "public_title": "Sedef kakmalı korkuluk",
+      "public_text": "Osman Gazi'nin ahşap sandukasının çevresi sedef kakmalı korkuluklarla çevrilidir.",
+      "notes": "2004 onarımı bağımsız kaynakta yok; yayın metnine alınmadı. Açık sorun CLAIM-SCOPE-BUR-0019-F006-001 önce çözülmeli.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0019-F007",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0019",
+          "excerpt": "Türbe içinde toplam on yedi sanduka vardır. Osman Gazi, Osman Gazi'nin oğlu Alaaddin Bey, Orhan Gazi'nin eşi Aspurça Hatun, Orhan Gazi'nin Aspurça'dan doğma oğlu İbrahim ve I. Murad'ın oğlu Savcı Bey'e ait olan beş sanduka"
+        }
+      ],
+      "public_title": "On yedi sanduka",
+      "public_text": "Türbede on yedi sanduka bulunur ve bunlardan beşinin sahibi bilinir: kurucu Osman Gazi, onun oğlu Alâeddin Bey, Orhan Gazi'nin hanımı Asporça Hatun, bu evlilikten doğan İbrahim ve I. Murad'ın şehzadesi Savcı Bey.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Osman Gazi Türbesi'nde kaç sanduka vardır?",
+        "choices": [
+          "4",
+          "17",
+          "5",
+          "21"
+        ],
+        "answer_index": 1,
+        "explanation": "Türbede 17 sanduka vardır; beşinin kime ait olduğu bilinir."
+      }
+    },
+    {
+      "fact_id": "BUR-0019-F008",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0019",
+          "excerpt": "2014 yılında UNESCO Dünya Miras Listesine kaydedilen 'Bursa ve Cumalıkızık: Osmanlı İmparatorluğunun Doğuşu' miras alanı içindeki …"
+        }
+      ],
+      "public_title": "UNESCO Dünya Mirası",
+      "public_text": "Türbenin bulunduğu alan, 2014'te UNESCO Dünya Mirası Listesi'ne giren 'Bursa ve Cumalıkızık: Osmanlı İmparatorluğu'nun Doğuşu' alanının bir parçasıdır.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Bursa ve Cumalıkızık hangi yıl UNESCO Dünya Mirası Listesi'ne girmiştir?",
+        "choices": [
+          "2008",
+          "2020",
+          "2014",
+          "1999"
+        ],
+        "answer_index": 2,
+        "explanation": "Alan 2014'te UNESCO Dünya Mirası Listesi'ne kaydedilmiştir."
+      }
+    },
+    {
+      "fact_id": "BUR-0020-F001",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0020",
+          "excerpt": "Osman Gazi'nin oğlu ve Osmanlı Devleti'nin ikinci padişahı olan Sultan Orhan … Bursa ve çevresini Bizanslılardan almış"
+        }
+      ],
+      "public_title": "Bursa'nın fatihi",
+      "public_text": "Türbe, Osmanlı Devleti'nin ikinci padişahı ve Bursa'nın fatihi Orhan Gazi'ye aittir.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Orhan Gazi Osmanlı Devleti'nin kaçıncı padişahıdır?",
+        "choices": [
+          "Üçüncü",
+          "Dördüncü",
+          "İkinci",
+          "Birinci"
+        ],
+        "answer_index": 2,
+        "explanation": "Orhan Gazi, Osman Gazi'nin oğlu ve Osmanlı Devleti'nin ikinci padişahıdır."
+      }
+    },
+    {
+      "fact_id": "BUR-0020-F002",
+      "verdict": "source_book_only",
+      "corroborations": [],
+      "public_title": null,
+      "public_text": null,
+      "notes": "Türbeye müstakil vakıflar tahsis edildiği bilgisi bağımsız kaynakta yok.",
+      "recommended_action": "needs_independent_source",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0020-F003",
+      "verdict": "corroborated_with_discrepancy",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0020",
+          "excerpt": "Türbe, 1855 depremiyle tamamen yıkılmıştır."
+        },
+        {
+          "source_id": "IS-KPE-0020",
+          "excerpt": "1854 depreminde yıkılan türbe 1863 yılında Sultan Abdülaziz tarafından yeniden yaptırılmıştır."
+        }
+      ],
+      "public_title": "Depremde yıkılan türbe",
+      "public_text": "Türbe 1855 Bursa depreminde tamamen yıkılmıştır.",
+      "notes": "D-0020-02: Kültür Portalı'nın envanter kaydı depremi 1854 olarak veriyor; gezilecek yer sayfası ve kitap 1855 diyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0020-F004",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0020",
+          "excerpt": "1863 yılında Sultan Abdülaziz tarafından … yeniden yaptırılmış ve bugünkü halini almıştır."
+        },
+        {
+          "source_id": "IS-KPE-0020",
+          "excerpt": "1854 depreminde yıkılan türbe 1863 yılında Sultan Abdülaziz tarafından yeniden yaptırılmıştır."
+        }
+      ],
+      "public_title": "1863'te yeniden yapıldı",
+      "public_text": "Bugünkü türbeyi 1863'te Sultan Abdülaziz yeniden yaptırmıştır.",
+      "notes": "Kültür Portalı'nın iki sayfası 1863 diyor. Açık sorun BUR-0020-ISSUE-001 (1863/1868) önce çözülmeli; önerilen değer 1863.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Orhan Gazi Türbesi'nin bugünkü binası hangi yıl yapılmıştır?",
+        "choices": [
+          "1868",
+          "1863",
+          "1326",
+          "1855"
+        ],
+        "answer_index": 1,
+        "explanation": "Resmî kaynaklara göre türbe 1863'te Sultan Abdülaziz tarafından yeniden yaptırılmıştır."
+      }
+    },
+    {
+      "fact_id": "BUR-0020-F005",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KPE-0020",
+          "excerpt": "Dışarıdan her bir kenarı 16,80 metre uzunluğunda olup, yapının duvar kalınlığı 1,30 metredir."
+        },
+        {
+          "source_id": "IS-KP-0020",
+          "excerpt": "Kare planlı olarak yapılan türbenin … Yangından önceki türbe binası çok kubbeli iken bu bina tek kubbeli"
+        }
+      ],
+      "public_title": "Kare plan, tek kubbe",
+      "public_text": "Kare planlı türbenin her bir kenarı dıştan yaklaşık 16,80 metredir ve yapı tek kubbeyle örtülüdür.",
+      "notes": "Resmî kaynaklarla örtüşüyor; OSM yapı izi de kenarları ~17 m olan bir kare.",
+      "recommended_action": "approve_publication",
+      "quiz": {
+        "question": "Orhan Gazi Türbesi'nin planı hangi biçimdedir?",
+        "choices": [
+          "Altıgen",
+          "Daire",
+          "Kare",
+          "Sekizgen"
+        ],
+        "answer_index": 2,
+        "explanation": "Türbe kare planlıdır ve tek kubbeyle örtülüdür."
+      }
+    },
+    {
+      "fact_id": "BUR-0020-F006",
+      "verdict": "partially_corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-WHMP-2021",
+          "excerpt": "PDF s. 84, Orhan Gazi Mausoleum: … It was damaged by fire in 1801, and a significant part of the tomb was destroyed after the 1855 earthquake. In 1863, it was rebuilt by Sultan Abdulaziz"
+        },
+        {
+          "source_id": "IS-KPE-0020",
+          "excerpt": "Orhan Gazi Türbesi envanter kaydı — Yapılan Onarımlar: 1863, 2009"
+        },
+        {
+          "source_id": "IS-KURE-ORHAN",
+          "excerpt": "Bursa kadı sicillerinde mevcut bu binaya ait bazı inşaat ve tamirat belgelerinden türbe ile caminin yan yana olduğu sonucu çıkmaktadır. … 1855 depreminde türbe tamamen yıkılmıştır."
+        }
+      ],
+      "public_title": "Yangından depreme, depremden bugüne",
+      "public_text": "Orhan Gazi Türbesi, 1855'teki yıkımdan önce de birçok kez onarılmıştı; Dünya Mirası Alan Yönetim Planı, yapının 1801'de bir yangında hasar gördüğünü belirtir. 1863'te yeniden yapılan türbe için Kültür envanteri 2009 yılında bir onarım daha kaydeder.",
+      "notes": "Doğrulanamayan erken dönem onarım yılları (1615, 1791, 1808, 1813, 1816–1818) yayın metnine alınmadı. 1855 yıkımı ve 1863 yeniden yapımı BUR-0020-F003 ve F004'te ayrı olgular olarak yer aldığı için burada tekrarlanmadı.",
+      "recommended_action": "approve_partial_text",
+      "quiz": null,
+      "revision": {
+        "addresses_decision_id": "DEC-9a7de09fc7fdb7bc",
+        "revised_at": "2026-10-24",
+        "changes": [
+          "Dünya Mirası Alan Yönetim Planı, Kültür envanteri kaydı ve TDV “Orhan Gazi Türbesi” maddesi bağımsız kaynak olarak eklendi.",
+          "Yapı-tarih eşleştirmesi düzeltildi: yalnızca türbeye ait olduğu doğrulanan 1801 yangını ve 2009 onarımı yazıldı."
+        ],
+        "removed_details": [
+          "1615, 1791, 1808, 1813 ve 1816–1818 onarım yılları (1808 onarımı Orhan Gazi Medresesi'ne aittir)."
+        ],
+        "pending_evidence": [
+          "Editör kararıyla reddedilen BUR-0020-F007'deki 1863 tarihi ayrı olgu olarak zaten BUR-0020-F004'te yer alıyor; yeni olgu oluşturulmadı."
+        ]
+      }
+    },
+    {
+      "fact_id": "BUR-0020-F007",
+      "verdict": "conflicting",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0020",
+          "excerpt": "1863 yılında Sultan Abdülaziz tarafından … yeniden yaptırılmış"
+        },
+        {
+          "source_id": "IS-KPE-0020",
+          "excerpt": "1863 yılında Sultan Abdülaziz tarafından yeniden yaptırılmıştır."
+        }
+      ],
+      "public_title": null,
+      "public_text": null,
+      "notes": "1868 tarihi resmî kaynaklarla çelişiyor; kitabın kendi s.116'sı da 1863 diyor. Önerilen karar: bu olgu için 'reddet' veya 'düzeltme gerekli'.",
+      "recommended_action": "reject",
+      "quiz": null
+    },
+    {
+      "fact_id": "BUR-0020-F008",
+      "verdict": "corroborated",
+      "corroborations": [
+        {
+          "source_id": "IS-KP-0020",
+          "excerpt": "2014 yılında UNESCO Dünya Miras Listesine kaydedilen … Hanlar Bölgesi'nin önemli bir parçasıdır."
+        }
+      ],
+      "public_title": "UNESCO Dünya Mirası",
+      "public_text": "Türbenin bulunduğu alan, 2014'te UNESCO Dünya Mirası Listesi'ne giren 'Bursa ve Cumalıkızık: Osmanlı İmparatorluğu'nun Doğuşu' alanının bir parçasıdır.",
+      "notes": "Kültür Portalı ile örtüşüyor.",
+      "recommended_action": "approve_publication",
+      "quiz": null
+    }
+  ],
+  "issue_proposals": [
+    {
+      "issue_id": "BUR-0020-ISSUE-001",
+      "chosen_value": "1863",
+      "source_ids": [
+        "IS-KP-0020",
+        "IS-KPE-0020"
+      ],
+      "resolution": "Kültür Portalı'nın iki sayfası ve kaynak kitabın fiziksel s.116'daki H. 1280 / M. 1863 ifadesi 1863'ü destekliyor. s.117'deki 1868 tek başına kalan çelişkili tarih olarak değerlendirildi; F004 yayına, F007 reddedilmeye önerilir."
+    },
+    {
+      "issue_id": "SOURCE-KINSHIP-BUR-0008-001",
+      "chosen_value": "kardeş",
+      "source_ids": [
+        "IS-KPM-0008",
+        "IS-KP-0008"
+      ],
+      "resolution": "Kaynak kitap Cem Sultan'ı Şehzade Mustafa'nın 'yeğeni' olarak anıyor. Kültür Portalı ikisini de Fatih Sultan Mehmed'in oğulları olarak verir; akrabalık 'kardeş' olarak düzeltildi. Yayın metni bu düzeltmeyi kullanıyor."
+    },
+    {
+      "issue_id": "CLAIM-SCOPE-BUR-0019-F006-001",
+      "chosen_value": null,
+      "source_ids": [
+        "IS-KP-0019"
+      ],
+      "resolution": "Yayın metni yalnızca bağımsız kaynakla desteklenen 'sanduka çevresindeki sedef kakmalı korkuluk' ifadesiyle sınırlandırıldı; 2004 onarımı ve şebeke ayrıntısı yayına alınmadı."
+    }
+  ],
+  "revised_at": "2026-10-24"
+}

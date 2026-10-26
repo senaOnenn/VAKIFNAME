@@ -1,0 +1,294 @@
+{
+  "schema_version": "vakifname-review-proposals-v1",
+  "generated_at": "2026-10-24",
+  "prepared_by": "Claude Code (otomatik masa başı araştırma; editör kararı değildir)",
+  "policy": "Öneriler yalnızca formu önceden doldurur. Karar, kayıtlı incelemecinin açık seçimiyle kaydedilir; sunucu ön koşulları ayrıca denetler. GPS check-in önerisi yoktur.",
+  "identity": [
+    {
+      "monument_id": "BUR-0001",
+      "payload": {
+        "display_name": "Bursa Ulu Camii",
+        "display_address": "Atatürk Caddesi, Osmangazi/Bursa (PTT'nin karşısı)",
+        "identity_source_ids": [
+          "S-0001-KP"
+        ],
+        "published_alternative_names": [
+          "Ulu Cami"
+        ],
+        "public_site_notice": "Aktif ibadet mekânıdır. Namaz vakitlerinde ve Cuma namazı sırasında ziyaret etmeyin; içeride sessiz olun ve uygun kıyafet giyin.",
+        "acknowledged_discrepancy_ids": [
+          "D-0001-01"
+        ]
+      },
+      "recommended": true,
+      "notes": "Ad, tür (cami) ve adres Kültür Portalı sayfasında. PDF adresi kaynak hakkı onayı olmadığı için seçilmedi."
+    },
+    {
+      "monument_id": "BUR-0005",
+      "payload": {
+        "display_name": "Muradiye Medresesi",
+        "display_address": "Muradiye Mahallesi, Sedat Sokak, Osmangazi/Bursa",
+        "identity_source_ids": [
+          "S-0005-KP"
+        ],
+        "published_alternative_names": [],
+        "public_site_notice": null,
+        "acknowledged_discrepancy_ids": [
+          "D-0005-01",
+          "D-0005-02"
+        ]
+      },
+      "recommended": true,
+      "notes": "Kültür Portalı envanter kaydı. Dikkat: sokak adı güncel olmayabilir (OSM'de yakındaki sokak 'Prof. Dr. Halil İnalcık Sokak')."
+    },
+    {
+      "monument_id": "BUR-0007",
+      "payload": {
+        "display_name": "Sultan II. Murad Türbesi",
+        "display_address": "Muradiye Mahallesi, 2. Murat Caddesi, Osmangazi/Bursa",
+        "identity_source_ids": [
+          "S-0007-KP"
+        ],
+        "published_alternative_names": [],
+        "public_site_notice": "Türbe ve kabir alanıdır. Ziyaret sırasında sessiz olun, sandukalara dokunmayın ve ziyaret saatlerine uyun.",
+        "acknowledged_discrepancy_ids": [
+          "D-0007-01"
+        ]
+      },
+      "recommended": true,
+      "notes": "Kültür Portalı: tür türbe, adres 2. Murat Caddesi."
+    },
+    {
+      "monument_id": "BUR-0008",
+      "payload": {
+        "display_name": "Cem Sultan Türbesi",
+        "display_address": "Muradiye Mahallesi, 2. Murad Caddesi, Osmangazi/Bursa",
+        "identity_source_ids": [
+          "S-0008-KP",
+          "S-0008-KPM"
+        ],
+        "published_alternative_names": [],
+        "public_site_notice": "Bu türbe 1479'da Fatih Sultan Mehmed'in oğlu Şehzade Mustafa için yapılmıştır; Cem Sultan 1499'da buraya defnedilmiştir. Muradiye'deki Kanuni'nin oğlu Şehzade Mustafa'nın türbesiyle karıştırılmamalıdır. Türbe ve kabir alanıdır. Ziyaret sırasında sessiz olun, sandukalara dokunmayın ve ziyaret saatlerine uyun.",
+        "acknowledged_discrepancy_ids": [
+          "D-0008-01"
+        ]
+      },
+      "recommended": true,
+      "notes": "Kimlik iki resmî sayfayla destekleniyor. Envanter kaydı (KPE) başka bir türbeyi (Şehzade Mahmud) tarif ettiği için seçilmedi."
+    },
+    {
+      "monument_id": "BUR-0009",
+      "payload": {
+        "display_name": "Koza Han",
+        "display_address": "Hanlar Bölgesi, Osmangazi/Bursa",
+        "identity_source_ids": [
+          "S-0009-KP"
+        ],
+        "published_alternative_names": [
+          "Koza Hanı"
+        ],
+        "public_site_notice": null,
+        "acknowledged_discrepancy_ids": [
+          "D-0009-01",
+          "D-0009-02",
+          "D-0009-03"
+        ]
+      },
+      "recommended": true,
+      "notes": "Kültür Portalı. Mescit kaydının adresi (KPE) hana değil avludaki mescide ait; seçilmedi."
+    },
+    {
+      "monument_id": "BUR-0013",
+      "payload": {
+        "display_name": "Pirinç Han",
+        "display_address": "Hanlar Bölgesi, Osmangazi/Bursa (Cumhuriyet Caddesi'nden yaya erişim)",
+        "identity_source_ids": [
+          "S-0013-KP",
+          "S-0013-AB"
+        ],
+        "published_alternative_names": [
+          "Pirinç Hanı"
+        ],
+        "public_site_notice": null,
+        "acknowledged_discrepancy_ids": [
+          "D-0013-01"
+        ]
+      },
+      "recommended": true,
+      "notes": "Kültür Portalı ve Alan Başkanlığı."
+    },
+    {
+      "monument_id": "BUR-0014",
+      "payload": {
+        "display_name": "Yıldırım Bayezid Bedesteni",
+        "display_address": "Atatürk Caddesi, Osmangazi/Bursa (Ulu Cami'nin alt kısmındaki çarşı)",
+        "identity_source_ids": [
+          "S-0014-KP",
+          "S-0014-AB"
+        ],
+        "published_alternative_names": [],
+        "public_site_notice": "Kuyumcular çarşısıdır; mesai saatleri dışında kapalıdır.",
+        "acknowledged_discrepancy_ids": [
+          "D-0014-01",
+          "D-0014-02"
+        ]
+      },
+      "recommended": true,
+      "notes": "Kültür Portalı ve Alan Başkanlığı."
+    },
+    {
+      "monument_id": "BUR-0019",
+      "payload": {
+        "display_name": "Osman Gazi Türbesi",
+        "display_address": "2. Osmangazi Caddesi, Tophane, Osmangazi/Bursa",
+        "identity_source_ids": [
+          "S-0019-KP"
+        ],
+        "published_alternative_names": [],
+        "public_site_notice": "Türbe ve kabir alanıdır. Ziyaret sırasında sessiz olun, sandukalara dokunmayın ve ziyaret saatlerine uyun.",
+        "acknowledged_discrepancy_ids": [
+          "D-0019-01"
+        ]
+      },
+      "recommended": true,
+      "notes": "Kültür Portalı."
+    },
+    {
+      "monument_id": "BUR-0020",
+      "payload": {
+        "display_name": "Orhan Gazi Türbesi",
+        "display_address": "Osmangazi Caddesi, Tophane, Osmangazi/Bursa",
+        "identity_source_ids": [
+          "S-0020-KP",
+          "S-0020-KPE"
+        ],
+        "published_alternative_names": [],
+        "public_site_notice": "Türbe ve kabir alanıdır. Ziyaret sırasında sessiz olun, sandukalara dokunmayın ve ziyaret saatlerine uyun.",
+        "acknowledged_discrepancy_ids": [
+          "D-0020-01",
+          "D-0020-02"
+        ]
+      },
+      "recommended": true,
+      "notes": "Kültür Portalı'nın iki kaydı."
+    }
+  ],
+  "location": [
+    {
+      "monument_id": "BUR-0001",
+      "payload": {
+        "candidate_id": "LC-0001-01",
+        "method": "editor_map_review",
+        "verification_reference": "osm:way/26434413@v21 'Ulu Cami' (building=mosque, wikidata Q32339); TKGM Parsel Sorgu (cbsapi.tkgm.gov.tr, nokta sorgusu 2026-10-24): Orhanbey Mah. ada 5827 parsel 87, nitelik 'Ulu Cami' — aday parsel içinde; Wikidata P625 yapı izine ~6 m",
+        "accuracy_m": 44,
+        "acknowledged_discrepancy_ids": [
+          "D-0001-01"
+        ]
+      },
+      "recommended": true,
+      "notes": "Bina merkezi / nokta; giriş noktası değildir. Haritada gösterim ile GPS check-in ayrıdır."
+    },
+    {
+      "monument_id": "BUR-0005",
+      "payload": {
+        "candidate_id": "LC-0005-01",
+        "method": "editor_map_review",
+        "verification_reference": "osm:way/472072850@v4 'Muradiye Medresesi' (wikidata Q131741328); TKGM Parsel Sorgu (cbsapi.tkgm.gov.tr, nokta sorgusu 2026-10-24): Muradiye Mah. ada 4768 parsel 2, nitelik 'Türbe Olan Bahçeli Medrese'; Wikidata P625 ~1 m",
+        "accuracy_m": 26,
+        "acknowledged_discrepancy_ids": []
+      },
+      "recommended": true,
+      "notes": "Bina merkezi / nokta; giriş noktası değildir. Haritada gösterim ile GPS check-in ayrıdır."
+    },
+    {
+      "monument_id": "BUR-0007",
+      "payload": {
+        "candidate_id": "LC-0007-01",
+        "method": "editor_map_review",
+        "verification_reference": "osm:node/2796344228@v4 'II.Murat Türbesi' (wikidata Q131394 = II. Murad); TKGM Parsel Sorgu (cbsapi.tkgm.gov.tr, nokta sorgusu 2026-10-24): Muradiye Mah. ada 4768 parsel 2, nitelik 'Türbe Olan Bahçeli Medrese'",
+        "accuracy_m": 20,
+        "acknowledged_discrepancy_ids": []
+      },
+      "recommended": true,
+      "notes": "Bina merkezi / nokta; giriş noktası değildir. Haritada gösterim ile GPS check-in ayrıdır."
+    },
+    {
+      "monument_id": "BUR-0008",
+      "payload": {
+        "candidate_id": "LC-0008-01",
+        "method": "editor_map_review",
+        "verification_reference": "osm:node/2796344231@v2 'Cem Sultan Türbesi' (yapı izi yok); TKGM Parsel Sorgu (cbsapi.tkgm.gov.tr, nokta sorgusu 2026-10-24): ada 4768 parsel 2. Rakip aday LC-0008-02 (osm:way/1352292877) 11×12 m dikdörtgen yapı izidir ve Kanuni'nin oğlu Şehzade Mustafa'ya bağlı (node 2796344232 wikidata Q1251392); kaynaklarda Cem Sultan'ın türbesi altıgen planlıdır — LC-0008-02 bu yüzden yanlış yapı olarak değerlendirildi",
+        "accuracy_m": 25,
+        "acknowledged_discrepancy_ids": [
+          "D-0008-01"
+        ]
+      },
+      "recommended": false,
+      "notes": "DİKKAT: Türbeler bahçesinde çok sayıda türbe birbirine yakın; nokta nesnesinin doğru türbeyi gösterdiği saha veya hava fotoğrafıyla kontrol edilmeden onaylanmamalı."
+    },
+    {
+      "monument_id": "BUR-0009",
+      "payload": {
+        "candidate_id": "LC-0009-01",
+        "method": "editor_map_review",
+        "verification_reference": "osm:relation/1018973@v10 'Koza Han' (wikidata Q6055245); TKGM Parsel Sorgu (cbsapi.tkgm.gov.tr, nokta sorgusu 2026-10-24): Orhanbey Mah. ada 5823 parsel 64, nitelik 'Şadırvan ve Şadırvan Üstünde Mescit' — aday avludaki köşk mescide düşüyor; Wikidata P625 ~5 m",
+        "accuracy_m": 46,
+        "acknowledged_discrepancy_ids": [
+          "D-0009-03"
+        ]
+      },
+      "recommended": true,
+      "notes": "Bina merkezi / nokta; giriş noktası değildir. Haritada gösterim ile GPS check-in ayrıdır."
+    },
+    {
+      "monument_id": "BUR-0013",
+      "payload": {
+        "candidate_id": "LC-0013-01",
+        "method": "editor_map_review",
+        "verification_reference": "osm:way/26456112@v6 'Pirinç Han'; TKGM Parsel Sorgu (cbsapi.tkgm.gov.tr, nokta sorgusu 2026-10-24): Şehreküstü Mah. ada 6015 parsel 53, nitelik 'Han Avlusu ve Yıkılmış Hela Arsa'",
+        "accuracy_m": 46,
+        "acknowledged_discrepancy_ids": []
+      },
+      "recommended": true,
+      "notes": "Bina merkezi / nokta; giriş noktası değildir. Haritada gösterim ile GPS check-in ayrıdır."
+    },
+    {
+      "monument_id": "BUR-0014",
+      "payload": {
+        "candidate_id": "LC-0014-01",
+        "method": "editor_map_review",
+        "verification_reference": "osm:way/1063228547@v2 'Bedesten' (landuse=retail, kullanım alanı); TKGM Parsel Sorgu (cbsapi.tkgm.gov.tr, nokta sorgusu 2026-10-24): Orhanbey Mah. ada 5835 parsel 1, nitelik 'Kargir Bedesten Çarşısı' — aday bedesten parselinde",
+        "accuracy_m": 37,
+        "acknowledged_discrepancy_ids": [
+          "D-0014-02"
+        ]
+      },
+      "recommended": true,
+      "notes": "Bina merkezi / nokta; giriş noktası değildir. Haritada gösterim ile GPS check-in ayrıdır."
+    },
+    {
+      "monument_id": "BUR-0019",
+      "payload": {
+        "candidate_id": "LC-0019-01",
+        "method": "editor_map_review",
+        "verification_reference": "osm:way/325992025@v7 'Osman Gazi Türbesi' — yapı izi 8 köşeli (kaynaklarda sekizgen plan); TKGM Parsel Sorgu (cbsapi.tkgm.gov.tr, nokta sorgusu 2026-10-24): Kuruçeşme Mah. ada 4268 parsel 148, nitelik 'Bahçe' (Tophane Parkı)",
+        "accuracy_m": 13,
+        "acknowledged_discrepancy_ids": []
+      },
+      "recommended": true,
+      "notes": "Bina merkezi / nokta; giriş noktası değildir. Haritada gösterim ile GPS check-in ayrıdır."
+    },
+    {
+      "monument_id": "BUR-0020",
+      "payload": {
+        "candidate_id": "LC-0020-01",
+        "method": "editor_map_review",
+        "verification_reference": "osm:way/325992024@v5 'Orhan Gazi Türbesi' — yapı izi kenarları 17,0–17,3 m olan kare (Kültür Portalı: 16,80 m kare plan); TKGM Parsel Sorgu (cbsapi.tkgm.gov.tr, nokta sorgusu 2026-10-24): Kuruçeşme Mah. ada 4268 parsel 148, nitelik 'Bahçe' (Tophane Parkı)",
+        "accuracy_m": 14,
+        "acknowledged_discrepancy_ids": []
+      },
+      "recommended": true,
+      "notes": "Bina merkezi / nokta; giriş noktası değildir. Haritada gösterim ile GPS check-in ayrıdır."
+    }
+  ]
+}

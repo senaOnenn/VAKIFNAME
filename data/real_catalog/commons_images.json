@@ -1,0 +1,2713 @@
+{
+  "schema_version": "vakifname-commons-images-v1",
+  "generated_at": "2026-10-24",
+  "prepared_by": "Claude Code (otomatik masa başı araştırma; hak kararı değildir)",
+  "image_root": "images/commons (VAKIFNAME_INTERNAL_DATA_DIR altında)",
+  "policy": {
+    "license_filter": "Yalnızca CC0, kamu malı, CC BY ve CC BY-SA; ticari kullanım ve değiştirmeye izin veren lisanslar. Ek kısıtlama (restrictions) taşıyan dosyalar alınmadı.",
+    "obligations": "CC BY / CC BY-SA: yazar adı, lisans adı ve lisans bağlantısı ile kaynak sayfası gösterilmelidir; CC BY-SA görselin uyarlamaları aynı lisansla paylaşılmalıdır.",
+    "approval": "Bu dosya hiçbir onay içermez. Yayın, 'rights' rolündeki incelemecinin image_rights ve image_publication kararlarıyla olur."
+  },
+  "images": [
+    {
+      "image_id": "commons/BUR-0001/e69b7eb9298ee0a6",
+      "monument_id": "BUR-0001",
+      "relative_path": "BUR-0001/e69b7eb9298ee0a6-1600.jpg",
+      "sha256": "2f34e81592e11cfd902aa039a8b57a5425087e218831697808797aab5f24a7a5",
+      "size_bytes": 432976,
+      "width": 1600,
+      "height": 1053,
+      "card": {
+        "relative_path": "BUR-0001/e69b7eb9298ee0a6-card.jpg",
+        "sha256": "29ccc10cdaef24acb5b1676224940ab845ef21dbd8db98f6aeb6f7a6dcb6d701",
+        "size_bytes": 140010,
+        "width": 900,
+        "height": 593
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:View of Bursa - 2024.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:View_of_Bursa_-_2024.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/View_of_Bursa_-_2024.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 5832,
+        "original_height": 3839,
+        "license_short_name": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "artist": "Jocelyn Erskine-Kellie",
+        "credit": "https://www.flickr.com/photos/jocelyn777/53714235687/",
+        "description": "View of Bursa",
+        "date": "Taken on 2 May 2024, 15:36:23",
+        "category": "Exterior of Grand Mosque of Bursa",
+        "commons_sha1": "03bf2d2b761868861f53f83a1e076cb74490f561",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/View_of_Bursa_-_2024.jpg/500px-View_of_Bursa_-_2024.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": "Kent panoraması; Ulu Cami ön planda, Koza Han avlusu da görünür.",
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Jocelyn Erskine-Kellie",
+        "license": "CC-BY-SA-2.0",
+        "attribution": "Fotoğraf: Jocelyn Erskine-Kellie, CC BY-SA 2.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:View_of_Bursa_-_2024.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0001/163bcd16d2039805",
+      "monument_id": "BUR-0001",
+      "relative_path": "BUR-0001/163bcd16d2039805-1600.jpg",
+      "sha256": "a7cfdd07faf441a330a5a157ef21932700c5ce336b9d5b7f87802ad67b8fa325",
+      "size_bytes": 247102,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0001/163bcd16d2039805-card.jpg",
+        "sha256": "8918a282b7252fa17b81d0bb192164bd9769848dae434e7617add7c303d6c639",
+        "size_bytes": 91315,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:Bursa Ulu Camii 2017-06-25 16.42.25 1791358893.JPG",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.42.25_1791358893.JPG",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/1/14/Bursa_Ulu_Camii_2017-06-25_16.42.25_1791358893.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Antonina Vyshnevska",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2017-06-25",
+        "category": "Grand Mosque of Bursa",
+        "commons_sha1": "66bd872e121cf8749f8595e92ebddc4850c95e27",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Bursa_Ulu_Camii_2017-06-25_16.42.25_1791358893.JPG/500px-Bursa_Ulu_Camii_2017-06-25_16.42.25_1791358893.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Antonina Vyshnevska",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.42.25_1791358893.JPG",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0001/e7dce978c2e1e181",
+      "monument_id": "BUR-0001",
+      "relative_path": "BUR-0001/e7dce978c2e1e181-1600.jpg",
+      "sha256": "bef8f3daa69130fc4673a4b480cdf8c937bc1345a5bee7423eb3f4a3c5b43fea",
+      "size_bytes": 416624,
+      "width": 1067,
+      "height": 1600,
+      "card": {
+        "relative_path": "BUR-0001/e7dce978c2e1e181-card.jpg",
+        "sha256": "c0234e297f4619ad39cd702d21cb4d1ab10558a09d32be012f9c025f2ad66233",
+        "size_bytes": 149275,
+        "width": 600,
+        "height": 900
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:Bursa Ulu Camii 2017-06-25 16.32.35 1791358879.JPG",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.32.35_1791358879.JPG",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Bursa_Ulu_Camii_2017-06-25_16.32.35_1791358879.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4000,
+        "original_height": 6000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Antonina Vyshnevska",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2017-06-25",
+        "category": "Grand Mosque of Bursa",
+        "commons_sha1": "fe2c335d0be07ac0983c8db1350476b08d32fe1a",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Bursa_Ulu_Camii_2017-06-25_16.32.35_1791358879.JPG/500px-Bursa_Ulu_Camii_2017-06-25_16.32.35_1791358879.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Antonina Vyshnevska",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.32.35_1791358879.JPG",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0001/6b653774d2963a33",
+      "monument_id": "BUR-0001",
+      "relative_path": "BUR-0001/6b653774d2963a33-1600.jpg",
+      "sha256": "3500ec812a6cd93352dab5aa2dd7c8757f4716475bb6e86758432b7f50c7ed91",
+      "size_bytes": 246047,
+      "width": 1067,
+      "height": 1600,
+      "card": {
+        "relative_path": "BUR-0001/6b653774d2963a33-card.jpg",
+        "sha256": "a2e71318f9647c24902855481490be7ab816e34537fb325e49b737ca93d95389",
+        "size_bytes": 93277,
+        "width": 600,
+        "height": 900
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Bursa Ulu Camii 2017-06-25 16.29.22 1791358847.JPG",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.29.22_1791358847.JPG",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/6/64/Bursa_Ulu_Camii_2017-06-25_16.29.22_1791358847.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4000,
+        "original_height": 6000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Antonina Vyshnevska",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2017-06-25",
+        "category": "Grand Mosque of Bursa",
+        "commons_sha1": "cc9f781b066c8cf0cb94b59d8f0e40329481e125",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Bursa_Ulu_Camii_2017-06-25_16.29.22_1791358847.JPG/500px-Bursa_Ulu_Camii_2017-06-25_16.29.22_1791358847.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Antonina Vyshnevska",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.29.22_1791358847.JPG",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0001/a95f5166c6ce2420",
+      "monument_id": "BUR-0001",
+      "relative_path": "BUR-0001/a95f5166c6ce2420-1600.jpg",
+      "sha256": "2f22f398abf27a6bd4094868d89b2a0db575af84170a52058776b0ffd66341a1",
+      "size_bytes": 188719,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0001/a95f5166c6ce2420-card.jpg",
+        "sha256": "75f9ca309284842203c31eca83fdee036f695a899848015eff7c335e2b672b29",
+        "size_bytes": 68093,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:Bursa Ulu Camii 2017-06-25 16.27.58 1791358845.JPG",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.27.58_1791358845.JPG",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/4/49/Bursa_Ulu_Camii_2017-06-25_16.27.58_1791358845.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Antonina Vyshnevska",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2017-06-25",
+        "category": "Grand Mosque of Bursa",
+        "commons_sha1": "341fda029ecda3242f8e2f78cf9505977481eef1",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Bursa_Ulu_Camii_2017-06-25_16.27.58_1791358845.JPG/500px-Bursa_Ulu_Camii_2017-06-25_16.27.58_1791358845.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Antonina Vyshnevska",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.27.58_1791358845.JPG",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0001/eb4c08c04e7b98a3",
+      "monument_id": "BUR-0001",
+      "relative_path": "BUR-0001/eb4c08c04e7b98a3-1600.jpg",
+      "sha256": "628c152894b2442771923bc56f72db3d33094121de5469954ae22db69529a22a",
+      "size_bytes": 462508,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0001/eb4c08c04e7b98a3-card.jpg",
+        "sha256": "0eda84a6208c0668c42dfff8af71d181c4c9f0ee594028806d3109a01f297782",
+        "size_bytes": 155949,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Year of construction of the Great Mosque in Bursa.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Year_of_construction_of_the_Great_Mosque_in_Bursa.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Year_of_construction_of_the_Great_Mosque_in_Bursa.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Mohammad Hijjawi",
+        "credit": "Own work",
+        "description": "Year of construction of the Great Mosque in Bursa",
+        "date": "2021-11-04 16:26:21",
+        "category": "Grand Mosque of Bursa",
+        "commons_sha1": "a2a9ae7f5c8a0fc2d4e9676cec941d25be740487",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Year_of_construction_of_the_Great_Mosque_in_Bursa.jpg/500px-Year_of_construction_of_the_Great_Mosque_in_Bursa.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mohammad Hijjawi",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Mohammad Hijjawi, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Year_of_construction_of_the_Great_Mosque_in_Bursa.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0003/9a605cd4f470576e",
+      "monument_id": "BUR-0003",
+      "relative_path": "BUR-0003/9a605cd4f470576e-1600.jpg",
+      "sha256": "6ff926d1bc798ed2b4a47fdb8b8b2bcf52665f8e58d0ea0cfc9a5712ff7e63b1",
+      "size_bytes": 443473,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0003/9a605cd4f470576e-card.jpg",
+        "sha256": "71042e2355df8c2f2add85c203ca2201172e044a941d1e3be6317a854e2a7373",
+        "size_bytes": 137509,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:Bursa Muradiye Mosque Exterior 8037.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8037.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/4/49/Bursa_Muradiye_Mosque_Exterior_8037.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "A view from the gardens of the complex, to its side, showing the domes. It is also clear that there are side rooms to the main space, we see one of them, another is symetrically at the other side. A view from the gardens of the complex, to its side, showing the domes. It is also clear that there are",
+        "date": "2018-10-12 13:51:43",
+        "category": "Muradiye Mosque (Bursa)",
+        "commons_sha1": "8e2ec93f38557488a8c9bc3595d842632bf0f353",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Bursa_Muradiye_Mosque_Exterior_8037.jpg/500px-Bursa_Muradiye_Mosque_Exterior_8037.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8037.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0003/79d984e655a21713",
+      "monument_id": "BUR-0003",
+      "relative_path": "BUR-0003/79d984e655a21713-1600.jpg",
+      "sha256": "48c93ed478e35a639a99b316bd12f2bb50dc58ae3dffec84197d21896fcc0548",
+      "size_bytes": 342035,
+      "width": 1600,
+      "height": 1200,
+      "card": {
+        "relative_path": "BUR-0003/79d984e655a21713-card.jpg",
+        "sha256": "fe9adc70307b7b5c154b3279101dd3977cac34668915adba0b46a062cea4736c",
+        "size_bytes": 121862,
+        "width": 900,
+        "height": 675
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:MURADİYE CAMİİ - panoramio (11).jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0%C4%B0_-_panoramio_(11).jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/5/55/MURAD%C4%B0YE_CAM%C4%B0%C4%B0_-_panoramio_%2811%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 3648,
+        "original_height": 2736,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161023234744/http://www.panoramio.com/photo/52429442",
+        "description": "MURADİYE CAMİİ",
+        "date": "Taken on 7 May 2011",
+        "category": "Muradiye Mosque (Bursa)",
+        "commons_sha1": "b6f84e41feda37e3fa8a2ed77f06f1dfce1f67fe",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/MURAD%C4%B0YE_CAM%C4%B0%C4%B0_-_panoramio_%2811%29.jpg/500px-MURAD%C4%B0YE_CAM%C4%B0%C4%B0_-_panoramio_%2811%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0%C4%B0_-_panoramio_(11).jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0003/c0957f6215c4be84",
+      "monument_id": "BUR-0003",
+      "relative_path": "BUR-0003/c0957f6215c4be84-1600.jpg",
+      "sha256": "002432ddaae9c2a9c2aeaaca1af81eb824c75e665d411227f9c60d195439c9c3",
+      "size_bytes": 344971,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0003/c0957f6215c4be84-card.jpg",
+        "sha256": "e68b0d98dc6c45892055fd527ab56b0d727259d8530c1876f02e212d4e162666",
+        "size_bytes": 118935,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:Bursa Muradiye Mosque Exterior 8040.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8040.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Bursa_Muradiye_Mosque_Exterior_8040.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "The entrance with in ots front the son cemaat yeri, the area for latecomers to the prayers, in a columned hall.",
+        "date": "2018-10-12 14:30:10",
+        "category": "Muradiye Mosque (Bursa)",
+        "commons_sha1": "20785326ba2349c71dd6b8d10d021158dddd598f",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Bursa_Muradiye_Mosque_Exterior_8040.jpg/500px-Bursa_Muradiye_Mosque_Exterior_8040.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8040.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0003/e8ab7b81bbe1c514",
+      "monument_id": "BUR-0003",
+      "relative_path": "BUR-0003/e8ab7b81bbe1c514-1600.jpg",
+      "sha256": "45528a2592d821b98f37f9214c9e9240bf3e7bf68820b04d4ad6650b209683f6",
+      "size_bytes": 289226,
+      "width": 1065,
+      "height": 1600,
+      "card": {
+        "relative_path": "BUR-0003/e8ab7b81bbe1c514-card.jpg",
+        "sha256": "b00bb5b6d2621824768b5a5319196c0adef108f15cc68d5024dc9c788f645e92",
+        "size_bytes": 104971,
+        "width": 599,
+        "height": 900
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Bursa Muradiye Mosque Exterior 8038.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8038.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Bursa_Muradiye_Mosque_Exterior_8038.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 3280,
+        "original_height": 4928,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "The entrance.",
+        "date": "2018-10-12 14:29:38",
+        "category": "Muradiye Mosque (Bursa)",
+        "commons_sha1": "6fed94a84d2915721ae6905f6982964380812566",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Bursa_Muradiye_Mosque_Exterior_8038.jpg/500px-Bursa_Muradiye_Mosque_Exterior_8038.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8038.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0003/ac0d6e214b272cd9",
+      "monument_id": "BUR-0003",
+      "relative_path": "BUR-0003/ac0d6e214b272cd9-1600.jpg",
+      "sha256": "64b2b872ce6ae62b8568fd652d5cf1a95364baf5f1deb09e195c034221c8ab94",
+      "size_bytes": 367136,
+      "width": 1600,
+      "height": 1200,
+      "card": {
+        "relative_path": "BUR-0003/ac0d6e214b272cd9-card.jpg",
+        "sha256": "91b2872c1cfd3db8dc0d1bba7d78edf8a9a20bedf2896ec6c439c26fb27f7ffe",
+        "size_bytes": 132151,
+        "width": 900,
+        "height": 675
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:MURADİYE CAMİSİ - panoramio.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0S%C4%B0_-_panoramio.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/5/50/MURAD%C4%B0YE_CAM%C4%B0S%C4%B0_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 3648,
+        "original_height": 2736,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161023093829/http://www.panoramio.com/photo/52431099",
+        "description": "MURADİYE CAMİSİ",
+        "date": "Taken on 7 May 2011",
+        "category": "Muradiye Mosque (Bursa)",
+        "commons_sha1": "cfd00c47ee234e4ef45d1b22d913e80cf9064e7c",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/MURAD%C4%B0YE_CAM%C4%B0S%C4%B0_-_panoramio.jpg/500px-MURAD%C4%B0YE_CAM%C4%B0S%C4%B0_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0S%C4%B0_-_panoramio.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0003/a4ed7ebce66a59d0",
+      "monument_id": "BUR-0003",
+      "relative_path": "BUR-0003/a4ed7ebce66a59d0-1600.jpg",
+      "sha256": "b1c9c3e4e4ef48040820b8d780ab45254ef395655d233ae9f4669581e46da330",
+      "size_bytes": 309212,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0003/a4ed7ebce66a59d0-card.jpg",
+        "sha256": "2bab4407c1d3e72c3e582a99e75310c4bc785ae8acc58da09eb412baa84e611b",
+        "size_bytes": 102865,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Bursa Muradiye Mosque Exterior 8039.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8039.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Bursa_Muradiye_Mosque_Exterior_8039.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "The entrance to the left, and part of the son cemaat yeri, the area for latecomers to the prayers, in a columned hall.",
+        "date": "2018-10-12 14:29:56",
+        "category": "Muradiye Mosque (Bursa)",
+        "commons_sha1": "02e38d65ae564670ef1a4fbeaf14dc13e302c44b",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Bursa_Muradiye_Mosque_Exterior_8039.jpg/500px-Bursa_Muradiye_Mosque_Exterior_8039.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8039.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0005/036682fccfd929f3",
+      "monument_id": "BUR-0005",
+      "relative_path": "BUR-0005/036682fccfd929f3-1600.jpg",
+      "sha256": "761250c2d8ecf0459359e3e15ee1cf2120089e3c407e59ad32aa46873d57104e",
+      "size_bytes": 433213,
+      "width": 1600,
+      "height": 1250,
+      "card": {
+        "relative_path": "BUR-0005/036682fccfd929f3-card.jpg",
+        "sha256": "2c853a4c0e08d61c47653705122d3058757fe2e42aa926fe1f0c79e63e9c80f9",
+        "size_bytes": 136930,
+        "width": 900,
+        "height": 703
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:MURADİYE CAMİ MEDRESESİ - panoramio (1).jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio_(1).jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/a/a6/MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 8366,
+        "original_height": 6538,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161030045620/http://www.panoramio.com/photo/106902367",
+        "description": "MURADİYE CAMİ MEDRESESİ",
+        "date": "Taken on 7 May 2014",
+        "category": "Muradiye Madrasa",
+        "commons_sha1": "1131c7b66d9d21dce273d012dbf6089c5a8f4139",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio_%281%29.jpg/500px-MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio_(1).jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0005/04927e53ab68e0fb",
+      "monument_id": "BUR-0005",
+      "relative_path": "BUR-0005/04927e53ab68e0fb-1600.jpg",
+      "sha256": "628257d5ccecf20254bdafa720a94d7046e0009428e94eddf7827cf5da0804b6",
+      "size_bytes": 590887,
+      "width": 1600,
+      "height": 1426,
+      "card": {
+        "relative_path": "BUR-0005/04927e53ab68e0fb-card.jpg",
+        "sha256": "a71deeeef28a7bbb4494deab736e90477a5b63ef5ddad274ee187cf0e5d2dd59",
+        "size_bytes": 193633,
+        "width": 900,
+        "height": 802
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:MURADİYE CAMİ MEDRESESİ - panoramio.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6815,
+        "original_height": 6074,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161029194634/http://www.panoramio.com/photo/106902381",
+        "description": "MURADİYE CAMİ MEDRESESİ",
+        "date": "Taken on 7 May 2014",
+        "category": "Muradiye Madrasa",
+        "commons_sha1": "58a0385f2d06e5b0117fe5b817f35135284c10ed",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d2/MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio.jpg/500px-MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0005/d9a68694ac7826c4",
+      "monument_id": "BUR-0005",
+      "relative_path": "BUR-0005/d9a68694ac7826c4-1600.jpg",
+      "sha256": "d8ba0700e0b93754c46d4e82310c99d3fe1f0afa9d4685fb3813db94a32f82f1",
+      "size_bytes": 503968,
+      "width": 1600,
+      "height": 1200,
+      "card": {
+        "relative_path": "BUR-0005/d9a68694ac7826c4-card.jpg",
+        "sha256": "af12971db40c5c1ede540a11c17ae8395ede20b3414168ed50fff83b6ea12723",
+        "size_bytes": 171019,
+        "width": 900,
+        "height": 675
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:Muradiye Medrese Bursa DSCF2043.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Muradiye_Medrese_Bursa_DSCF2043.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Muradiye_Medrese_Bursa_DSCF2043.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4608,
+        "original_height": 3456,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "R Prazeres",
+        "credit": "Own work",
+        "description": "Interior courtyard of the medrese of the Muradiye Complex (of Murad II), Bursa.",
+        "date": "2014-05-15 07:00:17",
+        "category": "Muradiye Madrasa",
+        "commons_sha1": "ffb3699900801a9bea739ac7084a3d6a47a617f5",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Muradiye_Medrese_Bursa_DSCF2043.jpg/500px-Muradiye_Medrese_Bursa_DSCF2043.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "R Prazeres",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: R Prazeres, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Muradiye_Medrese_Bursa_DSCF2043.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0005/226a241c857332a0",
+      "monument_id": "BUR-0005",
+      "relative_path": "BUR-0005/226a241c857332a0-1600.jpg",
+      "sha256": "20a5be9254e9e78a016155c662313b5778a0b7cd39b46ce5306f9c4581b34559",
+      "size_bytes": 279855,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0005/226a241c857332a0-card.jpg",
+        "sha256": "41eedfafb51533de618e8dd56353839d2a0bb24f5cd9ca3005f06fa8256a68fd",
+        "size_bytes": 107955,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Muradiye Medresesi (1).jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Muradiye_Medresesi_(1).jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Muradiye_Medresesi_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 2400,
+        "original_height": 1600,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Canercangul",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2022-11-17 12:38:52",
+        "category": "Muradiye Madrasa",
+        "commons_sha1": "b40818a898757932a87bc55083d6aace3120db17",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/Muradiye_Medresesi_%281%29.jpg/500px-Muradiye_Medresesi_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Canercangul",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Canercangul, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Muradiye_Medresesi_(1).jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0005/528adf9eb84a0b4f",
+      "monument_id": "BUR-0005",
+      "relative_path": "BUR-0005/528adf9eb84a0b4f-1600.jpg",
+      "sha256": "8be12453fbf0f4a57631196b6bd924ce09c60db0d325a25a71faf6ea6cd1cd73",
+      "size_bytes": 416747,
+      "width": 1600,
+      "height": 1200,
+      "card": {
+        "relative_path": "BUR-0005/528adf9eb84a0b4f-card.jpg",
+        "sha256": "5d3c655e5d54ca3a867a57948848ce4d37fade76cc8ebcd6bf102fa1eab4ca30",
+        "size_bytes": 142441,
+        "width": 900,
+        "height": 675
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:MURADİYE MEDRESESİ - panoramio (1).jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_MEDRESES%C4%B0_-_panoramio_(1).jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/MURAD%C4%B0YE_MEDRESES%C4%B0_-_panoramio_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 3648,
+        "original_height": 2736,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161021095402/http://www.panoramio.com/photo/52413677",
+        "description": "MURADİYE MEDRESESİ",
+        "date": "Taken on 7 May 2011",
+        "category": "Muradiye Madrasa",
+        "commons_sha1": "273c4a46081845c5f5f33dd1d364325cfd69b9c4",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/MURAD%C4%B0YE_MEDRESES%C4%B0_-_panoramio_%281%29.jpg/500px-MURAD%C4%B0YE_MEDRESES%C4%B0_-_panoramio_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_MEDRESES%C4%B0_-_panoramio_(1).jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0005/5a7d8363d8cc00f2",
+      "monument_id": "BUR-0005",
+      "relative_path": "BUR-0005/5a7d8363d8cc00f2-1600.jpg",
+      "sha256": "f39ab636099d1cb5ab8c5d98fa11503a08a11fba8c317d0ad0ccc5ad1f6b9b48",
+      "size_bytes": 503267,
+      "width": 1600,
+      "height": 1235,
+      "card": {
+        "relative_path": "BUR-0005/5a7d8363d8cc00f2-card.jpg",
+        "sha256": "e44f07e59cceb15646168975dc397bb4fc145442718879e095ce88e6c45ef888",
+        "size_bytes": 175374,
+        "width": 900,
+        "height": 695
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Muradiye Medrese Bursa DSCF2040.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Muradiye_Medrese_Bursa_DSCF2040.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Muradiye_Medrese_Bursa_DSCF2040.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4478,
+        "original_height": 3456,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "R Prazeres",
+        "credit": "Own work",
+        "description": "Medrese of the Muradiye Complex (of Murad II), Bursa. The courtyard-facing exterior of the dershane hall.",
+        "date": "2014-05-15 06:59:53",
+        "category": "Muradiye Madrasa",
+        "commons_sha1": "bb17f04b297d1304c6629651cbc73803a87f93ed",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Muradiye_Medrese_Bursa_DSCF2040.jpg/500px-Muradiye_Medrese_Bursa_DSCF2040.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "R Prazeres",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: R Prazeres, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Muradiye_Medrese_Bursa_DSCF2040.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0007/d5cb8a98de777d1d",
+      "monument_id": "BUR-0007",
+      "relative_path": "BUR-0007/d5cb8a98de777d1d-1600.jpg",
+      "sha256": "30db36253e5b8d6644c07b8de8a3c3439ba32bfd9dfcc41544e8ca1c2be760b3",
+      "size_bytes": 347463,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0007/d5cb8a98de777d1d-card.jpg",
+        "sha256": "a8c02ab1965753ba6a09cc7743dbbf92aa32bd199d1b7c081a6cfd1f8ba99c6c",
+        "size_bytes": 122444,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.16.51 1791294802.JPG",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.51_1791294802.JPG",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.51_1791294802.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Antonina Vyshnevska",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2017-06-30",
+        "category": "Tomb of Murad II",
+        "commons_sha1": "398083886ae06a38ad5eb4917b754ca1a95d29c6",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.51_1791294802.JPG/500px-Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.51_1791294802.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Antonina Vyshnevska",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.51_1791294802.JPG",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0007/84dca9bfe6953dca",
+      "monument_id": "BUR-0007",
+      "relative_path": "BUR-0007/84dca9bfe6953dca-1600.jpg",
+      "sha256": "0951ed503bdaf395b3c447712fb9647b79274774e6a79bc07d9fd9730ee949d2",
+      "size_bytes": 204260,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0007/84dca9bfe6953dca-card.jpg",
+        "sha256": "c77e8b0d81e38782801b121a3b5abf0b0558c2680722c2c673a6be77f7b92c43",
+        "size_bytes": 76436,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.14.01 1791297518.JPG",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.01_1791297518.JPG",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.01_1791297518.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Antonina Vyshnevska",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2017-06-30",
+        "category": "Tomb of Murad II",
+        "commons_sha1": "2596c7fc1000fc1bce337d42c65848a5f2d42256",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.01_1791297518.JPG/500px-Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.01_1791297518.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Antonina Vyshnevska",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.01_1791297518.JPG",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0007/95937d0798f92853",
+      "monument_id": "BUR-0007",
+      "relative_path": "BUR-0007/95937d0798f92853-1600.jpg",
+      "sha256": "e6761bb4132264e5e857640bd94d1206cf8c35bb00b6214f000f271619c9b058",
+      "size_bytes": 227961,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0007/95937d0798f92853-card.jpg",
+        "sha256": "f18a183ea315870d9d23f745d2461baa69d467dd601c211c433c772e2743ddff",
+        "size_bytes": 88348,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.14.12 1791297523.JPG",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.12_1791297523.JPG",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.12_1791297523.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Antonina Vyshnevska",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2017-06-30",
+        "category": "Tomb of Murad II",
+        "commons_sha1": "324df7390b8ddec699b4bf54338b4ea3bff3ce49",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.12_1791297523.JPG/500px-Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.12_1791297523.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Antonina Vyshnevska",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.12_1791297523.JPG",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0007/8ffe98b55464b044",
+      "monument_id": "BUR-0007",
+      "relative_path": "BUR-0007/8ffe98b55464b044-1600.jpg",
+      "sha256": "4c4ddd9f8a959776f57aca8230d63ff8ef2f07a1917d28fd73e8a063d160388a",
+      "size_bytes": 280501,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0007/8ffe98b55464b044-card.jpg",
+        "sha256": "1c61a1bc9b0f0fa39600b5ecc8680e1e4cce751e6a2ab1b6cf40936cd26f694f",
+        "size_bytes": 96959,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.13.06 1791297508.JPG",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.13.06_1791297508.JPG",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/3/38/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.13.06_1791297508.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Antonina Vyshnevska",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2017-06-30",
+        "category": "Tomb of Murad II",
+        "commons_sha1": "72e082226f0aab6ad08aea7a95b4ff92dc3f9f84",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.13.06_1791297508.JPG/500px-Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.13.06_1791297508.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Antonina Vyshnevska",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.13.06_1791297508.JPG",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0007/d7901cec6f45e030",
+      "monument_id": "BUR-0007",
+      "relative_path": "BUR-0007/d7901cec6f45e030-1600.jpg",
+      "sha256": "975d593e1ccf9103c1a54825f777d7b44aee79f487407c083fd60a1477b8b614",
+      "size_bytes": 435621,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0007/d7901cec6f45e030-card.jpg",
+        "sha256": "d6e669b44de127c078d3a9789b0afed23de100081173b78ff5c36d1bc10bc4ee",
+        "size_bytes": 144806,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:Murad II Türbesi 7943.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Murad_II_T%C3%BCrbesi_7943.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Murad_II_T%C3%BCrbesi_7943.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "This mausoleum was built in 1481 by Mehmet the Conqueror for his father, Murat II. According to the latter’s last will this structure was not covered to let the rain in, and with a surrounding gallery for disciples to memorize the Qur’an. Without using a sarcophagus the sultan’s body was buried dire",
+        "date": "2018-10-12 12:46:13",
+        "category": "Tomb of Murad II",
+        "commons_sha1": "b4afc0a6ce9841d37ad4baf93033f5f6aea1346e",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Murad_II_T%C3%BCrbesi_7943.jpg/500px-Murad_II_T%C3%BCrbesi_7943.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Murad_II_T%C3%BCrbesi_7943.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0007/060bfa77c23d3ddf",
+      "monument_id": "BUR-0007",
+      "relative_path": "BUR-0007/060bfa77c23d3ddf-1600.jpg",
+      "sha256": "5670576a065d9cf57b4a6b3d127ab704adfa701ad40ea65148bcae8ba7cfe084",
+      "size_bytes": 210879,
+      "width": 1067,
+      "height": 1600,
+      "card": {
+        "relative_path": "BUR-0007/060bfa77c23d3ddf-card.jpg",
+        "sha256": "ef47acbbccbd5e3f873ffab6c26c0dda5002ae208e2cc5f25244a485569ff4a6",
+        "size_bytes": 79112,
+        "width": 600,
+        "height": 900
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.16.03 1791297488.JPG",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.03_1791297488.JPG",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/4/41/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.03_1791297488.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4000,
+        "original_height": 6000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Antonina Vyshnevska",
+        "credit": "Own work",
+        "description": "This picture was uploaded via app \"Wiki Loves Monuments Turkey\".",
+        "date": "2017-06-30",
+        "category": "Tomb of Murad II",
+        "commons_sha1": "e6af3877eea179dfe1e931eeb19b25886bad32f5",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.03_1791297488.JPG/500px-Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.03_1791297488.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Antonina Vyshnevska",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.03_1791297488.JPG",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0008/f17927cd52d1d54a",
+      "monument_id": "BUR-0008",
+      "relative_path": "BUR-0008/f17927cd52d1d54a-1600.jpg",
+      "sha256": "cc3296379b719f6f984f8c6fd44cb4ce516a5615008e2f30c4b722cbe9b0b21d",
+      "size_bytes": 380282,
+      "width": 1600,
+      "height": 1044,
+      "card": {
+        "relative_path": "BUR-0008/f17927cd52d1d54a-card.jpg",
+        "sha256": "3a2d523d5dbc43008fb1131d4d6f7adcfd37e3ab8749249e1c33848d97eba5d3",
+        "size_bytes": 129030,
+        "width": 900,
+        "height": 587
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:Bursa Cem Sultan Turbesi in 1993 105.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Cem_Sultan_Turbesi_in_1993_105.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/0/01/Bursa_Cem_Sultan_Turbesi_in_1993_105.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6399,
+        "original_height": 4175,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "One of some older pictures, some not as sharp as wished for.",
+        "date": "2018-05-28 13:25:29",
+        "category": "Tomb of Cem",
+        "commons_sha1": "df2c6990ba877d7633b88fa910ea2fdd975eb09d",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Bursa_Cem_Sultan_Turbesi_in_1993_105.jpg/500px-Bursa_Cem_Sultan_Turbesi_in_1993_105.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Cem_Sultan_Turbesi_in_1993_105.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0008/6b3ea8d7e9d3a298",
+      "monument_id": "BUR-0008",
+      "relative_path": "BUR-0008/6b3ea8d7e9d3a298-1600.jpg",
+      "sha256": "b5031311e78184a614f987b3b441969e915cd190f5b5096fc03ca8c80831adb6",
+      "size_bytes": 447724,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0008/6b3ea8d7e9d3a298-card.jpg",
+        "sha256": "07a0b7b1aad4e8a6791d8a23b70fd62256ff0382796720424a1a84546571a4f5",
+        "size_bytes": 140101,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:Cem Sultan Türbesi 7952.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7952.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Cem_Sultan_T%C3%BCrbesi_7952.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "Condensed from a notice at the site: Built for Shehzade Mustafa, son of Mehmet the Conqueror. Mustafa died in 1474, his remains after some travels were brought to Bursa, to be buried in the mausoleum of an uncle, until in 1479 this mausoleum was built for him and he was buried here. Another son of M",
+        "date": "2018-10-12 12:54:47",
+        "category": "Tomb of Cem",
+        "commons_sha1": "191ed880b8f12b88a6c55847583d25a540a5b8b6",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/Cem_Sultan_T%C3%BCrbesi_7952.jpg/500px-Cem_Sultan_T%C3%BCrbesi_7952.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7952.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0008/329fe5a9bb762660",
+      "monument_id": "BUR-0008",
+      "relative_path": "BUR-0008/329fe5a9bb762660-1600.jpg",
+      "sha256": "1c3e6383a9ec4856da4e2ab3fca3e625e7fc3f8e82f548c486c158f78b4f5264",
+      "size_bytes": 340629,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0008/329fe5a9bb762660-card.jpg",
+        "sha256": "5f8df5899af59bfda286a054dbb367fb47663d70e61aba4c15015712b57deda3",
+        "size_bytes": 107084,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:Cem Sultan Türbesi 7961.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7961.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/b/be/Cem_Sultan_T%C3%BCrbesi_7961.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "Condensed from a notice at the site: Built for Shehzade Mustafa, son of Mehmet the Conqueror. Mustafa died in 1474, his remains after some travels were brought to Bursa, to be buried in the mausoleum of an uncle, until in 1479 this mausoleum was built for him and he was buried here. Another son of M",
+        "date": "2018-10-12 13:00:15",
+        "category": "Tomb of Cem",
+        "commons_sha1": "93300dd34c8f2d7cd237ec2734c1fe2f35efd33a",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/Cem_Sultan_T%C3%BCrbesi_7961.jpg/500px-Cem_Sultan_T%C3%BCrbesi_7961.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7961.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0008/e4e6c15ffc089c3a",
+      "monument_id": "BUR-0008",
+      "relative_path": "BUR-0008/e4e6c15ffc089c3a-1600.jpg",
+      "sha256": "46f159697184cd5e80bc8f244a0e9810e715ab18b9224a88cfd865277bf241df",
+      "size_bytes": 308249,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0008/e4e6c15ffc089c3a-card.jpg",
+        "sha256": "7475c7713d614dedf5428bd96e1ea6fac42a442d95ed5f4a5032b90b1ebe7bd7",
+        "size_bytes": 100968,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Cem Sultan Türbesi 7959.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7959.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Cem_Sultan_T%C3%BCrbesi_7959.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "Condensed from a notice at the site: Built for Shehzade Mustafa, son of Mehmet the Conqueror. Mustafa died in 1474, his remains after some travels were brought to Bursa, to be buried in the mausoleum of an uncle, until in 1479 this mausoleum was built for him and he was buried here. Another son of M",
+        "date": "2018-10-12 12:59:53",
+        "category": "Tomb of Cem",
+        "commons_sha1": "bea3d587b5078dd0c4ea1f7ac051c2db6d5c4cc8",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Cem_Sultan_T%C3%BCrbesi_7959.jpg/500px-Cem_Sultan_T%C3%BCrbesi_7959.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7959.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0008/5681958550686955",
+      "monument_id": "BUR-0008",
+      "relative_path": "BUR-0008/5681958550686955-1600.jpg",
+      "sha256": "59b7588ed7231affb9e0824b572373f851b5dfe96fbe7ab76e72cad7e71386d9",
+      "size_bytes": 519181,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0008/5681958550686955-card.jpg",
+        "sha256": "623d8ba4872fde93313ebac14357784ef8fa4b12bae194008c96704971882c55",
+        "size_bytes": 164953,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:Cem Sultan Türbesi 7967.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7967.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Cem_Sultan_T%C3%BCrbesi_7967.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "Condensed from a notice at the site: Built for Shehzade Mustafa, son of Mehmet the Conqueror. Mustafa died in 1474, his remains after some travels were brought to Bursa, to be buried in the mausoleum of an uncle, until in 1479 this mausoleum was built for him and he was buried here. Another son of M",
+        "date": "2018-10-12 13:01:40",
+        "category": "Tomb of Cem",
+        "commons_sha1": "dd6d24e534f3305962c30a095c141cabe24b1fee",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Cem_Sultan_T%C3%BCrbesi_7967.jpg/500px-Cem_Sultan_T%C3%BCrbesi_7967.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7967.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0008/94c31d3a674a21d6",
+      "monument_id": "BUR-0008",
+      "relative_path": "BUR-0008/94c31d3a674a21d6-1600.jpg",
+      "sha256": "03a54f2f5f2e36be67a221d4114094001a99ef7ed53dd8b3fbb9082652956767",
+      "size_bytes": 549179,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0008/94c31d3a674a21d6-card.jpg",
+        "sha256": "70f607911a31663a783a2ca6bd7080cdf63b867962600a255e02b8b193f0c7a6",
+        "size_bytes": 162945,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Cem Sultan Türbesi 8009.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_8009.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Cem_Sultan_T%C3%BCrbesi_8009.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "Condensed from a notice at the site: Built for Shehzade Mustafa, son of Mehmet the Conqueror. Mustafa died in 1474, his remains after some travels were brought to Bursa, to be buried in the mausoleum of an uncle, until in 1479 this mausoleum was built for him and he was buried here. Another son of M",
+        "date": "2018-10-12 13:32:05",
+        "category": "Tomb of Cem",
+        "commons_sha1": "aef686ea209bfd70de31c336747b0e0ff88a876e",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/Cem_Sultan_T%C3%BCrbesi_8009.jpg/500px-Cem_Sultan_T%C3%BCrbesi_8009.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_8009.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0009/bbe6889993d1b4ef",
+      "monument_id": "BUR-0009",
+      "relative_path": "BUR-0009/bbe6889993d1b4ef-1600.jpg",
+      "sha256": "2b1a4e850ad6a6219aa80ea88029e35e733d954282c31cfd972060a807408de7",
+      "size_bytes": 540380,
+      "width": 1600,
+      "height": 1057,
+      "card": {
+        "relative_path": "BUR-0009/bbe6889993d1b4ef-card.jpg",
+        "sha256": "e91c30eb5e4fb27a264ab074fe2e5564957e896b3a3cae42acc37e7a691282cf",
+        "size_bytes": 178422,
+        "width": 900,
+        "height": 595
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:Koza Han, Bursa1.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Koza_Han,_Bursa1.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/2/22/Koza_Han%2C_Bursa1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 5883,
+        "original_height": 3887,
+        "license_short_name": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "artist": "Jocelyn Erskine-Kellie",
+        "credit": "https://www.flickr.com/photos/jocelyn777/53729077213/",
+        "description": "Koza Han, Bursa",
+        "date": "Taken on 30 April 2024, 10:34:26",
+        "category": "Koza Han",
+        "commons_sha1": "fd464eaca725a25cb891a120337ca133d20e886e",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Koza_Han%2C_Bursa1.jpg/500px-Koza_Han%2C_Bursa1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Jocelyn Erskine-Kellie",
+        "license": "CC-BY-SA-2.0",
+        "attribution": "Fotoğraf: Jocelyn Erskine-Kellie, CC BY-SA 2.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Koza_Han,_Bursa1.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0009/5bd9fcb521311e8a",
+      "monument_id": "BUR-0009",
+      "relative_path": "BUR-0009/5bd9fcb521311e8a-1600.jpg",
+      "sha256": "ac57de4f18f6386b15d4d9e69a31fc425449bba3b938c111b7bedbe6550175b2",
+      "size_bytes": 527040,
+      "width": 1600,
+      "height": 1513,
+      "card": {
+        "relative_path": "BUR-0009/5bd9fcb521311e8a-card.jpg",
+        "sha256": "9cfd65d78e1d76744f7bc13ce0ee7b6aa23cf9983790d701f5e0aa4c3b9fee51",
+        "size_bytes": 178039,
+        "width": 900,
+        "height": 851
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:KOZA HANI KOZA HAN BURSA - panoramio (4).jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:KOZA_HANI_KOZA_HAN_BURSA_-_panoramio_(4).jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/b/b5/KOZA_HANI_KOZA_HAN_BURSA_-_panoramio_%284%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6293,
+        "original_height": 5951,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161028023104/http://www.panoramio.com/photo/107551889",
+        "description": "KOZA HANI KOZA HAN  BURSA",
+        "date": "Taken on 28 May 2014",
+        "category": "Koza Han",
+        "commons_sha1": "87d77dfa85e3eb1f8b3ef203aba7d6630a643e34",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/KOZA_HANI_KOZA_HAN_BURSA_-_panoramio_%284%29.jpg/500px-KOZA_HANI_KOZA_HAN_BURSA_-_panoramio_%284%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:KOZA_HANI_KOZA_HAN_BURSA_-_panoramio_(4).jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0009/6d934f8e20d3a72f",
+      "monument_id": "BUR-0009",
+      "relative_path": "BUR-0009/6d934f8e20d3a72f-1600.jpg",
+      "sha256": "0cd86f002a1158a37b67995e8c0205488e9cef31abfc684ab49cb73fe412b994",
+      "size_bytes": 413545,
+      "width": 1600,
+      "height": 1142,
+      "card": {
+        "relative_path": "BUR-0009/6d934f8e20d3a72f-card.jpg",
+        "sha256": "0845ef9e08621523fc73482ff5f08e2dffcc8c12d270c573801cbc6e73859eb1",
+        "size_bytes": 135324,
+        "width": 900,
+        "height": 642
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:Bursa, bazaar, koza han, 01 ingresso.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_bazaar,_koza_han,_01_ingresso.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Bursa%2C_bazaar%2C_koza_han%2C_01_ingresso.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6153,
+        "original_height": 4391,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Francesco Bini",
+        "credit": "Own work",
+        "description": "Buildings in Bursa",
+        "date": "2022-09-29 10:36:58",
+        "category": "Koza Han",
+        "commons_sha1": "b9d8d3d540bc6dd20c6377887b37ac9d01ee72f4",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Bursa%2C_bazaar%2C_koza_han%2C_01_ingresso.jpg/500px-Bursa%2C_bazaar%2C_koza_han%2C_01_ingresso.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Francesco Bini",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_bazaar,_koza_han,_01_ingresso.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0009/dbc3168189383d37",
+      "monument_id": "BUR-0009",
+      "relative_path": "BUR-0009/dbc3168189383d37-1600.jpg",
+      "sha256": "e4f29a32e285071d07623bdc51b4d9f994ea0c371d21049c236bb076e1380fa9",
+      "size_bytes": 238142,
+      "width": 1600,
+      "height": 1039,
+      "card": {
+        "relative_path": "BUR-0009/dbc3168189383d37-card.jpg",
+        "sha256": "d014b0fe9a209dc56eee2e6a4124e94538bb88c94a2d0048eb0954c57412cbe6",
+        "size_bytes": 85831,
+        "width": 900,
+        "height": 584
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Bursa Koza Han in 1993 031.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Koza_Han_in_1993_031.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Bursa_Koza_Han_in_1993_031.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6431,
+        "original_height": 4175,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "One of pictures taken over many years.",
+        "date": "2018-05-28 13:25:19",
+        "category": "Koza Han",
+        "commons_sha1": "db56b75e0dd9200b85b95a573aceab830fd8d1ff",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Bursa_Koza_Han_in_1993_031.jpg/500px-Bursa_Koza_Han_in_1993_031.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Koza_Han_in_1993_031.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0009/7fc730bdd5949b6f",
+      "monument_id": "BUR-0009",
+      "relative_path": "BUR-0009/7fc730bdd5949b6f-1600.jpg",
+      "sha256": "2b06fadaa086694f5157bfcdb79bdad32e791b6779ae4f163c2e9de73b469310",
+      "size_bytes": 413333,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0009/7fc730bdd5949b6f-card.jpg",
+        "sha256": "3b695111b188e5640adc891b0b4ab6321aff5d152dd5e0ca47cbd170da91d405",
+        "size_bytes": 133132,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:Bursa Koza Han in 2014 7185.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Koza_Han_in_2014_7185.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Bursa_Koza_Han_in_2014_7185.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "One of pictures taken over many years.",
+        "date": "2014-05-19 17:44:39",
+        "category": "Koza Han",
+        "commons_sha1": "25bded6716b80f107e904cabaa58787f4f62eb43",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Bursa_Koza_Han_in_2014_7185.jpg/500px-Bursa_Koza_Han_in_2014_7185.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Koza_Han_in_2014_7185.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0009/d81aebd6b32fd828",
+      "monument_id": "BUR-0009",
+      "relative_path": "BUR-0009/d81aebd6b32fd828-1600.jpg",
+      "sha256": "37dbdfe6dd3f8ea75079e349a80ec397deeaa0a31cac8baa0ef58fabf14d1149",
+      "size_bytes": 326906,
+      "width": 1600,
+      "height": 1033,
+      "card": {
+        "relative_path": "BUR-0009/d81aebd6b32fd828-card.jpg",
+        "sha256": "3cafd55ec163e409c74b79087efd380e802c6135af93106f0dfde29b34df2daf",
+        "size_bytes": 116880,
+        "width": 900,
+        "height": 581
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Bursa Koza Han Exterior north gate in 1993 034.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Koza_Han_Exterior_north_gate_in_1993_034.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/1/12/Bursa_Koza_Han_Exterior_north_gate_in_1993_034.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6368,
+        "original_height": 4112,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "One of pictures taken over many years.",
+        "date": "2018-05-27 19:01:54",
+        "category": "Koza Han",
+        "commons_sha1": "1c8bc9bc29286eb68b1077be5627aa9debbf6453",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Bursa_Koza_Han_Exterior_north_gate_in_1993_034.jpg/500px-Bursa_Koza_Han_Exterior_north_gate_in_1993_034.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Koza_Han_Exterior_north_gate_in_1993_034.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0013/3e5326e930616273",
+      "monument_id": "BUR-0013",
+      "relative_path": "BUR-0013/3e5326e930616273-1600.jpg",
+      "sha256": "84c7a154d70318c93bd781337e3026aa99206d441667c9ed95281360e4747202",
+      "size_bytes": 492337,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0013/3e5326e930616273-card.jpg",
+        "sha256": "d090524309368950b07f8ca697fe435db5bef6d5fa54b4721e3c502a4f451d99",
+        "size_bytes": 152419,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:Bursa, Pirinç Hanı, southern wing, 2.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_southern_wing,_2.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_southern_wing%2C_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Carl Ha",
+        "credit": "Own work",
+        "description": "Bursa, Pirinç Hanı, southern wing",
+        "date": "2025-03-29 13:35:16",
+        "category": "Pirinç Han (Bursa)",
+        "commons_sha1": "1a193a8a00c952c47dd3cf63ac348b08a618943c",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_southern_wing%2C_2.jpg/500px-Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_southern_wing%2C_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Carl Ha",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_southern_wing,_2.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0013/3db9066b0f4140b3",
+      "monument_id": "BUR-0013",
+      "relative_path": "BUR-0013/3db9066b0f4140b3-1600.jpg",
+      "sha256": "459501aaffb3870a781a0426c16bf988a13d5c58ab10f81a34df5aa1260770dd",
+      "size_bytes": 350798,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0013/3db9066b0f4140b3-card.jpg",
+        "sha256": "a927cec6f6fdb341702ae7a9bfa8d6afec5e350bdd46fc555facbdd01b1bf5dc",
+        "size_bytes": 112392,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:Bursa, Pirinç Hanı, exterior, eastern entrance, left spandrel.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_exterior,_eastern_entrance,_left_spandrel.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_exterior%2C_eastern_entrance%2C_left_spandrel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Carl Ha",
+        "credit": "Own work",
+        "description": "Bursa, Pirinç Hanı, exterior, eastern entrance, left spandrel",
+        "date": "2025-03-29 13:49:17",
+        "category": "Pirinç Han (Bursa)",
+        "commons_sha1": "9b85d13b9edb80f51a5d37a77d4f27e7c1807271",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_exterior%2C_eastern_entrance%2C_left_spandrel.jpg/500px-Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_exterior%2C_eastern_entrance%2C_left_spandrel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Carl Ha",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_exterior,_eastern_entrance,_left_spandrel.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0013/e6ed5fbad838c232",
+      "monument_id": "BUR-0013",
+      "relative_path": "BUR-0013/e6ed5fbad838c232-1600.jpg",
+      "sha256": "377cd859cd0e2df286e257ed3b8fd742423841897fe0db98311a1475fd8b7d1a",
+      "size_bytes": 246473,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0013/e6ed5fbad838c232-card.jpg",
+        "sha256": "ba1daa37618b9a075f40ad8dfab448b6ceb02b6e2480667f54e5c7eb5a034f57",
+        "size_bytes": 92678,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:Bursa, Pirinç Hanı, northern wing, first floor hallway towards east.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_northern_wing,_first_floor_hallway_towards_east.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_northern_wing%2C_first_floor_hallway_towards_east.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Carl Ha",
+        "credit": "Own work",
+        "description": "Bursa, Pirinç Hanı, northern wing, hallway towards east",
+        "date": "2025-03-29 13:35:56",
+        "category": "Pirinç Han (Bursa)",
+        "commons_sha1": "bebdd8f68cf5e3147a672e376554e7be7a444844",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_northern_wing%2C_first_floor_hallway_towards_east.jpg/500px-Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_northern_wing%2C_first_floor_hallway_towards_east.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Carl Ha",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_northern_wing,_first_floor_hallway_towards_east.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0013/d73b6502ac64ff15",
+      "monument_id": "BUR-0013",
+      "relative_path": "BUR-0013/d73b6502ac64ff15-1600.jpg",
+      "sha256": "ea32abec3ae32aaebd269f06d8c6a2b374b9a09ff5c53475c9f00b9f69ccc72e",
+      "size_bytes": 470164,
+      "width": 1532,
+      "height": 1600,
+      "card": {
+        "relative_path": "BUR-0013/d73b6502ac64ff15-card.jpg",
+        "sha256": "28e505ce0f5218367b766e657eed1889041e335967815f3f8ea97d5d46129284",
+        "size_bytes": 173977,
+        "width": 862,
+        "height": 900
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Bursa, Pirinç Hanı, exterior, eastern entrance.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_exterior,_eastern_entrance.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_exterior%2C_eastern_entrance.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4000,
+        "original_height": 4177,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Carl Ha",
+        "credit": "Own work",
+        "description": "Bursa, Pirinç Hanı, exterior, eastern entrance",
+        "date": "2025-03-29 13:39:06",
+        "category": "Pirinç Han (Bursa)",
+        "commons_sha1": "65d65b20a3879d5b7ee018b3972158f1a97e06e9",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_exterior%2C_eastern_entrance.jpg/500px-Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_exterior%2C_eastern_entrance.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Carl Ha",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_exterior,_eastern_entrance.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0013/4452611f4e1ebaba",
+      "monument_id": "BUR-0013",
+      "relative_path": "BUR-0013/4452611f4e1ebaba-1600.jpg",
+      "sha256": "195bc22f3d3a17ab86bbe057a36ab29f36769ff2cff8e9f256ba88f0470d34b6",
+      "size_bytes": 353183,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0013/4452611f4e1ebaba-card.jpg",
+        "sha256": "8e079d611037467e3611162770bc46a267f95d8231a240239ab56d705edd557d",
+        "size_bytes": 114460,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:Bursa Pirinç Han 2014 7164.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_Pirin%C3%A7_Han_2014_7164.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Bursa_Pirin%C3%A7_Han_2014_7164.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "A general view of the han.",
+        "date": "2014-05-19 16:15:45",
+        "category": "Pirinç Han (Bursa)",
+        "commons_sha1": "cfaf00fd7362eac3747c64a9bf4217f487148a54",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Bursa_Pirin%C3%A7_Han_2014_7164.jpg/500px-Bursa_Pirin%C3%A7_Han_2014_7164.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Pirin%C3%A7_Han_2014_7164.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0013/66c667ecceb585fc",
+      "monument_id": "BUR-0013",
+      "relative_path": "BUR-0013/66c667ecceb585fc-1600.jpg",
+      "sha256": "50e8eac417203e8fee0fa961093d8a963b62eb2a1269fdcb0ca6b296a2a1b4f3",
+      "size_bytes": 349919,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0013/66c667ecceb585fc-card.jpg",
+        "sha256": "20cc08ad60f6d707cfa0afc83366093b4f31c66f3b86d73965bdb6d777f0afdc",
+        "size_bytes": 115441,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Bursa, Pirinç Hanı, southern wing.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_southern_wing.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_southern_wing.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Carl Ha",
+        "credit": "Own work",
+        "description": "Bursa, Pirinç Hanı, southern wing",
+        "date": "2025-03-29 13:34:19",
+        "category": "Pirinç Han (Bursa)",
+        "commons_sha1": "44a22af66b98303e41cb78758405851f820f803a",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_southern_wing.jpg/500px-Bursa%2C_Pirin%C3%A7_Han%C4%B1%2C_southern_wing.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Carl Ha",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_southern_wing.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0014/627013d53111b5c6",
+      "monument_id": "BUR-0014",
+      "relative_path": "BUR-0014/627013d53111b5c6-1600.jpg",
+      "sha256": "3d8ad1e769b3eed7352a7cc2a38badb09421049a75cc6969cdfe485cc277b336",
+      "size_bytes": 386004,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0014/627013d53111b5c6-card.jpg",
+        "sha256": "79f0216358180cabac2d1c476d8f5ab3bcb785abb8aaa62292b23a3ba378ba09",
+        "size_bytes": 142599,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:Bursa, Bedesten, exterior, eastern facade from south-east.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_exterior,_eastern_facade_from_south-east.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/1/11/Bursa%2C_Bedesten%2C_exterior%2C_eastern_facade_from_south-east.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Carl Ha",
+        "credit": "Own work",
+        "description": "Bursa, Bedesten, exterior, eastern facade from south-east",
+        "date": "2025-03-29 14:06:57",
+        "category": "Bursa Bedesten",
+        "commons_sha1": "c11ad6dd4938773b48fdd5e6068925ac0739abd3",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Bursa%2C_Bedesten%2C_exterior%2C_eastern_facade_from_south-east.jpg/500px-Bursa%2C_Bedesten%2C_exterior%2C_eastern_facade_from_south-east.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": "Bedestenin doğu cephesi; çevresindeki modern kapalı çarşı çatısı da görünür.",
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Carl Ha",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_exterior,_eastern_facade_from_south-east.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0014/46979696181a206a",
+      "monument_id": "BUR-0014",
+      "relative_path": "BUR-0014/46979696181a206a-1600.jpg",
+      "sha256": "5b224d17be957358b35318708ad29ecaf6d53bfe83489ca6aa04fe61c564f460",
+      "size_bytes": 302134,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0014/46979696181a206a-card.jpg",
+        "sha256": "b9525e93c1204f3788e4bc8d880ba515e5b1e0dd0c714ba9b3ffe639b4d80a85",
+        "size_bytes": 105084,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:Bursa, Bedesten, interior, inscription on a pillar.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_interior,_inscription_on_a_pillar.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Bursa%2C_Bedesten%2C_interior%2C_inscription_on_a_pillar.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Carl Ha",
+        "credit": "Own work",
+        "description": "Bursa, Bedesten, interior, inscription on a pillar, about in the middle of the building",
+        "date": "2025-03-29 14:05:14",
+        "category": "Bursa Bedesten",
+        "commons_sha1": "0f20ed17ce7628e5c4932e18bab768cb6d1cf425",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Bursa%2C_Bedesten%2C_interior%2C_inscription_on_a_pillar.jpg/500px-Bursa%2C_Bedesten%2C_interior%2C_inscription_on_a_pillar.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Carl Ha",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_interior,_inscription_on_a_pillar.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0014/d8ec4a1e11195875",
+      "monument_id": "BUR-0014",
+      "relative_path": "BUR-0014/d8ec4a1e11195875-1600.jpg",
+      "sha256": "254ab933280c8f6d4286ff94ae0a171c0cf2b91cb1f08b1dfc9e04d861adb75c",
+      "size_bytes": 334524,
+      "width": 1381,
+      "height": 1600,
+      "card": {
+        "relative_path": "BUR-0014/d8ec4a1e11195875-card.jpg",
+        "sha256": "34dff3bf19557c2d12f7a3d5d88e94352f170e38c665fbd60eaf50cbca7c9cbe",
+        "size_bytes": 129196,
+        "width": 777,
+        "height": 900
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Bursa bedesten DSCF1672.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_bedesten_DSCF1672.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Bursa_bedesten_DSCF1672.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 1728,
+        "original_height": 2002,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Robert Prazeres",
+        "credit": "Own work",
+        "description": "Bedesten of Bursa, entrance",
+        "date": "2014-05-15 04:28:41",
+        "category": "Bursa Bedesten",
+        "commons_sha1": "9d42b9782632b74ac34d0ecb725c98f37799845a",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Bursa_bedesten_DSCF1672.jpg/500px-Bursa_bedesten_DSCF1672.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Robert Prazeres",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Robert Prazeres, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_bedesten_DSCF1672.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0014/387b72b79f64eefe",
+      "monument_id": "BUR-0014",
+      "relative_path": "BUR-0014/387b72b79f64eefe-1600.jpg",
+      "sha256": "2c9cac16c3f17e2d169430660f149799e8e3c21780ea5f3fee9b563af6fad877",
+      "size_bytes": 262247,
+      "width": 1067,
+      "height": 1600,
+      "card": {
+        "relative_path": "BUR-0014/387b72b79f64eefe-card.jpg",
+        "sha256": "2f22761db07bf3bfefa31ed374ec0944339aa2ae30160d1494df3755c30539e0",
+        "size_bytes": 98951,
+        "width": 600,
+        "height": 900
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:Bursa, Bedesten, interior with shops.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_interior_with_shops.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Bursa%2C_Bedesten%2C_interior_with_shops.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4000,
+        "original_height": 6000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Carl Ha",
+        "credit": "Own work",
+        "description": "Bursa, Bedesten, interior with shops, southern hallway towards east",
+        "date": "2025-03-29 14:04:03",
+        "category": "Bursa Bedesten",
+        "commons_sha1": "c49a1e8c314976b4a37bf36803a892547a5ea212",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Bursa%2C_Bedesten%2C_interior_with_shops.jpg/500px-Bursa%2C_Bedesten%2C_interior_with_shops.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Carl Ha",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_interior_with_shops.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0014/3f89e70990094ca3",
+      "monument_id": "BUR-0014",
+      "relative_path": "BUR-0014/3f89e70990094ca3-1600.jpg",
+      "sha256": "d2abd2275d664883b00636fc97641b9fd50cb43df4f10daafe389500f12f7039",
+      "size_bytes": 185712,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0014/3f89e70990094ca3-card.jpg",
+        "sha256": "71ab1be9c4e5a90276acd98c18c4e8e500ce3af720fe8a30951866135d1b4f1d",
+        "size_bytes": 68377,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Bursa, Bedesten, interior, exterior wall with arches and dome.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_interior,_exterior_wall_with_arches_and_dome.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Bursa%2C_Bedesten%2C_interior%2C_exterior_wall_with_arches_and_dome.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6000,
+        "original_height": 4000,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Carl Ha",
+        "credit": "Own work",
+        "description": "Bursa, Bedesten, interior, exterior wall with arches and dome, southern hallway, towards south-east",
+        "date": "2025-03-29 14:05:22",
+        "category": "Bursa Bedesten",
+        "commons_sha1": "7a130ca0d8075e9d5baebb9b4664ff38e42cde5a",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Bursa%2C_Bedesten%2C_interior%2C_exterior_wall_with_arches_and_dome.jpg/500px-Bursa%2C_Bedesten%2C_interior%2C_exterior_wall_with_arches_and_dome.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Carl Ha",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_interior,_exterior_wall_with_arches_and_dome.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0014/7c92f5d688ccc601",
+      "monument_id": "BUR-0014",
+      "relative_path": "BUR-0014/7c92f5d688ccc601-1600.jpg",
+      "sha256": "de2a4c86e79e5b49c0013a4efe5b9e38cce6d3cc7aacdda05c85ddd84f937ccb",
+      "size_bytes": 274140,
+      "width": 1200,
+      "height": 1600,
+      "card": {
+        "relative_path": "BUR-0014/7c92f5d688ccc601-card.jpg",
+        "sha256": "428f07a665e5547b384521214e5f4c1773ae83d4b00c5f181ba5dc143d03fdb7",
+        "size_bytes": 98545,
+        "width": 675,
+        "height": 900
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:Bursa bedesten DSCF1674.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa_bedesten_DSCF1674.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Bursa_bedesten_DSCF1674.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 1728,
+        "original_height": 2304,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Robert Prazeres",
+        "credit": "Own work",
+        "description": "Bedesten of Bursa, interior",
+        "date": "2014-05-15 04:29:05",
+        "category": "Bursa Bedesten",
+        "commons_sha1": "03b0e1af0bf319c12a799ff3f07c2bc9bb38bfc0",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Bursa_bedesten_DSCF1674.jpg/500px-Bursa_bedesten_DSCF1674.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Robert Prazeres",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Robert Prazeres, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_bedesten_DSCF1674.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0019/b82193f38df50d5e",
+      "monument_id": "BUR-0019",
+      "relative_path": "BUR-0019/b82193f38df50d5e-1600.jpg",
+      "sha256": "5d0827214c25b8617bdcc73c4fafb8fda87c52a47f117a795aec1c17215cf2dd",
+      "size_bytes": 451078,
+      "width": 1600,
+      "height": 1365,
+      "card": {
+        "relative_path": "BUR-0019/b82193f38df50d5e-card.jpg",
+        "sha256": "c33dfebf4cef16a6e1e39fc8e31bfc52d5c5db02dbeabf7509d4df1be72e667c",
+        "size_bytes": 167094,
+        "width": 900,
+        "height": 768
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:OSMAN GAZİ TÜRBESİ BURSA - panoramio (3).jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio_(3).jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/2/22/OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio_%283%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6938,
+        "original_height": 5920,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161028081146/http://www.panoramio.com/photo/107329252",
+        "description": "OSMAN GAZİ TÜRBESİ BURSA",
+        "date": "Taken on 22 May 2014",
+        "category": "Osman Gazi Türbesi",
+        "commons_sha1": "e24f29cd0791cb46f2a7450fe0ccd1f6f36ef9f5",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio_%283%29.jpg/500px-OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio_%283%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio_(3).jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0019/57774d967b5e4748",
+      "monument_id": "BUR-0019",
+      "relative_path": "BUR-0019/57774d967b5e4748-1600.jpg",
+      "sha256": "f50879b57c978f6cc09d3af9824da0ab64362a3cd40c4f4b1330d5983bf4364a",
+      "size_bytes": 317770,
+      "width": 1600,
+      "height": 1227,
+      "card": {
+        "relative_path": "BUR-0019/57774d967b5e4748-card.jpg",
+        "sha256": "368075080c5427f0d79148e91e23780f3d6708663b5e02deaec6e26d2b8fe95b",
+        "size_bytes": 112309,
+        "width": 900,
+        "height": 690
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:OSMAN GAZİ TÜRBESİ BURSA - panoramio.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/3/39/OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 8285,
+        "original_height": 6352,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161028111911/http://www.panoramio.com/photo/106892381",
+        "description": "OSMAN GAZİ TÜRBESİ BURSA",
+        "date": "Taken on 5 May 2014",
+        "category": "Osman Gazi Türbesi",
+        "commons_sha1": "d361e4579c3cce00285987cc56fe5a105624f4cb",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio.jpg/500px-OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0019/a0e105374963470b",
+      "monument_id": "BUR-0019",
+      "relative_path": "BUR-0019/a0e105374963470b-1600.jpg",
+      "sha256": "5531cecb85d3dbe2bd0587379404bb63c1821dc77113e06d7fcbf44b376b9046",
+      "size_bytes": 269294,
+      "width": 1600,
+      "height": 1360,
+      "card": {
+        "relative_path": "BUR-0019/a0e105374963470b-card.jpg",
+        "sha256": "5dda8bac707f2d4a6ec07d27b8928b0eea2836090ac447d92f0cec560b1274fe",
+        "size_bytes": 94937,
+        "width": 900,
+        "height": 765
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:OSMAN GAZİ TÜRBESİ - panoramio.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_-_panoramio.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/8/82/OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6651,
+        "original_height": 5653,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161027194126/http://www.panoramio.com/photo/107329273",
+        "description": "OSMAN GAZİ TÜRBESİ",
+        "date": "Taken on 22 May 2014",
+        "category": "Osman Gazi Türbesi",
+        "commons_sha1": "8adf3993e5f0fff7734cabd67953b48530de2bcd",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_-_panoramio.jpg/500px-OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_-_panoramio.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0019/8c9684500d66d7f3",
+      "monument_id": "BUR-0019",
+      "relative_path": "BUR-0019/8c9684500d66d7f3-1600.jpg",
+      "sha256": "0b31cc9149117c63a44bd7436f3ba375e605b6d54280ee35acab8e85483a4b3d",
+      "size_bytes": 339494,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0019/8c9684500d66d7f3-card.jpg",
+        "sha256": "0cda1f08d3b3ab6c46569a7bfbe0bf39217ad3d9b62e74ebec77cc9dec56633b",
+        "size_bytes": 135466,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Bursa, tophane, tomba di osman gazi, 1863, interno 08 grata.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_osman_gazi,_1863,_interno_08_grata.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_08_grata.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6720,
+        "original_height": 4480,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Francesco Bini",
+        "credit": "Own work",
+        "description": "Tophane, Bursa",
+        "date": "2022-09-29 09:31:24",
+        "category": "Osman Gazi Türbesi",
+        "commons_sha1": "386bdf95af004702dd662b7e4893f8c71c9fac7b",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_08_grata.jpg/500px-Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_08_grata.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Francesco Bini",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_osman_gazi,_1863,_interno_08_grata.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0019/e5fc004f52fdbc18",
+      "monument_id": "BUR-0019",
+      "relative_path": "BUR-0019/e5fc004f52fdbc18-1600.jpg",
+      "sha256": "a7226181fd20f6a34bbdbac58e6c5e7222685e6b94e9a9f8d22c6270b53e2b44",
+      "size_bytes": 362322,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0019/e5fc004f52fdbc18-card.jpg",
+        "sha256": "f3b3a395b1e727eb4946f5b8208e38a7c16cad41f53dbb0641c3ff408c2c7502",
+        "size_bytes": 141613,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:Bursa, tophane, tomba di osman gazi, 1863, interno 06.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_osman_gazi,_1863,_interno_06.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6720,
+        "original_height": 4480,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Francesco Bini",
+        "credit": "Own work",
+        "description": "Tophane, Bursa",
+        "date": "2022-09-29 09:30:55",
+        "category": "Osman Gazi Türbesi",
+        "commons_sha1": "d608d871c74d6223460c5dafd23c22904a0e4ab5",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_06.jpg/500px-Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Francesco Bini",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_osman_gazi,_1863,_interno_06.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0019/a5811efa593fb100",
+      "monument_id": "BUR-0019",
+      "relative_path": "BUR-0019/a5811efa593fb100-1600.jpg",
+      "sha256": "7b2b4347dc053a556de932cbf59bba41df66a3ae028ee0e22cb15e890a952035",
+      "size_bytes": 310327,
+      "width": 1002,
+      "height": 1600,
+      "card": {
+        "relative_path": "BUR-0019/a5811efa593fb100-card.jpg",
+        "sha256": "70d9d881c0160191c1befb0930a8c947c4c57d34599c7385d8d35d21104619f0",
+        "size_bytes": 119790,
+        "width": 564,
+        "height": 900
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Bursa, tophane, tomba di osman gazi, 1863, 01.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_osman_gazi,_1863,_01.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 3732,
+        "original_height": 5960,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Francesco Bini",
+        "credit": "Own work",
+        "description": "Tophane, Bursa",
+        "date": "2022-09-29 09:32:51",
+        "category": "Osman Gazi Türbesi",
+        "commons_sha1": "c866e8370d54834c21ed92f058052362d8a7eb54",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_01.jpg/500px-Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Francesco Bini",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_osman_gazi,_1863,_01.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0020/154c5bdb94d3bc6a",
+      "monument_id": "BUR-0020",
+      "relative_path": "BUR-0020/154c5bdb94d3bc6a-1600.jpg",
+      "sha256": "ed68e448a4c6f9a78e5d8e8014b88486ab2b8d06ed2a2645afa6c48bffb20c2e",
+      "size_bytes": 421446,
+      "width": 1600,
+      "height": 1208,
+      "card": {
+        "relative_path": "BUR-0020/154c5bdb94d3bc6a-card.jpg",
+        "sha256": "481a41474064b853abf36a1bd224e2ddf2bf9eec41fae3dc8972d3495634d443",
+        "size_bytes": 139621,
+        "width": 900,
+        "height": 679
+      },
+      "rank": 0,
+      "commons": {
+        "title": "File:ORHANGAZİ TÜRBESİ BURSA OSMANGAZİ - panoramio.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:ORHANGAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_OSMANGAZ%C4%B0_-_panoramio.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/7/72/ORHANGAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_OSMANGAZ%C4%B0_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 7582,
+        "original_height": 5724,
+        "license_short_name": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "artist": "Mustafa DUMAN",
+        "credit": "https://web.archive.org/web/20161030091803/http://www.panoramio.com/photo/106901597",
+        "description": "ORHANGAZİ TÜRBESİ BURSA OSMANGAZİ",
+        "date": "Taken on 5 May 2014",
+        "category": "Orhan Gazi Tomb",
+        "commons_sha1": "b6fcbb8127fe98fc5a689803591505c8a90a7af9",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/ORHANGAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_OSMANGAZ%C4%B0_-_panoramio.jpg/500px-ORHANGAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_OSMANGAZ%C4%B0_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Mustafa DUMAN",
+        "license": "CC-BY-3.0",
+        "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:ORHANGAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_OSMANGAZ%C4%B0_-_panoramio.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0020/5c10f5495b7ae92f",
+      "monument_id": "BUR-0020",
+      "relative_path": "BUR-0020/5c10f5495b7ae92f-1600.jpg",
+      "sha256": "75b728dfd5377ae801180272c749ef676921d72b32e24abab1d7ebf5744aa137",
+      "size_bytes": 314820,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0020/5c10f5495b7ae92f-card.jpg",
+        "sha256": "d16253cc601b9975b63272d6300f170a480270657e994cb51188a5864f432c62",
+        "size_bytes": 107709,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 1,
+      "commons": {
+        "title": "File:Orhan Gazi Türbesi 6896.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Orhan_Gazi_T%C3%BCrbesi_6896.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/8/82/Orhan_Gazi_T%C3%BCrbesi_6896.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "The present Tomb of Orhan Gazi (1281-1362) was built by Sultan Abdülaziz in 1863. It is a square building, measuring 15½ x 15½ m (inside).\nThe large cenotaph sarcophagus is surrounded by a brass grid and covered with velvet, which is embroidered in silver thread; an epitaph (in Ottoman Arabic script",
+        "date": "2014-05-18 09:29:51",
+        "category": "Orhan Gazi Tomb",
+        "commons_sha1": "16f3db09f4c0b0af1db9a26dc8f90cf279080db8",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Orhan_Gazi_T%C3%BCrbesi_6896.jpg/500px-Orhan_Gazi_T%C3%BCrbesi_6896.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Orhan_Gazi_T%C3%BCrbesi_6896.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0020/28dbd1e92e6d775f",
+      "monument_id": "BUR-0020",
+      "relative_path": "BUR-0020/28dbd1e92e6d775f-1600.jpg",
+      "sha256": "346fccb983cbaf9fcae0303355beeced8dad16b98bab4ee8579393fd2aa6bfcb",
+      "size_bytes": 277485,
+      "width": 1600,
+      "height": 1065,
+      "card": {
+        "relative_path": "BUR-0020/28dbd1e92e6d775f-card.jpg",
+        "sha256": "ff71cf99a520a003029f6585f92b83eb6d691faa4b2762080fabd880bae69299",
+        "size_bytes": 95322,
+        "width": 900,
+        "height": 599
+      },
+      "rank": 2,
+      "commons": {
+        "title": "File:Orhan Gazi Türbesi 6895.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Orhan_Gazi_T%C3%BCrbesi_6895.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Orhan_Gazi_T%C3%BCrbesi_6895.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4928,
+        "original_height": 3280,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Dosseman",
+        "credit": "Own work",
+        "description": "The present Tomb of Orhan Gazi (1281-1362) was built by Sultan Abdülaziz in 1863. It is a square building, measuring 15½ x 15½ m (inside).\nThe large cenotaph sarcophagus is surrounded by a brass grid and covered with velvet, which is embroidered in silver thread; an epitaph (in Ottoman Arabic script",
+        "date": "2014-05-18 09:28:51",
+        "category": "Orhan Gazi Tomb",
+        "commons_sha1": "8ff8d17cffa585c6b9d4397dc85ed0b88f99c07e",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Orhan_Gazi_T%C3%BCrbesi_6895.jpg/500px-Orhan_Gazi_T%C3%BCrbesi_6895.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Dosseman",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Orhan_Gazi_T%C3%BCrbesi_6895.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0020/fdcc3622f2150b2b",
+      "monument_id": "BUR-0020",
+      "relative_path": "BUR-0020/fdcc3622f2150b2b-1600.jpg",
+      "sha256": "50ec3124ff81c585ce738a92e03a25b7088e30f50ed54036cdc5a8e8b0adafcf",
+      "size_bytes": 315425,
+      "width": 1600,
+      "height": 1067,
+      "card": {
+        "relative_path": "BUR-0020/fdcc3622f2150b2b-card.jpg",
+        "sha256": "28e330f7c8feb4a2c66d0c31c796ce53872232a037f29f813cc078aa60726155",
+        "size_bytes": 110222,
+        "width": 900,
+        "height": 600
+      },
+      "rank": 3,
+      "commons": {
+        "title": "File:Bursa, tophane, tomba di orhan gazi, interno 01.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_orhan_gazi,_interno_01.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Bursa%2C_tophane%2C_tomba_di_orhan_gazi%2C_interno_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 6720,
+        "original_height": 4480,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Francesco Bini",
+        "credit": "Own work",
+        "description": "Tophane, Bursa",
+        "date": "2022-09-29 09:25:33",
+        "category": "Orhan Gazi Tomb",
+        "commons_sha1": "cab8753ff92261907f5ad247851b49eccce945e4",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Bursa%2C_tophane%2C_tomba_di_orhan_gazi%2C_interno_01.jpg/500px-Bursa%2C_tophane%2C_tomba_di_orhan_gazi%2C_interno_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Francesco Bini",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_orhan_gazi,_interno_01.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0020/fed261043bf9e86d",
+      "monument_id": "BUR-0020",
+      "relative_path": "BUR-0020/fed261043bf9e86d-1600.jpg",
+      "sha256": "2dd3b4a4cc0c46148e2c9f3e1674932736064be63b5e2599998005ebf420ac9e",
+      "size_bytes": 244368,
+      "width": 1600,
+      "height": 1200,
+      "card": {
+        "relative_path": "BUR-0020/fed261043bf9e86d-card.jpg",
+        "sha256": "393261606de4313e72d8560baa3d32cfa1437d0db69e5420433d890fdad7fdc1",
+        "size_bytes": 91966,
+        "width": 900,
+        "height": 675
+      },
+      "rank": 4,
+      "commons": {
+        "title": "File:Tomb of Nilüfer Hatun, wife of Sultan Orhan of the Ottoman Empire.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Tomb_of_Nil%C3%BCfer_Hatun,_wife_of_Sultan_Orhan_of_the_Ottoman_Empire.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Tomb_of_Nil%C3%BCfer_Hatun%2C_wife_of_Sultan_Orhan_of_the_Ottoman_Empire.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4032,
+        "original_height": 3024,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Maurice Flesier",
+        "credit": "Own work",
+        "description": "Tomb of Nilüfer Hatun (1283-1383), wife of Sultan Orhan Ghazi of the Ottoman Empire.",
+        "date": "2022-01-12 16:51:21",
+        "category": "Orhan Gazi Tomb",
+        "commons_sha1": "c4040384e97fa908744648fdd5e66046ae7eec1a",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Tomb_of_Nil%C3%BCfer_Hatun%2C_wife_of_Sultan_Orhan_of_the_Ottoman_Empire.jpg/500px-Tomb_of_Nil%C3%BCfer_Hatun%2C_wife_of_Sultan_Orhan_of_the_Ottoman_Empire.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Maurice Flesier",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Maurice Flesier, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Tomb_of_Nil%C3%BCfer_Hatun,_wife_of_Sultan_Orhan_of_the_Ottoman_Empire.jpg",
+        "monument_match": "confirmed"
+      }
+    },
+    {
+      "image_id": "commons/BUR-0020/f7b53114b8503b6e",
+      "monument_id": "BUR-0020",
+      "relative_path": "BUR-0020/f7b53114b8503b6e-1600.jpg",
+      "sha256": "e6406906b97eb1efd1a535229b854b7bca11f22da0988c94dad43d3edaf2d2a5",
+      "size_bytes": 277356,
+      "width": 1600,
+      "height": 1200,
+      "card": {
+        "relative_path": "BUR-0020/f7b53114b8503b6e-card.jpg",
+        "sha256": "633fa6d3abc7c55c4faa56a5894185773723cc50ea2cc3239079c544b2130222",
+        "size_bytes": 108861,
+        "width": 900,
+        "height": 675
+      },
+      "rank": 5,
+      "commons": {
+        "title": "File:Dome of Orhan Ghazi Tomb.jpg",
+        "file_page_url": "https://commons.wikimedia.org/wiki/File:Dome_of_Orhan_Ghazi_Tomb.jpg",
+        "original_url": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Dome_of_Orhan_Ghazi_Tomb.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "original_width": 4032,
+        "original_height": 3024,
+        "license_short_name": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "artist": "Maurice Flesier",
+        "credit": "Own work",
+        "description": "Tomb of Orhan Ghazi Tomb, Bursa, Turkey.",
+        "date": "2022-01-12 16:50:02",
+        "category": "Orhan Gazi Tomb",
+        "commons_sha1": "9f742489827b8d1a9404576151b04e2dd839f42c",
+        "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Dome_of_Orhan_Ghazi_Tomb.jpg/500px-Dome_of_Orhan_Ghazi_Tomb.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      },
+      "verification": {
+        "monument_match": "Görsel içerik, dosya adı, açıklama ve kategori karşılaştırılarak masa başında eşleştirildi; editör onayı gerekir.",
+        "notes": null,
+        "modification": "En fazla 1600 px (ayrıntı) ve 900 px (kart) genişliğe küçültülüp yeniden sıkıştırıldı; kırpma veya içerik değişikliği yok."
+      },
+      "proposed_rights": {
+        "rights_holder": "Maurice Flesier",
+        "license": "CC-BY-SA-4.0",
+        "attribution": "Fotoğraf: Maurice Flesier, CC BY-SA 4.0, Wikimedia Commons",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Dome_of_Orhan_Ghazi_Tomb.jpg",
+        "monument_match": "confirmed"
+      }
+    }
+  ]
+}

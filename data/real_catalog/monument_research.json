@@ -1,0 +1,1409 @@
+{
+  "schema_version": "vakifname.monument_research/1",
+  "generated_at": "2026-10-23",
+  "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+  "coordinate_reference_system": "EPSG:4326 (WGS84)",
+  "policy": {
+    "coordinates_verified_in_file": false,
+    "verification": "Koordinat yalnızca 'location' rolündeki kayıtlı incelemecinin location_verification kararıyla doğrulanır.",
+    "map_display_is_not_checkin": true
+  },
+  "method": "Kültür Portalı ve Bursa Alan Başkanlığı sayfaları 2026-10-23'te okundu; hiçbirinde koordinat yoktu. Koordinat adayları OpenStreetMap API 0.6 nesnelerinden hesaplandı ve Wikidata P625 ile çapraz kontrol edildi. V20 kaynak PDF'lerinde (fiziksel sayfa) adres cümleleri pypdf ile çıkarıldı. Saha ölçümü yapılmadı.",
+  "attribution": "Koordinat adayları © OpenStreetMap katkıcıları, ODbL 1.0; Wikidata CC0.",
+  "monuments": [
+    {
+      "monument_id": "BUR-0001",
+      "v20_name": "Ulucami",
+      "full_name": "Bursa Ulu Camii",
+      "alternative_names": [
+        "Ulucami",
+        "Ulu Cami",
+        "Bursa Ulu Cami"
+      ],
+      "type": "cami",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Şehreküstü Mahallesi, Atatürk Caddesi, Cami Sokak, Osmangazi",
+          "source_id": "S-0001-PDF"
+        },
+        {
+          "value": "Atatürk Caddesi, Osmangazi/Bursa (PTT'nin karşısı)",
+          "source_id": "S-0001-KP"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0001-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-1.pdf",
+          "pdf_physical_page": 19,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "address",
+            "type"
+          ],
+          "summary": "Eser adı, tür ve adres (mahalle/cadde/sokak) cümlesi."
+        },
+        {
+          "source_id": "S-0001-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "BURSA ULU CAMİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "type",
+            "address"
+          ],
+          "summary": "Tür 'Cami', adres 'Atatürk Caddesi Osmangazi/BURSA'. 'Konum Bilgileri' alanı boş; koordinat yok."
+        },
+        {
+          "source_id": "S-0001-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM yapı izi: Ulu Cami (building=mosque)",
+          "url": "https://www.openstreetmap.org/way/26434413",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Cami yapı izi çokgeni; wikidata=Q32339 etiketi taşıyor. Nesne sürümü v21."
+        },
+        {
+          "source_id": "S-0001-WD",
+          "kind": "open_knowledge_base",
+          "publisher": "Wikidata (CC0)",
+          "title": "Wikidata: Bursa Ulu Camii",
+          "url": "https://www.wikidata.org/wiki/Q32339",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location",
+            "alternative_names"
+          ],
+          "summary": "P625 koordinatı OSM merkezine ~6 m uzaklıkta."
+        }
+      ],
+      "discrepancies": [
+        {
+          "discrepancy_id": "D-0001-01",
+          "topic": "Mahalle adı",
+          "description": "Kaynak PDF 'Şehreküstü Mahallesi' diyor; OSM'de yapı Şehreküstü–Nalbantoğlu mahalle sınırına çok yakın, bazı ikincil kaynaklar Nalbantoğlu yazıyor. Resmî adres (UAVT) kontrol edilmedi.",
+          "source_ids": [
+            "S-0001-PDF",
+            "S-0001-OSM"
+          ]
+        }
+      ],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0001-01",
+          "latitude": 40.183926,
+          "longitude": 29.061884,
+          "crs": "EPSG:4326",
+          "source_id": "S-0001-OSM",
+          "source_object": "osm:way/26434413@v21",
+          "represents": "building_footprint_centroid",
+          "estimated_accuracy_m": 44,
+          "collection_method": "OSM API 0.6 'full' yanıtındaki dış halka düğümlerinden düzlemsel çokgen ağırlık merkezi hesaplandı; doğruluk tahmini = yapı izinin en büyük kenarının yarısı + 5 m OSM konum belirsizliği.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Yapı izi 68 × 77 m. Bina merkezini gösterir; giriş kapısı değildir."
+        },
+        {
+          "candidate_id": "LC-0001-02",
+          "latitude": 40.183889,
+          "longitude": 29.061944,
+          "crs": "EPSG:4326",
+          "source_id": "S-0001-WD",
+          "source_object": "wikidata:Q32339#P625",
+          "represents": "point_feature",
+          "estimated_accuracy_m": 50,
+          "collection_method": "Wikidata P625 (coğrafi koordinat) değeri; kaynağı belirtilmemiş, yalnızca çapraz kontrol içindir.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Çapraz kontrol."
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": true,
+        "burial_site": false,
+        "access_notes": "Aktif ibadet mekânı. Namaz vakitleri ve Cuma namazında ziyaret/görev yönlendirmesi yapılmamalı; check-in noktası avlu dışındaki kamusal alanda seçilmeli."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    },
+    {
+      "monument_id": "BUR-0003",
+      "v20_name": "Muradiye Camii",
+      "full_name": "Muradiye Camii (II. Murad Camii)",
+      "alternative_names": [
+        "II. Murad Camii",
+        "II. Murat (Muradiye) Cami"
+      ],
+      "type": "cami",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Muradiye Mahallesi, II. Murad Caddesi (Muradiye Külliyesi), Osmangazi",
+          "source_id": "S-0003-PDF"
+        },
+        {
+          "value": "2. Murat Caddesi, Sedat Sokak, Osmangazi/Bursa",
+          "source_id": "S-0003-KP"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0003-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-1.pdf",
+          "pdf_physical_page": 58,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "address"
+          ],
+          "summary": "II. Murad Külliyesi'nin konumu (mahalle ve cadde)."
+        },
+        {
+          "source_id": "S-0003-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "MURADİYE CAMİİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/muradiye-camii",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "type",
+            "address"
+          ],
+          "summary": "Tür 'Cami', adres '2. Murat Caddesi Sedat Sokak Osmangazi/BURSA'. Koordinat yok."
+        },
+        {
+          "source_id": "S-0003-KPE",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "II. MURAT (MURADİYE) CAMİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/ii-murat-muradiye--cami",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "alternative_names"
+          ],
+          "summary": "Kültür envanteri kaydı; alternatif ad."
+        },
+        {
+          "source_id": "S-0003-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM yapı izi: Muradiye Camii (building=mosque)",
+          "url": "https://www.openstreetmap.org/way/397551853",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Cami yapı izi; wikidata=Q65219967. Nesne sürümü v4."
+        },
+        {
+          "source_id": "S-0003-WD",
+          "kind": "open_knowledge_base",
+          "publisher": "Wikidata (CC0)",
+          "title": "Wikidata: Bursa Muradiye Camii",
+          "url": "https://www.wikidata.org/wiki/Q65219967",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location",
+            "alternative_names"
+          ],
+          "summary": "P625 koordinatı OSM merkezine ~10 m uzaklıkta."
+        }
+      ],
+      "discrepancies": [],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0003-01",
+          "latitude": 40.191059,
+          "longitude": 29.046533,
+          "crs": "EPSG:4326",
+          "source_id": "S-0003-OSM",
+          "source_object": "osm:way/397551853@v4",
+          "represents": "building_footprint_centroid",
+          "estimated_accuracy_m": 27,
+          "collection_method": "OSM API 0.6 'full' yanıtındaki dış halka düğümlerinden düzlemsel çokgen ağırlık merkezi hesaplandı; doğruluk tahmini = yapı izinin en büyük kenarının yarısı + 5 m OSM konum belirsizliği.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Yapı izi 43 × 36 m; bina merkezi."
+        },
+        {
+          "candidate_id": "LC-0003-02",
+          "latitude": 40.190972,
+          "longitude": 29.046556,
+          "crs": "EPSG:4326",
+          "source_id": "S-0003-WD",
+          "source_object": "wikidata:Q65219967#P625",
+          "represents": "point_feature",
+          "estimated_accuracy_m": 40,
+          "collection_method": "Wikidata P625 (coğrafi koordinat) değeri; kaynağı belirtilmemiş, yalnızca çapraz kontrol içindir.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Çapraz kontrol."
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": true,
+        "burial_site": true,
+        "access_notes": "Aktif ibadet mekânı; külliye hazîresinde türbeler var. Görev noktası cami avlusu veya türbe bahçesi içinde olmamalı."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    },
+    {
+      "monument_id": "BUR-0005",
+      "v20_name": "Muradiye Medresesi",
+      "full_name": "Muradiye Medresesi",
+      "alternative_names": [
+        "II. Murad Medresesi"
+      ],
+      "type": "medrese",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Muradiye Mahallesi, Prof. Dr. Halil İnalcık Sokak (Muradiye Külliyesi'nin batı ucu), Osmangazi",
+          "source_id": "S-0005-PDF"
+        },
+        {
+          "value": "Muradiye Mahallesi, Sedat Sokak, Osmangazi/Bursa",
+          "source_id": "S-0005-KP"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0005-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-1.pdf",
+          "pdf_physical_page": 63,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "address",
+            "type"
+          ],
+          "summary": "Medresenin konumu ve sokak adı."
+        },
+        {
+          "source_id": "S-0005-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "MURADİYE MEDRESESİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/muradiye-medresesi",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "address"
+          ],
+          "summary": "Adres 'Muradiye Mahallesi Sedat Sokak'. 1951'den beri Verem Savaş Dispanseri olarak kullanıldığı yazıyor (güncelliği belirsiz)."
+        },
+        {
+          "source_id": "S-0005-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM yapı izi: Muradiye Medresesi",
+          "url": "https://www.openstreetmap.org/way/472072850",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Yapı izi; wikidata=Q131741328. Nesne sürümü v4."
+        },
+        {
+          "source_id": "S-0005-WD",
+          "kind": "open_knowledge_base",
+          "publisher": "Wikidata (CC0)",
+          "title": "Wikidata: Muradiye Medresesi",
+          "url": "https://www.wikidata.org/wiki/Q131741328",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location",
+            "alternative_names"
+          ],
+          "summary": "P625 koordinatı OSM merkezine ~2 m uzaklıkta."
+        }
+      ],
+      "discrepancies": [
+        {
+          "discrepancy_id": "D-0005-01",
+          "topic": "Sokak adı",
+          "description": "PDF 'Prof. Dr. Halil İnalcık Sokak', Kültür Portalı 'Sedat Sokak' diyor (olası ad değişikliği; doğrulanmadı).",
+          "source_ids": [
+            "S-0005-PDF",
+            "S-0005-KP"
+          ]
+        },
+        {
+          "discrepancy_id": "D-0005-02",
+          "topic": "Güncel kullanım",
+          "description": "Kültür Portalı yapıyı dispanser olarak tanımlıyor; güncel kullanım ve ziyarete açıklık doğrulanmadı.",
+          "source_ids": [
+            "S-0005-KP"
+          ]
+        }
+      ],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0005-01",
+          "latitude": 40.19093,
+          "longitude": 29.045747,
+          "crs": "EPSG:4326",
+          "source_id": "S-0005-OSM",
+          "source_object": "osm:way/472072850@v4",
+          "represents": "building_footprint_centroid",
+          "estimated_accuracy_m": 26,
+          "collection_method": "OSM API 0.6 'full' yanıtındaki dış halka düğümlerinden düzlemsel çokgen ağırlık merkezi hesaplandı; doğruluk tahmini = yapı izinin en büyük kenarının yarısı + 5 m OSM konum belirsizliği.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Yapı izi 41 × 40 m; bina merkezi."
+        },
+        {
+          "candidate_id": "LC-0005-02",
+          "latitude": 40.190937,
+          "longitude": 29.045734,
+          "crs": "EPSG:4326",
+          "source_id": "S-0005-WD",
+          "source_object": "wikidata:Q131741328#P625",
+          "represents": "point_feature",
+          "estimated_accuracy_m": 30,
+          "collection_method": "Wikidata P625 (coğrafi koordinat) değeri; kaynağı belirtilmemiş, yalnızca çapraz kontrol içindir.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Çapraz kontrol."
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": false,
+        "burial_site": false,
+        "access_notes": "Sağlık tesisi olarak kullanılmış olabilir; iç mekân erişimi doğrulanmadı. Görev yalnızca kamusal sokak cephesinden tasarlanmalı."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    },
+    {
+      "monument_id": "BUR-0007",
+      "v20_name": "Sultan II. Murad Türbesi",
+      "full_name": "Sultan II. Murad Türbesi",
+      "alternative_names": [
+        "II. Murad Türbesi",
+        "II. Murat Türbesi"
+      ],
+      "type": "türbe",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Muradiye Mahallesi, Kaplıca Caddesi No:62 (Muradiye Külliyesi içi), Osmangazi",
+          "source_id": "S-0007-PDF"
+        },
+        {
+          "value": "Muradiye Mahallesi, 2. Murat Caddesi, Osmangazi/Bursa",
+          "source_id": "S-0007-KP"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0007-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-1.pdf",
+          "pdf_physical_page": 68,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "address"
+          ],
+          "summary": "Türbenin külliye içindeki konumu ve adres."
+        },
+        {
+          "source_id": "S-0007-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "II. MURAD TÜRBESİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/ii-murad-turbesi",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "type",
+            "address"
+          ],
+          "summary": "Tür 'Türbe', adres 'Muradiye Mahallesi 2. Murat Caddesi'. Koordinat yok."
+        },
+        {
+          "source_id": "S-0007-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM nokta: II.Murat Türbesi (historic=tomb)",
+          "url": "https://www.openstreetmap.org/node/2796344228",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Nokta nesnesi; yapı izi yok. Nesne sürümü v4."
+        },
+        {
+          "source_id": "S-0007-OSMA",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM alan: II. Murad Külliyesi Sultan Türbeleri",
+          "url": "https://www.openstreetmap.org/way/472072853",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Türbeler bahçesinin alanı (123 × 168 m). Nesne sürümü v4."
+        }
+      ],
+      "discrepancies": [
+        {
+          "discrepancy_id": "D-0007-01",
+          "topic": "Adres caddesi",
+          "description": "PDF 'Kaplıca Caddesi No:62', Kültür Portalı '2. Murat Caddesi' diyor.",
+          "source_ids": [
+            "S-0007-PDF",
+            "S-0007-KP"
+          ]
+        }
+      ],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0007-01",
+          "latitude": 40.190553,
+          "longitude": 29.046121,
+          "crs": "EPSG:4326",
+          "source_id": "S-0007-OSM",
+          "source_object": "osm:node/2796344228@v4",
+          "represents": "point_feature",
+          "estimated_accuracy_m": 20,
+          "collection_method": "OSM nokta nesnesinin koordinatı olduğu gibi alındı; yapı izi olmadığından doğruluk düşük tahmin edildi.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Türbeler bahçesindeki nokta; türbe yapı izi OSM'de yok."
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": false,
+        "burial_site": true,
+        "access_notes": "Kabir/türbe alanı; ziyaret saatleri ve kurallar doğrulanmadı. Check-in noktası türbeler bahçesi dışında olmalı."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    },
+    {
+      "monument_id": "BUR-0008",
+      "v20_name": "Cem Sultan Türbesi",
+      "full_name": "Cem Sultan Türbesi (Şehzade Mustafa Türbesi)",
+      "alternative_names": [
+        "Şehzade Sultan Mustafa ve Sultan Cem Türbesi"
+      ],
+      "type": "türbe",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Muradiye Mahallesi, II. Murad Külliyesi içi, Osmangazi",
+          "source_id": "S-0008-PDF"
+        },
+        {
+          "value": "Muradiye Mahallesi, 2. Murad Caddesi, Osmangazi/Bursa",
+          "source_id": "S-0008-KP"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0008-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-1.pdf",
+          "pdf_physical_page": 73,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "address",
+            "dating"
+          ],
+          "summary": "Yapının 1479'da Fâtih'in oğlu Şehzade Mustafa için yapıldığı, Cem Sultan'ın 1499'da buraya defnedildiği ve konum."
+        },
+        {
+          "source_id": "S-0008-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "CEM SULTAN TÜRBESİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/cem-sultan-turbesi",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "address"
+          ],
+          "summary": "Adres 'Muradiye Mahallesi 2. Murad Caddesi'. Yapının kimin için yapıldığı belirtilmiyor."
+        },
+        {
+          "source_id": "S-0008-KPM",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "ŞEHZADE SULTAN MUSTAFA VE SULTAN CEM TÜRBESİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/sehzade-sultan-mustafa-ve-sultan-cem-turbesi",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "alternative_names"
+          ],
+          "summary": "Şehzade Mustafa'nın 1479'da kendi türbesine defnedildiği, Cem'in 1499'da aynı türbeye gömüldüğü."
+        },
+        {
+          "source_id": "S-0008-KPE",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "ŞEHZADE MAHMUD (CEM SULTAN) TÜRBESİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/sehzade-mahmud-cem-sultan-turbesi",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity"
+          ],
+          "summary": "Envanter kaydı 'Cem Sultan' adını 1506'da II. Bayezid'in oğlu Şehzade Mahmud için yapılan türbeye ekliyor."
+        },
+        {
+          "source_id": "S-0008-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM nokta: Cem Sultan Türbesi (historic=tomb)",
+          "url": "https://www.openstreetmap.org/node/2796344231",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Nokta nesnesi; yapı izi yok. Nesne sürümü v2."
+        },
+        {
+          "source_id": "S-0008-OSMM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM yapı izi: Şehzade Mustafa Türbesi (wikidata=Q20587092)",
+          "url": "https://www.openstreetmap.org/way/1352292877",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Aynı bahçede 'Şehzade Mustafa Türbesi' adlı ayrı bir yapı izi var; hangi Şehzade Mustafa'ya ait olduğu doğrulanmadı. Nesne sürümü v2."
+        }
+      ],
+      "discrepancies": [
+        {
+          "discrepancy_id": "D-0008-01",
+          "topic": "Yapı kimliği (hangi türbe?)",
+          "description": "PDF ve Kültür Portalı 'gezilecek yer' sayfası yapıyı 1479'da Şehzade Mustafa için yapılmış ve Cem'in gömüldüğü türbe olarak tanımlıyor; Kültür Portalı envanter kaydı 'Cem Sultan' adını Şehzade Mahmud Türbesi'ne (1506) ekliyor. OSM'de ayrı 'Cem Sultan Türbesi', 'Şehzade Mahmut Türbesi' ve 'Şehzade Mustafa Türbesi' nesneleri var. Haritada hangi yapının işaretleneceği editör/saha kontrolü gerektirir.",
+          "source_ids": [
+            "S-0008-PDF",
+            "S-0008-KPM",
+            "S-0008-KPE",
+            "S-0008-OSM",
+            "S-0008-OSMM"
+          ]
+        }
+      ],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0008-01",
+          "latitude": 40.190555,
+          "longitude": 29.04563,
+          "crs": "EPSG:4326",
+          "source_id": "S-0008-OSM",
+          "source_object": "osm:node/2796344231@v2",
+          "represents": "point_feature",
+          "estimated_accuracy_m": 25,
+          "collection_method": "OSM nokta nesnesinin koordinatı olduğu gibi alındı; yapı izi olmadığından doğruluk düşük tahmin edildi.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "OSM'de 'Cem Sultan Türbesi' adlı nokta. D-0008-01 çözülmeden kullanılamaz."
+        },
+        {
+          "candidate_id": "LC-0008-02",
+          "latitude": 40.190286,
+          "longitude": 29.04569,
+          "crs": "EPSG:4326",
+          "source_id": "S-0008-OSMM",
+          "source_object": "osm:way/1352292877@v2",
+          "represents": "building_footprint_centroid",
+          "estimated_accuracy_m": 13,
+          "collection_method": "OSM API 0.6 'full' yanıtındaki dış halka düğümlerinden düzlemsel çokgen ağırlık merkezi hesaplandı; doğruluk tahmini = yapı izinin en büyük kenarının yarısı + 5 m OSM konum belirsizliği.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Rakip aday: OSM 'Şehzade Mustafa Türbesi' yapı izi. Bu yapının Kanuni'nin oğlu Şehzade Mustafa'ya ait olabileceği doğrulanmadı; yanlış yapı olabilir."
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": false,
+        "burial_site": true,
+        "access_notes": "Kabir/türbe alanı; iç mekân ziyaretine açıklık doğrulanmadı."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    },
+    {
+      "monument_id": "BUR-0009",
+      "v20_name": "Koza Hanı",
+      "full_name": "Koza Han",
+      "alternative_names": [
+        "Kozahan",
+        "Yeni Han",
+        "Beylik Han",
+        "Hân-ı Cedîd-i Âmire",
+        "Hân-ı Cedîd-i Evvel",
+        "Simkeş Han",
+        "Sırmakeş Han",
+        "Eski Yeni Han"
+      ],
+      "type": "han",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Çarşı ve Hanlar Bölgesi, Orhan Camii ile Ulucami arası, Osmangazi",
+          "source_id": "S-0009-PDF"
+        },
+        {
+          "value": "Hanlar Bölgesi, Osmangazi/Bursa",
+          "source_id": "S-0009-KP"
+        },
+        {
+          "value": "Uzun Çarşı Caddesi (Koza Han Mescidi için Şehreküstü Mahallesi)",
+          "source_id": "S-0009-KPE"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0009-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-2.pdf",
+          "pdf_physical_page": 8,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "alternative_names",
+            "address",
+            "dating"
+          ],
+          "summary": "Konum, tarihî adlar, inşa tarihleri (Mart 1489 – 30 Eylül 1491) ve mimar adı."
+        },
+        {
+          "source_id": "S-0009-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "KOZA HAN",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/koza-han",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "type",
+            "address",
+            "dating"
+          ],
+          "summary": "Tür 'Han', adres 'Hanlar Bölgesi'. İnşa 1490-1491, mimar 'Abdullah bin Pulad Şah'."
+        },
+        {
+          "source_id": "S-0009-KPE",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "KOZA HAN MESCİDİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/koza-han-mescidi",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "address"
+          ],
+          "summary": "Han avlusundaki mescidin adresi."
+        },
+        {
+          "source_id": "S-0009-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM çokgen: Koza Han (multipolygon)",
+          "url": "https://www.openstreetmap.org/relation/1018973",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Avlulu yapı çokgeni; addr:street=Uzun Çarşı Caddesi, addr:neighbourhood=Nalbantoğlu Mahallesi, wikidata=Q6055245. Nesne sürümü v10."
+        },
+        {
+          "source_id": "S-0009-WD",
+          "kind": "open_knowledge_base",
+          "publisher": "Wikidata (CC0)",
+          "title": "Wikidata: Koza Hanı",
+          "url": "https://www.wikidata.org/wiki/Q6055245",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location",
+            "alternative_names"
+          ],
+          "summary": "P625 koordinatı OSM merkezine ~5 m uzaklıkta."
+        }
+      ],
+      "discrepancies": [
+        {
+          "discrepancy_id": "D-0009-01",
+          "topic": "İnşa tarihi",
+          "description": "PDF inşaatı Mart 1489 – 30 Eylül 1491 olarak veriyor; Kültür Portalı 1490-1491 diyor.",
+          "source_ids": [
+            "S-0009-PDF",
+            "S-0009-KP"
+          ]
+        },
+        {
+          "discrepancy_id": "D-0009-02",
+          "topic": "Mimar adının yazımı",
+          "description": "PDF 'Abdülûlâ bin Pulad Şah', Kültür Portalı 'Abdullah bin Pulad Şah' yazıyor.",
+          "source_ids": [
+            "S-0009-PDF",
+            "S-0009-KP"
+          ]
+        },
+        {
+          "discrepancy_id": "D-0009-03",
+          "topic": "Mahalle adı",
+          "description": "OSM 'Nalbantoğlu Mahallesi', Kültür Portalı (mescit kaydı) 'Şehreküstü Mahallesi' diyor.",
+          "source_ids": [
+            "S-0009-OSM",
+            "S-0009-KPE"
+          ]
+        }
+      ],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0009-01",
+          "latitude": 40.18437,
+          "longitude": 29.063537,
+          "crs": "EPSG:4326",
+          "source_id": "S-0009-OSM",
+          "source_object": "osm:relation/1018973@v10",
+          "represents": "building_footprint_centroid",
+          "estimated_accuracy_m": 46,
+          "collection_method": "OSM API 0.6 'full' yanıtındaki dış halka düğümlerinden düzlemsel çokgen ağırlık merkezi hesaplandı; doğruluk tahmini = yapı izinin en büyük kenarının yarısı + 5 m OSM konum belirsizliği.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Yapı 81 × 69 m; merkez avlu içine düşer. Giriş kapısı değildir."
+        },
+        {
+          "candidate_id": "LC-0009-02",
+          "latitude": 40.184333,
+          "longitude": 29.063528,
+          "crs": "EPSG:4326",
+          "source_id": "S-0009-WD",
+          "source_object": "wikidata:Q6055245#P625",
+          "represents": "point_feature",
+          "estimated_accuracy_m": 50,
+          "collection_method": "Wikidata P625 (coğrafi koordinat) değeri; kaynağı belirtilmemiş, yalnızca çapraz kontrol içindir.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Çapraz kontrol."
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": false,
+        "burial_site": false,
+        "access_notes": "Ticari kullanımda; avlu açılış saatleri doğrulanmadı. Avluda mescit (ibadet mekânı) var."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    },
+    {
+      "monument_id": "BUR-0013",
+      "v20_name": "Pirinç Hanı",
+      "full_name": "Pirinç Han",
+      "alternative_names": [
+        "Pirinç Hanı",
+        "Hân-ı Cedîd-i Sânî"
+      ],
+      "type": "han",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Cumhuriyet Caddesi üzeri, Bilecik Sokak No:31, Osmangazi",
+          "source_id": "S-0013-PDF"
+        },
+        {
+          "value": "Hanlar Bölgesi, Osmangazi/Bursa (Cumhuriyet Caddesi'nden yaya erişim)",
+          "source_id": "S-0013-KP"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0013-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-2.pdf",
+          "pdf_physical_page": 22,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "alternative_names",
+            "address"
+          ],
+          "summary": "Adres ve tarihî ad (Hân-ı Cedîd-i Sânî)."
+        },
+        {
+          "source_id": "S-0013-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "PİRİNÇ HAN",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/pirinc-han",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "type",
+            "address",
+            "dating"
+          ],
+          "summary": "Tür 'Han', adres 'Hanlar Bölgesi'. İnşa 1490-1508, II. Bayezid."
+        },
+        {
+          "source_id": "S-0013-AB",
+          "kind": "municipal_heritage",
+          "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+          "title": "Pirinç Han (Han-ı Cedid-i Sani, Han-ı Cedid-i Evvel)",
+          "url": "https://alanbaskanligi.bursa.bel.tr/pirinc-han-han-i-cedid-i-sani-han-i-cedid-i-evvel/",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "alternative_names",
+            "dating"
+          ],
+          "summary": "Alternatif adlar, inşa aralığı 1490-1508, güncel kullanım (alt kat kafe, üst kat büyük ölçüde boş)."
+        },
+        {
+          "source_id": "S-0013-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM yapı izi: Pirinç Han",
+          "url": "https://www.openstreetmap.org/way/26456112",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Avlulu yapı izi; addr:neighbourhood=Şehreküstü Mahallesi. Nesne sürümü v6."
+        }
+      ],
+      "discrepancies": [
+        {
+          "discrepancy_id": "D-0013-01",
+          "topic": "Alternatif ad",
+          "description": "Alan Başkanlığı sayfa başlığı 'Han-ı Cedid-i Evvel' adını da Pirinç Han'a veriyor; PDF bu adı Koza Han'a, 'Hân-ı Cedîd-i Sânî' adını Pirinç Han'a veriyor.",
+          "source_ids": [
+            "S-0013-PDF",
+            "S-0013-AB"
+          ]
+        }
+      ],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0013-01",
+          "latitude": 40.185717,
+          "longitude": 29.060274,
+          "crs": "EPSG:4326",
+          "source_id": "S-0013-OSM",
+          "source_object": "osm:way/26456112@v6",
+          "represents": "building_footprint_centroid",
+          "estimated_accuracy_m": 46,
+          "collection_method": "OSM API 0.6 'full' yanıtındaki dış halka düğümlerinden düzlemsel çokgen ağırlık merkezi hesaplandı; doğruluk tahmini = yapı izinin en büyük kenarının yarısı + 5 m OSM konum belirsizliği.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Yapı izi 79 × 82 m; merkez avlu içine düşer."
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": false,
+        "burial_site": false,
+        "access_notes": "Ticari kullanım; üst kat büyük ölçüde boş (Alan Başkanlığı). Üst kat görev hedefi olmamalı."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    },
+    {
+      "monument_id": "BUR-0014",
+      "v20_name": "Yıldırım Bayezid Bedesteni",
+      "full_name": "Yıldırım Bayezid Bedesteni",
+      "alternative_names": [
+        "Bedesten",
+        "Bursa Bedesteni"
+      ],
+      "type": "bedesten",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Atatürk Caddesi, Osmangazi/Bursa (Ulu Cami'nin alt kısmındaki çarşı)",
+          "source_id": "S-0014-KP"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0014-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-2.pdf",
+          "pdf_physical_page": 29,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "dating"
+          ],
+          "summary": "Yapının Yıldırım Bayezid tarafından yaptırıldığı ve 1958 Kapalıçarşı yangını; açık adres cümlesi yok."
+        },
+        {
+          "source_id": "S-0014-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "YILDIRIM BAYEZİD BEDESTENİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/yildirim-beyazid-bedesteni",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "type",
+            "address",
+            "dating"
+          ],
+          "summary": "Tür 'Bedesten', adres 'Atatürk Caddesi'. Kapalı Çarşı yangını yılı (1956) ve 1960 restorasyonu."
+        },
+        {
+          "source_id": "S-0014-AB",
+          "kind": "municipal_heritage",
+          "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+          "title": "BEDESTEN",
+          "url": "https://alanbaskanligi.bursa.bel.tr/bedesten/",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity"
+          ],
+          "summary": "Kuyumcular çarşısı olarak kullanıldığı; adres veya koordinat yok."
+        },
+        {
+          "source_id": "S-0014-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM alan: Bedesten (landuse=retail)",
+          "url": "https://www.openstreetmap.org/way/1063228547",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Bina izi değil, 'Bedesten' adlı perakende kullanım alanı. Nesne sürümü v2."
+        }
+      ],
+      "discrepancies": [
+        {
+          "discrepancy_id": "D-0014-01",
+          "topic": "Kapalıçarşı yangını yılı",
+          "description": "PDF (fiziksel s.29) 1958, Kültür Portalı 1956 diyor. V20 olgusu BUR-0014-F005 1958'i kullanıyor.",
+          "source_ids": [
+            "S-0014-PDF",
+            "S-0014-KP"
+          ]
+        },
+        {
+          "discrepancy_id": "D-0014-02",
+          "topic": "Harita nesnesi",
+          "description": "OSM'deki 'Bedesten' nesnesi bir yapı izi değil, kullanım alanıdır; bina sınırı doğrulanmadı.",
+          "source_ids": [
+            "S-0014-OSM"
+          ]
+        }
+      ],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0014-01",
+          "latitude": 40.185135,
+          "longitude": 29.062114,
+          "crs": "EPSG:4326",
+          "source_id": "S-0014-OSM",
+          "source_object": "osm:way/1063228547@v2",
+          "represents": "area_centroid",
+          "estimated_accuracy_m": 37,
+          "collection_method": "OSM API 0.6 'full' yanıtındaki dış halka düğümlerinden düzlemsel çokgen ağırlık merkezi hesaplandı; doğruluk tahmini = yapı izinin en büyük kenarının yarısı + 5 m OSM konum belirsizliği.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Kullanım alanı 26 × 63 m; bina izi değildir."
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": false,
+        "burial_site": false,
+        "access_notes": "Kuyumcular çarşısı; mesai dışı kapalı. Yoğun ticari alan."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    },
+    {
+      "monument_id": "BUR-0019",
+      "v20_name": "Osman Gazi Türbesi",
+      "full_name": "Osman Gazi Türbesi",
+      "alternative_names": [
+        "Gümüşlü Kümbet (ilk yapı)"
+      ],
+      "type": "türbe",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Osmangazi Mahallesi, Yiğitler Caddesi No:2 (Tophane/Hisariçi), Osmangazi",
+          "source_id": "S-0019-PDF"
+        },
+        {
+          "value": "2. Osmangazi Caddesi, Tophane, Osmangazi/Bursa",
+          "source_id": "S-0019-KP"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0019-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-2.pdf",
+          "pdf_physical_page": 118,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "address"
+          ],
+          "summary": "Türbenin adresi."
+        },
+        {
+          "source_id": "S-0019-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "OSMAN GAZİ TÜRBESİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "type",
+            "address",
+            "dating"
+          ],
+          "summary": "Tür 'Türbe', adres '2. Osmangazi Caddesi Tophane'. 1855 depreminde yıkıldığı, 1863'te yeniden yapıldığı."
+        },
+        {
+          "source_id": "S-0019-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM yapı izi: Osman Gazi Türbesi (historic=tomb)",
+          "url": "https://www.openstreetmap.org/way/325992025",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Yapı izi. Not: wikidata etiketi (Q83100) yapıyı değil Osman Gazi'nin kendisini gösteriyor. Nesne sürümü v7."
+        }
+      ],
+      "discrepancies": [
+        {
+          "discrepancy_id": "D-0019-01",
+          "topic": "1855 depreminin etkisi",
+          "description": "V20 olgusu BUR-0019-F003 'tamamen yıkılmasa da büyük ölçüde hasar gördü' diyor; Kültür Portalı 'tamamen yıkılmıştır' diyor.",
+          "source_ids": [
+            "S-0019-PDF",
+            "S-0019-KP"
+          ]
+        }
+      ],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0019-01",
+          "latitude": 40.186831,
+          "longitude": 29.057366,
+          "crs": "EPSG:4326",
+          "source_id": "S-0019-OSM",
+          "source_object": "osm:way/325992025@v7",
+          "represents": "building_footprint_centroid",
+          "estimated_accuracy_m": 13,
+          "collection_method": "OSM API 0.6 'full' yanıtındaki dış halka düğümlerinden düzlemsel çokgen ağırlık merkezi hesaplandı; doğruluk tahmini = yapı izinin en büyük kenarının yarısı + 5 m OSM konum belirsizliği.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Yapı izi 14 × 15 m; bina merkezi."
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": false,
+        "burial_site": true,
+        "access_notes": "Kabir/türbe; Tophane Parkı içinde. Ziyaret saatleri doğrulanmadı."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    },
+    {
+      "monument_id": "BUR-0020",
+      "v20_name": "Orhan Gazi Türbesi",
+      "full_name": "Orhan Gazi Türbesi",
+      "alternative_names": [
+        "Orhangazi Türbesi"
+      ],
+      "type": "türbe",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address_claims": [
+        {
+          "value": "Osmangazi Mahallesi, Yiğitler Caddesi No:2 (Hisariçi / Osmangazi Meydanı), Osmangazi",
+          "source_id": "S-0020-PDF"
+        },
+        {
+          "value": "Osmangazi Caddesi, Tophane, Osmangazi/Bursa",
+          "source_id": "S-0020-KP"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S-0020-PDF",
+          "kind": "v20_source_pdf",
+          "publisher": "Vakıf Katılım (künye: fiziksel s.3; 'Tüm hakları saklıdır')",
+          "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+          "url": null,
+          "pdf_file": "bursa-envanteri-cilt-2.pdf",
+          "pdf_physical_page": 115,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "address"
+          ],
+          "summary": "Türbenin adresi ve konumlandığı tarihî alan."
+        },
+        {
+          "source_id": "S-0020-KP",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "ORHANGAZİ TÜRBESİ",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/orhangazi-turbesi",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "type",
+            "address",
+            "dating"
+          ],
+          "summary": "Tür 'Türbe', adres 'Osmangazi Caddesi Tophane'. 1855 depremi, 1863 yeniden yapım."
+        },
+        {
+          "source_id": "S-0020-KPE",
+          "kind": "official_portal",
+          "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+          "title": "ORHAN GAZİ TÜRBESİ (envanter)",
+          "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/orhan-gazi-turbesi",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "identity",
+            "dating"
+          ],
+          "summary": "Envanter kaydı depremi 1854, yeniden yapımı 1863 olarak veriyor."
+        },
+        {
+          "source_id": "S-0020-OSM",
+          "kind": "open_map_data",
+          "publisher": "OpenStreetMap katkıcıları (ODbL)",
+          "title": "OSM yapı izi: Orhan Gazi Türbesi (historic=tomb)",
+          "url": "https://www.openstreetmap.org/way/325992024",
+          "pdf_file": null,
+          "pdf_physical_page": null,
+          "accessed_at": "2026-10-23",
+          "supports": [
+            "location"
+          ],
+          "summary": "Yapı izi. Not: wikidata etiketi (Q133168) yapıyı değil Orhan Gazi'nin kendisini gösteriyor. Nesne sürümü v5."
+        }
+      ],
+      "discrepancies": [
+        {
+          "discrepancy_id": "D-0020-01",
+          "topic": "Yeniden yapım yılı (BUR-0020-ISSUE-001 ile ilişkili)",
+          "description": "V20 kaynağı fiziksel s.116'da 1863, s.117'de 1868 diyor; Kültür Portalı'nın iki sayfası da 1863 diyor. Dış kaynak tek başına çelişkiyi çözmez; editör kararı gerekir.",
+          "source_ids": [
+            "S-0020-PDF",
+            "S-0020-KP",
+            "S-0020-KPE"
+          ]
+        },
+        {
+          "discrepancy_id": "D-0020-02",
+          "topic": "Deprem yılı",
+          "description": "Kültür Portalı gezilecek yer sayfası 1855, envanter sayfası 1854 diyor.",
+          "source_ids": [
+            "S-0020-KP",
+            "S-0020-KPE"
+          ]
+        }
+      ],
+      "location_candidates": [
+        {
+          "candidate_id": "LC-0020-01",
+          "latitude": 40.186728,
+          "longitude": 29.057663,
+          "crs": "EPSG:4326",
+          "source_id": "S-0020-OSM",
+          "source_object": "osm:way/325992024@v5",
+          "represents": "building_footprint_centroid",
+          "estimated_accuracy_m": 14,
+          "collection_method": "OSM API 0.6 'full' yanıtındaki dış halka düğümlerinden düzlemsel çokgen ağırlık merkezi hesaplandı; doğruluk tahmini = yapı izinin en büyük kenarının yarısı + 5 m OSM konum belirsizliği.",
+          "collected_by": "Claude Code (otomatik masa başı araştırma; insan doğrulaması değildir)",
+          "collected_at": "2026-10-23",
+          "reviewed_by": null,
+          "reviewed_at": null,
+          "status": "unverified",
+          "notes": "Yapı izi 18 × 18 m; bina merkezi. (V20 ölçüsü 16,80 × 16,80 m ile uyumlu.)"
+        }
+      ],
+      "site_context": {
+        "active_place_of_worship": false,
+        "burial_site": true,
+        "access_notes": "Kabir/türbe; Tophane Parkı içinde. Ziyaret saatleri doğrulanmadı."
+      },
+      "vgm_search": "vgm.gov.tr üzerinde bu esere özgü kayıt/konum sayfası bulunamadı (2026-10-23 araması). V20 kaynak PDF'leri VGM yayını değildir; künyede yayıncı Vakıf Katılım'dır.",
+      "location_status": "unverified",
+      "review_status": "research_collected_editor_review_pending"
+    }
+  ]
+}
