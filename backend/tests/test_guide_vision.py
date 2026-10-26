@@ -62,7 +62,10 @@ class FakeLexicon:
 
 def _assert_photo_failed(r, kind):
     assert r["status"] == "photo_analysis_failed" and r["mode"] == "generative"
-    assert r["message"].startswith("Fotoğraf analiz edilemedi.")
+    # Görev 32: sabit, açık mesaj; geçici hatada yeniden deneme önerilir. Sahte analiz veya eser ataması yok.
+    assert r["message"].startswith("Fotoğraf şu anda analiz edilemedi.")
+    if kind in ("timeout", "unavailable", "rate_limited", "busy", "circuit_open", "parse_error"):
+        assert r["message"] == "Fotoğraf şu anda analiz edilemedi. Yeniden deneyebilirsiniz."
     assert r["actions"] == FAILED_ACTIONS and "explain_architecture" not in r["actions"]
     # Açık eserin kaydı, katalog araması veya eser varsayımı yok; teknik ayrıntı yok.
     assert r["search"] is None and r["facts"] == [] and r["sentences"] == [] and r["monument"] is None
@@ -104,7 +107,7 @@ def test_real_provider_timeout_on_vision_is_reported_without_answering():
                                else httpx.Response(200, stream=_Trickle()))
     r = svc.ask("Bu yapı hakkında bilgi verir misin?", "BUR-0001", image_bytes=_jpeg())
     _assert_photo_failed(r, "timeout")
-    assert "zamanında" in r["message"] and svc.budget.status()["timeouts"] == 1
+    assert svc.budget.status()["timeouts"] == 1
 
 
 def test_failed_analysis_through_api_is_a_normal_answer(monkeypatch, tmp_path):
@@ -163,14 +166,14 @@ def test_ordinal_numbers_do_not_split_sentences():
 
 def test_real_selimiye_observation_keeps_correct_architecture_and_drops_unseen_elements():
     svc, _ = make_service(_vlm(REAL_SELIMIYE), models=VISION_MODELS)
-    p = svc.ask("Bu cami ne zaman ve kim tarafından yapıldı?", image_bytes=_jpeg())["photo"]
+    r = svc.ask("Bu cami ne zaman ve kim tarafından yapıldı?", image_bytes=_jpeg())
+    p = r["photo"]
     # Görev 22'de "mimari" yüzünden silinen kimlik gerekçesi artık gösterilir.
     assert p["identity"]["reason"].startswith("Fotoğrafta yapıya özgü bir isim levhası")
-    # Görünen öğelerin açıklaması kalır; görünmeyen avlu/revak anlatılmaz.
-    assert "Kubbe, caminin ana odasını" in p["architecture_explanation"] and "Minareler" in p["architecture_explanation"]
-    assert "Kemerler" in p["architecture_explanation"] and "Revak" not in p["architecture_explanation"]
+    # Görev 32: ayrı "mimari açıklama" alanı yok; analiz tek metindir ve kimlik bulunamasa da gösterilir.
+    assert r["status"] == "photo_analyzed" and "architecture_explanation" not in p
     assert "minare" in p["description"] and "kiremit" not in p["description"]  # malzeme betimlemede kesin söylenmez
-    assert p["features"] == ["kubbe", "minare", "kemer", "pencere", "kapı", "duvar", "ağaç"]
+    assert p["features"] == ["kubbe", "minare", "kemer", "pencere", "kapı", "duvar"]  # en çok 6 etiket
 
 
 def test_real_koza_observation_drops_broken_words_and_keeps_the_rest(real_lexicon):
@@ -180,11 +183,9 @@ def test_real_koza_observation_drops_broken_words_and_keeps_the_rest(real_lexico
     p = r["photo"]
     shown = json.dumps(p, ensure_ascii=False)
     assert "okşu" not in shown.lower() and "kaminler" not in shown  # bozuk sözcükler
-    assert "Revak" not in p["architecture_explanation"]              # görünmeyen öğe
     assert p["identity"]["reason"].startswith("Büyük ve net harflerle")  # Görev 22'de yanlışlıkla silinmişti
     assert "Yanlarda bitkisel süslemeler ve bilgi panoları yer alıyor." in p["description"]
     assert {"altın harfli levha", "bitkisel süslemeler", "bilgi panoları"} <= set(p["features"])
-    assert "Demir ızgaralı pencereler" not in p["architecture_explanation"]  # malzeme kesin söylenmez
     assert r["status"] == "answered" and r["monument"]["monument_id"] == "BUR-0009"
 
 
@@ -247,8 +248,8 @@ def test_vision_prompt_asks_for_hedged_material_and_visible_only_explanation():
         return answer(("Koza Han'ı Sultan II. Bayezid yaptırmıştır.", ["BUR-0009-F001"]))
     svc, _ = make_service(responder, models=VISION_MODELS)
     svc.ask("Bu yapı ne?", image_bytes=_jpeg())
-    assert '"material_guess"' in seen["system"] and "Fotoğrafta görünmeyen öğeyi" in seen["system"]
-    assert "terim uydurma" in seen["system"]
+    assert '"material_guess"' in seen["system"] and "Görmediğin öğeyi" in seen["system"]
+    assert "terim uydurma" in seen["system"] and "70-140 sözcük" in seen["system"] and "sütun ya da paye" in seen["system"]
 
 
 def test_lexicon_status_is_reported(monkeypatch, tmp_path):

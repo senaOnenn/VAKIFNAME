@@ -7,7 +7,9 @@ Model cevabı cümle başına kaynak kimliği taşıyan JSON olarak verir. Bu mo
    atıf yapılan kayıtların metninde (ve ilgili eserlerin adlarında) bulunmalı.
 3. Yalnızca fotoğrafa (`FOTOGRAF`) dayanan cümle tarih, yüzyıl, kişi adı, yapı malzemesi veya yapım/onarım gibi tarihî
    olay içeremez; fotoğrafa bakarak tarihî bilgi kesinmiş gibi söylenemez. (Gerçek testte model Koza Han'ın tuğla ve
-   taş cephesini "tuğla ve tahta" diye tanımladı: malzeme fotoğraftan güvenilir okunamaz.)
+   taş cephesini "tuğla ve tahta" diye tanımladı: malzeme fotoğraftan güvenilir okunamaz.) Görülen ayrı bir nesneyi
+   adlandıran genel "taş" sözcüğü ("duvara gömülü taş levha") yapı malzemesi iddiası sayılmaz; yapının, duvarın veya
+   taşıyıcının malzemesi ("duvar taştan yapılmış") sayılır. "Gömülü" (duvara gömülü) defin anlatmaz.
 4. Cümledeki yapı malzemesi (taş, tuğla, ahşap, mermer, kurşun, çini…) atıf yapılan kayıtlarda geçmeli; fotoğraf
    atfı malzemeye kanıt sayılmaz. Fotoğrafa dayanmayan cümledeki mimari bölüm (minare, kubbe, şadırvan, mihrap, avlu,
    mescit…) atıf yapılan kayıtlarda geçmeli. Böylece geçerli bir kayıt kimliği gösterip başka bir yapının bölümünü veya
@@ -26,6 +28,8 @@ from typing import Optional
 from ..ask.text import fold, stem
 
 PHOTO_ID = "FOTOGRAF"
+# Fotoğraf sonrası mimari takip cevabında fotoğraftan bağımsız genel mimari bilgi cümlesi (kayıt kimliği değildir).
+GENERAL_ID = "GENEL"
 MAX_SENTENCES = 8
 MAX_SENTENCE_CHARS = 600
 
@@ -40,11 +44,18 @@ _UPPER = set("ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZÂÎÛQWX")
 _HISTORICAL = ("yaptir", "insa", "kurul", "kurdu", "onari", "onarim", "resto", "yikil", "yikti", "defne", "gomul", "vakfi",
                "vakif", "bani", "mimar", "tamamla", "yuzyi", "hicri", "milad", "donem", "sulta", "padis", "hukum", "fethet",
                "yandi", "yangi", "deprem", "tarih", "yilin", "yilda")
-_SUFFIX = r"(lar|ler)?(i|in|ini|a|e|ta|te|tan|ten|da|de|dan|den|la|le|li|lu|dir|tir|si|sini|siyla|yla|yle|n|nin|ndan|nden)?"
+# "y" kaynaştırmalı biçimler de ("tahtaya", "tuğlayla") malzeme sayılır; Görev 32 öncesinde atlanıyordu.
+_SUFFIX = (r"(lar|ler)?(i|in|ini|a|e|ya|ye|yi|yu|ta|te|tan|ten|da|de|dan|den|la|le|li|lu|dir|tir|si|sini|siyla|yla|yle|"
+           r"n|nin|ndan|nden)?")
 # Katlanmış (fold) biçimler; kök → tek ad ("tahta" ve "ahşap" aynı malzeme).
 _MATERIALS = {"tas": "tas", "tugla": "tugla", "ahsap": "ahsap", "tahta": "ahsap", "mermer": "mermer", "kursun": "kursun",
               "kerpic": "kerpic", "cini": "cini", "demir": "demir", "moloz": "moloz", "kiremit": "kiremit", "alci": "alci"}
 _MATERIAL = re.compile(rf"^({'|'.join(_MATERIALS)}){_SUFFIX}$")
+# Ayrı, görülen nesneler: "taş levha", "taş kitabe". Yalnızca genel "taş" sözcüğü için; "mermer levha" gibi daha özgül
+# malzeme adı fotoğraftan doğrulanamaz ve malzeme iddiası sayılmaya devam eder.
+_OBJECTS = ("levha", "kitabe", "pano", "plaka", "yazit", "tablet")
+# "gömülü" (duvara gömülü) görsel betimlemedir; "gömülüdür", "gömülü yatıyor" defin anlatır.
+_EMBEDDED = re.compile(r"\bgomulu (?!olan|olarak|yat|bulun|oldu)\w")
 # Mimari bölüm kökleri (katlanmış biçimin başı); "mihrap/mihrab", "mescit/mescid" aynı kökte buluşur.
 _PARTS = ("minare", "kubbe", "sadirvan", "avlu", "revak", "mihra", "minber", "mesci", "turbe", "medrese", "hamam", "cesme",
           "kitabe", "imaret", "sebil", "kasnak", "sanduka")
@@ -97,8 +108,18 @@ def _proper_tokens(text: str) -> list[tuple[str, bool]]:
     return out
 
 
-def _materials(text: str) -> set[str]:
-    return {_MATERIALS[m.group(1)] for w in fold(text).split() if (m := _MATERIAL.match(w.strip(".,;:!?()\"'“”‘’")))}
+def _materials(text: str, objects_ok: bool = False) -> set[str]:
+    """Metindeki malzeme adları. `objects_ok`: ayrı bir nesneyi adlandıran "taş" ("taş levha") sayılmaz."""
+    ws = fold(text).split()
+    out = set()
+    for i, w in enumerate(ws):
+        m = _MATERIAL.match(w)
+        if not m:
+            continue
+        if objects_ok and m.group(0) == "tas" and i + 1 < len(ws) and ws[i + 1].startswith(_OBJECTS):
+            continue
+        out.add(_MATERIALS[m.group(1)])
+    return out
 
 
 def _parts(text: str, skip_names: bool = False) -> set[str]:
@@ -163,13 +184,17 @@ class Checker:
             # ı'yı i'ye çevirdiği için ayrım katlamadan önceki küçük harfli sözcükte yapılır.
             low = s.text.replace("I", "ı").replace("İ", "i").lower()
             architectural = {fold(w) for w in re.findall(r"\w+", low) if re.match(r"mimar[iî]", w)}
+            if _EMBEDDED.search(f):
+                architectural.add("gomulu")
             if any(w.startswith(h) and w not in architectural for w in f.split() for h in _HISTORICAL):
                 return "fotoğraftan tarihî bilgi"
-            if _materials(s.text):
-                return "fotoğraftan malzeme"
             for st, initial in _proper_tokens(s.text):
                 if not initial and st in self.corpus_proper:  # cümle başındaki büyük harf ad sayılmaz
                     return "fotoğraftan kişi/özel ad"
+            # Malzeme en son denetlenir: bu neden yalnızca öteki bütün kurallar geçildiyse döner (çekinceli malzeme
+            # izlenimine izin veren çağıran, başka bir kuralı atlamış olmaz).
+            if _materials(s.text, objects_ok=True):
+                return "fotoğraftan malzeme"
             return None
         for n in _numbers(s.text):
             if n not in sup_nums and not (photo and n < 100):

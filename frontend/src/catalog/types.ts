@@ -229,7 +229,14 @@ export type GuideStatus =
   | 'insufficient_evidence'
   | 'clarification_required'
   | 'monument_not_identified'
-  | 'photo_not_matched'
+  /** Fotoğrafın mimari analizi gösterildi; kimlik güvenle doğrulanamadıysa yalnızca altta kısa bir not. */
+  | 'photo_analyzed'
+  /** Fotoğraf sonrası mimari takip cevabı (önceki analiz + genel mimari bilgi; fotoğraf yeniden incelenmedi). */
+  | 'photo_followup'
+  /** Takip sorusu fotoğrafın yeniden incelenmesini gerektiriyor. */
+  | 'photo_context_needed'
+  /** Kimliği doğrulanmamış fotoğraf için tarihî soru: ziyaretçi eseri kendisi seçebilir. */
+  | 'identity_required'
   | 'photo_analysis_failed'
   | 'monument_not_in_catalog'
   | 'not_found'
@@ -238,7 +245,10 @@ export type GuideStatus =
 
 export interface GuideSentence {
   text: string
-  /** Onaylı kayıt kimlikleri; `FOTOGRAF` yalnızca fotoğrafta görülen özelliği anlatan cümlelerde. */
+  /**
+   * Onaylı kayıt kimlikleri; `FOTOGRAF` yalnızca fotoğrafta görülen özelliği anlatan cümlelerde, `GENEL` fotoğraftan
+   * bağımsız genel mimari bilgide (yalnızca fotoğraf sonrası takip cevabında).
+   */
   sources: string[]
 }
 
@@ -246,10 +256,10 @@ export interface GuidePhoto {
   is_architecture: boolean
   /** Katalogdan bağımsız gözlem: görülen yapı türü (cami, han, türbe…, "belirsiz"). */
   building_type?: string
+  /** Fotoğrafın mimari analizi: modelin doğal Türkçe paragrafı (tarih, ad, üslup ve çekincesiz malzeme ayıklanmış). */
   description: string
+  /** Dikkat çeken mimari özellikler (kısa etiketler, en çok 6). */
   features: string[]
-  /** Görünen mimari öğelerin genel açıklaması (tarih, ad, malzeme yok); "Görseldeki mimariyi açıkla" ile gösterilir. */
-  architecture_explanation?: string
   /** Malzemeye dair çekinceli görsel izlenim; tarihî kaynak bilgisi değildir. */
   material_guess?: string
   visible_text: string
@@ -262,7 +272,7 @@ export interface GuidePhoto {
 }
 
 export type GuideAction =
-  | 'explain_architecture'
+  | 'explain_more'
   | 'upload_another'
   | 'choose_manually'
   | 'retry_photo'

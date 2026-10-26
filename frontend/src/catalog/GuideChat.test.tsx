@@ -193,7 +193,7 @@ describe('GuideChat (yapay zekâ rehberi)', () => {
     expect(screen.getByRole('button', { name: 'Sor' })).toBeDisabled()
     await userEvent.click(screen.getByRole('checkbox', { name: /insan yüzü, kişisel bilgi veya gizli belge olmadığını onaylıyorum/ }))
     await userEvent.click(screen.getByRole('button', { name: 'Sor' }))
-    expect(await screen.findByLabelText('Fotoğraftan gözlem')).toHaveTextContent(/revaklı bir avlu/)
+    expect(await screen.findByLabelText('Fotoğrafın Mimari Analizi')).toHaveTextContent(/revaklı bir avlu/)
     expect(screen.getByText(/konum ve cihaz bilgileri gönderilmeden önce silindi/)).toBeInTheDocument()
     expect(bodies[0].question).toBe('Bu fotoğraftaki yapı hakkında ne söyleyebilirsin?')
     expect(bodies[0].image).toMatchObject({ mime: 'image/jpeg', consent: true })
@@ -206,12 +206,14 @@ describe('GuideChat (yapay zekâ rehberi)', () => {
     expect(JSON.stringify(bodies[1].history)).toContain('Fotoğraftan gözlem: Fotoğrafta iki katlı')
   })
 
-  it('eşleşmeyen fotoğrafta en yakın eseri önermez; mimari açıklama, başka fotoğraf ve kendi seçim seçenekleri sunar', async () => {
+  it('kimlik bulunamasa da mimari analizi tek alanda gösterir; kimlik yalnızca altta not; daha ayrıntılı açıklama ve takip soruları analiz bağlamıyla gider', async () => {
     const bodies: Record<string, unknown>[] = []
     const manual = [
       { monument_id: 'BUR-9001', name: 'Kurgusal Cami' },
       { monument_id: 'BUR-9002', name: 'Kurgusal Han' },
     ]
+    const analysis =
+      'Fotoğraf gece çekilmiş; yapı sarı ışıklarla aydınlatılmış. Üstte sıra sıra dizilmiş küçük kubbeler ve iki yüksek minare görülüyor.'
     stubFetch({
       ...enabled,
       '/guide/ask': async (init?: RequestInit) => {
@@ -220,17 +222,28 @@ describe('GuideChat (yapay zekâ rehberi)', () => {
         if (b.image) {
           return {
             body: result({
-              status: 'photo_not_matched', message: 'Bu görsel kayıtlı Bursa eserleriyle güvenilir şekilde eşleştirilemedi.',
+              status: 'photo_analyzed', message: 'Fotoğraftan yapının kesin kimliği doğrulanamadı.',
               sentences: [], facts: [], monument: null, options: [], manual_options: manual,
-              actions: ['explain_architecture', 'upload_another', 'choose_manually'],
+              actions: ['explain_more', 'choose_manually', 'upload_another'],
               photo: {
-                is_architecture: true, building_type: 'cami',
-                description: 'Fotoğrafta büyük merkezî bir kubbe ve dört ince minare görülüyor.',
-                features: ['büyük merkezî kubbe', 'revaklı avlu'], visible_text: '', candidates: [], metadata_removed: [],
-                architecture_explanation: 'Revak, avluyu çevreleyen üstü örtülü kemerli geçittir.',
-                identity: { identifiable: 'no', reason: 'Ayırt edici bir yazı görünmüyor.' },
+                is_architecture: true, building_type: 'cami', description: analysis,
+                features: ['küçük kubbeler', 'iki minare', 'gece aydınlatması'], visible_text: '', candidates: [],
+                metadata_removed: [], identity: { identifiable: 'uncertain', reason: '' },
                 synthetic_signs: ['Minarelerin şerefe sayıları farklı görünüyor; görsel kurgusal olabilir.'],
               },
+            }),
+          }
+        }
+        if (b.photo_context) {
+          return {
+            body: result({
+              status: 'photo_followup', monument: null, facts: [],
+              message: 'Önceki fotoğraf analizine ve genel mimari bilgiye dayanan açıklama (fotoğraf yeniden incelenmedi):',
+              sentences: [
+                { text: 'Fotoğrafta küçük kubbeler sıra sıra dizilmiş.', sources: ['FOTOGRAF'] },
+                { text: 'Kubbe, altındaki mekânı örten yarım küre biçimli örtüdür.', sources: ['GENEL'] },
+              ],
+              actions: ['upload_another'],
             }),
           }
         }
@@ -243,29 +256,57 @@ describe('GuideChat (yapay zekâ rehberi)', () => {
     await userEvent.upload(screen.getByLabelText('Galeriden fotoğraf seç'), file)
     await userEvent.click(await screen.findByRole('checkbox', { name: /insan yüzü/ }))
     await userEvent.click(screen.getByRole('button', { name: 'Sor' }))
-    expect(await screen.findByText('Bu görsel kayıtlı Bursa eserleriyle güvenilir şekilde eşleştirilemedi.')).toBeInTheDocument()
-    const note = screen.getByLabelText('Fotoğraftan gözlem')
-    expect(note).toHaveTextContent('Görülen yapı türü: cami')
-    expect(note).toHaveTextContent('kimliği yalnızca bu fotoğraftan güvenle belirlenemiyor')
-    expect(note).toHaveTextContent(/olası işaretler \(kesin yargı değildir\).*kurgusal olabilir/)
-    expect(note).not.toHaveTextContent('Kayıtlı eserlerle karşılaştırma')
-    // Eser önerisi yok: kayıtlı eser düğmeleri yalnızca "kendim seçmek istiyorum" açılınca görünür.
+    const panel = await screen.findByLabelText('Fotoğrafın Mimari Analizi')
+    expect(within(panel).getByRole('heading', { name: 'Fotoğrafın Mimari Analizi' })).toBeInTheDocument()
+    expect(within(panel).getByText(analysis)).toBeInTheDocument()
+    expect(within(panel).getByRole('heading', { name: 'Dikkat Çeken Mimari Özellikler' })).toBeInTheDocument()
+    expect(within(panel).getAllByRole('listitem').map((li) => li.textContent)).toContain('gece aydınlatması')
+    expect(panel).toHaveTextContent(/olası işaretler \(kesin yargı değildir\).*kurgusal olabilir/)
+    // Kimlik notu yalnızca bir kez, analizin altında; eski "eşleştirilemedi" ana mesajı ve ikinci açıklama kutusu yok.
+    expect(screen.getAllByText('Fotoğraftan yapının kesin kimliği doğrulanamadı.')).toHaveLength(1)
+    expect(panel.lastElementChild).toHaveTextContent('Fotoğraftan yapının kesin kimliği doğrulanamadı.')
+    expect(screen.queryByText(/eşleştirilemedi/)).toBeNull()
+    expect(screen.getAllByText(analysis)).toHaveLength(1)
     expect(screen.queryByRole('group', { name: 'Olası eserler' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Kurgusal Cami' })).toBeNull()
     const actions = screen.getByRole('group', { name: 'Ne yapmak istersiniz?' })
-    await userEvent.click(within(actions).getByRole('button', { name: 'Görseldeki mimariyi açıkla' }))
-    expect(screen.getByLabelText('Görseldeki mimarinin açıklaması')).toHaveTextContent('Revak, avluyu çevreleyen')
-    expect(within(actions).getByRole('button', { name: 'Başka fotoğraf yükle' })).toBeInTheDocument()
-    await userEvent.click(within(actions).getByRole('button', { name: 'Kayıtlı eserlerden birini kendim seçmek istiyorum' }))
+    expect(within(actions).getAllByRole('button').map((b) => b.textContent)).toEqual([
+      'Mimariyi daha ayrıntılı açıkla', 'Kayıtlı eserlerden birini seç', 'Başka fotoğraf yükle',
+    ])
+
+    // Daha ayrıntılı açıklama: fotoğraf yeniden gönderilmez, analiz metni bağlam olur.
+    await userEvent.click(within(actions).getByRole('button', { name: 'Mimariyi daha ayrıntılı açıkla' }))
+    await vi.waitFor(() => expect(bodies).toHaveLength(2))
+    expect(bodies[1].image).toBeUndefined()
+    expect(bodies[1].question).toBe('Fotoğraftaki mimariyi daha ayrıntılı açıklar mısın?')
+    expect(bodies[1].photo_context).toEqual({ description: analysis, features: ['küçük kubbeler', 'iki minare', 'gece aydınlatması'] })
+    const followup = await screen.findByLabelText('Mimari açıklama')
+    expect(within(followup).getByText('fotoğraf')).toBeInTheDocument()
+    expect(within(followup).getByText('genel bilgi')).toBeInTheDocument()
+
+    // Serbest takip sorusu da aynı analiz bağlamıyla gider.
+    const input = screen.getByLabelText(/hakkında sorunuz/)
+    expect(input).toHaveAttribute('placeholder', expect.stringMatching(/Fotoğraftaki mimari hakkında sorun/))
+    await userEvent.type(input, 'Minarelerin mimari işlevi nedir?{Enter}')
+    await vi.waitFor(() => expect(bodies).toHaveLength(3))
+    expect(bodies[2].photo_context).toEqual(bodies[1].photo_context)
+
+    // Kendi seçimi: yalnızca tarihî sorunun bağlamı; fotoğraf ve analiz gönderilmez.
+    const first = screen.getAllByRole('group', { name: 'Ne yapmak istersiniz?' })[0]
+    await userEvent.click(within(first).getByRole('button', { name: 'Kayıtlı eserlerden birini seç' }))
+    expect(screen.getByText(/bu seçim fotoğrafın o esere ait olduğu anlamına gelmez/)).toBeInTheDocument()
     const list = screen.getByRole('group', { name: 'Kayıtlı eserler' })
     expect(within(list).getAllByRole('button').map((b) => b.textContent)).toEqual(['Kurgusal Cami', 'Kurgusal Han'])
     await userEvent.click(within(list).getByRole('button', { name: 'Kurgusal Han' }))
-    await vi.waitFor(() => expect(bodies).toHaveLength(2))
-    // Kendi seçiminde fotoğraf da gözlemi de gönderilmez; cevap bunun fotoğrafla eşleştirilmediğini söyler.
-    expect(bodies[1].image).toBeUndefined()
-    expect(bodies[1].monument_id).toBe('BUR-9002')
-    expect(JSON.stringify(bodies[1].history)).not.toContain('Fotoğraftan gözlem')
+    await vi.waitFor(() => expect(bodies).toHaveLength(4))
+    expect(bodies[3].image).toBeUndefined()
+    expect(bodies[3].photo_context).toBeUndefined()
+    expect(bodies[3].monument_id).toBe('BUR-9002')
     expect(await screen.findByText(/fotoğrafla eşleştirilmeden, seçtiğiniz eserin onaylı kayıtlarına dayanır/)).toBeInTheDocument()
+    // Fotoğraf dışı bir cevaptan sonra analiz bağlamı düşer.
+    await userEvent.type(input, 'Kim yaptırdı?{Enter}')
+    await vi.waitFor(() => expect(bodies).toHaveLength(5))
+    expect(bodies[4].photo_context).toBeUndefined()
   })
 
   it('fotoğraf analizi başarısızsa eser bilgisi göstermez; tekrar dene, başka fotoğraf ve fotoğrafsız sor sunar', async () => {
@@ -276,7 +317,7 @@ describe('GuideChat (yapay zekâ rehberi)', () => {
         bodies.push(JSON.parse(String(init?.body)))
         return {
           body: result({
-            status: 'photo_analysis_failed', message: 'Fotoğraf analiz edilemedi. Yapay zekâ fotoğrafı zamanında inceleyemedi.',
+            status: 'photo_analysis_failed', message: 'Fotoğraf şu anda analiz edilemedi. Yeniden deneyebilirsiniz.',
             sentences: [], facts: [], monument: null, options: [], manual_options: [], photo: null,
             actions: ['retry_photo', 'upload_another', 'ask_without_photo'], fallback_reason: 'timeout',
           }),
@@ -290,11 +331,11 @@ describe('GuideChat (yapay zekâ rehberi)', () => {
     await userEvent.click(await screen.findByRole('checkbox', { name: /insan yüzü/ }))
     await userEvent.type(screen.getByLabelText(/hakkında sorunuz/), 'Bu yapı ne zaman yapıldı?')
     await userEvent.click(screen.getByRole('button', { name: 'Sor' }))
-    expect(await screen.findByText(/^Fotoğraf analiz edilemedi\./)).toBeInTheDocument()
-    // Açık eserin kaydı veya kaynak kartı gösterilmez; mimari açıklama seçeneği yok.
+    expect(await screen.findByText('Fotoğraf şu anda analiz edilemedi. Yeniden deneyebilirsiniz.')).toBeInTheDocument()
+    // Açık eserin kaydı veya kaynak kartı gösterilmez; sahte analiz veya mimari açıklama seçeneği yok.
     expect(screen.queryByRole('article')).toBeNull()
-    expect(screen.queryByLabelText('Fotoğraftan gözlem')).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Görseldeki mimariyi açıkla' })).toBeNull()
+    expect(screen.queryByLabelText('Fotoğrafın Mimari Analizi')).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Mimariyi daha ayrıntılı açıkla' })).toBeNull()
     const actions = screen.getByRole('group', { name: 'Ne yapmak istersiniz?' })
     expect(within(actions).getAllByRole('button').map((b) => b.textContent)).toEqual([
       'Tekrar dene', 'Başka fotoğraf yükle', 'Fotoğraf olmadan soru sor',
@@ -324,19 +365,20 @@ describe('GuideChat (yapay zekâ rehberi)', () => {
     await userEvent.upload(screen.getByLabelText('Galeriden fotoğraf seç'), file)
     await userEvent.click(await screen.findByRole('checkbox', { name: /insan yüzü/ }))
     await userEvent.click(screen.getByRole('button', { name: 'Sor' }))
-    expect(await screen.findByRole('alert')).toHaveTextContent(/^Fotoğraf analiz edilemedi\./)
+    expect(await screen.findByRole('alert')).toHaveTextContent(/^Fotoğraf şu anda analiz edilemedi\./)
     expect(screen.queryByRole('button', { name: 'Onaylı kayıtlarda ara (yapay zekâsız)' })).toBeNull()
     expect(screen.getByRole('button', { name: 'Tekrar dene' })).toBeInTheDocument()
   })
 
-  it('malzeme izlenimini tarihî bilgiden ayrı ve çekinceli gösterir', async () => {
+  it('güvenilir eşleşmede mimari analiz ile onaylı tarihî bilgiyi ayrı bölümlerde gösterir', async () => {
     stubFetch({
       ...enabled,
       '/guide/ask': {
         body: result({
           photo: {
-            is_architecture: true, description: 'Giriş kemerlidir.', features: [], visible_text: '', candidates: [],
-            metadata_removed: [], material_guess: 'Cephe tuğla ve taş sıralarına benziyor.',
+            is_architecture: true, description: 'Giriş kemerli. Cephe tuğla ve taş sıralarına benziyor.',
+            features: ['kemerli giriş'], visible_text: 'KURGUSAL', metadata_removed: [],
+            candidates: [{ monument_id: 'BUR-9001', name: 'Kurgusal Cami', likelihood: 'high' }],
           },
         }),
       },
@@ -344,10 +386,14 @@ describe('GuideChat (yapay zekâ rehberi)', () => {
     render(<AskMonument monumentId="BUR-9001" monumentName="Kurgusal Cami" />)
     await screen.findByRole('button', { name: 'Fotoğraf ekle' })
     await userEvent.type(screen.getByLabelText(/hakkında sorunuz/), 'Kim yaptırdı?{Enter}')
-    const note = await screen.findByLabelText('Fotoğraftan gözlem')
-    expect(note).toHaveTextContent('Malzeme izlenimi (görsel tahmin, kesin değil; tarihî kaynak bilgisi değildir): Cephe tuğla')
-    expect(screen.getByLabelText('Yapay zekâ cevabı')).not.toHaveTextContent('tuğla')
-    expect(screen.getByLabelText('Yapay zekâ cevabı')).toHaveTextContent('Onaylı kayıtlardan doğrulanmış tarihî bilgi')
+    const panel = await screen.findByLabelText('Fotoğrafın Mimari Analizi')
+    expect(panel).toHaveTextContent('tuğla ve taş sıralarına benziyor')
+    expect(panel).toHaveTextContent('Fotoğrafta okunan yazı: «KURGUSAL»')
+    expect(panel).toHaveTextContent('Kayıtlı eserlerle karşılaştırma: Kurgusal Cami ile yüksek görsel benzerlik (kesin kimlik değildir).')
+    expect(panel).not.toHaveTextContent('1400')
+    const answer = screen.getByLabelText('Yapay zekâ cevabı')
+    expect(answer).not.toHaveTextContent('tuğla')
+    expect(answer).toHaveTextContent('Onaylı kayıtlardan doğrulanmış tarihî bilgi')
   })
 
   it('sunucuda yüz taraması hazır değilse fotoğraf düğmelerini göstermez', async () => {

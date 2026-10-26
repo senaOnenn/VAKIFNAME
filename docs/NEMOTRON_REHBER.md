@@ -15,6 +15,28 @@ Soru (+ isteğe bağlı fotoğraf)
 Sağlayıcı çalışmazsa, anahtar yoksa, kota/bütçe dolduysa mevcut kaynaklı arama (`/monuments/ask`) cevap verir. Dahili
 V20 RAG ve kitap metinleri kullanılmaz.
 
+### Fotoğraf: önce mimari analiz (Görev 32)
+
+- Görsel çağrı fotoğrafın **mimari analizini** yazar: belirgin 3–6 özelliğe odaklanan doğal bir paragraf (≈70–140
+  sözcük; zayıf görüntüde daha kısa) ve en çok 6 özellik etiketi. Backend tarih, kişi, üslup/dönem, yer adı ve
+  çekincesiz malzeme içeren cümleleri; ayrıca etiketlerde olmayan bir mimari öğeyi (ör. görünmeyen mihrap) anan
+  cümleleri çıkarır. Şerefe/kasnak, minare/kubbe görüldüyse serbesttir. Okunamayan ya da boş kalan analiz
+  "Fotoğraf şu anda analiz edilemedi." olarak bildirilir; sahte analiz gösterilmez.
+- Kimlik isteğe bağlıdır. Tek bir "yüksek" katalog eşleşmesi yoksa durum `photo_analyzed` olur: arayüz yalnızca
+  "Fotoğrafın Mimari Analizi" alanını gösterir, altta "Fotoğraftan yapının kesin kimliği doğrulanamadı." notu yer alır.
+  Seçenekler: mimariyi daha ayrıntılı açıkla, kayıtlı eserlerden birini seç (yalnızca tarihî sorunun bağlamıdır),
+  başka fotoğraf yükle. Bu durumda ikinci (cevap) çağrısı yapılmaz.
+- Güvenilir eşleşmede tarihî soru için ikinci çağrı yapılır ve yalnızca onaylı olgulardan cevap verilir. Yalnızca
+  mimari bir soruda ("kubbeleri açıklar mısın?") ikinci çağrı yapılmaz.
+- Takip soruları (`photo_context`): istemci, son tur bir fotoğraf analizi ya da onun takibiyse analiz metnini gönderir;
+  fotoğrafın kendisi gönderilmez. Bu durumda:
+  - Mimari soru tek metin çağrısıyla cevaplanır. Her cümle "fotoğraf" (önceki analizde geçen) ya da "genel bilgi"
+    olarak etiketlenir. Analizde olmayan bir ayrıntı gerekiyorsa fotoğraf yeniden istenir (`photo_context_needed`).
+  - "Burası neresi?" fotoğrafın yeniden yüklenmesini ister; çağrı yapılmaz.
+  - Kimliği doğrulanmamış fotoğraf için sorulan tarihî soruya cevap verilmez (`identity_required`); ziyaretçi eseri
+    kendisi seçebilir. Açık eser sayfası fotoğrafa kimlik atamaz.
+- DINOv2 deney indeksi, Commons adayları ve ZIP arşiv görselleri bu akışta kullanılmaz.
+
 ## Hesap ve anahtar (yetkili proje sorumlusu)
 
 OpenRouter hizmet şartları gereği hesap ve API anahtarı **yetkili, yetişkin proje sorumlusu** tarafından açılır ve
@@ -53,7 +75,8 @@ OpenRouter ücretsiz modellerde (openrouter.ai/docs/api-reference/limits, **2026
 en az 10 dolar alınmışsa 1000 istek/gün (UTC günü). `status` komutu `GET /key` yanıtındaki
 `free_model_daily_requests` (kullanılan/sınır/kalan) değerini gösterir. Uygulama sınırları bunların altındadır:
 
-- günlük en çok 40 çağrı (`VAKIFNAME_GUIDE_DAILY_CALLS`); fotoğraflı soru 2 çağrı harcar,
+- günlük en çok 40 çağrı (`VAKIFNAME_GUIDE_DAILY_CALLS`); fotoğraflı soru 1 çağrı harcar (güvenilir eşleşme ve tarihî
+  soruda 2), fotoğraf sonrası mimari takip sorusu 1 çağrı harcar,
 - dakikada en çok 15 çağrı (`VAKIFNAME_GUIDE_CALLS_PER_MINUTE`),
 - 429'da yeniden deneme yapılmaz; devre `Retry-After` kadar açılır. Günlük kota hatasında devre UTC günü sıfırlanana
   dek açık kalır ve sağlayıcı yoklanmaz,

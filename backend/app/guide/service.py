@@ -1,4 +1,9 @@
-"""Tarih rehberi servisi: fotoğraf gözlemi (VLM) → onaylı olgu seçimi → üretken cevap → kaynak denetimi.
+"""Tarih rehberi servisi: fotoğrafın mimari analizi (VLM) → onaylı olgu seçimi → üretken cevap → kaynak denetimi.
+
+Fotoğrafta öncelik mimari analizdir: kimlik bulunamasa da analiz ana sonuçtur, kimlik yalnızca altta kısa bir nottur.
+Tarihî bilgi yalnızca fotoğraf tek bir esere güvenle eşleştiyse ve onaylı kayıtlardan gelir. Fotoğraf sonrası mimari
+takip soruları (`photo_context`) fotoğrafı yeniden göndermeden, önceki analiz metni ve genel mimari bilgiyle cevaplanır;
+her cümle "fotoğraf" ya da "genel bilgi" dayanağıyla gösterilir.
 
 Sağlayıcı yoksa, anahtar yüklenmemişse, bütçe dolduysa, devre kesici açıksa veya sağlayıcı hata verirse mevcut kaynaklı
 arama (`app/ask`) cevap verir; ziyaretçiye bunun yedek cevap olduğu söylenir. Ücretli modele geçilmez. Fotoğraf, yerel
@@ -21,8 +26,10 @@ from ..ask.service import AskService
 from . import image as img
 from . import privacy
 from .budget import CircuitBreaker, DailyBudget
-from .claims import PHOTO_ID, Checker, Sentence, parse
-from .prompts import answer_messages, vision_messages
+from .claims import GENERAL_ID, PHOTO_ID, Checker, Sentence, parse
+from .lexicon import correct
+from .observation import ObservationFilter, material_hedged, repeats
+from .prompts import answer_messages, followup_messages, vision_messages
 from .provider import DEFAULT_MODEL, ChatProvider, ProviderError
 from .retrieval import gather, identity_id, identity_text
 
@@ -54,7 +61,7 @@ ERROR_MESSAGES = {
     "invalid_response": "Yapay zekâ sağlayıcısından okunamayan bir yanıt geldi.",
     "bad_request": "Yapay zekâ sağlayıcısı isteği kabul etmedi.",
     "parse_error": "Yapay zekâ cevabı beklenen biçimde değildi.",
-    "vision_unsupported": "Fotoğraf analizi için uygun model bulunamadı.",
+    "vision_unsupported": "Fotoğraf analizi şu anda kullanılamıyor.",
 }
 
 
@@ -63,7 +70,9 @@ class GuideSettings:
     text_model: str = DEFAULT_MODEL
     vision_model: str = ""  # boş: metin modeli (görsel destekliyorsa)
     max_answer_tokens: int = 1000
-    max_vision_tokens: int = 700
+    # Mimari analiz 70-140 sözcüklük bir paragraf ve kısa alanlar içerir; 700 token sınırı paragrafı kesebiliyordu.
+    max_vision_tokens: int = 900
+    max_followup_tokens: int = 600
     temperature: float = 0.2
     # Tek çağrının ve bütün isteğin (fotoğraflı soruda iki çağrı) kesin üst sınırları. Gerçek testte bir çağrı 84 sn
     # sürdü; arayüz bekleme süresi (`GUIDE_TIMEOUT_MS`) `deadline_s`'den uzun tutulur, böylece süre dolunca ziyaretçi
@@ -117,6 +126,8 @@ class GuideService:
         self.breaker = breaker or CircuitBreaker()
         self.face_screen = face_screen
         self.lexicon = lexicon  # TurkishLexicon; yoksa bozuk sözcük denetimi yapılmaz
+        # Yalnızca değerlendirme/test: fotoğraf gözleminden düşen ifadeler ve nedenleri. Yanıta hiç konmaz.
+        self.on_removed = None
         self._lexicon_fed = False
 
     # --- Sağlayıcı ------------------------------------------------------------------------------------------------
@@ -197,11 +208,30 @@ class GuideService:
     # --- Cevap ----------------------------------------------------------------------------------------------------
 
     def ask(self, question: str, monument_id: Optional[str] = None, history: Optional[list[dict]] = None,
-            image_bytes: Optional[bytes] = None) -> dict:
+            image_bytes: Optional[bytes] = None, photo_context: Optional[dict] = None) -> dict:
+        """`photo_context`: önceki fotoğraf analizinin metni ve özellikleri (istemciden; fotoğrafın kendisi değil).
+        Yalnızca fotoğrafsız ve tarihî olmayan (mimari) takip sorusunda kullanılır."""
         t0 = time.perf_counter()
         usage = Usage(deadline=time.monotonic() + self.settings.deadline_s)
         engine = self.ask_service.engine()
         history = (history or [])[-self.settings.history_turns:]
+        if image_bytes is None and photo_context and photo_context.get("description"):
+            # Fotoğraf sonrası takip: mimari soru önceki analizle cevaplanır; kimlik sorusu fotoğrafın yeniden
+            # incelenmesini gerektirir; tarihî soru yalnızca kimliği doğrulanmış (veya soruda adıyla anılan) eser için
+            # onaylı kayıtlardan cevaplanır, açık eser sayfası fotoğrafa kimlik atamaz.
+            verified = photo_context.get("monument_id")
+            named = list(engine.corpus.analyzer.analyze(question).monuments)
+            if is_identifying(question) and not named:
+                return self._finish(self._base("generative", "photo_context_needed", IDENTITY_NEEDS_PHOTO,
+                                               actions=["upload_another"]), usage, t0, False)
+            if not is_historical(question):
+                return self._finish(self._followup(question, photo_context, history, engine, usage), usage, t0, False)
+            if not named and verified not in engine.corpus.monuments:
+                return self._finish(self._base("generative", "identity_required", HISTORY_NEEDS_IDENTITY,
+                                               manual_options=_options(engine, engine.corpus.monuments),
+                                               actions=["choose_manually", "upload_another"]), usage, t0, False)
+            if not named:
+                monument_id = verified
         photo, clean = None, None
         if image_bytes is not None:
             # ImageRejected → 400 (çağıran ele alır). Yüz taraması sağlayıcıya herhangi bir çağrıdan önce yapılır.
@@ -228,15 +258,19 @@ class GuideService:
                 res = self._fallback(question, scope, e.kind, engine, photo_requested=False)
         if photo is not None:
             res["photo"] = {**{k: photo[k] for k in ("description", "features", "visible_text", "is_architecture",
-                                                     "building_type", "architecture_explanation", "material_guess",
-                                                     "identity", "synthetic_signs")},
+                                                     "building_type", "material_guess", "identity", "synthetic_signs")},
                             "candidates": photo["candidates_view"], "metadata_removed": list(clean.removed)}
+            if self.on_removed is not None:
+                self.on_removed(photo["removed"])
+        return self._finish(res, usage, t0, clean is not None)
+
+    def _finish(self, res: dict, usage: Usage, t0: float, photo_sent: bool) -> dict:
         res["usage"] = {"calls": usage.calls, "prompt_tokens": usage.prompt_tokens,
                         "completion_tokens": usage.completion_tokens, "provider_latency_ms": usage.latency_ms,
                         "cost_usd": usage.cost,
                         "total_ms": int((time.perf_counter() - t0) * 1000)}
         res["models"] = list(dict.fromkeys(usage.models))
-        res["notice"] = NOTICE + (" " + PHOTO_NOTICE if clean is not None else "")
+        res["notice"] = NOTICE + (" " + PHOTO_NOTICE if photo_sent else "")
         logger.info("guide mode=%s status=%s fallback=%s calls=%d tokens=%d/%d cost=%.6f ms=%d removed=%d", res["mode"],
                     res["status"], res.get("fallback_reason"), usage.calls, usage.prompt_tokens, usage.completion_tokens,
                     usage.cost, res["usage"]["total_ms"], res.get("removed_claims", 0))
@@ -249,8 +283,11 @@ class GuideService:
 
     def _photo_failed(self, kind: str) -> dict:
         logger.warning("guide photo analysis failed reason=%s", kind)
-        reason = PHOTO_FAILED_REASON.get(kind, ERROR_MESSAGES.get(kind, ERROR_MESSAGES["unavailable"]))
-        return self._base("generative", "photo_analysis_failed", f"Fotoğraf analiz edilemedi. {reason}",
+        # Geçici hatada (502/503, zaman aşımı, yoğunluk) yeniden denemek işe yarar; kota veya yapılandırma sorununda
+        # nedeni söylenir. Teknik ayrıntı (HTTP durumu, sağlayıcı adı) gösterilmez.
+        reason = "Yeniden deneyebilirsiniz." if kind in RETRYABLE else \
+            ERROR_MESSAGES.get(kind, ERROR_MESSAGES["unavailable"])
+        return self._base("generative", "photo_analysis_failed", f"{PHOTO_FAILED} {reason}",
                           fallback_reason=kind, actions=["retry_photo", "upload_another", "ask_without_photo"])
 
     def _base(self, mode: str, status: str, message: str, **extra) -> dict:
@@ -269,39 +306,44 @@ class GuideService:
         monuments = list(engine.corpus.monuments.values())
         text = self._call(model, vision_messages(question, clean.data_url(), monuments), self.settings.max_vision_tokens,
                           usage, est_tokens=3000, timeout_s=self.settings.vision_timeout_s, stage="vision")
-        data = parse(text) or {}
+        data = parse(text)
+        if data is None:
+            raise ProviderError("parse_error")  # okunamayan yanıt: analiz yapılmış gibi gösterilmez
         visible = str(data.get("visible_text") or "")[:200]
         # Gözlem metni de denetlenir: tarih, kişi, malzeme, tarihî olay veya yapı/yer adı içeren cümleler gösterilmez.
         # Ad yalnızca fotoğrafta okunan yazıda geçiyorsa kalabilir. Eser kimliği gözlemde söylenmez; yalnızca katalog
         # karşılaştırmasının sonucu olarak, olasılık derecesiyle gösterilir.
         checker = Checker({}, [d.text for d in engine.corpus.docs], [visible])
         lex = self._lexicon(engine)
-        dropped_words = []
 
-        def ok(t: str, phrase: bool = False, material: bool = False) -> bool:
-            if checker._check(Sentence(t, [PHOTO_ID])) is not None and not (material and _only_material(checker, t)):
-                return False
-            if not _no_names(t, visible, phrase) or _STYLE.search(fold(t)):
-                return False
-            bad = lex.unknown_words(t, visible) if lex is not None else []
-            dropped_words.extend(bad)  # bozuk Türkçe sözcük ("okşu", "duşarlı"): ifade gösterilmez
-            return not bad
+        def base(t: str, phrase: bool) -> Optional[str]:
+            # Tarih, kişi/yer adı, tarihî olay, üslup: bu kurallar yan cümle düzeyinde de aynen uygulanır.
+            r = checker._check(Sentence(t, [PHOTO_ID]))
+            if r is not None and r != "fotoğraftan malzeme":
+                return r
+            if not _no_names(t, visible, phrase):
+                return "özel ad"
+            # Malzeme nedeni en son döner; `ObservationFilter` onu çekince ve tutarlılıkla yeniden değerlendirir.
+            return "üslup/dönem" if _STYLE.search(fold(t)) else r
 
-        sentences = lambda v, n: " ".join(x for x in _sentences(str(v or "")) if ok(x))[:n]
-        desc = sentences(data.get("description"), 600)
-        feats = [str(f)[:80] for f in (data.get("features") or []) if isinstance(f, (str, int))][:10]
-        feats = [f for f in feats if ok(f, phrase=True)]
-        # Açıklama yalnızca fotoğrafta görülen öğeleri anlatabilir: betimlemede veya özelliklerde geçmeyen bir mimari
-        # öğeyi (ör. avlu görünmüyorken "revak") açıklayan cümle gösterilmez.
-        seen = _visible_parts(" ".join([desc, *feats]))
-        explanation = " ".join(x for x in _sentences(str(data.get("architecture_explanation") or ""))
-                               if ok(x) and _visible_parts(x) <= seen)[:700]
-        # Malzeme izlenimi ayrı ve ihtiyatlı: yalnızca "benziyor/olabilir" gibi çekinceli bir görsel tahmin gösterilir;
-        # tarihî kaynak bilgisi değildir ve cevap istemine konmaz (malzeme iddiası yalnızca onaylı kayıttan gelir).
+        raw_feats = [str(f)[:80] for f in (data.get("features") or []) if isinstance(f, (str, int))][:10]
         mg = data.get("material_guess")
         mg_text = str((mg.get("text") if isinstance(mg, dict) else mg) or "")[:200]
-        material = mg_text if mg_text and _HEDGE.search(fold(mg_text)) and not _DEFINITIVE.search(fold(mg_text)) \
-            and ok(mg_text, material=True) else ""
+        # Açıklamadaki malzeme modelin ayrı malzeme alanlarıyla (material_guess, özellikler) karşılaştırılır.
+        filt = ObservationFilter(base, lex, visible, material_reference=" ".join([mg_text, *raw_feats]))
+        sentences = lambda v, n: filt.paragraph(_sentences(str(v or ""))).text[:n]
+        feats = list(dict.fromkeys(f for f in map(filt.phrase, raw_feats) if f))[:6]
+        # Analiz paragrafı yan cümle düzeyinde süzülür (`observation.py`): tarih, kişi, üslup, yer adı, çekincesiz veya
+        # kendisiyle çelişen malzeme, bozuk sözcük/tamlama içeren yan cümle ve ona gönderme yapan devam düşer. Özellik
+        # listesinde olmayan bir mimari öğeyi (ör. görünmeyen revak, mihrap) anlatan yan cümle de düşer: model analizde
+        # andığı her öğeyi özelliklerde de saymalıdır. Özellik listesi boşsa bu tutarlılık denetimi yapılmaz.
+        seen = _visible_parts(" ".join(feats))
+        unseen = lambda t: None if not feats or _only_seen_parts(t, seen) else "özelliklerde olmayan öğe"
+        analysis = filt.paragraph(_sentences(str(data.get("description") or "")), unseen)
+        desc = analysis.text[:1100]
+        # Malzeme izlenimi ayrı ve ihtiyatlı: yalnızca "benziyor/olabilir" gibi çekinceli bir görsel tahmin tutulur;
+        # tarihî kaynak bilgisi değildir ve cevap istemine konmaz (malzeme iddiası yalnızca onaylı kayıttan gelir).
+        material = correct(mg_text) if mg_text and material_hedged(mg_text) and filt.reason(correct(mg_text)) is None else ""
         btype = str(data.get("building_type") or "").strip().lower()
         btype = btype if btype in BUILDING_TYPES else "belirsiz"
         ident = data.get("identity") if isinstance(data.get("identity"), dict) else {}
@@ -309,7 +351,7 @@ class GuideService:
         reason = sentences(ident.get("reason"), 200)
         signs = [str(x)[:120] for x in (data.get("synthetic_signs") or []) if isinstance(x, str)][:4]
         # Yapay üretim işaretleri yalnızca olasılık olarak gösterilir; kesin yargı içeren ifade atılır.
-        signs = [x for x in signs if ok(x) and not _DEFINITIVE.search(fold(x))]
+        signs = [x for x in signs if filt.reason(x) is None and not _DEFINITIVE.search(fold(x))]
         raw = data.get("catalog_match") if "catalog_match" in data else data.get("candidates")
         cands, dropped = [], 0
         for c in raw or []:
@@ -320,24 +362,31 @@ class GuideService:
                 continue
             cands.append({"monument_id": c["monument_id"], "likelihood": c["likelihood"]})
         cands = list({c["monument_id"]: c for c in cands}.values())[:3]
-        logger.info("guide vision type=%s identifiable=%s matches=%s type_mismatch=%d signs=%d broken_words=%d", btype,
-                    identifiable, ",".join(f"{c['monument_id']}:{c['likelihood']}" for c in cands) or "-", dropped,
-                    len(signs), len(dropped_words))
+        reasons = [x["reason"] for x in analysis.removed]
+        logger.info("guide vision type=%s identifiable=%s matches=%s type_mismatch=%d signs=%d removed=%d broken=%d "
+                    "material=%d context=%d", btype, identifiable,
+                    ",".join(f"{c['monument_id']}:{c['likelihood']}" for c in cands) or "-", dropped, len(signs),
+                    len(reasons), sum(r in ("bozuk sözcük", "bozuk tamlama") for r in reasons),
+                    sum("malzeme" in r for r in reasons), reasons.count("bağlam kopması"))
         # Yalnızca "yüksek" eşleşme ziyaretçiye gösterilir; "orta" benzerlik (çoğu kez yalnızca aynı yapı türü) öneriye
         # dönüşüp yanlış kimliklendirmeye yöneltmesin diye yanıta konmaz, yalnızca loglanır.
         cands = [c for c in cands if c["likelihood"] == "high"]
-        return {"is_architecture": bool(data.get("is_architecture", True)), "building_type": btype, "description": desc,
-                "features": feats, "architecture_explanation": explanation, "material_guess": material, "visible_text": visible,
+        is_arch = bool(data.get("is_architecture", True))
+        if is_arch and not desc and not feats:
+            raise ProviderError("parse_error")  # gösterilebilecek analiz kalmadı: boş analiz sonuç gibi sunulmaz
+        return {"is_architecture": is_arch, "building_type": btype, "description": desc,
+                "features": feats, "material_guess": material, "visible_text": visible,
                 "identity": {"identifiable": identifiable, "reason": reason}, "synthetic_signs": signs, "candidates": cands,
+                "removed": analysis.removed + [{"text": f, "reason": "özellik"} for f in raw_feats if filt.phrase(f) is None],
                 "candidates_view": [{**c, "name": engine.corpus.monuments[c["monument_id"]].name} for c in cands]}
 
     def _not_matched(self, engine, named: list[str] = ()) -> dict:
-        """Güvenilir eşleşme yok. En yakın eser önerilmez: ziyaretçi mimarinin açıklamasını görebilir, başka fotoğraf
-        yükleyebilir veya eseri kendisi seçebilir (tarafsız katalog sırası). Yalnızca soruda adıyla andığı eser ayrıca
-        düğme olarak verilir."""
-        return self._base("generative", "photo_not_matched", NOT_MATCHED, options=_options(engine, named),
-                          manual_options=_options(engine, engine.corpus.monuments),
-                          actions=["explain_architecture", "upload_another", "choose_manually"])
+        """Güvenilir eşleşme yok: mimari analiz ana sonuçtur, kimlik yalnızca kısa bir nottur. En yakın eser önerilmez;
+        ziyaretçi mimariyi daha ayrıntılı isteyebilir, eseri kendisi seçebilir (tarafsız katalog sırası; yalnızca tarihî
+        sorunun bağlamıdır, fotoğrafın o esere ait olduğunun kanıtı değildir) veya başka fotoğraf yükleyebilir. Soruda
+        adıyla anılan eser ayrıca düğme olarak verilir."""
+        return self._base("generative", "photo_analyzed", NOT_VERIFIED, options=_options(engine, named),
+                          manual_options=_options(engine, engine.corpus.monuments), actions=list(ANALYZED_ACTIONS))
 
     def _photo_monuments(self, question: str, monument_id: Optional[str], photo: dict, engine) -> tuple[Optional[list[str]], Optional[dict]]:
         """(aday eser kimlikleri, erken dönüş). Yalnızca tek "yüksek" eşleşme güvenilir sayılır; "orta" eşleşme,
@@ -359,7 +408,7 @@ class GuideService:
                                         "Fotoğraf açık olan eserden farklı, kayıtlı bir esere benziyor (görsel benzerlik, kesin "
                                         "kimlik değildir). Onu mu soruyorsunuz?", options=_options(engine, high),
                                         manual_options=_options(engine, engine.corpus.monuments),
-                                        actions=["explain_architecture", "upload_another", "choose_manually"])
+                                        actions=list(ANALYZED_ACTIONS))
             return None, self._not_matched(engine)
         if len(high) == 1:
             return high, None
@@ -368,7 +417,7 @@ class GuideService:
                                     "Fotoğraf birden fazla kayıtlı esere benziyor (görsel benzerlik, kesin kimlik değildir). "
                                     "Hangisini soruyorsunuz?", options=_options(engine, high),
                                     manual_options=_options(engine, engine.corpus.monuments),
-                                    actions=["explain_architecture", "upload_another", "choose_manually"])
+                                    actions=list(ANALYZED_ACTIONS))
         return None, self._not_matched(engine)
 
     def _answer(self, question: str, monument_id: Optional[str], history: list[dict], photo: Optional[dict], engine,
@@ -384,6 +433,12 @@ class GuideService:
             if early is not None:
                 return early
             usage.photo_monument = candidate_ids[0] if candidate_ids else monument_id
+            if is_architectural(question) and not is_historical(question):
+                # Yalnızca mimari soru ("kubbeleri açıklar mısın?"): cevabı analizin kendisidir; tarihî kayıt çağrısı
+                # yapılmaz (kota harcanmaz). Güvenilir eşleşme analizin altında not olarak görünür.
+                m = engine.corpus.monuments[usage.photo_monument]
+                return self._base("generative", "photo_analyzed", "", actions=list(ANALYZED_ACTIONS),
+                                  monument={"monument_id": m.monument_id, "name": m.name})
         # Takip sorularında ("peki ne zaman?") eser önceki sorudan gelir: istemci `monument_id` gönderir; arama
         # sorgusuna önceki soru da eklenir.
         extra = " ".join(filter(None, [history[-1]["question"] if history else "",
@@ -426,6 +481,62 @@ class GuideService:
         res["_removed"] = checked.removed  # yalnızca değerlendirme için; rota bunu yanıttan çıkarır
         return res
 
+    def _followup(self, question: str, photo_context: dict, history: list[dict], engine, usage: Usage) -> dict:
+        """Fotoğraf sonrası mimari takip sorusu: fotoğraf yeniden gönderilmez, model yalnızca önceki analiz metnini görür.
+        "Fotoğraf" dayanaklı cümle analizde geçen öğelerle sınırlıdır; analizde olmayan görsel ayrıntı gerekiyorsa
+        fotoğraf yeniden istenir. Sağlayıcı hatasında yedek arama yapılmaz (soru tarihî değil, mimaridir)."""
+        ctx = {"description": photo_context["description"], "features": list(photo_context.get("features") or [])}
+        try:
+            text = self._call(self.settings.text_model, followup_messages(question, ctx, history),
+                              self.settings.max_followup_tokens, usage, est_tokens=2500, stage="followup")
+            data = parse(text)
+            if data is None:
+                raise ProviderError("parse_error")
+        except ProviderError as e:
+            self._log_provider_error(e)
+            reason = "Yeniden deneyebilirsiniz." if e.kind in RETRYABLE else ERROR_MESSAGES.get(e.kind, ERROR_MESSAGES["unavailable"])
+            return self._base("generative", "unavailable", f"Mimari açıklama şu anda hazırlanamadı. {reason}",
+                              fallback_reason=e.kind)
+        checker = Checker({}, [d.text for d in engine.corpus.docs], [])
+        lex = self._lexicon(engine)
+        seen = _visible_parts(" ".join([ctx["description"], *ctx["features"]]))
+        previous = _sentences(ctx["description"]) + [h["answer"] for h in history if h.get("answer")]
+        kept, removed, repeated, anchor = [], 0, 0, None
+        for item in (data.get("sentences") or [])[:6] if data.get("status") != "needs_photo" else []:
+            if not isinstance(item, dict) or not isinstance(item.get("text"), str):
+                continue
+            t = correct(" ".join(item["text"].split())[:400])
+            photo = item.get("basis") != "general"
+            hedged = _hedged(t) or (not photo and not _DEICTIC.search(fold(t)))
+            parts_ok = _only_seen_parts(t, seen) or (not photo and not _DEICTIC.search(fold(t)))
+            reason = checker._check(Sentence(t, [PHOTO_ID]))
+            fine = (reason is None or (reason == "fotoğraftan malzeme" and hedged)) and parts_ok \
+                and _no_names(t, "") and not _STYLE.search(fold(t)) \
+                and not (lex and (lex.unknown_words(t, "") or getattr(lex, "grammar_issues", lambda x: [])(t)))
+            # Gerçek testte model kubbe sorusuna önceki analizin cümlelerini olduğu gibi döndürdü: ziyaretçi bunları
+            # zaten okudu; tekrar yeni bilgi gibi gösterilmez. Sorulan öğeyi hatırlatan tek bir "fotoğraf" cümlesi,
+            # ardından genel bilgi geliyorsa kalabilir.
+            if fine and repeats(t, previous + [k["text"] for k in kept]):
+                repeated += 1
+                if photo and anchor is None and not kept:
+                    anchor = {"text": t, "sources": [PHOTO_ID]}
+                continue
+            if t and fine:
+                kept.append({"text": t, "sources": [PHOTO_ID if photo else GENERAL_ID]})
+            else:
+                removed += 1
+        logger.info("guide followup status=%s kept=%d removed=%d repeated=%d", data.get("status"), len(kept), removed,
+                    repeated)
+        if not kept or not any(k["sources"] == [GENERAL_ID] for k in kept) and repeated:
+            # Yeni bilgi yok (yalnızca önceki analizin tekrarı ya da hiç güvenilir cümle yok): fotoğraf yeniden istenir.
+            return self._base("generative", "photo_context_needed", NO_NEW_DETAIL if repeated else NEEDS_PHOTO,
+                              actions=["upload_another"], removed_claims=removed + repeated)
+        if anchor is not None:
+            kept.insert(0, anchor)
+            repeated -= 1
+        return self._base("generative", "photo_followup", FOLLOWUP_LABEL, sentences=kept,
+                          removed_claims=removed + repeated)
+
     def _fallback(self, question: str, monument_id: Optional[str], reason: str, engine, photo_requested: bool) -> dict:
         logger.warning("guide fallback reason=%s", reason)
         search = engine.ask(question, monument_id)
@@ -446,16 +557,48 @@ class GuideService:
                 "lexicon": getattr(self.lexicon, "state", "disabled")}
 
 
-NOT_MATCHED = "Bu görsel kayıtlı Bursa eserleriyle güvenilir şekilde eşleştirilemedi."
-# Ziyaretçiye teknik ayrıntı (HTTP durumu, hata kodu, sağlayıcı adı) gösterilmez.
-PHOTO_FAILED_REASON = {
-    "timeout": "Yapay zekâ fotoğrafı zamanında inceleyemedi.",
-    "unavailable": "Yapay zekâ sağlayıcısına şu anda ulaşılamıyor.",
-    "rate_limited": "Yapay zekâ sağlayıcısı şu anda yoğun.",
-    "busy": "Yapay zekâ rehberi şu anda yoğun.",
-    "circuit_open": "Yapay zekâ sağlayıcısına geçici olarak ulaşılamıyor.",
-    "vision_unsupported": "Fotoğraf analizi şu anda kullanılamıyor.",
-}
+NOT_VERIFIED = "Fotoğraftan yapının kesin kimliği doğrulanamadı."
+PHOTO_FAILED = "Fotoğraf şu anda analiz edilemedi."
+NEEDS_PHOTO = ("Bu soru, önceki analizde yer almayan görsel ayrıntılar gerektiriyor. Fotoğrafı şu anda görmediğim için "
+               "tahmin etmiyorum; fotoğrafı yeniden yüklerseniz yeniden inceleyebilirim.")
+NO_NEW_DETAIL = ("Önceki analizde yazılanların dışında bu konuda güvenilir yeni bir ayrıntı veremiyorum. Fotoğrafı şu anda "
+                 "görmediğim için tahmin etmiyorum; fotoğrafı yeniden yüklerseniz daha ayrıntılı inceleyebilirim.")
+FOLLOWUP_LABEL = "Önceki fotoğraf analizine ve genel mimari bilgiye dayanan açıklama (fotoğraf yeniden incelenmedi):"
+ANALYZED_ACTIONS = ("explain_more", "choose_manually", "upload_another")
+IDENTITY_NEEDS_PHOTO = ("Yapının kimliğini belirlemek için fotoğrafın yeniden incelenmesi gerekir; önceki analizde kimlik "
+                        "doğrulanamamıştı. Fotoğrafı yeniden yükleyip sorabilirsiniz.")
+HISTORY_NEEDS_IDENTITY = ("Fotoğraftaki yapının kimliği doğrulanmadığı için ona tarihî bilgi atfetmiyorum. Kayıtlı eserlerden "
+                          "birini seçerseniz o eserin onaylı kayıtlarıyla cevaplarım; bu seçim fotoğrafın o esere ait olduğu "
+                          "anlamına gelmez.")
+RETRYABLE = {"timeout", "unavailable", "rate_limited", "circuit_open", "busy", "parse_error", "invalid_response"}
+# Tarihî soru: tarihî bilgi yalnızca onaylı kayıtlardan cevaplanır (mimari takip yoluna girmez).
+_HISTORY_Q = re.compile(r"\b(ne zaman|kim|kimin|kimler|kimdir|yaptir\w*|insa\w*|tarih\w*|yil|yil(da|dan|in|inda|i|lar\w*|lik\w*)|yuzyil\w*|donem\w*|"
+                        r"bani\w*|mimari kim|mimar[ia]? kim|mimarin|restor\w*|onar\w*|vakf\w*|vakif\w*|hikaye\w*|"
+                        r"olay\w*|sultan\w*|padisah\w*)\b")
+_IDENTIFY_Q = re.compile(r"\b(neresi|nerede|neresidir|hangi (eser|yapi|cami)\w*\s*(\?|$)|adi ne|ismi ne|hangi yapidir|tanidin)")
+_ARCH_Q = re.compile(r"\b(kubbe|minare|kemer|revak|paye|sutun|malzeme|mimari|cephe|susleme|bezeme|motif|cati|pencere|"
+                     r"kapi|avlu|mekan|isik|perspektif|ozellik|tasiyici|tonoz|cini|hat\b|hatt)")
+# Genel bilgi cümlesinin "bu yapı/fotoğraf" hakkında konuşması: o zaman fotoğraf kuralları uygulanır.
+_DEICTIC = re.compile(r"\b(bu yapi|bu cami|bu bina|bu mekan|burada|buradaki|fotograf|goruntu|gorul|goruyor|gorunen|"
+                      r"gorunuyor)")
+
+
+def is_historical(question: str) -> bool:
+    return bool(_HISTORY_Q.search(fold(question)))
+
+
+def is_identifying(question: str) -> bool:
+    return bool(_IDENTIFY_Q.search(fold(question)))
+
+
+def is_architectural(question: str) -> bool:
+    return bool(_ARCH_Q.search(fold(question)))
+
+
+def _hedged(text: str) -> bool:
+    f = fold(text)
+    return bool(_HEDGE.search(f)) and not _DEFINITIVE.search(f)
+
 BUILDING_TYPES = ("cami", "külliye", "medrese", "türbe", "han", "bedesten", "kilise", "saray", "konut", "köprü", "kale",
                   "diğer", "belirsiz")
 # Görülen yapı türü ile katalogdaki türün uyumu; "diğer"/"belirsiz" her türle uyumlu sayılır (model emin değil).
@@ -478,9 +621,12 @@ def _visible_parts(text: str) -> set[str]:
     return {p for w in fold(text).split() for p in _VISIBLE if w.startswith(p)}
 
 
-def _only_material(checker: Checker, text: str) -> bool:
-    """Cümle yalnızca malzeme kuralına takılıyorsa (çekinceli malzeme izlenimi için) True."""
-    return checker._check(Sentence(text, [PHOTO_ID])) == "fotoğraftan malzeme"
+# Bir öğenin parçası, öğe görüldüyse ayrıca etiketlenmeden anılabilir (şerefe minarenin, kasnak kubbenin parçasıdır).
+_PART_OF = {"seref": "minare", "kasnak": "kubbe"}
+
+
+def _only_seen_parts(text: str, seen: set[str]) -> bool:
+    return all(p in seen or _PART_OF.get(p) in seen for p in _visible_parts(text))
 
 
 def _type_compatible(seen: str, catalog_type: str) -> bool:

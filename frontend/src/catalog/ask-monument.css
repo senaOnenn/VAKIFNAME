@@ -365,6 +365,12 @@ a.guide-cite:focus-visible {
   color: var(--amber-ink);
 }
 
+.guide-cite--general {
+  background: var(--paper-50);
+  color: var(--green-900);
+  border: 1px solid var(--line-strong);
+}
+
 .guide-missing,
 .guide-meta {
   margin: 0;
@@ -389,41 +395,74 @@ a.guide-cite:focus-visible {
   scroll-margin-top: calc(var(--header-height) + 0.75rem);
 }
 
-.guide-photo-note {
+/* Fotoğrafın Mimari Analizi: tek ana alan (açıklama, özellik etiketleri, altta kimlik notu). */
+.guide-analysis {
   display: grid;
-  gap: 0.3rem;
-  padding: 0.65rem 0.85rem;
+  gap: 0.55rem;
+  padding: 0.85rem 1rem;
   background: var(--surface);
   border-left: 3px solid var(--copper);
   border-radius: var(--radius-sm);
-  font-size: 0.85rem;
 }
 
-.guide-photo-note p {
+.guide-analysis p {
   margin: 0;
 }
 
-.guide-photo-note__title {
-  font-size: 0.74rem;
+.guide-analysis__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
   font-weight: 600;
+  color: var(--green-900);
+}
+
+.guide-analysis__meta {
+  font-size: 0.74rem;
   color: var(--copper);
 }
 
-.guide-features {
+.guide-analysis__text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.guide-analysis__features {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.guide-analysis__features h6 {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--green-900);
+}
+
+.guide-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 0.35rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.guide-features li {
-  padding: 0.1rem 0.5rem;
-  font-size: 0.75rem;
+.guide-tags li {
+  padding: 0.15rem 0.6rem;
+  font-size: 0.78rem;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
   background: var(--paper-50);
+  color: var(--green-900);
+}
+
+.guide-analysis__identity {
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--line-strong);
+  font-size: 0.76rem;
+  color: var(--ink-muted);
 }
 
 .guide-preview {

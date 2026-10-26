@@ -7,6 +7,7 @@ import type { AskFact, GuideAvailability, GuideResult } from './types'
  */
 export const GUIDE_TIMEOUT_MS = 70_000
 export const PHOTO_SOURCE = 'FOTOGRAF'
+export const GENERAL_SOURCE = 'GENEL'
 
 const invalid = () => new ApiError('invalid-response', 'Sunucudan beklenmeyen bir yanıt geldi.')
 const isObject = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v)
@@ -42,6 +43,16 @@ export interface GuideImage {
   mime: 'image/jpeg' | 'image/png' | 'image/webp'
 }
 
+/**
+ * Önceki fotoğraf analizinin metni (fotoğrafın kendisi değil): mimari takip sorusu fotoğraf yeniden gönderilmeden bununla
+ * cevaplanır. `monument_id` yalnızca analizde güvenilir eşleşme olduysa verilir.
+ */
+export interface PhotoContext {
+  description: string
+  features: string[]
+  monument_id?: string
+}
+
 /** Gönderilen fotoğraf: ziyaretçi yüz, kişisel bilgi veya gizli belge olmadığını onaylamıştır (sunucu onaysız reddeder). */
 export type ConsentedImage = GuideImage & { consent: true }
 
@@ -57,11 +68,13 @@ export async function askGuide(
   monumentId: string | null,
   history: GuideTurn[],
   image: ConsentedImage | null,
+  photoContext?: PhotoContext | null,
   signal?: AbortSignal,
 ): Promise<GuideResult> {
   const payload: Record<string, unknown> = { question, history }
   if (monumentId) payload.monument_id = monumentId
   if (image) payload.image = image
+  else if (photoContext) payload.photo_context = photoContext
   const body = await apiPost('/guide/ask', payload, signal, { ...GUIDE_OPTIONS, timeoutMs: GUIDE_TIMEOUT_MS })
   if (!isObject(body) || typeof body.status !== 'string' || typeof body.message !== 'string') throw invalid()
   if (body.mode !== 'generative' && body.mode !== 'fallback_search') throw invalid()
@@ -70,6 +83,7 @@ export async function askGuide(
   if (!facts || !sentences || !facts.every(hasSources)) throw invalid()
   const known = new Set<string>([
     PHOTO_SOURCE,
+    GENERAL_SOURCE,
     ...facts.map((f) => f.fact_id),
     ...(Array.isArray(body.identities) ? body.identities.map((i) => (isObject(i) ? String(i.id) : '')) : []),
   ])

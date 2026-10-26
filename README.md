@@ -1,6 +1,9 @@
 # VAKIFNAME
 VAKIFNAME - Oyunlaştırılmış Kültür Turu &amp; RAG Destekli Canlı Vasiyet Platformu (Team HisGuard)
 
+> **Bu dal (`feat/ai-guide-photo-analysis`) henüz tam doğrulanmadı.** Fotoğraftan mimari analiz geliştirmesidir;
+> açık sorunlar `docs/GELISTIRME_NOTLARI_YAPAY_ZEKA.md` içindedir. Kararlı ortak sürüm `develop` dalıdır.
+
 ## Takım için hızlı başlangıç
 
 **Amaç:** Bursa'daki vakıf eserlerini (10 eserlik dijital katalog, editörün onayladığı 76 tarihî bilgi) eser sayfaları,

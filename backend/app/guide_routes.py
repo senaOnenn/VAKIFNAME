@@ -73,12 +73,32 @@ class GuideImage(BaseModel):
     consent: Literal[True]
 
 
+class PhotoContext(BaseModel):
+    """Önceki fotoğraf analizinin metni (fotoğrafın kendisi değil). Mimari takip sorusunda modele "önceki analiz"
+    olarak verilir; tarihî kanıt değildir. `monument_id` yalnızca o analizde güvenilir eşleşme olduysa gönderilir."""
+    model_config = ConfigDict(extra="forbid")
+    description: str = Field(min_length=1, max_length=1200)
+    features: list[str] = Field(default_factory=list, max_length=6)
+    monument_id: Optional[MonumentId] = None
+
+    @field_validator("description")
+    @classmethod
+    def _d(cls, v: str) -> str:
+        return _clean_text(v, 1)
+
+    @field_validator("features")
+    @classmethod
+    def _f(cls, v: list[str]) -> list[str]:
+        return [_clean_text(x, 1)[:80] for x in v]
+
+
 class GuideRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     question: str = Field(min_length=2, max_length=MAX_QUESTION)
     monument_id: Optional[MonumentId] = None
     history: list[HistoryTurn] = Field(default_factory=list, max_length=8)
     image: Optional[GuideImage] = None
+    photo_context: Optional[PhotoContext] = None
 
     @field_validator("question")
     @classmethod
@@ -241,7 +261,8 @@ def guide_ask(body: GuideRequest, request: Request, response: Response):
     try:
         image_bytes = img.decode_base64(body.image.data) if body.image is not None else None
         # Geçersiz dosya veya yüz içeren fotoğraf, sağlayıcıya herhangi bir çağrı yapılmadan reddedilir.
-        result = service.ask(body.question, body.monument_id, [h.model_dump() for h in body.history], image_bytes)
+        result = service.ask(body.question, body.monument_id, [h.model_dump() for h in body.history], image_bytes,
+                             body.photo_context.model_dump() if body.photo_context else None)
     except img.ImageRejected as e:
         raise HTTPException(status_code=400, detail=str(e)) from None
     finally:

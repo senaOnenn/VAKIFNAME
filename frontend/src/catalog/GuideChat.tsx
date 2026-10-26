@@ -2,7 +2,16 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { ApiError } from '../api/client'
 import { Answer, errorMessage, FactCard } from './AskMonument'
 import { askMonument } from './catalogClient'
-import { askGuide, GUIDE_TIMEOUT_MS, type GuideImage, type GuideTurn, PHOTO_SOURCE, preparePhoto } from './guideClient'
+import {
+  askGuide,
+  GENERAL_SOURCE,
+  GUIDE_TIMEOUT_MS,
+  type GuideImage,
+  type GuideTurn,
+  PHOTO_SOURCE,
+  type PhotoContext,
+  preparePhoto,
+} from './guideClient'
 import type { AskResult, GuideResult } from './types'
 
 const MAX_QUESTION = 300
@@ -19,6 +28,8 @@ type Turn = {
   note?: string
   /** "Tekrar dene" için yalnızca bellekte tutulur (ziyaretçi bu fotoğraf için onay vermişti). */
   photo?: Photo
+  /** Bu soru bir fotoğraf analizinin takibi olarak soruldu (fotoğrafın kendisi değil, analiz metni gönderildi). */
+  photoContext?: PhotoContext
 } & (
   | { state: 'loading'; startedAt: number }
   | { state: 'done'; result: GuideResult }
@@ -48,7 +59,7 @@ function Waiting({ startedAt, photo, deadlineS }: { startedAt: number; photo: bo
   const text =
     s < 8
       ? photo
-        ? 'Fotoğraf inceleniyor, onaylı kayıtlar aranıyor…'
+        ? 'Fotoğrafın mimarisi inceleniyor…'
         : 'Onaylı kayıtlar aranıyor, cevap yazılıyor…'
       : s < 25
         ? 'Yapay zekâ cevabı hazırlıyor; ücretsiz hizmette bu yarım dakikayı bulabilir.'
@@ -86,7 +97,7 @@ function Quota({ remaining, circuitOpen }: { remaining?: number; circuitOpen?: b
     )
   return (
     <p className={`guide-quota${remaining <= 5 ? ' notice notice--warning' : ' guide-meta'}`} role="status">
-      Bugün kalan yapay zekâ hakkı: {remaining} çağrı (fotoğraflı soru 2 çağrı harcar)
+      Bugün kalan yapay zekâ hakkı: {remaining} çağrı (fotoğraflı soru en çok 2 çağrı harcar)
       {remaining <= 5 ? '. Sınır dolunca sorular onaylı kayıtlarda arama ile cevaplanır.' : '.'}
     </p>
   )
@@ -94,44 +105,43 @@ function Quota({ remaining, circuitOpen }: { remaining?: number; circuitOpen?: b
 
 const answerText = (r: GuideResult) => r.sentences.map((s) => s.text).join(' ')
 
-const IDENTITY_TEXT = {
-  yes: 'Yapının kimliği fotoğraftan belirlenebilir görünüyor; ancak onaylı kayıtlarımızla doğrulanmadıkça ad verilmez.',
-  no: 'Yapının kimliği yalnızca bu fotoğraftan güvenle belirlenemiyor.',
-  uncertain: 'Yapının kimliği bu fotoğraftan kesin olarak belirlenemiyor.',
-} as const
+const NOT_VERIFIED = 'Fotoğraftan yapının kesin kimliği doğrulanamadı.'
+const EXPLAIN_MORE_QUESTION = 'Fotoğraftaki mimariyi daha ayrıntılı açıklar mısın?'
+
+/** Sonraki mimari takip sorusu için bu fotoğraf analizinin metni (fotoğrafın kendisi gönderilmez). */
+function photoContextOf(result: GuideResult): PhotoContext | undefined {
+  const p = result.photo
+  if (!p?.description) return undefined
+  const match = p.candidates.filter((c) => c.likelihood === 'high')
+  return {
+    description: p.description.slice(0, 1200),
+    features: p.features.slice(0, 6),
+    ...(match.length === 1 ? { monument_id: match[0].monument_id } : {}),
+  }
+}
 
 /**
- * Fotoğraftan gözlem: katalogdan bağımsız görsel değerlendirme (yapı türü, özellikler, kimliğin belirlenebilirliği,
- * olası yapay üretim işaretleri) ve ardından yalnızca güvenilir katalog eşleşmesi. Tarihî bilgi burada değil, onaylı
- * kayıtlar bölümünde gösterilir.
+ * Fotoğrafın Mimari Analizi: tek ana alan. Modelin doğal açıklaması, dikkat çeken özellik etiketleri ve en altta kimlik
+ * notu. Kimlik bulunamaması ana sonuç değildir; tarihî bilgi burada değil, onaylı kayıtlar bölümünde gösterilir.
  */
-function PhotoNote({ photo }: { photo: NonNullable<GuideResult['photo']> }) {
+function PhotoAnalysis({ photo }: { photo: NonNullable<GuideResult['photo']> }) {
   const match = photo.candidates.filter((c) => c.likelihood === 'high')
   return (
-    <aside className="guide-photo-note" aria-label="Fotoğraftan gözlem">
-      <p className="guide-photo-note__title">Fotoğraftan gözlem · yapay zekâ, yanılabilir; tarihî kanıt değildir</p>
-      {photo.building_type && photo.building_type !== 'belirsiz' && (
-        <p className="guide-meta">Görülen yapı türü: {photo.building_type}</p>
-      )}
-      {photo.description && <p>{photo.description}</p>}
+    <section className="guide-analysis" aria-label="Fotoğrafın Mimari Analizi">
+      <h5 className="guide-analysis__title">Fotoğrafın Mimari Analizi</h5>
+      <p className="guide-analysis__meta">Yapay zekânın fotoğraftan gözlemi · yanılabilir; tarihî bilgi değildir</p>
+      {photo.description && <p className="guide-analysis__text">{photo.description}</p>}
       {photo.features.length > 0 && (
-        <ul className="guide-features">
-          {photo.features.map((f) => (
-            <li key={f}>{f}</li>
-          ))}
-        </ul>
+        <div className="guide-analysis__features">
+          <h6>Dikkat Çeken Mimari Özellikler</h6>
+          <ul className="guide-tags">
+            {photo.features.map((f) => (
+              <li key={f}>{f}</li>
+            ))}
+          </ul>
+        </div>
       )}
-      {photo.material_guess && (
-        <p className="guide-meta guide-material">
-          Malzeme izlenimi (görsel tahmin, kesin değil; tarihî kaynak bilgisi değildir): {photo.material_guess}
-        </p>
-      )}
-      {photo.identity && (
-        <p className="guide-meta">
-          {IDENTITY_TEXT[photo.identity.identifiable]}
-          {photo.identity.reason ? ` ${photo.identity.reason}` : ''}
-        </p>
-      )}
+      {photo.visible_text && <p className="guide-meta">Fotoğrafta okunan yazı: «{photo.visible_text}»</p>}
       {photo.synthetic_signs && photo.synthetic_signs.length > 0 && (
         <div className="guide-synthetic">
           <p className="guide-meta">
@@ -144,15 +154,13 @@ function PhotoNote({ photo }: { photo: NonNullable<GuideResult['photo']> }) {
           </ul>
         </div>
       )}
-      {match.length === 1 && (
-        <p className="guide-meta">
-          Kayıtlı eserlerle karşılaştırma: {match[0].name} ile yüksek görsel benzerlik (kesin kimlik değildir).
-        </p>
-      )}
-      {photo.metadata_removed.length > 0 && (
-        <p className="guide-meta">Fotoğrafın konum ve cihaz bilgileri gönderilmeden önce silindi.</p>
-      )}
-    </aside>
+      <p className="guide-analysis__identity">
+        {match.length === 1
+          ? `Kayıtlı eserlerle karşılaştırma: ${match[0].name} ile yüksek görsel benzerlik (kesin kimlik değildir).`
+          : NOT_VERIFIED}
+        {photo.metadata_removed.length > 0 && ' Fotoğrafın konum ve cihaz bilgileri gönderilmeden önce silindi.'}
+      </p>
+    </section>
   )
 }
 
@@ -162,12 +170,14 @@ type PhotoHandlers = {
   onRetry?: () => void
   /** Soruyu fotoğrafsız sormak için giriş alanına koyar; gönderme kararı ziyaretçinindir. */
   onAskWithoutPhoto: () => void
+  /** Analizi derinleştiren takip sorusu (fotoğraf yeniden gönderilmez; önceki analiz bağlam olur). */
+  onExplainMore?: () => void
 }
 
 /**
- * Fotoğraf sonrası seçenekler. Eşleşme yoksa: mimariyi açıklama, başka fotoğraf, eseri kendisi seçme (en yakın eser
- * önerilmez). Analiz başarısızsa: tekrar dene, başka fotoğraf, fotoğrafsız sor (doğrulanacak gözlem olmadığından mimari
- * açıklama yok).
+ * Fotoğraf sonrası seçenekler. Analiz sonrası: mimariyi daha ayrıntılı açıklama, eseri kendisi seçme (en yakın eser
+ * önerilmez; seçim yalnızca tarihî sorunun bağlamıdır), başka fotoğraf. Analiz başarısızsa: tekrar dene, başka fotoğraf,
+ * fotoğrafsız sor.
  */
 function PhotoActions({
   result,
@@ -175,11 +185,10 @@ function PhotoActions({
   onUploadAnother,
   onRetry,
   onAskWithoutPhoto,
+  onExplainMore,
 }: { result: GuideResult; onChoose: (mid: string) => void } & PhotoHandlers) {
-  const [explain, setExplain] = useState(false)
   const [manual, setManual] = useState(false)
   const actions = result.actions ?? []
-  const explanation = result.photo?.architecture_explanation ?? ''
   return (
     <div className="guide-nomatch">
       <div className="ask-options" role="group" aria-label="Ne yapmak istersiniz?">
@@ -188,9 +197,14 @@ function PhotoActions({
             Tekrar dene
           </button>
         )}
-        {actions.includes('explain_architecture') && explanation && (
-          <button type="button" className="button button--light" aria-expanded={explain} onClick={() => setExplain((v) => !v)}>
-            Görseldeki mimariyi açıkla
+        {actions.includes('explain_more') && onExplainMore && (
+          <button type="button" className="button button--light" onClick={onExplainMore}>
+            Mimariyi daha ayrıntılı açıkla
+          </button>
+        )}
+        {actions.includes('choose_manually') && (result.manual_options?.length ?? 0) > 0 && (
+          <button type="button" className="button button--light" aria-expanded={manual} onClick={() => setManual((v) => !v)}>
+            Kayıtlı eserlerden birini seç
           </button>
         )}
         {actions.includes('upload_another') && (
@@ -203,22 +217,11 @@ function PhotoActions({
             Fotoğraf olmadan soru sor
           </button>
         )}
-        {actions.includes('choose_manually') && (result.manual_options?.length ?? 0) > 0 && (
-          <button type="button" className="button button--light" aria-expanded={manual} onClick={() => setManual((v) => !v)}>
-            Kayıtlı eserlerden birini kendim seçmek istiyorum
-          </button>
-        )}
       </div>
-      {explain && (
-        <div className="guide-photo-note" aria-label="Görseldeki mimarinin açıklaması">
-          <p className="guide-photo-note__title">Görseldeki mimari · genel açıklama; bu yapının tarihi hakkında bilgi değildir</p>
-          <p>{explanation}</p>
-        </div>
-      )}
       {manual && (
         <div className="guide-manual">
           <p className="guide-meta">
-            Seçtiğiniz eserin onaylı kayıtlarıyla cevap verilir; fotoğraf bu eserle eşleştirilmez.
+            Seçtiğiniz eserin onaylı kayıtlarıyla cevap verilir; bu seçim fotoğrafın o esere ait olduğu anlamına gelmez.
           </p>
           <div className="ask-options" role="group" aria-label="Kayıtlı eserler">
             {result.manual_options!.map((o) => (
@@ -252,11 +255,12 @@ function GuideAnswer({
   onAsk: (question: string, mid: string) => void
 } & PhotoHandlers) {
   const order = result.facts.map((f) => f.fact_id)
+  const followup = result.status === 'photo_followup'
   const anchor = (fid: string) => `rehber-${turnId}-${fid}`
   if (result.mode === 'fallback_search') {
     return (
       <div className="guide-reply">
-        {result.photo && <PhotoNote photo={result.photo} />}
+        {result.photo && <PhotoAnalysis photo={result.photo} />}
         <p className="notice notice--warning">{result.message}</p>
         {result.search && <Answer result={result.search} onPick={onPick} onAsk={onAsk} />}
       </div>
@@ -264,9 +268,9 @@ function GuideAnswer({
   }
   return (
     <div className={`guide-reply guide-reply--${result.status}`}>
-      {result.photo && <PhotoNote photo={result.photo} />}
+      {result.photo && <PhotoAnalysis photo={result.photo} />}
       {result.sentences.length > 0 ? (
-        <div className="guide-answer" aria-label="Yapay zekâ cevabı">
+        <div className="guide-answer" aria-label={followup ? 'Mimari açıklama' : 'Yapay zekâ cevabı'}>
           {result.photo && <p className="guide-answer__section">Onaylı kayıtlardan doğrulanmış tarihî bilgi</p>}
           <p className="guide-answer__label">{result.message}</p>
           <p className="guide-answer__text">
@@ -274,6 +278,12 @@ function GuideAnswer({
               <span key={i}>
                 {s.text}
                 {s.sources.map((src) => {
+                  if (src === GENERAL_SOURCE)
+                    return (
+                      <span key={src} className="guide-cite guide-cite--general" title="Fotoğraftan bağımsız genel mimari bilgi">
+                        genel bilgi
+                      </span>
+                    )
                   if (src === PHOTO_SOURCE)
                     return (
                       <span key={src} className="guide-cite guide-cite--photo" title="Fotoğraftaki görünüşe dayanır">
@@ -304,7 +314,8 @@ function GuideAnswer({
           )}
         </div>
       ) : (
-        <p className="guide-reply__message">{result.message}</p>
+        // Analiz gösterildiyse kimlik notu analizin altındadır; ayrıca ana mesaj olarak tekrarlanmaz.
+        result.status !== 'photo_analyzed' && result.message && <p className="guide-reply__message">{result.message}</p>
       )}
       {result.facts.length > 0 && (
         <div className="guide-sources">
@@ -322,14 +333,14 @@ function GuideAnswer({
         <div
           className="ask-options"
           role="group"
-          aria-label={result.status === 'photo_not_matched' ? 'Sorunuzda andığınız eser' : 'Olası eserler'}
+          aria-label={result.status === 'photo_analyzed' ? 'Sorunuzda andığınız eser' : 'Olası eserler'}
         >
           {result.options.map((o) => (
             <button
               key={o.monument_id}
               type="button"
               className="button button--light"
-              onClick={() => (result.status === 'photo_not_matched' ? onChoose(o.monument_id) : onPick(o.monument_id))}
+              onClick={() => (result.status === 'photo_analyzed' ? onChoose(o.monument_id) : onPick(o.monument_id))}
             >
               {o.name}
             </button>
@@ -433,6 +444,7 @@ export function GuideChat({
     extraHistory: GuideTurn[] = [],
     note?: string,
     consented = false,
+    photoContext?: PhotoContext,
   ) {
     const q = (text.trim() || (image ? DEFAULT_PHOTO_QUESTION : '')).slice(0, MAX_QUESTION)
     if (q.length < 2 || busy || (image && !consent && !consented)) return
@@ -447,6 +459,7 @@ export function GuideChat({
         context,
         photoUrl: image?.previewUrl ?? null,
         photo: image ?? undefined,
+        photoContext: image ? undefined : photoContext,
         note,
         state: 'loading',
         startedAt: Date.now(),
@@ -456,7 +469,7 @@ export function GuideChat({
     setPhoto(null)
     setConsent(false)
     try {
-      const result = await askGuide(q, context, history, image ? { ...image.image, consent: true } : null)
+      const result = await askGuide(q, context, history, image ? { ...image.image, consent: true } : null, photoContext)
       setTurns((ts) => ts.map((t) => (t.id === id ? { ...t, state: 'done', result } : t)))
     } catch (e) {
       setTurns((ts) => ts.map((t) => (t.id === id ? { ...t, state: 'error', message: guideError(e) } : t)))
@@ -480,6 +493,20 @@ export function GuideChat({
   // Takip sorusu en son cevaplanan eser bağlamında sorulur (ziyaretçi başka bir eseri adıyla sorabilir).
   const lastContext = [...turns].reverse().find((t) => t.state === 'done' && t.result.monument)
   const context = lastContext && lastContext.state === 'done' ? lastContext.result.monument!.monument_id : monumentId
+
+  /**
+   * Sohbet hâlâ fotoğraf üzerineyse (son tur fotoğraf analizi ya da onun takibiyse) sonraki soru analiz metniyle birlikte
+   * gönderilir: mimari soru fotoğraf yeniden gönderilmeden cevaplanır, tarihî soru yalnızca doğrulanmış eser için.
+   * Ziyaretçi eseri kendisi seçince veya fotoğrafsız bir soruya geçince bağlam düşer.
+   */
+  const lastTurn = turns[turns.length - 1]
+  const activePhotoContext =
+    lastTurn && lastTurn.state === 'done' ? (photoContextOf(lastTurn.result) ?? lastTurn.photoContext) : undefined
+
+  function explainMore(turn: Turn) {
+    const ctx = turn.state === 'done' ? (photoContextOf(turn.result) ?? turn.photoContext) : undefined
+    if (ctx) void send(EXPLAIN_MORE_QUESTION, turn.context, null, [], undefined, false, ctx)
+  }
 
   function pick(turn: Turn, mid: string) {
     // Fotoğraf yeniden gönderilmez: önceki gözlem yalnızca bağlam olarak eklenir (ek görsel analiz ücreti yok).
@@ -552,7 +579,7 @@ export function GuideChat({
             {t.state === 'error' && (
               <div className="guide-reply">
                 <p className="notice notice--warning" role="alert">
-                  {t.photoUrl ? `Fotoğraf analiz edilemedi. ${t.message}` : t.message}
+                  {t.photoUrl ? `Fotoğraf şu anda analiz edilemedi. ${t.message}` : t.message}
                 </p>
                 {t.photoUrl ? (
                   // Fotoğraflı soruda açık eserin kayıtları fotoğrafın cevabıymış gibi aranmaz.
@@ -598,6 +625,7 @@ export function GuideChat({
                 onUploadAnother={() => galleryRef.current?.click()}
                 onRetry={t.photo ? () => retry(t) : undefined}
                 onAskWithoutPhoto={() => askWithoutPhoto(t)}
+                onExplainMore={() => explainMore(t)}
               />
             )}
           </li>
@@ -639,7 +667,7 @@ export function GuideChat({
         className="ask-form guide-form"
         onSubmit={(e) => {
           e.preventDefault()
-          void send(question, context, photo)
+          void send(question, context, photo, [], undefined, false, photo ? undefined : activePhotoContext)
         }}
       >
         <label htmlFor={inputId} className="visually-hidden">
@@ -651,7 +679,13 @@ export function GuideChat({
           type="text"
           value={question}
           maxLength={MAX_QUESTION}
-          placeholder={photo ? 'Fotoğraf hakkında sorunuz (isteğe bağlı)…' : `${monumentName} hakkında bir soru yazın…`}
+          placeholder={
+            photo
+              ? 'Fotoğraf hakkında sorunuz (isteğe bağlı)…'
+              : activePhotoContext
+                ? 'Fotoğraftaki mimari hakkında sorun (ör. kubbeler, minareler, malzeme)…'
+                : `${monumentName} hakkında bir soru yazın…`
+          }
           onChange={(e) => setQuestion(e.target.value)}
           autoComplete="off"
           enterKeyHint="send"

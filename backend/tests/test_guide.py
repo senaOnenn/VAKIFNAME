@@ -650,7 +650,7 @@ def test_koza_han_wrong_material_from_photo_is_never_shown_or_used():
                       ("Koza Han ahşaptan yapılmıştır.", ["BUR-0009-F001"]),
                       ("Koza Han'ı Sultan II. Bayezid yaptırmıştır.", ["BUR-0009-F001"]))
     svc, provider = make_service(responder, models=VISION_MODELS)
-    r = svc.ask("Bu fotoğrafta hangi mimari özellikler görülüyor?", image_bytes=_jpeg())
+    r = svc.ask("Bu yapı hakkında ne söyleyebilirsin?", image_bytes=_jpeg())
     shown = " ".join([r["photo"]["description"], *r["photo"]["features"], *(s["text"] for s in r["sentences"])]).lower()
     assert "tahta" not in shown and "ahşap" not in shown and "tuğla" not in shown
     # Yanlış malzeme, cevap istemine "fotoğraf gözlemi" olarak da taşınmaz.
@@ -684,7 +684,10 @@ def test_photo_is_refused_when_face_screen_is_unavailable(tmp_path):
                     reason="yerel yüz modelleri veya katalog görselleri yok")
 def test_real_face_screen_passes_catalog_monument_photos():
     fs = FaceScreen(DEFAULT_MODEL_DIR)
-    photos = sorted(MEDIA.iterdir())[:20]
+    # Yalnızca katalogda (Commons) yayımlanan dosyalar; aynı klasördeki proje arşivi kopyaları bu sınamanın konusu değildir.
+    cat = json.loads((MEDIA.parent / "catalog.json").read_text(encoding="utf-8"))
+    listed = sorted({i["file"] for m in cat["monuments"] for i in m["images"]})
+    photos = [MEDIA / f for f in listed][:20]
     assert photos and all(fs.faces(p.read_bytes()) == 0 for p in photos)
 
 
@@ -734,11 +737,13 @@ def _vlm(obs, calls=None):
 
 
 def _assert_not_matched(r, named=()):
-    assert r["status"] == "photo_not_matched" and r["mode"] == "generative"
-    assert r["message"] == "Bu görsel kayıtlı Bursa eserleriyle güvenilir şekilde eşleştirilemedi."
+    # Görev 32: kimlik bulunamaması ana sonuç değildir; mimari analiz gösterilir, kimlik yalnızca kısa nottur.
+    assert r["status"] == "photo_analyzed" and r["mode"] == "generative"
+    assert r["message"] == "Fotoğraftan yapının kesin kimliği doğrulanamadı."
+    assert r["photo"]["description"]  # analiz her zaman var
     assert [o["monument_id"] for o in r["options"]] == list(named)  # en yakın eser önerilmez
     assert [o["monument_id"] for o in r["manual_options"]] == CATALOG_ORDER  # tarafsız, katalog sırası
-    assert r["actions"] == ["explain_architecture", "upload_another", "choose_manually"]
+    assert r["actions"] == ["explain_more", "choose_manually", "upload_another"]
     assert r["sentences"] == [] and r["facts"] == [] and r["monument"] is None
 
 
@@ -753,7 +758,7 @@ def test_fictional_domed_mosque_is_not_steered_to_ulu_cami(page):
     assert p["building_type"] == "cami" and p["candidates"] == [] and p["identity"]["identifiable"] == "no"
     assert "Ulu" not in json.dumps(p, ensure_ascii=False) and "Osmanlı" not in p["description"]
     assert "büyük merkezî kubbe" in p["features"] and "revaklı avlu" in p["features"]
-    assert "16. yüzyıl" not in p["architecture_explanation"] and "Revak, avluyu çevreleyen" in p["architecture_explanation"]
+    assert "revaklarla çevrili geniş bir avlu" in p["description"] and "architecture_explanation" not in p
     # Yapay üretim işareti yalnızca olasılık olarak kalır; kesin yargı atılır.
     assert p["synthetic_signs"] == ["Minarelerin şerefe sayıları birbirinden farklı görünüyor; görsel kurgusal olabilir."]
 

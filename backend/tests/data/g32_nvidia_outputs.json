@@ -1,0 +1,163 @@
+{
+ "_about": "Görev 32 gerçek NVIDIA Nemotron testi (2026-10-26, nvidia/nemotron-3.5-super-vl:free, OpenRouter). Yalnızca modelin değiştirilmemiş JSON metin çıktısı; görsel, anahtar, istek başlığı veya kişisel veri yok. Testler bu çıktıları sahte sağlayıcıyla yeniden oynatır; ağ çağrısı yapılmaz.",
+ "scenarios": {
+  "B_ulu_cami_ic": {
+   "question": "Bu iç mekânın mimari özelliklerini açıklar mısın?",
+   "photo": "Wikimedia Commons · Bursa Ulu Camii iç mekân · CC BY-SA 4.0 (katalog fotoğrafı, BUR-0001)"
+  },
+  "C_muradiye_dis": {
+   "question": "Bu yapıda hangi mimari özellikler dikkat çekiyor?",
+   "photo": "Wikimedia Commons · Bursa Muradiye Mosque Exterior · CC BY-SA 4.0 (katalog fotoğrafı, BUR-0003)",
+   "note": "İlk denemede sağlayıcı 502 döndü (photo_analysis_failed); bu çıktı ikinci çalıştırmadandır."
+  },
+  "D_yildirim_katalog_disi": {
+   "question": "Bu fotoğraftaki yapının mimari özelliklerini açıklar mısın?",
+   "photo": "Wikimedia Commons · Yildirim Bayezid I Mosque · R Prazeres · CC BY-SA 4.0 (katalog dışı yapı)"
+  },
+  "E_bedesten_ayrinti": {
+   "question": "Bu fotoğraftaki mimari ayrıntıyı açıklar mısın?",
+   "photo": "Wikimedia Commons · Bursa Bedesten, interior, inscription on a pillar · CC BY-SA 4.0 (katalog fotoğrafı, BUR-0014)"
+  },
+  "B_takip_kubbe": {
+   "question": "Kubbeleri biraz daha ayrıntılı açıklar mısın?",
+   "followup_of": "B_ulu_cami_ic"
+  },
+  "C_takip_gorulmeyen": {
+   "question": "Mihrabın süslemeleri nasıl görünüyor?",
+   "followup_of": "C_muradiye_dis"
+  }
+ },
+ "outputs": {
+  "B_ulu_cami_ic": {
+   "is_architecture": true,
+   "building_type": "cami",
+   "description": "Fotoğraf, bir cami iç mekânının yüksek bir perspektiften çekilmiş tavan ve kemer düzenini gösterir. Merkezde geniş, darbelemeli bir kubbe ve yanlarında daha küçük kubbeler yer alıyor; bu kubbeler kenarlarında süslemeli çerçeve ve orta kısmında çiçekli, geometrik bir medallon barındırıyor. Kubbelerin etrafında küçük, yüksek konumlu pencereler ışık sağlıyor. Tavanı destekleyen kalın, dikme benzeri taşıyıcılar arasında kemerler gevşek bir akış oluşturuyor. Dikmenin alt kısmında büyük harfliyle yazılmış kaligrafik bir panel ve üzeri süslemeli bir başlık görünüyor. Genel renk paleti krem, beyaz ve koyu kahverengi tonlarında; süslemeler tavan ve kemerlerin kenarlarında tekrarlanıyor.",
+   "features": [
+    "merkezî kubbe",
+    "yan kubbeler",
+    "kemerler",
+    "kalın dikme/paye",
+    "yüksek pencereler",
+    "kaligrafik panel",
+    "tavan süslemeleri"
+   ],
+   "material_guess": {
+    "text": "sıvalı duvar ve taş veya tuğla taşıyıcı",
+    "certainty": "low"
+   },
+   "visible_text": "",
+   "identity": {
+    "identifiable": "uncertain",
+    "reason": "Fotoğraf yalnızca iç mekân detaylarını gösteriyor; yapının kimliğini belirleyecek benzersiz bir görünüm yok."
+   },
+   "synthetic_signs": [],
+   "catalog_match": []
+  },
+  "C_muradiye_dis": {
+   "is_architecture": true,
+   "building_type": "cami",
+   "description": "Fotoğraf, açık bir mavi gökyüzü altında yeşil ağaçlarla çevrili bir camiyi gösterir. Yapının en belirgin özellikleri, yüksek bir minare ve birden fazla kubbedir. Ana kubbe yanındaki daha küçük kubbelerle birleşerek dinamik bir siluet oluşturur. Cephe, kirişli ve kesme tahta benzeri malzemelerle kaplanmış görünür. Alt katta sivri kemerli kapı ve pencereler, üst katta ise örüntülü pencereler yer alır. Işık ve gölge, duvarın dokuyu ve mimari detayları vurgular.",
+   "features": [
+    "tek minare",
+    "birden fazla kubbe",
+    "sivri kemerli kapılar",
+    "örüntülü pencereler",
+    "taş ve tuğla cephe",
+    "açık gökyüzü",
+    "ağaç çevresi"
+   ],
+   "material_guess": {
+    "text": "taş ve tuğla karışımı",
+    "certainty": "low"
+   },
+   "visible_text": "",
+   "identity": {
+    "identifiable": "uncertain",
+    "reason": "Fotoğrafta yapıyı kesin olarak belirleyecek benzersiz bir işaret veya yazı yok."
+   },
+   "synthetic_signs": [],
+   "catalog_match": []
+  },
+  "D_yildirim_katalog_disi": {
+   "is_architecture": true,
+   "building_type": "medrese",
+   "description": "Fotoğraf, geniş bir revaklı dış mekânın uzun bir kesitini gösteriyor. Tekerlek şeklinde sıralanmış sivri kemerli boşluklar, kalın ve dikmeşer taşıyıcılarla destekleniyor. Üstteki kiriş ve çatı hattı, revaklı bölgenin üstünü kapalı tutuyor. Sağdaki duvar, karışık taş ve tuğla düzeniyle yapılmış; içinde iki farklı boyutta, sivri kemerli pencereler var. Sol üstte bir minare gibi yüksek, tuğlalı yapı parçası görünüyor. Zemin düz ve açık bir avla gibi duruyor. Sol kenarda yeşil ağaç dalları kareye giriyor. Işık doğal ve hafif bulutlu; perspektif, revaklı koridoru derinlikte uzatıyor.",
+   "features": [
+    "revaklı koridor",
+    "sivri kemerli boşluklar",
+    "kalın taşıyıcılar",
+    "sivri kemerli pencereler",
+    "tuğlalı yüksek yapı parçası",
+    "açık avla"
+   ],
+   "material_guess": {
+    "text": "taş ve tuğla sıralamalarına benziyor",
+    "certainty": "low"
+   },
+   "visible_text": "",
+   "identity": {
+    "identifiable": "uncertain",
+    "reason": "Fotoğrafta net bir ad, tarih veya benzersiz simge yok; revaklı yapı birçok tarihi eserde yaygındır."
+   },
+   "synthetic_signs": [],
+   "catalog_match": [
+    {
+     "monument_id": "BUR-0005",
+     "likelihood": "medium",
+     "reason": "Revaklı avlu ve sivri kemerli pencereler medrese tipiyle uyumludur."
+    }
+   ]
+  },
+  "E_bedesten_ayrinti": {
+   "is_architecture": true,
+   "building_type": "belirsiz",
+   "description": "Fotoğraf, duvarın bir kısmını yakından gösteren bir mimari ayrıntı sunar. Merkezde, duvara gömülü dikdörtgen bir taş levha yer alıyor. Üzerinde koyu renkli, el yazısı tarzında hat süslemesi bulunuyor. Levhanın çevresinde hafif bir kenarlık var ve duvarın geri kalan kısmı kırmızımsı kahverengi tuğla veya kesme taşlı bir yüzeye sahip. Görüntü yalnızca bu küçük bölgeyi kapsadığı için binanın genel görünümü, işlevi veya kimliği hakkında yorum yapılamıyor.",
+   "features": [
+    "duvar",
+    "dikdörtgen taş levha",
+    "hat süslemesi",
+    "tuğla veya kesme taşlı duvar"
+   ],
+   "material_guess": {
+    "text": "tuğla ve kesme taş karışımı olabilir",
+    "certainty": "low"
+   },
+   "visible_text": "",
+   "identity": {
+    "identifiable": "no",
+    "reason": "fotoğraf yalnızca küçük bir duvar ayrıntısını gösteriyor, binanın kimliğini belirleyecek yeterli mimari öğe yok"
+   },
+   "synthetic_signs": [],
+   "catalog_match": []
+  },
+  "B_takip_kubbe": {
+   "status": "answered",
+   "sentences": [
+    {
+     "text": "Merkezî kubbe, yan kubbelerle birlikte tavan düzenini oluşturuyor.",
+     "basis": "photo"
+    },
+    {
+     "text": "Kubbelerin etrafında yüksek konumlu pencereler ışık sağlıyor.",
+     "basis": "photo"
+    },
+    {
+     "text": "Kubbeleri destekleyen kalın, dikme benzeri taşıyıcılar arasında kemerler gevşek bir akış oluşturuyor.",
+     "basis": "photo"
+    },
+    {
+     "text": "Tavan ve kemerlerin kenarlarında tekrarlanan süslemeler kubbe çevresinde de yer alıyor.",
+     "basis": "photo"
+    },
+    {
+     "text": "Genel renk paleti krem, beyaz ve koyu kahverengi tonlarında.",
+     "basis": "photo"
+    }
+   ]
+  },
+  "C_takip_gorulmeyen": {
+   "status": "needs_photo",
+   "sentences": []
+  }
+ }
+}

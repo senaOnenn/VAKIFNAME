@@ -5,7 +5,15 @@ Bu sözcükleri taşıyan gözlem cümlesi veya özellik gösterilmez. Denetim, 
 ile biçimbilimsel çözümleme yapar: kök ve ekleriyle çözümlenemeyen sözcük bilinmeyen sayılır. Onaylı katalog
 metinlerindeki sözcükler ve mimari terimler (ör. "mukarnas", "şerefe") sözlükte olmasa da geçerlidir.
 
-Sınırlar: gerçek ama yanlış yerde kullanılan sözcükleri ("tipler", "kirişli") yakalayamaz; anlam denetimi yapmaz.
+Görev 32 gerçek testlerinde çözümleyicinin geçerli saydığı ama mimari betimlemede yanlış olan sözcükler de çıktı
+("darbelemeli" — sözlükte "darbelemek" fiili var; "avla" — "avlamak" fiilinin emri; "medallon"). Bunlar için yalnızca
+gerçek çıktılarda görülen küçük bir liste tutulur: niyet açıksa düzeltilir ("medallon" → "madalyon", "avla" → "avlu"),
+değilse sözcük bozuk sayılır. Ayrıca tamlama uyumu denetlenir: ilgi ekli adın hemen ardından iyeliksiz ama hâl ekli bir ad
+gelirse ("duvarın dokuyu"; doğrusu "duvarın dokusunu") ifade bozuk sayılır. Arada ortaçlı yan cümle varsa ("caminin
+avluya açılan kapısı") tamlamanın başı sonra geldiği için denetlenmez.
+
+Sınırlar: gerçek ama yanlış yerde kullanılan sözcüklerin çoğunu ("tipler", "kirişli", "tekerlek şeklinde") yakalayamaz;
+anlam denetimi yapmaz. Doğal Türkçe için asıl önlem istemdir (`prompts.py`); bu denetim son bir süzgeçtir.
 `zeyrek` kurulu değilse veya henüz yüklenmediyse denetim yapılmaz (hiçbir cümle bu nedenle silinmez) — bu bir kalite
 denetimidir, güvenlik denetimi değil; tarihî iddia denetimi `claims.py`'dedir.
 """
@@ -22,7 +30,20 @@ DOMAIN_TERMS = ("mukarnas", "şerefe", "kündekâri", "kündekari", "revak", "ş
                 "tonoz", "pandantif", "tromp", "payanda", "çörten", "kitabe", "alem", "külah", "almaşık", "sebil", "imaret",
                 "eyvan", "mahfil", "hünkâr", "son cemaat", "pencereli", "kemerli", "kubbeli", "minareli", "revaklı",
                 "medrese", "türbe", "külliye", "bedesten", "kervansaray", "hamam", "çeşme", "selsebil", "rozet", "silme",
-                "kornişli", "korniş", "saçak", "çatı", "kiremit", "kurşun", "levha", "pano", "kemer", "sütun", "başlık")
+                "kornişli", "korniş", "saçak", "çatı", "kiremit", "kurşun", "levha", "pano", "kemer", "sütun", "başlık",
+                "paye", "kaligrafi", "kaligrafik", "madalyon", "palmet", "rumi", "kaburga", "dilimli", "istiridye", "ajur",
+                "zencerek", "kabara", "bordür", "friz", "kartuş", "niş", "lento", "söve", "hatıl")
+
+# Gerçek model çıktılarında görülen, çözümleyicinin geçerli saydığı ya da sözlükte bulunmayan hatalı sözcükler.
+# Değer: niyet açıksa doğru yazım (yalnızca yazım düzeltilir, yeni ayrıntı eklenmez); None: bozuk sözcük (ifade düşer).
+MODEL_ERRORS = {"medallon": "madalyon", "medallonu": "madalyonu", "medallonlu": "madalyonlu", "medallonlar": "madalyonlar",
+                "avla": "avlu", "avlası": "avlusu", "avlaya": "avluya", "avlada": "avluda", "avladan": "avludan",
+                "darbelemeli": None, "dikmeşer": None, "okşu": None, "okşulu": None, "duşarlı": None,
+                "kesmeköprüsü": None, "kaminler": None}
+_POSSESSIVE = {"P1sg", "P2sg", "P3sg", "P1pl", "P2pl", "P3pl"}
+_CASES = {"Acc", "Dat", "Loc", "Abl", "Ins"}
+_PARTICIPLES = ("PresPart", "PastPart", "FutPart", "AorPart", "NarrPart")
+_TENSES = {"Aor", "Past", "Narr", "Prog1", "Prog2", "Fut", "Pres"}
 
 _LOOSE = {"Abbreviation", "ProperNoun"}
 _WORD = re.compile(r"[A-Za-zÇĞİÖŞÜÂÎÛçğıöşüâîû]+")
@@ -34,6 +55,17 @@ def _lower_tr(w: str) -> str:
 
 def _plain(w: str) -> str:
     return _lower_tr(w).replace("â", "a").replace("î", "i").replace("û", "u")
+
+
+def correct(text: str) -> str:
+    """Gerçek çıktılarda görülen ve niyeti açık yazım hatalarını düzeltir ("medallon" → "madalyon"). Sözlük gerekmez."""
+    def fix(m):
+        w = m.group(0)
+        to = MODEL_ERRORS.get(_lower_tr(w))
+        if not to:
+            return w
+        return to[0].upper() + to[1:] if w[0].isupper() else to
+    return _WORD.sub(fix, text)
 
 
 class TurkishLexicon:
@@ -96,6 +128,9 @@ class TurkishLexicon:
             if len(raw) < 3 or raw.isupper():  # kısaltma veya levhadaki büyük harfli yazı
                 continue
             w = _plain(raw)
+            if _lower_tr(raw) in MODEL_ERRORS and MODEL_ERRORS[_lower_tr(raw)] is None:
+                out.append(raw)  # çözümleyici kabul etse de gerçek çıktıda bozuk olduğu görülmüş sözcük
+                continue
             if w in self._known or w in free or w.startswith(self._domain):
                 continue
             if not self._parses(_lower_tr(raw)) and not self._parses(w):
@@ -103,5 +138,37 @@ class TurkishLexicon:
         return out
 
     def ok(self, text: str, allowed: str = "") -> bool:
-        return not self.unknown_words(text, allowed)
+        return not self.unknown_words(text, allowed) and not self.grammar_issues(text)
+
+    def _analyses(self, w: str) -> list[list[str]]:
+        try:
+            return [[m[0].id_ for m in a.morphemes] + [f"pos:{a.pos.value}", f"root:{a.dict_item.primary_pos.value}"]
+                    for a in self._analyzer._parse(_lower_tr(w)) if a is not None]
+        except Exception:  # çözümleyici iç hatası: bu sözcük için denetim yapılmaz
+            return []
+
+    def grammar_issues(self, text: str) -> list[str]:
+        """Bozuk ad tamlamaları ("duvarın dokuyu"). Yalnızca kesin biçimbilimsel uyumsuzluk: ilk sözcüğün ilgi ekli ad
+        çözümlemesi var ve sıfat okuması yok; ikinci sözcüğün bütün çözümlemeleri iyeliksiz, hâl ekli addır; ardından gelen sözcük tamlamanın
+        başını sonraya taşıyan bir ortaç değildir. Denetim hazır değilse boş liste."""
+        if self.state != "ready":
+            return []
+        out = []
+        for seg in re.split(r"[,.;:!?()\"“”‘’]", text):
+            ws = _WORD.findall(seg)
+            for i in range(len(ws) - 1):
+                a, b = self._analyses(ws[i]), self._analyses(ws[i + 1])
+                # Sıfat okuması olan sözcük ("kalın" — "kal" adının ilgi hâli de olabilir) ilgi eki adayı sayılmaz.
+                if not any(x[-3] == "Gen" and "pos:Noun" in x and "root:Noun" in x for x in a) \
+                        or any("pos:Adj" in x or "root:Adj" in x for x in a):
+                    continue
+                if not b or not all("pos:Noun" in x and not _POSSESSIVE & set(x) and x[-3] in _CASES for x in b):
+                    continue
+                nxt = self._analyses(ws[i + 2]) if i + 2 < len(ws) else []
+                participle = any(any(m in _PARTICIPLES for m in x) for x in nxt)
+                finite = any(_TENSES & set(x) and not any(m in _PARTICIPLES for m in x) for x in nxt)
+                if participle and not finite:
+                    continue
+                out.append(f"{ws[i]} {ws[i + 1]}")
+        return out
 
