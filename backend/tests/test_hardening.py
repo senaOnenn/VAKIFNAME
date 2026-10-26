@@ -137,7 +137,7 @@ def test_cors_default_origins(monkeypatch):
 def test_cors_origins_from_env(monkeypatch):
     monkeypatch.setenv("VAKIFNAME_CORS_ORIGINS", " https://app.example/ , https://admin.example ")
     assert cors_origins_from_env() == ["https://app.example", "https://admin.example"]
-    with TestClient(create_app(TEST_PLACES_FILE)) as c:
+    with TestClient(create_app(TEST_PLACES_FILE, demo_api=True)) as c:
         assert c.get("/places", headers={"Origin": "https://app.example"}).headers["access-control-allow-origin"] == "https://app.example"
         assert "access-control-allow-origin" not in c.get("/places", headers={"Origin": ALLOWED}).headers
 

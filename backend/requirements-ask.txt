@@ -1,0 +1,15 @@
+# "Esere Sor" anlamsal araması için isteğe bağlı bağımlılıklar (genel API ortamına kurulur).
+# Kurulu değilse /monuments/ask güvenli kelime aramasıyla çalışır. Sürümler dahili RAG ortamıyla aynıdır; aynı model ve
+# aynı sürümlerle indeks vektörleri birebir yeniden üretilir (bkz. app/ask/index.py manifesti).
+#   pip install -r requirements-ask.txt --extra-index-url https://download.pytorch.org/whl/cpu
+numpy==2.5.4
+torch==2.14.1+cpu
+sentence-transformers==6.2.0
+transformers==5.20.2
+tokenizers==0.23.3
+safetensors==0.8.0
+huggingface_hub==2.2.0
+# Yapay zekâ rehberinde fotoğrafın yerel yüz taraması (app/guide/privacy.py; ONNX modelleri onnxruntime ile çalışır).
+# Kurulu değilse fotoğraf analizi kapalı kalır, metin sohbeti etkilenmez.
+pillow==11.3.0
+onnxruntime==1.31.0

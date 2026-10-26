@@ -1,21 +1,35 @@
 from datetime import datetime
 from enum import Enum
-from typing import Annotated, Optional
+from typing import Annotated, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl, StringConstraints
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, HttpUrl, StringConstraints
 
 Latitude = Annotated[float, Field(ge=-90, le=90, allow_inf_nan=False, description="Enlem (WGS84)")]
 Longitude = Annotated[float, Field(ge=-180, le=180, allow_inf_nan=False, description="Boylam (WGS84)")]
 PlaceId = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=64)]
+
+
+def _not_real_monument_id(value: str) -> str:
+    # Gerçek eser kimlikleri (BUR-xxxx) yalnızca dahili katalogda kullanılır; demo kaydı bu önekle başlayamaz.
+    if value.upper().startswith("BUR-"):
+        raise ValueError("BUR- öneki gerçek eserlere ayrılmıştır; demo mekânı bu kimliği kullanamaz.")
+    return value
+
+
+DemoPlaceId = Annotated[PlaceId, AfterValidator(_not_real_monument_id)]
 UserId = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=64)]
 
 
-class Place(BaseModel):
-    """Eser kaydı. Resmî veri aktarımında da aynı şema kullanılır."""
+class DemoPlace(BaseModel):
+    """Demo keşif oyununun kurgusal mekânı. Genel API (`/places`, check-in, pasaport) yalnızca bunu sunar.
+
+    Gerçek eserler (`app.internal.catalog.RealMonument`) bu modele çevrilemez; onaylı gerçek eserler için
+    ileride ayrı bir yayın modeli eklenecek.
+    """
 
     model_config = ConfigDict(extra="forbid")
 
-    id: PlaceId
+    id: DemoPlaceId
     name: str = Field(min_length=1)
     city: str = Field(min_length=1)
     description: str
@@ -24,7 +38,11 @@ class Place(BaseModel):
     check_in_radius_m: float = Field(gt=0, description="Check-in için izin verilen yarıçap (metre)")
     source_title: Optional[str] = None
     source_url: Optional[HttpUrl] = None
-    is_demo: bool
+    is_demo: Literal[True]
+
+
+# Mevcut check-in ve pasaport kodu `Place` adını kullanır; genel API'deki her mekân bir demo mekânıdır.
+Place = DemoPlace
 
 
 class CheckInRequest(BaseModel):

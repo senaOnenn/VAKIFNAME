@@ -18,6 +18,7 @@ from fastapi.testclient import TestClient
 from app.internal.catalog import load_catalog
 from app.internal.rag import InternalRag, RagIntegrityError
 from app.internal.server import create_internal_app
+from tests.conftest import temp_review_db
 from tests.test_internal_catalog import REAL_DATA_DIR
 
 RUNTIME = REAL_DATA_DIR / "rag" / "runtime"
@@ -73,7 +74,8 @@ def rag(catalog):
 
 
 def client(encoder):
-    app = create_internal_app(REAL_DATA_DIR, TOKEN, rag_encoder=encoder, allowed_client_hosts=frozenset({"testclient"}))
+    app = create_internal_app(REAL_DATA_DIR, TOKEN, rag_encoder=encoder, allowed_client_hosts=frozenset({"testclient"}),
+                              review_db=temp_review_db())
     return TestClient(app)
 
 

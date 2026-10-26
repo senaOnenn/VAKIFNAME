@@ -138,7 +138,7 @@ def test_empty_coordinates_become_none_not_zero(raw):
 
 def test_monument_without_coordinates_cannot_check_in():
     m = build().monuments["BUR-9001"]
-    assert (m.latitude, m.longitude, m.location_status) == (None, None, "missing")
+    assert (m.location.latitude, m.location.longitude, m.location.status) == (None, None, "missing")
     assert m.checkin_eligible is False
     with pytest.raises(LocationUnavailableError):
         to_checkin_place(m)
@@ -147,7 +147,8 @@ def test_monument_without_coordinates_cannot_check_in():
 def test_monument_with_unverified_coordinates_cannot_check_in():
     kb = _mutate(lambda kb: kb["monuments"][0]["catalog_metadata"].update(latitude="40.18", longitude="29.06"))
     m = build(kb).monuments["BUR-9001"]
-    assert m.location_status == "unverified" and m.checkin_eligible is False
+    assert m.location.status == "unverified" and m.checkin_eligible is False
+    assert m.location.mappable is False
     with pytest.raises(LocationUnavailableError):
         to_checkin_place(m)
 
@@ -156,7 +157,7 @@ def test_public_place_contract_still_requires_coordinates():
     # Mevcut `/places` sözleşmesi değişmedi: koordinatsız kayıt Place olamaz.
     with pytest.raises(ValueError):
         Place(id="x", name="x", city="x", description="x", latitude=None, longitude=None,
-              check_in_radius_m=10, is_demo=False)
+              check_in_radius_m=10, is_demo=True)
 
 
 # --- Görsel envanteri -------------------------------------------------------------
@@ -252,7 +253,7 @@ def test_real_orhan_gazi_conflict_preserved(real_catalog):
 @real_data
 def test_real_monuments_have_no_coordinates_and_cannot_check_in(real_catalog):
     for m in real_catalog.monuments.values():
-        assert (m.latitude, m.longitude, m.location_status) == (None, None, "missing")
+        assert (m.location.latitude, m.location.longitude, m.location.status) == (None, None, "missing")
         with pytest.raises(LocationUnavailableError):
             to_checkin_place(m)
 

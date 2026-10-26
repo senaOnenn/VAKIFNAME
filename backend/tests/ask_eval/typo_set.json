@@ -1,0 +1,1642 @@
+{
+ "description": "Yazım hatası dayanıklılığı seti (Görev 25). Motor değişikliğinden önce yazıldı. 25 temel soru × 5 biçim (correct, missing, ascii, order, keyboard), görevdeki örnekler, eser sayfası bağlamı ve 30 cevapsız soru.",
+ "items": [
+  {
+   "q": "Koza Han'ın mimarı kim?",
+   "ctx": null,
+   "group": "correct",
+   "base": 0,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "kza hanın mimrı kim",
+   "ctx": null,
+   "group": "missing",
+   "base": 0,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "koza hanin mimari kim",
+   "ctx": null,
+   "group": "ascii",
+   "base": 0,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "mimarı kim koza hanın",
+   "ctx": null,
+   "group": "order",
+   "base": 0,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "koza hanın mimaro kim",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 0,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "Ulu Cami'yi kim yaptırdı?",
+   "ctx": null,
+   "group": "correct",
+   "base": 1,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F001"
+   ]
+  },
+  {
+   "q": "ulu cmi'yi kim yaptrdı",
+   "ctx": null,
+   "group": "missing",
+   "base": 1,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F001"
+   ]
+  },
+  {
+   "q": "ulu camiyi kim yaptirdi",
+   "ctx": null,
+   "group": "ascii",
+   "base": 1,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F001"
+   ]
+  },
+  {
+   "q": "kim yaptırdı ulu camiyi",
+   "ctx": null,
+   "group": "order",
+   "base": 1,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F001"
+   ]
+  },
+  {
+   "q": "ulu caiyi kim yapitrdi",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 1,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F001"
+   ]
+  },
+  {
+   "q": "Ulu Cami'de kaç kubbe var?",
+   "ctx": null,
+   "group": "correct",
+   "base": 2,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ]
+  },
+  {
+   "q": "ulu camide kç kubbe var",
+   "ctx": null,
+   "group": "missing",
+   "base": 2,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ]
+  },
+  {
+   "q": "ulu camide kac kubbe var",
+   "ctx": null,
+   "group": "ascii",
+   "base": 2,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ]
+  },
+  {
+   "q": "kaç kubbe var ulu camide",
+   "ctx": null,
+   "group": "order",
+   "base": 2,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ]
+  },
+  {
+   "q": "ulu camide kac kubeb var",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 2,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ]
+  },
+  {
+   "q": "Ulu Cami'nin minberi hangi ağaçtan yapılmış?",
+   "ctx": null,
+   "group": "correct",
+   "base": 3,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ]
+  },
+  {
+   "q": "ulu cami minberi hangi ağçtan yapılmş",
+   "ctx": null,
+   "group": "missing",
+   "base": 3,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ]
+  },
+  {
+   "q": "ulu cami minberi hangi agactan yapilmis",
+   "ctx": null,
+   "group": "ascii",
+   "base": 3,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ]
+  },
+  {
+   "q": "hangi ağaçtan yapılmış ulu cami minberi",
+   "ctx": null,
+   "group": "order",
+   "base": 3,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ]
+  },
+  {
+   "q": "ulu cami minbweri hangi agactan yapilmis",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 3,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ]
+  },
+  {
+   "q": "Ulu Cami'nin ilk imamı kimdir?",
+   "ctx": null,
+   "group": "correct",
+   "base": 4,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F003"
+   ]
+  },
+  {
+   "q": "ulu caminin ilk imamı kimdr",
+   "ctx": null,
+   "group": "missing",
+   "base": 4,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F003"
+   ]
+  },
+  {
+   "q": "ulu caminin ilk imami kimdir",
+   "ctx": null,
+   "group": "ascii",
+   "base": 4,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F003"
+   ]
+  },
+  {
+   "q": "ilk imamı kimdir ulu caminin",
+   "ctx": null,
+   "group": "order",
+   "base": 4,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F003"
+   ]
+  },
+  {
+   "q": "ulu caminin ilk imsmi kimdir",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 4,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F003"
+   ]
+  },
+  {
+   "q": "Muradiye Camii'ni kim yaptırdı?",
+   "ctx": null,
+   "group": "correct",
+   "base": 5,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ]
+  },
+  {
+   "q": "muradye camisini kim yaptrdı",
+   "ctx": null,
+   "group": "missing",
+   "base": 5,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ]
+  },
+  {
+   "q": "muradiye camisini kim yaptirdi",
+   "ctx": null,
+   "group": "ascii",
+   "base": 5,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ]
+  },
+  {
+   "q": "kim yaptırdı muradiye camisini",
+   "ctx": null,
+   "group": "order",
+   "base": 5,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ]
+  },
+  {
+   "q": "muradiye camisini kim yaotirdi",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 5,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ]
+  },
+  {
+   "q": "Muradiye Camii'nin duvarları neyle örülmüş?",
+   "ctx": null,
+   "group": "correct",
+   "base": 6,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F003"
+   ]
+  },
+  {
+   "q": "muradiye camii duvarlrı neyle örülmş",
+   "ctx": null,
+   "group": "missing",
+   "base": 6,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F003"
+   ]
+  },
+  {
+   "q": "muradiye camii duvarlari neyle orulmus",
+   "ctx": null,
+   "group": "ascii",
+   "base": 6,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F003"
+   ]
+  },
+  {
+   "q": "duvarları neyle örülmüş muradiye camiinin",
+   "ctx": null,
+   "group": "order",
+   "base": 6,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F003"
+   ]
+  },
+  {
+   "q": "muradiye camii duvarkari neyle orulmus",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 6,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F003"
+   ]
+  },
+  {
+   "q": "Muradiye Camii'nin mihrabı ne zaman yapılmış?",
+   "ctx": null,
+   "group": "correct",
+   "base": 7,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F006"
+   ]
+  },
+  {
+   "q": "muradiye camii mihrbı ne zman yapılmış",
+   "ctx": null,
+   "group": "missing",
+   "base": 7,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F006"
+   ]
+  },
+  {
+   "q": "muradiye camii mihrabi ne zaman yapilmis",
+   "ctx": null,
+   "group": "ascii",
+   "base": 7,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F006"
+   ]
+  },
+  {
+   "q": "ne zaman yapılmış muradiye camii mihrabı",
+   "ctx": null,
+   "group": "order",
+   "base": 7,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F006"
+   ]
+  },
+  {
+   "q": "muradiye camii mihrabi ne zamsn yapilmis",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 7,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F006"
+   ]
+  },
+  {
+   "q": "Muradiye Medresesi bugün ne olarak kullanılıyor?",
+   "ctx": null,
+   "group": "correct",
+   "base": 8,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F006"
+   ]
+  },
+  {
+   "q": "muradiye medresi bugün ne olrak kullanılıyor",
+   "ctx": null,
+   "group": "missing",
+   "base": 8,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F006"
+   ]
+  },
+  {
+   "q": "muradiye medresesi bugun ne olarak kullaniliyor",
+   "ctx": null,
+   "group": "ascii",
+   "base": 8,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F006"
+   ]
+  },
+  {
+   "q": "bugün ne olarak kullanılıyor muradiye medresesi",
+   "ctx": null,
+   "group": "order",
+   "base": 8,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F006"
+   ]
+  },
+  {
+   "q": "muradiye medreswsi bugun ne olarak kullaniliyor",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 8,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F006"
+   ]
+  },
+  {
+   "q": "II. Murad Türbesi'nin kubbesi neden açık?",
+   "ctx": null,
+   "group": "correct",
+   "base": 9,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ]
+  },
+  {
+   "q": "2. murad türbsinin kubbesi neden açk",
+   "ctx": null,
+   "group": "missing",
+   "base": 9,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ]
+  },
+  {
+   "q": "ii murad turbesinin kubbesi neden acik",
+   "ctx": null,
+   "group": "ascii",
+   "base": 9,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ]
+  },
+  {
+   "q": "kubbesi neden açık murad türbesinin",
+   "ctx": null,
+   "group": "order",
+   "base": 9,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ]
+  },
+  {
+   "q": "murad turbesinin kubbesi nedeb acik",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 9,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ]
+  },
+  {
+   "q": "II. Murad Türbesi'ni kim yaptırdı?",
+   "ctx": null,
+   "group": "correct",
+   "base": 10,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F001"
+   ]
+  },
+  {
+   "q": "murad türbesni kim yaptırdı",
+   "ctx": null,
+   "group": "missing",
+   "base": 10,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F001"
+   ]
+  },
+  {
+   "q": "murad turbesini kim yaptirdi",
+   "ctx": null,
+   "group": "ascii",
+   "base": 10,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F001"
+   ]
+  },
+  {
+   "q": "kim yaptırdı murad türbesini",
+   "ctx": null,
+   "group": "order",
+   "base": 10,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F001"
+   ]
+  },
+  {
+   "q": "murad turbesini kim yaptirsi",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 10,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F001"
+   ]
+  },
+  {
+   "q": "Cem Sultan Türbesi'nde kimler gömülü?",
+   "ctx": null,
+   "group": "correct",
+   "base": 11,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F003",
+    "BUR-0008-F002"
+   ]
+  },
+  {
+   "q": "cem sultan türbesinde kimlr gömülü",
+   "ctx": null,
+   "group": "missing",
+   "base": 11,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F003",
+    "BUR-0008-F002"
+   ]
+  },
+  {
+   "q": "cem sultan turbesinde kimler gomulu",
+   "ctx": null,
+   "group": "ascii",
+   "base": 11,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F003",
+    "BUR-0008-F002"
+   ]
+  },
+  {
+   "q": "kimler gömülü cem sultan türbesinde",
+   "ctx": null,
+   "group": "order",
+   "base": 11,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F003",
+    "BUR-0008-F002"
+   ]
+  },
+  {
+   "q": "cem sultan turbesinde kimler gomuku",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 11,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F003",
+    "BUR-0008-F002"
+   ]
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin planı nasıl?",
+   "ctx": null,
+   "group": "correct",
+   "base": 12,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F004"
+   ]
+  },
+  {
+   "q": "cem sultan türbesinin plnı nasıl",
+   "ctx": null,
+   "group": "missing",
+   "base": 12,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F004"
+   ]
+  },
+  {
+   "q": "cem sultan turbesinin plani nasil",
+   "ctx": null,
+   "group": "ascii",
+   "base": 12,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F004"
+   ]
+  },
+  {
+   "q": "planı nasıl cem sultan türbesinin",
+   "ctx": null,
+   "group": "order",
+   "base": 12,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F004"
+   ]
+  },
+  {
+   "q": "cem sultan turbesinin plani nadil",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 12,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F004"
+   ]
+  },
+  {
+   "q": "Koza Han ne zaman yapıldı?",
+   "ctx": null,
+   "group": "correct",
+   "base": 13,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ]
+  },
+  {
+   "q": "koza han ne zmn yapıldı",
+   "ctx": null,
+   "group": "missing",
+   "base": 13,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ]
+  },
+  {
+   "q": "koza han ne zaman yapildi",
+   "ctx": null,
+   "group": "ascii",
+   "base": 13,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ]
+  },
+  {
+   "q": "ne zaman yapıldı koza han",
+   "ctx": null,
+   "group": "order",
+   "base": 13,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ]
+  },
+  {
+   "q": "koza hab ne zaman yapildi",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 13,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ]
+  },
+  {
+   "q": "Koza Han'ı kim yaptırdı?",
+   "ctx": null,
+   "group": "correct",
+   "base": 14,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F001"
+   ]
+  },
+  {
+   "q": "koza hanı kim yaptrdı",
+   "ctx": null,
+   "group": "missing",
+   "base": 14,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F001"
+   ]
+  },
+  {
+   "q": "koza hani kim yaptirdi",
+   "ctx": null,
+   "group": "ascii",
+   "base": 14,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F001"
+   ]
+  },
+  {
+   "q": "kim yaptırdı koza hanı",
+   "ctx": null,
+   "group": "order",
+   "base": 14,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F001"
+   ]
+  },
+  {
+   "q": "koxa hani kim yaptirdi",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 14,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F001"
+   ]
+  },
+  {
+   "q": "Koza Han avlusundaki mescit kaç ayak üzerine oturur?",
+   "ctx": null,
+   "group": "correct",
+   "base": 15,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F007"
+   ]
+  },
+  {
+   "q": "koza han avlusndaki mescit kç ayak üzerine oturur",
+   "ctx": null,
+   "group": "missing",
+   "base": 15,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F007"
+   ]
+  },
+  {
+   "q": "koza han avlusundaki mescit kac ayak uzerine oturur",
+   "ctx": null,
+   "group": "ascii",
+   "base": 15,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F007"
+   ]
+  },
+  {
+   "q": "avlusundaki mescit kaç ayak üzerine oturur koza han",
+   "ctx": null,
+   "group": "order",
+   "base": 15,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F007"
+   ]
+  },
+  {
+   "q": "koza han avlusundaki mesxit kac ayak uzerine oturur",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 15,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F007"
+   ]
+  },
+  {
+   "q": "Pirinç Han'ın mimarı kim?",
+   "ctx": null,
+   "group": "correct",
+   "base": 16,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F002"
+   ]
+  },
+  {
+   "q": "pirnç hanın mimarı kim",
+   "ctx": null,
+   "group": "missing",
+   "base": 16,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F002"
+   ]
+  },
+  {
+   "q": "pirinc hanin mimari kim",
+   "ctx": null,
+   "group": "ascii",
+   "base": 16,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F002"
+   ]
+  },
+  {
+   "q": "mimarı kim pirinç hanın",
+   "ctx": null,
+   "group": "order",
+   "base": 16,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F002"
+   ]
+  },
+  {
+   "q": "pirinc hanin mimari kin",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 16,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F002"
+   ]
+  },
+  {
+   "q": "Pirinç Han'ın restorasyonu kaç yıl sürdü?",
+   "ctx": null,
+   "group": "correct",
+   "base": 17,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F005"
+   ]
+  },
+  {
+   "q": "pirinç han restorasyonu kç yıl sürdü",
+   "ctx": null,
+   "group": "missing",
+   "base": 17,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F005"
+   ]
+  },
+  {
+   "q": "pirinc han restorasyonu kac yil surdu",
+   "ctx": null,
+   "group": "ascii",
+   "base": 17,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F005"
+   ]
+  },
+  {
+   "q": "restorasyonu kaç yıl sürdü pirinç hanın",
+   "ctx": null,
+   "group": "order",
+   "base": 17,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F005"
+   ]
+  },
+  {
+   "q": "pirinc han restprasyonu kac yil surdu",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 17,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F005"
+   ]
+  },
+  {
+   "q": "Bedesten bugün ne olarak kullanılıyor?",
+   "ctx": null,
+   "group": "correct",
+   "base": 18,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F006"
+   ]
+  },
+  {
+   "q": "bedestn bugün ne olarak kullanılyor",
+   "ctx": null,
+   "group": "missing",
+   "base": 18,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F006"
+   ]
+  },
+  {
+   "q": "bedesten bugun ne olarak kullaniliyor",
+   "ctx": null,
+   "group": "ascii",
+   "base": 18,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F006"
+   ]
+  },
+  {
+   "q": "bugün ne olarak kullanılıyor bedesten",
+   "ctx": null,
+   "group": "order",
+   "base": 18,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F006"
+   ]
+  },
+  {
+   "q": "bedesren bugun ne olarak kullaniliyor",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 18,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F006"
+   ]
+  },
+  {
+   "q": "Bedestende kaç kubbe var?",
+   "ctx": null,
+   "group": "correct",
+   "base": 19,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ]
+  },
+  {
+   "q": "bedestende kç kubbe vr",
+   "ctx": null,
+   "group": "missing",
+   "base": 19,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ]
+  },
+  {
+   "q": "bedestende kac kubbe var",
+   "ctx": null,
+   "group": "ascii",
+   "base": 19,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ]
+  },
+  {
+   "q": "kaç kubbe var bedestende",
+   "ctx": null,
+   "group": "order",
+   "base": 19,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ]
+  },
+  {
+   "q": "bedestende kac kubne var",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 19,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ]
+  },
+  {
+   "q": "Bedesten ne zaman restore edildi?",
+   "ctx": null,
+   "group": "correct",
+   "base": 20,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F005"
+   ]
+  },
+  {
+   "q": "bedestn ne zmn restore edildi",
+   "ctx": null,
+   "group": "missing",
+   "base": 20,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F005"
+   ]
+  },
+  {
+   "q": "bedesten ne zaman restore edildi",
+   "ctx": null,
+   "group": "ascii",
+   "base": 20,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F005"
+   ]
+  },
+  {
+   "q": "ne zaman restore edildi bedesten",
+   "ctx": null,
+   "group": "order",
+   "base": 20,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F005"
+   ]
+  },
+  {
+   "q": "bedesten ne zaman restire edildi",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 20,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F005"
+   ]
+  },
+  {
+   "q": "Osman Gazi Türbesi'nde kaç sanduka var?",
+   "ctx": null,
+   "group": "correct",
+   "base": 21,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F007"
+   ]
+  },
+  {
+   "q": "osman gazi türbsinde kaç sandka var",
+   "ctx": null,
+   "group": "missing",
+   "base": 21,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F007"
+   ]
+  },
+  {
+   "q": "osman gazi turbesinde kac sanduka var",
+   "ctx": null,
+   "group": "ascii",
+   "base": 21,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F007"
+   ]
+  },
+  {
+   "q": "kaç sanduka var osman gazi türbesinde",
+   "ctx": null,
+   "group": "order",
+   "base": 21,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F007"
+   ]
+  },
+  {
+   "q": "osman gazi turbesinde kac sanduja var",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 21,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F007"
+   ]
+  },
+  {
+   "q": "Osman Gazi Türbesi'ni kim yeniden yaptırdı?",
+   "ctx": null,
+   "group": "correct",
+   "base": 22,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F004"
+   ]
+  },
+  {
+   "q": "osmn gazi türbesini kim yenidn yaptırdı",
+   "ctx": null,
+   "group": "missing",
+   "base": 22,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F004"
+   ]
+  },
+  {
+   "q": "osman gazi turbesini kim yeniden yaptirdi",
+   "ctx": null,
+   "group": "ascii",
+   "base": 22,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F004"
+   ]
+  },
+  {
+   "q": "kim yeniden yaptırdı osman gazi türbesini",
+   "ctx": null,
+   "group": "order",
+   "base": 22,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F004"
+   ]
+  },
+  {
+   "q": "osman gazi turbesini kim yeniden yaptitdi",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 22,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F004"
+   ]
+  },
+  {
+   "q": "Orhan Gazi Türbesi ne zaman yapıldı?",
+   "ctx": null,
+   "group": "correct",
+   "base": 23,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004"
+   ]
+  },
+  {
+   "q": "orhan gazi turbsi ne zmn yapildi",
+   "ctx": null,
+   "group": "missing",
+   "base": 23,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004"
+   ]
+  },
+  {
+   "q": "orhan gazi turbesi ne zaman yapildi",
+   "ctx": null,
+   "group": "ascii",
+   "base": 23,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004"
+   ]
+  },
+  {
+   "q": "ne zaman yapıldı orhan gazi türbesi",
+   "ctx": null,
+   "group": "order",
+   "base": 23,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004"
+   ]
+  },
+  {
+   "q": "orhan gazi turbesi ne zamab yapildi",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 23,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004"
+   ]
+  },
+  {
+   "q": "Orhan Gazi Türbesi depremde yıkıldı mı?",
+   "ctx": null,
+   "group": "correct",
+   "base": 24,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F003"
+   ]
+  },
+  {
+   "q": "orhan gazi türbesi deprmde yıkıldı mı",
+   "ctx": null,
+   "group": "missing",
+   "base": 24,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F003"
+   ]
+  },
+  {
+   "q": "orhan gazi turbesi depremde yikildi mi",
+   "ctx": null,
+   "group": "ascii",
+   "base": 24,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F003"
+   ]
+  },
+  {
+   "q": "depremde yıkıldı mı orhan gazi türbesi",
+   "ctx": null,
+   "group": "order",
+   "base": 24,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F003"
+   ]
+  },
+  {
+   "q": "orhan gazi turbesi depeemde yikildi mi",
+   "ctx": null,
+   "group": "keyboard",
+   "base": 24,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F003"
+   ]
+  },
+  {
+   "q": "kza ahnn nmari ne",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "koza han mimari kim",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "kozahanı kim yapti",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F001",
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "ulucaminin kubbe sayisi",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ]
+  },
+  {
+   "q": "muradiye camisini kim yaptirdi",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ]
+  },
+  {
+   "q": "orhan gazi turbsi ne zmn yapildi",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004"
+   ]
+  },
+  {
+   "q": "koza hanın mimarı",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "pirinchanin mimari kimdir",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F002"
+   ]
+  },
+  {
+   "q": "bedestenin kac kubbesi var",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ]
+  },
+  {
+   "q": "cem sultan turbesi ne zman yapildi",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F001"
+   ]
+  },
+  {
+   "q": "osmangazi turbesini kim yaptirdi",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F004"
+   ]
+  },
+  {
+   "q": "ulu caminin ilk imami kim",
+   "ctx": null,
+   "group": "task_examples",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F003"
+   ]
+  },
+  {
+   "q": "mimrı kim",
+   "ctx": "BUR-0009",
+   "group": "page_context",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "ne zmn yapıldı",
+   "ctx": "BUR-0009",
+   "group": "page_context",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ]
+  },
+  {
+   "q": "kç kubbe var",
+   "ctx": "BUR-0001",
+   "group": "page_context",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ]
+  },
+  {
+   "q": "kim yaptrdı",
+   "ctx": "BUR-0003",
+   "group": "page_context",
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ]
+  },
+  {
+   "q": "depremde ykıldı mı",
+   "ctx": "BUR-0020",
+   "group": "page_context",
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F003"
+   ]
+  },
+  {
+   "q": "bugun ne olrak kullaniliyor",
+   "ctx": "BUR-0014",
+   "group": "page_context",
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F006"
+   ]
+  },
+  {
+   "q": "kza ahnn nmari ne",
+   "ctx": "BUR-0009",
+   "group": "page_context",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ]
+  },
+  {
+   "q": "koza hanın kaç odası var",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "koza hanin kc odasi vr",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "ulu caminin minaresi kaç metre",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "ulu caminin minaresi kc metre",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "pirinç hanı kim restore etti",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "pirnc hani kim restore etti",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "muradiye camii kaç kişi alır",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "muradiye camii kac kisi alir",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "bedesteni hangi mimar yaptı",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "bedesteni hangi mimr yapti",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "cem sultan nerede doğdu",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "cem sultn nerde dogdu",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "orhan gazi türbesinin mimarı kim",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "orhn gazi trbesinin mimari kim",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "osman gazi türbesi ne zaman müze oldu",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "osman gazi turbesi ne zmn muze oldu",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "yeşil caminin mimarı kim",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "yesil cmi mimari kim",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "yeşil türbeyi kim yaptırdı",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "yesil turbyi kim yaptrdi",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "emir sultan camii ne zaman yapıldı",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "emir sultn camii ne zmn yapildi",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "asdf qwer zxcv",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "kza hn",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "koza hanın kubbesi kaç metre",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "koza hanin kubbesi kac metre",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "irgandı köprüsü ne zaman yapıldı",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "irgandi koprusu ne zmn yapildi",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "pirinç hanın kaç kapısı var",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "pirinc hanin kac kapsi var",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  }
+ ]
+}

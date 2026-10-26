@@ -75,8 +75,8 @@ def test_internal_status_reports_closed_access(internal):
 
 def test_internal_monument_has_null_location(internal):
     m = internal.get("/internal/catalog/monuments/BUR-9001", headers=AUTH).json()
-    assert m["latitude"] is None and m["longitude"] is None
-    assert m["location_status"] == "missing" and m["checkin_eligible"] is False
+    assert m["location"]["latitude"] is None and m["location"]["longitude"] is None
+    assert m["location"]["status"] == "missing" and m["checkin_eligible"] is False and m["map_eligible"] is False
     assert m["facts"][0]["source"]["pdf_page_kind"] == "physical"
     assert "facts" in m and "drafts" not in m
 
@@ -111,7 +111,7 @@ def test_rag_question_validation(internal, question):
 
 @pytest.fixture
 def public_client():
-    with TestClient(create_app(DEFAULT_PLACES_FILE, cors_origins=DEFAULT_CORS_ORIGINS)) as c:
+    with TestClient(create_app(DEFAULT_PLACES_FILE, cors_origins=DEFAULT_CORS_ORIGINS, demo_api=True)) as c:
         yield c
 
 
@@ -146,3 +146,21 @@ def test_frontend_contains_no_internal_data():
             assert "X-Internal-Token" not in text, path
             assert "VAKIFNAME_INTERNAL" not in text, path
             assert "BUR-00" not in text, path
+
+
+def test_token_is_read_from_private_file_in_preference_to_env(tmp_path, monkeypatch):
+    import os
+
+    from app.internal import config
+
+    f = tmp_path / "internal_token"
+    f.write_text(TOKEN + "\n")
+    os.chmod(f, 0o600)
+    monkeypatch.setenv("VAKIFNAME_INTERNAL_TOKEN", "eski-ortam-anahtari")
+    monkeypatch.setenv("VAKIFNAME_INTERNAL_TOKEN_FILE", str(f))
+    assert config.token_from_env() == TOKEN
+    os.chmod(f, 0o640)
+    with pytest.raises(ValueError, match="600"):
+        config.token_from_env()
+    monkeypatch.delenv("VAKIFNAME_INTERNAL_TOKEN_FILE")
+    assert config.token_from_env() == "eski-ortam-anahtari"

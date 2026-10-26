@@ -1,0 +1,1739 @@
+{
+ "description": "Esere Sor değerlendirme seti. Ayar bu sete bakılarak yapıldı; bağımsız ölçüm için heldout.json'a bakın.",
+ "items": [
+  {
+   "q": "Ulu Cami'yi kim yaptırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Bursa Ulu Camii ne zaman tamamlandı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulucami hangi padişah döneminde inşa edildi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'nin mimarı kimdir?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulucami'yi kim tasarladı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'nin ilk imamı kimdi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Mevlid'in yazarı Süleyman Çelebi bu camide ne yapmıştır?",
+   "ctx": "BUR-0001",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'de kaç kubbe var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulucami kaç ayak üzerine oturuyor?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'nin ölçüleri nedir?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'nin minberini kim yaptı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulucami minberi hangi teknikle yapılmış?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Minberde çivi kullanıldı mı?",
+   "ctx": "BUR-0001",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'nin mihrabındaki süslemeleri kim yaptırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Tevfik Paşa Ulu Cami'de ne yaptırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'deki müezzin mahfili ne zaman yapıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F007"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulucami'de şadırvan nerede?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'nin ortasındaki kubbe neden açık?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'nin kaç minaresi var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F009"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami'nin doğu minaresi ne zaman tamamlandı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F009"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami depremden zarar gördü mü?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F010"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Ulu Cami en kapsamlı onarımını ne zaman geçirdi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F010"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Timur istilası Ulu Cami'yi etkiledi mi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F010"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'ni kim yaptırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii hangi yıllarda inşa edildi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'nin plan tipi nedir?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'ndeki tabhaneler ne işe yarıyordu?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'nin son cemaat yeri kaç gözlü?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'nin duvarları nasıl örülmüş?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'nde tabhanelerin duvarları neden kaldırıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F004"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'nde hangi çiniler var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'nin mihrabı orijinal mi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'nin minberi ne zaman yenilendi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Léon Parvillée kimdir?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F007"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii 1855 depreminden sonra kim tarafından onarıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F007"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii işgal yıllarında ne olarak kullanıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Camii'nde Yunan bayrağı izi bulundu mu?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Medresesi'nin avlusu nasıl?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Medresesi'nde kaç oda var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F001",
+    "BUR-0005-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Medresesi'nde müderris nerede kalırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Medresede hocalara ayrılan odalar hangileriydi?",
+   "ctx": "BUR-0005",
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Medresesi ne zaman onarıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F003",
+    "BUR-0005-F004",
+    "BUR-0005-F005",
+    "BUR-0005-F006"
+   ],
+   "group": "answerable",
+   "note": "Görev 12: kabul edilebilir alternatif eklendi (geliştirme verisi)."
+  },
+  {
+   "q": "1844'te Muradiye Medresesi'nde ne yapıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "1855 depremi Muradiye Medresesi'ne zarar verdi mi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F004"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Medresesi dispanser olarak kullanıldı mı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F005",
+    "BUR-0005-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Muradiye Medresesi bugün ne olarak kullanılıyor?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "El Yazmaları Müzesi ne zaman açıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'ni kim yaptırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Sultan II. Murad'ın türbesi ne zaman yapıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'nin kubbesi neden açık?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Mezarın üstü neden toprakla örtülü?",
+   "ctx": "BUR-0007",
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'nde başka kimler gömülü?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'nin kapısında ne yazıyor?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F004",
+    "BUR-0007-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'nin duvar örgüsü nasıl?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'nin planı nasıl?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'ndeki galeri ne için yapılmış?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'ndeki sütunlar nereden geldi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F007"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'nde devşirme malzeme var mı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F007"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'nin restorasyonu ne zaman bitti?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "II. Murad Türbesi'nde badananın altından ne çıktı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Cem Sultan Türbesi kimin için yapıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Cem Sultan Türbesi ne zaman inşa edildi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Cem Sultan nereye gömüldü?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F002",
+    "BUR-0008-F003"
+   ],
+   "group": "answerable",
+   "note": "F003 (türbede gömülü şehzadeler) de doğru cevaptır; ilk sürümde altın cevap yalnız F002 idi, ölçümden sonra genişletildi."
+  },
+  {
+   "q": "Cem Sultan'ın naaşı Bursa'ya ne zaman getirildi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nde kimler yatıyor?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F003",
+    "BUR-0008-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin planı nasıl?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F004"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin duvarları neyle süslenmiş?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin kubbesinde ne yazıyor?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Cem Sultan kimin kardeşidir?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han'ı kim yaptırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han neden yaptırıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Hanı ne zaman inşa edildi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han'ın yapımına ne zaman başlandı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han ne zaman restore edildi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F003",
+    "BUR-0009-F009"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han'ın mimarı kim?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han kaç katlı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "İç Koza Han nedir?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F005",
+    "BUR-0009-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han'daki ahır bölümü bugün ne olarak kullanılıyor?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han'ın avlusunda ne var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F007",
+    "BUR-0009-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han'daki köşk mescidin altında ne var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F007"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han'da ikinci bir mescit var mıydı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han mescidi hangi yıllarda onarıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F009",
+    "BUR-0009-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han bugün ne için kullanılıyor?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F010"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Koza Han'da ticaret yapılıyor mu?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F010"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Han'ı kim yaptırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Hanı hangi amaçla yapıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Han'ın mimarı kimdir?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Hanı ne zaman inşa edildi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Han kaç katlı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F004"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Han'ın restorasyonu kaç yıl sürdü?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Hanı'nın eski adı ne?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Han'a neden Hân-ı Cedîd-i Sânî denir?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Han'da ahır var mıydı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F007"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Han'ın köşesi neden kesildi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Pirinç Han'ın çatısı kiremitle mi kaplandı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F010"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Bedesteni kim yaptırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Yıldırım Bayezid Bedesteni Osmanlı'nın ilk bedesteni mi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Bedestende ne satılırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Bedestende kaç kubbe var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Bedestenin içi kaç bölüme ayrılır?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Bedesten yangında zarar gördü mü?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Bedesten ne zaman restore edildi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Bedesten bugün ne olarak kullanılıyor?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi nereye gömülmek istemişti?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi'nin naaşını Bursa'ya kim getirdi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi Türbesi 1801'de ne yaşadı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F002"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi Türbesi 1855 depreminde yıkıldı mı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F003"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi Türbesi'ni kim yeniden yaptırdı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F004"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nin planı nasıl?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi'nin sandukasının etrafında ne var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nde kaç sanduka var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F007"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nde kimler yatıyor?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F007"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Osman Gazi Türbesi UNESCO listesinde mi?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Orhan Gazi Türbesi kime aittir?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F001"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Orhan Gazi Türbesi depremde yıkıldı mı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F003",
+    "BUR-0020-F006"
+   ],
+   "group": "answerable",
+   "note": "Görev 12: kabul edilebilir alternatif eklendi (geliştirme verisi)."
+  },
+  {
+   "q": "Orhan Gazi Türbesi ne zaman yeniden yapıldı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004",
+    "BUR-0020-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nin bir kenarı kaç metre?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nin kaç kubbesi var?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F005"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Orhan Gazi Türbesi 2009'da onarıldı mı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F006"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Orhan Gazi Türbesi Dünya Mirası alanında mı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F008"
+   ],
+   "group": "answerable"
+  },
+  {
+   "q": "Mimarı kim?",
+   "ctx": "BUR-0009",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F004"
+   ],
+   "group": "context"
+  },
+  {
+   "q": "Kaç kubbesi var?",
+   "ctx": "BUR-0001",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ],
+   "group": "context"
+  },
+  {
+   "q": "Ne zaman yapılmış?",
+   "ctx": "BUR-0014",
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F001"
+   ],
+   "group": "context"
+  },
+  {
+   "q": "Kubbesi neden açık?",
+   "ctx": "BUR-0007",
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ],
+   "group": "context"
+  },
+  {
+   "q": "Eski adı neydi?",
+   "ctx": "BUR-0013",
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F006"
+   ],
+   "group": "context"
+  },
+  {
+   "q": "Kim yaptırdı?",
+   "ctx": "BUR-0003",
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ],
+   "group": "context"
+  },
+  {
+   "q": "ulucami kac kubbeli",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "ULU CAMİİ'Yİ KİM YAPTIRDI",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F001"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "kozahan ne zaman yapildi",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "pirinc hani mimari kim",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F002"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "bedestenin kac kubbesi var",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "2. Murat türbesinin kubbesi neden açık",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "Sultan Cem nereye gömüldü",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F002",
+    "BUR-0008-F003"
+   ],
+   "group": "alias",
+   "note": "F003 (türbede gömülü şehzadeler) de doğru cevaptır; ilk sürümde altın cevap yalnız F002 idi, ölçümden sonra genişletildi."
+  },
+  {
+   "q": "Osman Bey'in türbesinde kaç sanduka var",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F007"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "orhan bey türbesi ne zaman yeniden yapıldı",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004",
+    "BUR-0020-F006"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "Muradiye camisini kim yaptırmış",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "Ulu Camii'nin ilk imamı",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F003"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "Bursa Bedesteni ne zaman yapıldı",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F001"
+   ],
+   "group": "alias"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nin yeniden yapım tarihi ne?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004",
+    "BUR-0020-F006"
+   ],
+   "group": "conflict"
+  },
+  {
+   "q": "Bedesten hangi yıl yandı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F005"
+   ],
+   "group": "conflict"
+  },
+  {
+   "q": "Muradiye Camii'nin çinileri ne renk?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F005"
+   ],
+   "group": "conflict"
+  },
+  {
+   "q": "Koza Han'ın yapımına hangi yıl başlandı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F002"
+   ],
+   "group": "conflict"
+  },
+  {
+   "q": "Orhan Gazi Türbesi 1868'de mi yeniden yapıldı?",
+   "ctx": null,
+   "expect": "answer_or_none",
+   "gold": [
+    "BUR-0020-F004",
+    "BUR-0020-F006"
+   ],
+   "forbid_text": [
+    "1868"
+   ],
+   "group": "conflict"
+  },
+  {
+   "q": "Orhan Gazi Türbesi ne zaman yeniden yapıldı?",
+   "ctx": "BUR-0019",
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004",
+    "BUR-0020-F006"
+   ],
+   "group": "wrong_monument"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nde kaç sanduka var?",
+   "ctx": "BUR-0020",
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F007"
+   ],
+   "group": "wrong_monument"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin planı nasıl?",
+   "ctx": "BUR-0007",
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F004"
+   ],
+   "group": "wrong_monument"
+  },
+  {
+   "q": "II. Murad Türbesi'nin kubbesi neden açık?",
+   "ctx": "BUR-0008",
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F002"
+   ],
+   "group": "wrong_monument"
+  },
+  {
+   "q": "Ulu Cami'nin minberini kim yaptı?",
+   "ctx": null,
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ],
+   "group": "wrong_monument"
+  },
+  {
+   "q": "Pirinç Han'ın mimarı kim?",
+   "ctx": "BUR-0009",
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F002"
+   ],
+   "group": "wrong_monument"
+  },
+  {
+   "q": "Muradiye Medresesi'nin avlusu kaç metre?",
+   "ctx": "BUR-0003",
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F001"
+   ],
+   "group": "wrong_monument"
+  },
+  {
+   "q": "Bedestende kaç kubbe var?",
+   "ctx": "BUR-0003",
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ],
+   "group": "wrong_monument"
+  },
+  {
+   "q": "Ulu Cami'nin minaresi kaç metre?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Koza Han'da kaç oda var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Bedesteni hangi mimar tasarladı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nin mimarı kim?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Pirinç Han'ın kaç dükkânı var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin restorasyonu ne zaman yapıldı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Muradiye Camii'nin minaresi kaç şerefeli?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "II. Murad Türbesi'nde kaç pencere var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nin mimarı kimdir?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Ulu Cami'nin kaç kapısı var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Koza Han'ın yıllık geliri ne kadardı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Muradiye Medresesi'nde hangi dersler okutulurdu?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Bedestende kaç dükkân var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Orhan Gazi kaç yaşında öldü?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nin kubbesi kaç metre yüksekliğinde?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Pirinç Han'da hangi tüccarlar konaklardı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Cem Sultan kaç yıl sürgünde kaldı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Muradiye Camii'nin kaç kubbesi var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Ulu Cami'nin halıları nereden geldi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Koza Han'da ipek böceği yetiştirilir miydi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "II. Murad Türbesi'ni hangi mimar inşa etti?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Bedestenin yüzölçümü kaç metrekare?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Yıldırım Bayezid Bedesteni'nde kaç kapı var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Pirinç Han'ın avlusunda kaç ağaç var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "unanswerable"
+  },
+  {
+   "q": "Koza Han kaçta kapanıyor?",
+   "ctx": null,
+   "expect": "current_info_unavailable",
+   "gold": [],
+   "options": [],
+   "group": "current_info_unavailable"
+  },
+  {
+   "q": "Ulu Cami'ye giriş ücretli mi?",
+   "ctx": null,
+   "expect": "current_info_unavailable",
+   "gold": [],
+   "options": [],
+   "group": "current_info_unavailable"
+  },
+  {
+   "q": "Muradiye Medresesi müzesi pazartesi açık mı?",
+   "ctx": null,
+   "expect": "current_info_unavailable",
+   "gold": [],
+   "options": [],
+   "group": "current_info_unavailable"
+  },
+  {
+   "q": "Bedestene nasıl giderim?",
+   "ctx": null,
+   "expect": "current_info_unavailable",
+   "gold": [],
+   "options": [],
+   "group": "current_info_unavailable"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nde fotoğraf çekmek serbest mi?",
+   "ctx": null,
+   "expect": "current_info_unavailable",
+   "gold": [],
+   "options": [],
+   "group": "current_info_unavailable"
+  },
+  {
+   "q": "Pirinç Han'da tuvalet nerede?",
+   "ctx": null,
+   "expect": "current_info_unavailable",
+   "gold": [],
+   "options": [],
+   "group": "current_info_unavailable"
+  },
+  {
+   "q": "Yeşil Cami'yi kim yaptırdı?",
+   "ctx": null,
+   "expect": "monument_not_in_catalog",
+   "gold": [],
+   "options": [],
+   "group": "monument_not_in_catalog"
+  },
+  {
+   "q": "Emir Sultan Camii ne zaman yapıldı?",
+   "ctx": "BUR-0001",
+   "expect": "monument_not_in_catalog",
+   "gold": [],
+   "options": [],
+   "group": "monument_not_in_catalog"
+  },
+  {
+   "q": "Orhan Gazi Camii'nin mimarı kim?",
+   "ctx": null,
+   "expect": "monument_not_in_catalog",
+   "gold": [],
+   "options": [],
+   "group": "monument_not_in_catalog"
+  },
+  {
+   "q": "Irgandı Köprüsü kaç yaşında?",
+   "ctx": null,
+   "expect": "monument_not_in_catalog",
+   "gold": [],
+   "options": [],
+   "group": "monument_not_in_catalog"
+  },
+  {
+   "q": "Şehzade Ahmed Türbesi'nde kim yatıyor?",
+   "ctx": "BUR-0007",
+   "expect": "monument_not_in_catalog",
+   "gold": [],
+   "options": [],
+   "group": "monument_not_in_catalog"
+  },
+  {
+   "q": "Hüdavendigar Camii'nin özelliği ne?",
+   "ctx": null,
+   "expect": "monument_not_in_catalog",
+   "gold": [],
+   "options": [],
+   "group": "monument_not_in_catalog"
+  },
+  {
+   "q": "Muradiye'yi kim yaptırdı?",
+   "ctx": null,
+   "expect": "clarification_required",
+   "gold": [],
+   "options": [
+    "BUR-0003",
+    "BUR-0005",
+    "BUR-0007",
+    "BUR-0008"
+   ],
+   "group": "ambiguous"
+  },
+  {
+   "q": "Muradiye Külliyesi ne zaman yapıldı?",
+   "ctx": null,
+   "expect": "clarification_required",
+   "gold": [],
+   "options": [
+    "BUR-0003",
+    "BUR-0005",
+    "BUR-0007",
+    "BUR-0008"
+   ],
+   "group": "ambiguous"
+  },
+  {
+   "q": "II. Murad'ın yaptırdığı yapı hangisi?",
+   "ctx": null,
+   "expect": "clarification_required",
+   "gold": [],
+   "options": [
+    "BUR-0003",
+    "BUR-0007"
+   ],
+   "group": "ambiguous"
+  },
+  {
+   "q": "Şehzade Mustafa Türbesi'nde kim yatıyor?",
+   "ctx": null,
+   "expect": "clarification_required",
+   "gold": [],
+   "options": [
+    "BUR-0008"
+   ],
+   "group": "ambiguous"
+  },
+  {
+   "q": "Koza Han ile Pirinç Han'ı kim yaptırdı?",
+   "ctx": null,
+   "expect": "clarification_required",
+   "gold": [],
+   "options": [
+    "BUR-0009",
+    "BUR-0013"
+   ],
+   "group": "ambiguous"
+  },
+  {
+   "q": "Yıldırım Bayezid neler yaptırdı?",
+   "ctx": null,
+   "expect": "clarification_required",
+   "gold": [],
+   "options": [
+    "BUR-0001",
+    "BUR-0014"
+   ],
+   "group": "ambiguous"
+  },
+  {
+   "q": "Kubbesi kaç tane?",
+   "ctx": null,
+   "expect": "monument_not_identified",
+   "gold": [],
+   "options": [],
+   "group": "ambiguous"
+  },
+  {
+   "q": "Türbede kimler yatıyor?",
+   "ctx": "BUR-0001",
+   "expect": "clarification_required",
+   "gold": [],
+   "options": [],
+   "group": "ambiguous"
+  }
+ ]
+}

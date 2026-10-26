@@ -6,17 +6,20 @@ basılı sayfa numarası türetmez veya tahmin etmez.
 
 Gerçek eserlerin V20'deki koordinatları boştur. Boş koordinat `None` olarak tutulur; asla 0,0 veya
 başka bir değere çevrilmez. Konumu doğrulanmamış eser check-in akışına giremez (`to_checkin_place`).
+
+Gerçek eser (`RealMonument`, `BUR-xxxx`) ile demo oyununun kurgusal mekânı (`app.models.DemoPlace`) ayrı
+modellerdir; biri diğerine çevrilmez.
 """
 
 import hashlib
 import json
 import re
+from datetime import datetime
 from pathlib import Path
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal, NoReturn, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError, model_validator
 
-from ..models import Place
 from . import config
 
 MonumentId = Annotated[str, StringConstraints(pattern=r"^BUR-\d{4}$")]
@@ -58,7 +61,7 @@ class AccessFlags(_Strict):
         )
 
 
-class SourceRef(_Strict):
+class SourceReference(_Strict):
     source_file: NonEmpty
     # Fiziksel PDF sayfası (1 tabanlı). Basılı sayfa numarası DEĞİLDİR.
     pdf_physical_page: int = Field(ge=1)
@@ -81,7 +84,7 @@ class HistoricalFact(_Strict):
     review_status: NonEmpty
     review_priority: NonEmpty
     open_issue_ids: tuple[str, ...]
-    source: SourceRef
+    source: SourceReference
     access: AccessFlags
 
 
@@ -113,7 +116,55 @@ class EditorialIssue(_Strict):
     chosen_value: Optional[str] = None
 
 
-class CatalogMonument(_Strict):
+CoordinateSource = Literal["field_survey_gnss", "official_registry", "cadastral_parcel", "editor_map_review"]
+
+
+class LocationRecord(_Strict):
+    """Gerçek eserin konumu ve bu konumun nereden geldiği.
+
+    - `missing`: koordinat yok. Eser haritada işaretlenmez, check-in yapılamaz.
+    - `unverified`: koordinat var ama kaynağı doğrulanmadı. Haritada da check-in'de de kullanılmaz.
+    - `verified`: koordinatın kaynağı, kaynak belgesi, doğrulayan kişi ve tarihi kayıtlıdır.
+    Koordinat tahmin edilmez veya geokodlama ile üretilmez.
+    """
+
+    status: Literal["missing", "unverified", "verified"]
+    latitude: Optional[float] = Field(default=None, ge=-90, le=90, allow_inf_nan=False)
+    longitude: Optional[float] = Field(default=None, ge=-180, le=180, allow_inf_nan=False)
+    source: Optional[CoordinateSource] = None
+    # Kaynak belge / ölçüm kaydı (ör. tescil fişi numarası, ölçüm dosyası). Serbest metin URL'si değildir.
+    source_reference: Optional[NonEmpty] = None
+    # Yarıçap, ölçümün doğruluğundan küçük seçilemez.
+    accuracy_m: Optional[float] = Field(default=None, gt=0, allow_inf_nan=False)
+    verified_by: Optional[NonEmpty] = None
+    verified_at: Optional[datetime] = None
+    note: Optional[str] = None
+
+    @model_validator(mode="after")
+    def _consistent(self):
+        has_lat, has_lon = self.latitude is not None, self.longitude is not None
+        if has_lat != has_lon:
+            raise ValueError("Koordinatın iki bileşeni birlikte verilmeli.")
+        if self.status == "missing" and (has_lat or self.source or self.verified_by or self.verified_at):
+            raise ValueError("Konumu 'missing' olan kayıtta koordinat veya doğrulama bilgisi olamaz.")
+        if self.status != "missing" and not has_lat:
+            raise ValueError(f"Konum durumu '{self.status}' iken koordinat boş olamaz.")
+        if self.status == "verified" and None in (
+            self.source, self.source_reference, self.accuracy_m, self.verified_by, self.verified_at
+        ):
+            raise ValueError("Doğrulanmış konum için kaynak, kaynak belgesi, doğruluk, doğrulayan ve tarih zorunludur.")
+        if self.status == "unverified" and (self.verified_by or self.verified_at):
+            raise ValueError("Doğrulanmamış konumda doğrulayan veya doğrulama tarihi olamaz.")
+        return self
+
+    @property
+    def mappable(self) -> bool:
+        return self.status == "verified"
+
+
+class RealMonument(_Strict):
+    """V20 kataloğundaki gerçek Bursa eseri. Genel API'de, haritada veya check-in'de kullanılmaz."""
+
     monument_id: MonumentId
     name: NonEmpty
     city: NonEmpty
@@ -123,22 +174,15 @@ class CatalogMonument(_Strict):
     source_files: tuple[str, ...]
     review_status: NonEmpty
     publication_status: NonEmpty
-    latitude: Optional[float] = Field(default=None, ge=-90, le=90, allow_inf_nan=False)
-    longitude: Optional[float] = Field(default=None, ge=-180, le=180, allow_inf_nan=False)
-    # V20'de konum doğrulama alanı yoktur; dolu koordinat bile "unverified" sayılır.
-    location_status: Literal["missing", "unverified", "verified"]
+    license_review_status: NonEmpty
+    location: LocationRecord
     fact_ids: tuple[str, ...]
     draft_ids: tuple[str, ...]
     open_issue_ids: tuple[str, ...]
 
     @property
     def checkin_eligible(self) -> bool:
-        return (
-            self.location_status == "verified"
-            and self.latitude is not None
-            and self.longitude is not None
-            and self.publication_status == "published"
-        )
+        return self.location.mappable and self.publication_status == "published"
 
 
 class SourceDocument(_Strict):
@@ -168,8 +212,12 @@ def parse_coordinate(raw) -> Optional[float]:
         raise CatalogError(f"Geçersiz koordinat: {raw!r}") from None
 
 
-def to_checkin_place(monument: CatalogMonument) -> Place:
-    """Gerçek eseri check-in sözleşmesine (`Place`) çevirir; doğrulanmış konum yoksa reddeder."""
+def to_checkin_place(monument: RealMonument) -> NoReturn:
+    """Gerçek eser için check-in kaydı ister; doğrulanmış ve yayına açık konum yoksa reddeder.
+
+    Gerçek eserler demo mekânına (`DemoPlace`) çevrilmez. Onaylı eserler için ayrı yayın modeli
+    hazırlanana kadar bu fonksiyon her durumda hata fırlatır.
+    """
     if not monument.checkin_eligible:
         raise LocationUnavailableError(
             f"{monument.monument_id} için doğrulanmış ve yayına açık konum yok; check-in'e eklenemez."
@@ -237,7 +285,7 @@ def _fact_from_v20(raw: dict, issue_ids: tuple[str, ...]) -> HistoricalFact:
         review_status=meta["review_status"],
         review_priority=meta["review_priority"],
         open_issue_ids=issue_ids,
-        source=SourceRef(
+        source=SourceReference(
             source_file=src["original_book"],
             pdf_physical_page=src["original_pdf_page"],
             evidence_quote=src["evidence_quote"],
@@ -318,7 +366,7 @@ class V20Catalog:
             for fid in issue.related_fact_ids:
                 issues_by_fact.setdefault(fid, set()).add(issue.issue_id)
 
-        self.monuments: dict[str, CatalogMonument] = {}
+        self.monuments: dict[str, RealMonument] = {}
         self.facts: dict[str, HistoricalFact] = {}
         self.drafts: dict[str, QuarantinedDraft] = {}
 
@@ -363,7 +411,11 @@ class V20Catalog:
             for fid in fact_ids:
                 issue_ids |= set(self.facts[fid].open_issue_ids)
 
-            self.monuments[mid] = CatalogMonument(
+            # V20'de konum doğrulama bilgisi yoktur; dolu koordinat bile "unverified" sayılır.
+            location = LocationRecord(
+                status="missing" if lat is None else "unverified", latitude=lat, longitude=lon
+            )
+            self.monuments[mid] = RealMonument(
                 monument_id=mid,
                 name=m["name"],
                 city=meta["city"],
@@ -373,9 +425,8 @@ class V20Catalog:
                 source_files=tuple(m.get("source_files", [])),
                 review_status=m["editorial"]["review_status"],
                 publication_status=m["editorial"]["publication_status"],
-                latitude=lat,
-                longitude=lon,
-                location_status="missing" if lat is None else "unverified",
+                license_review_status=m["editorial"]["license_review_status"],
+                location=location,
                 fact_ids=tuple(fact_ids),
                 draft_ids=tuple(own_drafts),
                 open_issue_ids=tuple(sorted(issue_ids)),
@@ -409,6 +460,54 @@ class V20Catalog:
     def publicly_usable_facts(self) -> list[HistoricalFact]:
         """Genel kullanıma açılabilecek olgular. V20'de bu liste boştur."""
         return [f for f in self.facts.values() if f.access.publicly_usable]
+
+
+SourceAuditResult = Literal[
+    "quote_found_on_page", "quote_found_on_adjacent_page", "quote_not_found", "no_direct_quote", "source_missing"
+]
+
+
+class SourceAuditRecord(_Strict):
+    """Alıntının belirtilen fiziksel PDF sayfasında bulunup bulunmadığı (`build_internal_manifests.py`)."""
+
+    record_id: NonEmpty
+    kind: Literal["fact", "draft"]
+    source_file: NonEmpty
+    pdf_physical_page: int = Field(ge=1)
+    result: SourceAuditResult
+    found_on: tuple[int, ...] = ()
+
+
+def load_source_audit(path: Path, catalog: V20Catalog) -> dict[str, SourceAuditRecord]:
+    """Kaynak sayfa denetimini yükler. Dosya yoksa boş döner (kayıtlar "denetlenmedi" görünür).
+
+    Denetimdeki dosya/sayfa, katalogdaki kaynak referansından farklıysa denetim başka bir sürüme aittir
+    ve reddedilir.
+    """
+    path = Path(path)
+    if not path.is_file():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    if raw.get("page_numbering") != "physical_1_based":
+        raise CatalogError("Kaynak sayfa denetimi fiziksel (1 tabanlı) sayfa numarası kullanmalı.")
+    try:
+        records = [SourceAuditRecord(**r) for r in raw["records"]]
+    except (KeyError, TypeError, ValidationError) as e:
+        raise CatalogError(f"Kaynak sayfa denetimi geçersiz: {e}") from e
+    audit = {}
+    for r in records:
+        if r.kind == "fact":
+            ref = catalog.facts.get(r.record_id)
+            expected = (ref.source.source_file, ref.source.pdf_physical_page) if ref else None
+        else:
+            ref = catalog.drafts.get(r.record_id)
+            expected = (ref.source_file, ref.pdf_physical_page) if ref else None
+        if expected != (r.source_file, r.pdf_physical_page):
+            raise CatalogError(f"{r.record_id}: kaynak sayfa denetimi katalogdaki referansla uyuşmuyor.")
+        if r.record_id in audit:
+            raise CatalogError(f"{r.record_id}: kaynak sayfa denetiminde yinelenen kayıt.")
+        audit[r.record_id] = r
+    return audit
 
 
 def load_source_registry(path: Path) -> list[SourceDocument]:

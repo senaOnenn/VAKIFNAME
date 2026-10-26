@@ -1,0 +1,3707 @@
+{
+  "schema": "vakifname.public_catalog/2",
+  "generated_at": "2026-10-24T13:01:33Z",
+  "data_version": "V20:92dc423d37e9493bfff9e408b0e6abac25f5300c2e9da4866f6775b2a4c965f8",
+  "monuments": [
+    {
+      "monument_id": "BUR-0001",
+      "name": "Bursa Ulu Camii",
+      "alternative_names": [
+        "Ulu Cami"
+      ],
+      "type": "cami",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "Atatürk Caddesi, Osmangazi/Bursa (PTT'nin karşısı)",
+      "catalog_decision_id": "DEC-4b642a64ee206d0e",
+      "facts": [
+        {
+          "fact_id": "BUR-0001-F001",
+          "title": "Yıldırım Bayezid'in camisi",
+          "text": "Ulu Cami'yi Sultan Yıldırım Bayezid yaptırmıştır. Minber kapısının üstündeki kitabeye göre yapı Hicrî 802 yılında, yani 1399–1400'de tamamlanmıştır.",
+          "category": "construction",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 20,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-0d22ab88b4fdefdc",
+          "publication_decision_id": "DEC-378e01a36081296c",
+          "game_use": true,
+          "game_use_decision_id": "DEC-c8838a19f51df4cd",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa Ulu Cami (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami"
+            }
+          ],
+          "quest": {
+            "question": "Bursa Ulu Cami'yi hangi padişah yaptırmıştır?",
+            "choices": [
+              "II. Murad",
+              "Fatih Sultan Mehmed",
+              "Yıldırım Bayezid",
+              "Orhan Gazi"
+            ],
+            "answer_index": 2,
+            "explanation": "Ulu Cami, Yıldırım Bayezid döneminde yapılmış ve 1399–1400'de tamamlanmıştır.",
+            "decision_id": "DEC-c8838a19f51df4cd"
+          }
+        },
+        {
+          "fact_id": "BUR-0001-F002",
+          "title": "Ulu Cami'nin mimarı kim?",
+          "text": "Ulu Cami'yi kimin tasarladığı kesin olarak bilinmiyor. Araştırmacılar en çok Ali Neccâr ile Hacı İvaz Paşa'nın adlarını anıyor; ancak bu adlar bir kitabe ya da belgeyle kanıtlanmış değil, yalnızca birer ihtimal. Eski Bursa salnamelerinde mimarın Rum olduğuna dair bir kayıt da geçer, fakat bu bilginin güvenilirliği tartışmalıdır.",
+          "category": "historical_person",
+          "certainty": "uncertain",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 21,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-4a0fc9b2b5ebda64",
+          "publication_decision_id": "DEC-42ab26fa95b687fd",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "“Ulucami” maddesi — Bursa Ulucamii bölümü",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/ulucami"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0001-F003",
+          "title": "İlk imam: Süleyman Çelebi",
+          "text": "Caminin ilk imamı, halk arasında Mevlid diye bilinen eserin yazarı Süleyman Çelebi'dir.",
+          "category": "historical_person",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 19,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-514e9bf8f369aa7f",
+          "publication_decision_id": "DEC-9dc29da818fc6625",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d4890fbeaa9c05c7",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa Ulu Cami (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami"
+            }
+          ],
+          "quest": {
+            "question": "Ulu Cami'nin ilk imamı kimdir?",
+            "choices": [
+              "Somuncu Baba",
+              "Molla Fenârî",
+              "Emir Sultan",
+              "Süleyman Çelebi"
+            ],
+            "answer_index": 3,
+            "explanation": "İlk imam, Mevlid'in yazarı Süleyman Çelebi'dir. Somuncu Baba ise ilk namazı kıldıran kişi olarak anılır.",
+            "decision_id": "DEC-d4890fbeaa9c05c7"
+          }
+        },
+        {
+          "fact_id": "BUR-0001-F004",
+          "title": "Yirmi kubbeli dev yapı",
+          "text": "Yaklaşık 55 × 69 metrelik dikdörtgen bir plana oturan cami, on iki ayağa dayanan yirmi kubbeyle örtülüdür.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 25,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-ac1efe6374a34cd7",
+          "publication_decision_id": "DEC-e215ce892a1f9889",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d1303b19220c926e",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa Ulu Cami (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami"
+            }
+          ],
+          "quest": {
+            "question": "Ulu Cami'nin üstünü kaç kubbe örter?",
+            "choices": [
+              "12",
+              "9",
+              "16",
+              "20"
+            ],
+            "answer_index": 3,
+            "explanation": "Cami, on iki ayağa oturan yirmi kubbeyle örtülüdür.",
+            "decision_id": "DEC-d1303b19220c926e"
+          }
+        },
+        {
+          "fact_id": "BUR-0001-F005",
+          "title": "Çivisiz minber",
+          "text": "Ceviz ağacından yapılan minber, parçaların çivi ve tutkal kullanılmadan birbirine geçirildiği kündekâri tekniğiyle yapılmıştır. Ustası Abdülaziz oğlu Hacı Mehmed'dir; adı kaynaklarda Muhammed biçiminde de geçer.",
+          "category": "artistic_feature",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 27,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-83001995cb134949",
+          "publication_decision_id": "DEC-68d6aaf7940e3a2d",
+          "game_use": true,
+          "game_use_decision_id": "DEC-ca057b6df6224331",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa Ulu Cami (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami"
+            }
+          ],
+          "quest": {
+            "question": "Ulu Cami minberinde hangi teknik kullanılmıştır?",
+            "choices": [
+              "Kündekâri",
+              "Çini mozaik",
+              "Kalem işi",
+              "Malakâri"
+            ],
+            "answer_index": 0,
+            "explanation": "Minber, parçaların çivi ve tutkal olmadan birbirine geçirildiği kündekâri tekniğiyle yapılmıştır.",
+            "decision_id": "DEC-ca057b6df6224331"
+          }
+        },
+        {
+          "fact_id": "BUR-0001-F006",
+          "title": "Mihraptaki 19. yüzyıl süslemeleri",
+          "text": "Ulu Cami'nin mihrabındaki bugünkü süslemeler 19. yüzyıla aittir. 1862'de Bursa'ya sürgün edilen Tevfik Paşa, mihrabı çevreleyen kûfî yazılı kuşağı, stilize ve bitkisel motifli kuşakları ve ortadaki büyük kandil motifini yaptırdı. Tevfik Paşa'nın adı mihrabın kendisiyle değil, onun sonradan yapılan bu süslemeleriyle bağlantılıdır.",
+          "category": "artistic_feature",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 30,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-4ad4accd500f5ab6",
+          "publication_decision_id": "DEC-dbdc89634dbea1fe",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "“Ulucami” maddesi — Bursa Ulucamii bölümü",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/ulucami"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0001-F007",
+          "title": "1549 tarihli müezzin mahfili",
+          "text": "Sekiz sütun üzerinde yükselen sade müezzin mahfili 1549 yılında yaptırılmıştır.",
+          "category": "inscription",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 31,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-dfa36cb5c9254201",
+          "publication_decision_id": "DEC-a04417e109e643c0",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa Ulu Cami (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0001-F008",
+          "title": "Açık kubbe ve şadırvan",
+          "text": "Ortadaki kubbenin tepesi açık bırakılmış, altına on altı köşeli havuzu olan bir şadırvan yapılmıştır. Bu açıklık son yıllarda camla kapatılmıştır.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 33,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-07fe7ff55867bcaf",
+          "publication_decision_id": "DEC-a78c785ee88ea667",
+          "game_use": true,
+          "game_use_decision_id": "DEC-0aa763e6a12df64c",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa Ulu Cami (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami"
+            }
+          ],
+          "quest": {
+            "question": "Ulu Cami'nin ortasındaki açık kubbenin altında ne bulunur?",
+            "choices": [
+              "Hünkâr mahfili",
+              "Şadırvan",
+              "Minber",
+              "Mihrap"
+            ],
+            "answer_index": 1,
+            "explanation": "Ortadaki kubbenin altında on altı köşeli havuzu olan bir şadırvan vardır.",
+            "decision_id": "DEC-0aa763e6a12df64c"
+          }
+        },
+        {
+          "fact_id": "BUR-0001-F009",
+          "title": "İki minare, iki dönem",
+          "text": "Batı minaresi Yıldırım Bayezid döneminde yapılmıştır. Doğu minaresinin Çelebi Mehmed döneminde tamamlandığı kabul edilir; kaynak kitap Yavuz Sultan Selim dönemini de olasılık olarak anar.",
+          "category": "construction",
+          "certainty": "uncertain",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 34,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-bbb5821eb26f479f",
+          "publication_decision_id": "DEC-89558aebd46b28a7",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa Ulu Cami (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0001-F010",
+          "title": "1855 depremi sonrası onarım",
+          "text": "Timur istilasında zarar gören cami tarih boyunca birçok kez onarılmıştır. En kapsamlı onarımı 1855 depreminden sonra yapılmıştır.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 36,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-57eb119fa2426bc7",
+          "publication_decision_id": "DEC-2dfa795a4cd8ec9d",
+          "game_use": true,
+          "game_use_decision_id": "DEC-af0dc81872615077",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa Ulu Cami (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/bursa-ulu-cami"
+            }
+          ],
+          "quest": {
+            "question": "Ulu Cami en kapsamlı onarımını hangi olaydan sonra geçirmiştir?",
+            "choices": [
+              "Timur istilası",
+              "Kapalıçarşı yangını",
+              "Birinci Dünya Savaşı",
+              "1855 depremi"
+            ],
+            "answer_index": 3,
+            "explanation": "Kültür Portalı'na göre en büyük onarım 1855 depreminden sonra yapılmıştır.",
+            "decision_id": "DEC-af0dc81872615077"
+          }
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0001/e69b7eb9298ee0a6",
+          "file": "2f34e81592e11cfd902aa039a8b57a5425087e218831697808797aab5f24a7a5.jpeg",
+          "rights_holder": "Jocelyn Erskine-Kellie",
+          "license": "CC-BY-SA-2.0",
+          "attribution": "Fotoğraf: Jocelyn Erskine-Kellie, CC BY-SA 2.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-51d6876c4c187e09",
+          "publication_decision_id": "DEC-833f23b493804325",
+          "game_use": true,
+          "game_use_decision_id": "DEC-1dc6a1665383061f",
+          "card_file": "29ccc10cdaef24acb5b1676224940ab845ef21dbd8db98f6aeb6f7a6dcb6d701.jpeg",
+          "title": "File:View of Bursa - 2024.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:View_of_Bursa_-_2024.jpg",
+          "width": 1600,
+          "height": 1053
+        },
+        {
+          "image_id": "commons/BUR-0001/163bcd16d2039805",
+          "file": "a7cfdd07faf441a330a5a157ef21932700c5ce336b9d5b7f87802ad67b8fa325.jpeg",
+          "rights_holder": "Antonina Vyshnevska",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-92b56892c14bca87",
+          "publication_decision_id": "DEC-32fd2cf4de62f5ff",
+          "game_use": true,
+          "game_use_decision_id": "DEC-137b59524c73660a",
+          "card_file": "8918a282b7252fa17b81d0bb192164bd9769848dae434e7617add7c303d6c639.jpeg",
+          "title": "File:Bursa Ulu Camii 2017-06-25 16.42.25 1791358893.JPG",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.42.25_1791358893.JPG",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0001/e7dce978c2e1e181",
+          "file": "bef8f3daa69130fc4673a4b480cdf8c937bc1345a5bee7423eb3f4a3c5b43fea.jpeg",
+          "rights_holder": "Antonina Vyshnevska",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-527980f2f12cc8fb",
+          "publication_decision_id": "DEC-20caf8c0b9dd880d",
+          "game_use": true,
+          "game_use_decision_id": "DEC-7cb335aeb8f9f018",
+          "card_file": "c0234e297f4619ad39cd702d21cb4d1ab10558a09d32be012f9c025f2ad66233.jpeg",
+          "title": "File:Bursa Ulu Camii 2017-06-25 16.32.35 1791358879.JPG",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.32.35_1791358879.JPG",
+          "width": 1067,
+          "height": 1600
+        },
+        {
+          "image_id": "commons/BUR-0001/6b653774d2963a33",
+          "file": "3500ec812a6cd93352dab5aa2dd7c8757f4716475bb6e86758432b7f50c7ed91.jpeg",
+          "rights_holder": "Antonina Vyshnevska",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-667263eccd1301f3",
+          "publication_decision_id": "DEC-ce3cce53e1027750",
+          "game_use": true,
+          "game_use_decision_id": "DEC-cb9c208d206a37ea",
+          "card_file": "a2e71318f9647c24902855481490be7ab816e34537fb325e49b737ca93d95389.jpeg",
+          "title": "File:Bursa Ulu Camii 2017-06-25 16.29.22 1791358847.JPG",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.29.22_1791358847.JPG",
+          "width": 1067,
+          "height": 1600
+        },
+        {
+          "image_id": "commons/BUR-0001/a95f5166c6ce2420",
+          "file": "2f22f398abf27a6bd4094868d89b2a0db575af84170a52058776b0ffd66341a1.jpeg",
+          "rights_holder": "Antonina Vyshnevska",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-a244ea7f12492083",
+          "publication_decision_id": "DEC-a6f01c797edf774c",
+          "game_use": true,
+          "game_use_decision_id": "DEC-b43f8c7cd46f3959",
+          "card_file": "75f9ca309284842203c31eca83fdee036f695a899848015eff7c335e2b672b29.jpeg",
+          "title": "File:Bursa Ulu Camii 2017-06-25 16.27.58 1791358845.JPG",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Ulu_Camii_2017-06-25_16.27.58_1791358845.JPG",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0001/eb4c08c04e7b98a3",
+          "file": "628c152894b2442771923bc56f72db3d33094121de5469954ae22db69529a22a.jpeg",
+          "rights_holder": "Mohammad Hijjawi",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Mohammad Hijjawi, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-1dfeb757141c4c49",
+          "publication_decision_id": "DEC-7d25f0d7a8a5be2f",
+          "game_use": true,
+          "game_use_decision_id": "DEC-4278f9d39dd1f389",
+          "card_file": "0eda84a6208c0668c42dfff8af71d181c4c9f0ee594028806d3109a01f297782.jpeg",
+          "title": "File:Year of construction of the Great Mosque in Bursa.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Year_of_construction_of_the_Great_Mosque_in_Bursa.jpg",
+          "width": 1600,
+          "height": 1067
+        }
+      ],
+      "location": {
+        "latitude": 40.183926,
+        "longitude": 29.061884,
+        "accuracy_m": 44.0,
+        "represents": "building_footprint_centroid",
+        "verification_decision_id": "DEC-6bfc9ea7d5a6e9da",
+        "map_decision_id": "DEC-457cca5781b1f16c"
+      },
+      "checkin": null,
+      "site_notice": "Aktif ibadet mekânıdır. Namaz vakitlerinde ve Cuma namazı sırasında ziyaret etmeyin; içeride sessiz olun ve uygun kıyafet giyin.",
+      "illustration": "representative_drawing"
+    },
+    {
+      "monument_id": "BUR-0003",
+      "name": "Muradiye Camii",
+      "alternative_names": [],
+      "type": "cami",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "2. Murat Caddesi, Sedat Sokak, Osmangazi/Bursa",
+      "catalog_decision_id": "DEC-a53ad8877d3d3618",
+      "facts": [
+        {
+          "fact_id": "BUR-0003-F001",
+          "title": "II. Murad'ın camisi",
+          "text": "Kapı kemerinin üstündeki yapım kitabesine göre Muradiye Camii'ni Sultan II. Murad 1425–1426 yıllarında yaptırmıştır.",
+          "category": "construction",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 59,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-9e70ff95d9cf3ce2",
+          "publication_decision_id": "DEC-bbca6f0d824f7b6a",
+          "game_use": true,
+          "game_use_decision_id": "DEC-e8c0de086bf52a15",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Muradiye Camii (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/muradiye-camii"
+            },
+            {
+              "title": "Muradiye (Sultan II. Murad) Külliyesi",
+              "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+              "url": "https://alanbaskanligi.bursa.bel.tr/muradiye-sultan-ii-murad-kulliyesi/"
+            }
+          ],
+          "quest": {
+            "question": "Muradiye Camii'ni hangi padişah yaptırmıştır?",
+            "choices": [
+              "Yıldırım Bayezid",
+              "Fatih Sultan Mehmed",
+              "Orhan Gazi",
+              "II. Murad"
+            ],
+            "answer_index": 3,
+            "explanation": "Yapım kitabesine göre cami 1425–1426'da Sultan II. Murad tarafından yaptırılmıştır.",
+            "decision_id": "DEC-e8c0de086bf52a15"
+          }
+        },
+        {
+          "fact_id": "BUR-0003-F002",
+          "title": "Tabhaneli bir sultan camisi",
+          "text": "Muradiye Camii, erken Osmanlı döneminin “zaviyeli” ya da “tabhaneli” denen cami tipindedir. Girişten sonra gelen orta mekânın iki yanında, yolcuları ve dervişleri ağırlamak için yapılmış kubbeli odalar (tabhaneler) yer alır. Caminin önünde ise beş gözlü bir son cemaat yeri uzanır.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 60,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-a983b06b6c41a689",
+          "publication_decision_id": "DEC-c2e7c8fe9f4fe40a",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Doğan Yavaş, “Murâdiye Külliyesi” (Bursa)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/muradiye-kulliyesi-3"
+            },
+            {
+              "title": "Saliha Tupal Yeke, Bursa Muradiye Külliyesi Türbelerinde Gerçekleştirilen Koruma ve Onarım Müdahalelerinin Tarihsel Arka Planı (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Fen Bilimleri Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/a7299c72-c430-471d-97f2-c0f176e50676"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0003-F003",
+          "title": "Tuğla ve taş duvarlar",
+          "text": "Caminin duvarları, erken Osmanlı Bursa yapılarında sık görülen düzende üç sıra tuğla ile bir sıra taşın dönüşümlü dizilmesiyle örülmüştür.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 59,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-58230c0f9f6b7a92",
+          "publication_decision_id": "DEC-5276ad8b06933c16",
+          "game_use": true,
+          "game_use_decision_id": "DEC-38fda325f4e515bb",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "II. Murat (Muradiye) Cami (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/ii-murat-muradiye--cami"
+            }
+          ],
+          "quest": {
+            "question": "Muradiye Camii'nin duvarlarında hangi örgü düzeni görülür?",
+            "choices": [
+              "Ahşap karkas",
+              "Üç sıra tuğla, bir sıra taş",
+              "Yalnız kesme taş",
+              "Yalnız tuğla"
+            ],
+            "answer_index": 1,
+            "explanation": "Duvarlar üç sıra tuğla ve bir sıra taşın dönüşümlü dizilmesiyle örülmüştür.",
+            "decision_id": "DEC-38fda325f4e515bb"
+          }
+        },
+        {
+          "fact_id": "BUR-0003-F004",
+          "title": "Yan odaların ibadet alanına katılması",
+          "text": "Zamanla işlevini yitiren yan odalar (tabhaneler), harimden ayıran duvarları kaldırılarak caminin ibadet alanına katıldı; böylece kalabalık cemaate daha geniş bir mekân açıldı. Osmanlı arşiv belgeleri hem 18. yüzyıla hem de 19. yüzyılın sonuna ait genişletme çalışmalarından söz ettiği için bu dönüşümün tam olarak hangi yıl yapıldığı kesinleşmiş değildir.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 60,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-793b93745db20b8d",
+          "publication_decision_id": "DEC-030b6cf6c0526673",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Fatma Gül Altun, Arşiv Belgeleri Işığında Bursa Murâdiye Külliyesi (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Sosyal Bilimler Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/6647e05b-ae8c-4308-abe0-d26b9b8b9151"
+            },
+            {
+              "title": "Fatma Gül Altun, Arşiv Belgeleri Işığında Bursa Murâdiye Külliyesi (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Sosyal Bilimler Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/6647e05b-ae8c-4308-abe0-d26b9b8b9151"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0003-F005",
+          "title": "Altıgen çiniler",
+          "text": "Mihrabın çevresindeki duvarlar altıgen çinilerle kaplıdır. Çinilerin rengi kaynaklarda farklı tanımlanır: resmî kayıtlar lacivert ve firuze, kaynak kitap zümrüt yeşili der.",
+          "category": "artistic_feature",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 61,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-cb8ef60363aeddfd",
+          "publication_decision_id": "DEC-3e7029374bdd405a",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "II. Murat (Muradiye) Cami (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/ii-murat-muradiye--cami"
+            },
+            {
+              "title": "Muradiye Camii (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/muradiye-camii"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0003-F006",
+          "title": "Rokoko mihrap",
+          "text": "Bugünkü mihrap ve minber özgün değildir; 1790'da rokoko üslubunda yeniden yapılmıştır.",
+          "category": "artistic_feature",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 62,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-78010a16a5d62543",
+          "publication_decision_id": "DEC-bceb7c3677cf2745",
+          "game_use": true,
+          "game_use_decision_id": "DEC-fb520662b20b9a30",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "II. Murat (Muradiye) Cami (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/ii-murat-muradiye--cami"
+            }
+          ],
+          "quest": {
+            "question": "Muradiye Camii'nin bugünkü mihrabı hangi üsluptadır?",
+            "choices": [
+              "Rokoko",
+              "Selçuklu",
+              "Gotik",
+              "Art nouveau"
+            ],
+            "answer_index": 0,
+            "explanation": "Mihrap ve minber 1790'da rokoko üslubunda yeniden yapılmıştır.",
+            "decision_id": "DEC-fb520662b20b9a30"
+          }
+        },
+        {
+          "fact_id": "BUR-0003-F007",
+          "title": "Depremden sonra gelen Fransız usta",
+          "text": "1855 depreminde zarar gören Bursa anıtlarının onarımı için Fransız mimar ve dekoratör Léon Parvillée görevlendirildi. Parvillée, 1874'te yayımladığı kitabında 1863'te Osmanlı hükümetince bu işe atandığını ve Ahmed Vefik'in talimatıyla çalıştığı yapılar arasında Muradiye Camii'nin de bulunduğunu yazar. Camide yaptığı müdahalelerin ayrıntıları ise kaynaklarda tek tek belgelenmiş değildir.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 62,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-13e7776c34dc07c6",
+          "publication_decision_id": "DEC-f538f908320db33a",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Saliha Tupal Yeke, Bursa Muradiye Külliyesi Türbelerinde Gerçekleştirilen Koruma ve Onarım Müdahalelerinin Tarihsel Arka Planı (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Fen Bilimleri Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/a7299c72-c430-471d-97f2-c0f176e50676"
+            },
+            {
+              "title": "Saliha Tupal Yeke, Bursa Muradiye Külliyesi Türbelerinde Gerçekleştirilen Koruma ve Onarım Müdahalelerinin Tarihsel Arka Planı (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Fen Bilimleri Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/a7299c72-c430-471d-97f2-c0f176e50676"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0003-F008",
+          "title": "Duvarın altından çıkan işgal izi",
+          "text": "2012'deki restorasyon sırasında caminin bir duvarındaki sıva kazındığında altından bir Yunan sancağı işareti çıktı. Basına yansıyan haberlere göre bu iz, Bursa'nın 1920–1922 yıllarındaki işgali sırasında caminin Yunan askerlerince depo olarak kullanılmasından kalıyor; restoratörler yapının karargâh olarak da kullanılmış olabileceğini söyledi. Bu kullanım haberlere ve restorasyon gözlemlerine dayanıyor, resmî bir belgeyle kesinleşmiş değil.",
+          "category": "function",
+          "certainty": "reported",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 62,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-2b038aea571e7d88",
+          "publication_decision_id": "DEC-0b7ed4deec5e1186",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Yunan İşgalinin İzleri Cami Duvarından Çıktı",
+              "publisher": "Mynet (özel haber, 20.10.2012)",
+              "url": "https://www.mynet.com/ozel-haber-yunan-isgalinin-izleri-cami-duvarindan-cikti-180100490133"
+            }
+          ],
+          "quest": null
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0003/9a605cd4f470576e",
+          "file": "6ff926d1bc798ed2b4a47fdb8b8b2bcf52665f8e58d0ea0cfc9a5712ff7e63b1.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-23fca17f7afd821c",
+          "publication_decision_id": "DEC-b6bd57be99b382c6",
+          "game_use": true,
+          "game_use_decision_id": "DEC-7d6961767996ae5a",
+          "card_file": "71042e2355df8c2f2add85c203ca2201172e044a941d1e3be6317a854e2a7373.jpeg",
+          "title": "File:Bursa Muradiye Mosque Exterior 8037.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8037.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0003/79d984e655a21713",
+          "file": "48c93ed478e35a639a99b316bd12f2bb50dc58ae3dffec84197d21896fcc0548.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-02eda9b34a368f9c",
+          "publication_decision_id": "DEC-1de4117f34656c49",
+          "game_use": true,
+          "game_use_decision_id": "DEC-6e2fa44e16649079",
+          "card_file": "fe9adc70307b7b5c154b3279101dd3977cac34668915adba0b46a062cea4736c.jpeg",
+          "title": "File:MURADİYE CAMİİ - panoramio (11).jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0%C4%B0_-_panoramio_(11).jpg",
+          "width": 1600,
+          "height": 1200
+        },
+        {
+          "image_id": "commons/BUR-0003/c0957f6215c4be84",
+          "file": "002432ddaae9c2a9c2aeaaca1af81eb824c75e665d411227f9c60d195439c9c3.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-19916654934b1336",
+          "publication_decision_id": "DEC-a7b143333cad9175",
+          "game_use": true,
+          "game_use_decision_id": "DEC-a4650ab6e90a97cf",
+          "card_file": "e68b0d98dc6c45892055fd527ab56b0d727259d8530c1876f02e212d4e162666.jpeg",
+          "title": "File:Bursa Muradiye Mosque Exterior 8040.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8040.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0003/e8ab7b81bbe1c514",
+          "file": "45528a2592d821b98f37f9214c9e9240bf3e7bf68820b04d4ad6650b209683f6.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-a100bae99b1cc622",
+          "publication_decision_id": "DEC-5f9ddf3a9355e432",
+          "game_use": true,
+          "game_use_decision_id": "DEC-1ae92e50eb4bba71",
+          "card_file": "b00bb5b6d2621824768b5a5319196c0adef108f15cc68d5024dc9c788f645e92.jpeg",
+          "title": "File:Bursa Muradiye Mosque Exterior 8038.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8038.jpg",
+          "width": 1065,
+          "height": 1600
+        },
+        {
+          "image_id": "commons/BUR-0003/ac0d6e214b272cd9",
+          "file": "64b2b872ce6ae62b8568fd652d5cf1a95364baf5f1deb09e195c034221c8ab94.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-0f0313e62906fdf2",
+          "publication_decision_id": "DEC-f406a8948863e0a4",
+          "game_use": true,
+          "game_use_decision_id": "DEC-af2f7989bb6c5641",
+          "card_file": "91b2872c1cfd3db8dc0d1bba7d78edf8a9a20bedf2896ec6c439c26fb27f7ffe.jpeg",
+          "title": "File:MURADİYE CAMİSİ - panoramio.jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0S%C4%B0_-_panoramio.jpg",
+          "width": 1600,
+          "height": 1200
+        },
+        {
+          "image_id": "commons/BUR-0003/a4ed7ebce66a59d0",
+          "file": "b1c9c3e4e4ef48040820b8d780ab45254ef395655d233ae9f4669581e46da330.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-8ac631cec20157c2",
+          "publication_decision_id": "DEC-5fd3e177e8fbdc2c",
+          "game_use": true,
+          "game_use_decision_id": "DEC-bdaf90a77f9ab19f",
+          "card_file": "2bab4407c1d3e72c3e582a99e75310c4bc785ae8acc58da09eb412baa84e611b.jpeg",
+          "title": "File:Bursa Muradiye Mosque Exterior 8039.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Muradiye_Mosque_Exterior_8039.jpg",
+          "width": 1600,
+          "height": 1065
+        }
+      ],
+      "location": {
+        "latitude": 40.191059,
+        "longitude": 29.046533,
+        "accuracy_m": 27.0,
+        "represents": "building_footprint_centroid",
+        "verification_decision_id": "DEC-105fe9f4b30f8bc1",
+        "map_decision_id": "DEC-56789315812c638c"
+      },
+      "checkin": null,
+      "site_notice": "Bursa’nın Osmangazi ilçesinde yer alan Muradiye Camii, Osmanlı mimari mirasını keşfetmek isteyen ziyaretçiler için önemli bir duraktır. Yapıyı incelerken mimari ayrıntılarına, taş ve tuğla işçiliğine dikkat edin. Burası aynı zamanda bir ibadet mekânıdır; ziyaretiniz sırasında sessizliğe, ibadet edenlerin mahremiyetine ve ziyaret kurallarına özen gösterin.",
+      "illustration": "representative_drawing"
+    },
+    {
+      "monument_id": "BUR-0005",
+      "name": "Muradiye Medresesi",
+      "alternative_names": [],
+      "type": "medrese",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "Muradiye Mahallesi, Sedat Sokak, Osmangazi/Bursa",
+      "catalog_decision_id": "DEC-95f6629488d61dbd",
+      "facts": [
+        {
+          "fact_id": "BUR-0005-F001",
+          "title": "Revaklı kare avlu",
+          "text": "Medrese, revaklarla çevrili yaklaşık 17 × 17 metrelik kare bir iç avlunun etrafında tek eyvanlı bir plana sahiptir. Öğrenci odalarının sayısı kaynaklarda farklı verilir (14 ya da 16).",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 63,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-56a5eb6db1da243a",
+          "publication_decision_id": "DEC-9a8db3f1a5fe7b31",
+          "game_use": true,
+          "game_use_decision_id": "DEC-e650a3b57c103802",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Muradiye Medresesi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/muradiye-medresesi"
+            }
+          ],
+          "quest": {
+            "question": "Muradiye Medresesi'nin iç avlusu yaklaşık hangi ölçüdedir?",
+            "choices": [
+              "55 × 69 m",
+              "5 × 5 m",
+              "40 × 40 m",
+              "17 × 17 m"
+            ],
+            "answer_index": 3,
+            "explanation": "Revaklı iç avlu yaklaşık 17 × 17 metredir (Kültür Portalı: 16,80 m).",
+            "decision_id": "DEC-e650a3b57c103802"
+          }
+        },
+        {
+          "fact_id": "BUR-0005-F002",
+          "title": "Hocalar için ayrılan odalar",
+          "text": "Medresenin on altı hücresinden ikisinin, ilk dönemlerde dersleri yöneten müderris ile ona yardım eden muide ayrıldığı düşünülüyor. Bu bir tahmindir: vakıf kayıtlarında öğrenci sayısı 14–15 olarak geçtiği için araştırmacılar kalan odaların hocalara verildiği sonucuna varıyor. Hangi hücrelerin bu amaçla kullanıldığı kesin olarak bilinmiyor.",
+          "category": "function",
+          "certainty": "uncertain",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 64,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-0cad00216ead92aa",
+          "publication_decision_id": "DEC-c5fd9a814a30e0db",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Fatma Gül Altun, Arşiv Belgeleri Işığında Bursa Murâdiye Külliyesi (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Sosyal Bilimler Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/6647e05b-ae8c-4308-abe0-d26b9b8b9151"
+            },
+            {
+              "title": "Doğan Yavaş, “Murâdiye Külliyesi” (Bursa)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/muradiye-kulliyesi-3"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0005-F003",
+          "title": "Yüzyıllar boyunca süren onarımlar",
+          "text": "Arşiv belgeleri Muradiye Medresesi'nin 17. yüzyılın başından 20. yüzyılın ortasına kadar defalarca onarıldığını gösteriyor. Bu onarımlardan biri 2 Temmuz 1844 tarihli bir keşif kaydında ayrıntılı olarak anlatılır: medresenin bazı odalarının kurşun örtü altındaki ahşap döşemeleri ve iç döşemeleri yenilenmiştir.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 64,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-5ef793686b6b5945",
+          "publication_decision_id": "DEC-83864bb4f4d89529",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Fatma Gül Altun, Arşiv Belgeleri Işığında Bursa Murâdiye Külliyesi (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Sosyal Bilimler Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/6647e05b-ae8c-4308-abe0-d26b9b8b9151"
+            },
+            {
+              "title": "Fatma Gül Altun, Arşiv Belgeleri Işığında Bursa Murâdiye Külliyesi (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Sosyal Bilimler Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/6647e05b-ae8c-4308-abe0-d26b9b8b9151"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0005-F004",
+          "title": "1855 depreminin izleri",
+          "text": "1855'teki büyük Bursa depremi Muradiye Medresesi'ni de etkiledi. Ders verilen dershane bölümü ve medresenin duvarları hasar gördü ve yapı ardından kapsamlı bir onarımdan geçti.",
+          "category": "historical_event",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 64,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-7b18aca875b131d2",
+          "publication_decision_id": "DEC-72110fe397198f69",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Doğan Yavaş, “Murâdiye Külliyesi” (Bursa)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/muradiye-kulliyesi-3"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0005-F005",
+          "title": "Bir dönem dispanser",
+          "text": "Medrese, 1951'deki onarımdan sonra uzun yıllar Verem Savaş Dispanseri olarak kullanılmıştır.",
+          "category": "function",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 64,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-1069477e2ae4e587",
+          "publication_decision_id": "DEC-968c1b3056da9214",
+          "game_use": true,
+          "game_use_decision_id": "DEC-0ae4a28b504411b1",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Muradiye Medresesi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/muradiye-medresesi"
+            }
+          ],
+          "quest": {
+            "question": "Muradiye Medresesi 1951'den sonra hangi amaçla kullanıldı?",
+            "choices": [
+              "Verem Savaş Dispanseri",
+              "Postane",
+              "İlkokul",
+              "Kervansaray"
+            ],
+            "answer_index": 0,
+            "explanation": "Medrese 1951'deki onarımdan sonra Verem Savaş Dispanseri olarak kullanılmıştır.",
+            "decision_id": "DEC-0ae4a28b504411b1"
+          }
+        },
+        {
+          "fact_id": "BUR-0005-F006",
+          "title": "Medreseden müzeye",
+          "text": "Uzun yıllar verem savaş dispanseri ve kanser tarama merkezi gibi sağlık kuruluşu olarak kullanılan medrese, Bursa Büyükşehir Belediyesi tarafından restore edildi ve 2019'da Muradiye Kur'an ve El Yazmaları Müzesi olarak ziyarete açıldı.",
+          "category": "function",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 64,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-24d809910ef110b2",
+          "publication_decision_id": "DEC-1fc24539a59b9581",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa and Cumalıkızık World Heritage Site Management Plan 2021–2026",
+              "publisher": "Bursa Büyükşehir Belediyesi — Bursa Alan Başkanlığı (hazırlayan: Dizayn Turizm)",
+              "url": "https://antalya.ktb.gov.tr/Eklenti/93128,uyp-bursa-and-cumalikizik-management-planpdf.pdf"
+            },
+            {
+              "title": "Fatma Gül Altun, Arşiv Belgeleri Işığında Bursa Murâdiye Külliyesi (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Sosyal Bilimler Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/6647e05b-ae8c-4308-abe0-d26b9b8b9151"
+            }
+          ],
+          "quest": null
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0005/036682fccfd929f3",
+          "file": "761250c2d8ecf0459359e3e15ee1cf2120089e3c407e59ad32aa46873d57104e.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-55e36566649f2bf3",
+          "publication_decision_id": "DEC-b701127e7ac835e0",
+          "game_use": true,
+          "game_use_decision_id": "DEC-8a5eadc2282704e5",
+          "card_file": "2c853a4c0e08d61c47653705122d3058757fe2e42aa926fe1f0c79e63e9c80f9.jpeg",
+          "title": "File:MURADİYE CAMİ MEDRESESİ - panoramio (1).jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio_(1).jpg",
+          "width": 1600,
+          "height": 1250
+        },
+        {
+          "image_id": "commons/BUR-0005/04927e53ab68e0fb",
+          "file": "628257d5ccecf20254bdafa720a94d7046e0009428e94eddf7827cf5da0804b6.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-a351f939ddfd5b9d",
+          "publication_decision_id": "DEC-101ed3d29a8fa19d",
+          "game_use": true,
+          "game_use_decision_id": "DEC-b2a9beddeb7ef22a",
+          "card_file": "a71deeeef28a7bbb4494deab736e90477a5b63ef5ddad274ee187cf0e5d2dd59.jpeg",
+          "title": "File:MURADİYE CAMİ MEDRESESİ - panoramio.jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_CAM%C4%B0_MEDRESES%C4%B0_-_panoramio.jpg",
+          "width": 1600,
+          "height": 1426
+        },
+        {
+          "image_id": "commons/BUR-0005/d9a68694ac7826c4",
+          "file": "d8ba0700e0b93754c46d4e82310c99d3fe1f0afa9d4685fb3813db94a32f82f1.jpeg",
+          "rights_holder": "R Prazeres",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: R Prazeres, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-5e88a78eab0f5b27",
+          "publication_decision_id": "DEC-80fd80fe94bcd04e",
+          "game_use": true,
+          "game_use_decision_id": "DEC-8d910d25828c7747",
+          "card_file": "af12971db40c5c1ede540a11c17ae8395ede20b3414168ed50fff83b6ea12723.jpeg",
+          "title": "File:Muradiye Medrese Bursa DSCF2043.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Muradiye_Medrese_Bursa_DSCF2043.jpg",
+          "width": 1600,
+          "height": 1200
+        },
+        {
+          "image_id": "commons/BUR-0005/226a241c857332a0",
+          "file": "20a5be9254e9e78a016155c662313b5778a0b7cd39b46ce5306f9c4581b34559.jpeg",
+          "rights_holder": "Canercangul",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Canercangul, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-2d5d2a7438304438",
+          "publication_decision_id": "DEC-af95663306d9ecdd",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d86aba76458acb6b",
+          "card_file": "41eedfafb51533de618e8dd56353839d2a0bb24f5cd9ca3005f06fa8256a68fd.jpeg",
+          "title": "File:Muradiye Medresesi (1).jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Muradiye_Medresesi_(1).jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0005/528adf9eb84a0b4f",
+          "file": "8be12453fbf0f4a57631196b6bd924ce09c60db0d325a25a71faf6ea6cd1cd73.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-3769ae78cf749412",
+          "publication_decision_id": "DEC-ee63f00ebc8c5ea8",
+          "game_use": true,
+          "game_use_decision_id": "DEC-219a6ac7a3b262cb",
+          "card_file": "5d3c655e5d54ca3a867a57948848ce4d37fade76cc8ebcd6bf102fa1eab4ca30.jpeg",
+          "title": "File:MURADİYE MEDRESESİ - panoramio (1).jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:MURAD%C4%B0YE_MEDRESES%C4%B0_-_panoramio_(1).jpg",
+          "width": 1600,
+          "height": 1200
+        },
+        {
+          "image_id": "commons/BUR-0005/5a7d8363d8cc00f2",
+          "file": "f39ab636099d1cb5ab8c5d98fa11503a08a11fba8c317d0ad0ccc5ad1f6b9b48.jpeg",
+          "rights_holder": "R Prazeres",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: R Prazeres, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-4913cd299868cfe6",
+          "publication_decision_id": "DEC-88406b20906f3ea4",
+          "game_use": true,
+          "game_use_decision_id": "DEC-c72ce66b52c90b37",
+          "card_file": "e44f07e59cceb15646168975dc397bb4fc145442718879e095ce88e6c45ef888.jpeg",
+          "title": "File:Muradiye Medrese Bursa DSCF2040.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Muradiye_Medrese_Bursa_DSCF2040.jpg",
+          "width": 1600,
+          "height": 1235
+        }
+      ],
+      "location": {
+        "latitude": 40.19093,
+        "longitude": 29.045747,
+        "accuracy_m": 26.0,
+        "represents": "building_footprint_centroid",
+        "verification_decision_id": "DEC-792e7b87189a60f3",
+        "map_decision_id": "DEC-21150e88e1b91752"
+      },
+      "checkin": null,
+      "site_notice": null,
+      "illustration": "representative_drawing"
+    },
+    {
+      "monument_id": "BUR-0007",
+      "name": "Sultan II. Murad Türbesi",
+      "alternative_names": [],
+      "type": "türbe",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "Muradiye Mahallesi, 2. Murat Caddesi, Osmangazi/Bursa",
+      "catalog_decision_id": "DEC-7c47b4106b7d0962",
+      "facts": [
+        {
+          "fact_id": "BUR-0007-F001",
+          "title": "Oğlunun yaptırdığı türbe",
+          "text": "Kapı üzerindeki kitabeye göre türbe, Sultan II. Murad'ın 1451'deki ölümünden sonra vasiyetine uygun olarak oğlu Fatih Sultan Mehmed tarafından yaptırılmıştır.",
+          "category": "construction",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 68,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-8536827db4b2e653",
+          "publication_decision_id": "DEC-84b6e72a16281afa",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d2797670ee83ac4a",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "II. Murad Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/ii-murad-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "II. Murad Türbesi'ni kim yaptırmıştır?",
+            "choices": [
+              "Fatih Sultan Mehmed",
+              "II. Bayezid",
+              "Orhan Gazi",
+              "Yavuz Sultan Selim"
+            ],
+            "answer_index": 0,
+            "explanation": "Türbe, II. Murad'ın vasiyeti üzerine oğlu Fatih Sultan Mehmed tarafından yaptırılmıştır.",
+            "decision_id": "DEC-d2797670ee83ac4a"
+          }
+        },
+        {
+          "fact_id": "BUR-0007-F002",
+          "title": "Gökyüzüne açık mezar",
+          "text": "II. Murad'ın vasiyeti gereği türbenin kubbesinin ortası açık bırakılmış, mezarın üstü toprakla örtülmüştür.",
+          "category": "burial_practice",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 68,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-3d3084015d68ed4a",
+          "publication_decision_id": "DEC-3fe015f96ce43b01",
+          "game_use": true,
+          "game_use_decision_id": "DEC-7764e047dbea47fa",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "II. Murad Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/ii-murad-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "II. Murad'ın vasiyeti gereği türbenin kubbesi nasıl bırakılmıştır?",
+            "choices": [
+              "Altınla kaplı",
+              "Çiniyle kaplı",
+              "Ahşapla örtülü",
+              "Ortası açık"
+            ],
+            "answer_index": 3,
+            "explanation": "Vasiyet gereği kubbenin ortası açık bırakılmış, mezarın üstü toprakla örtülmüştür.",
+            "decision_id": "DEC-7764e047dbea47fa"
+          }
+        },
+        {
+          "fact_id": "BUR-0007-F003",
+          "title": "Tek başına bir sultan",
+          "text": "Asıl türbe mekânında II. Murad'dan başka mezar yoktur. Ailesinin bazı üyelerinin sandukaları, sonradan eklenen bitişik bölümdedir.",
+          "category": "burial_practice",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 68,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-312e31dbc465b23b",
+          "publication_decision_id": "DEC-3e7a0f2e11025872",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "II. Murad Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/ii-murad-turbesi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0007-F004",
+          "title": "Kapı kitabesi",
+          "text": "Türbenin kapısının üstünde, yapılış öyküsünü anlatan bir kitabe bulunur.",
+          "category": "inscription",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 68,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-4db7430cf5a7a50f",
+          "publication_decision_id": "DEC-71c1c6c319368192",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "II. Murad Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/ii-murad-turbesi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0007-F005",
+          "title": "Almaşık duvar",
+          "text": "Türbenin duvarları, bir sıra taş ile iki sıra tuğlanın dönüşümlü kullanıldığı almaşık teknikle örülmüştür.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 69,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-284007c0e0c7f597",
+          "publication_decision_id": "DEC-e40d9ea66fdb3f13",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "II. Murad Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/ii-murad-turbesi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0007-F006",
+          "title": "İç içe iki kare",
+          "text": "II. Murad Türbesi'nin planı iç içe iki kareden oluşur: dıştaki kare yaklaşık 13,45 × 13,45 metre, içteki 6,90 × 6,90 metredir. İki kare arasında 3,25 metre genişliğinde bir galeri dolaşır. Sultanın vasiyeti uyarınca hafızların Kur'an okuması için düşünülen bu galeri, ortadaki üstü açık mekânı çevreler.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 70,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-ee05b6e8eacf782a",
+          "publication_decision_id": "DEC-80e8b19b31f12c64",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Doğan Yavaş, “Murâdiye Külliyesi” (Bursa)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/muradiye-kulliyesi-3"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0007-F007",
+          "title": "Bizans'tan gelen sütunlar",
+          "text": "Türbenin ortasındaki kubbe, sivri kemerlerle birbirine bağlanan dört sütun ve dört payeye oturur. Bu sütunların hem kaideleri hem de başlıkları türbe için yeni yapılmamış; Bizans döneminden kalma yapılardan getirilip yeniden kullanılmış (devşirme) parçalardır.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 70,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-e84118b0f52d2d80",
+          "publication_decision_id": "DEC-4ed38203ddedd985",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Doğan Yavaş, “Murâdiye Külliyesi” (Bursa)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/muradiye-kulliyesi-3"
+            },
+            {
+              "title": "Fatma Gül Altun, Arşiv Belgeleri Işığında Bursa Murâdiye Külliyesi (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Sosyal Bilimler Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/6647e05b-ae8c-4308-abe0-d26b9b8b9151"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0007-F008",
+          "title": "Badananın altından çıkan nakışlar",
+          "text": "II. Murad Türbesi'nin restorasyonu, Dünya Mirası Alan Yönetim Planı'na göre 2014'te tamamlandı. Külliyenin türbelerinde 2012–2015 arasında yürütülen bu çalışmalarda, II. Murad Türbesi'nin beyaz badanasının altından iki ayrı katman kalem işi bezeme çıktı. Üstteki katmanın 1857–58 yıllarında yapıldığı belirlendi.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 70,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-c1a6c025caa0a69a",
+          "publication_decision_id": "DEC-e75c210496011ce0",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa and Cumalıkızık World Heritage Site Management Plan 2021–2026",
+              "publisher": "Bursa Büyükşehir Belediyesi — Bursa Alan Başkanlığı (hazırlayan: Dizayn Turizm)",
+              "url": "https://antalya.ktb.gov.tr/Eklenti/93128,uyp-bursa-and-cumalikizik-management-planpdf.pdf"
+            },
+            {
+              "title": "Saliha Tupal Yeke, Bursa Muradiye Külliyesi Türbelerinde Gerçekleştirilen Koruma ve Onarım Müdahalelerinin Tarihsel Arka Planı (doktora tezi, 2024)",
+              "publisher": "Bursa Uludağ Üniversitesi, Fen Bilimleri Enstitüsü",
+              "url": "https://acikerisim.uludag.edu.tr/items/a7299c72-c430-471d-97f2-c0f176e50676"
+            }
+          ],
+          "quest": null
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0007/d5cb8a98de777d1d",
+          "file": "30db36253e5b8d6644c07b8de8a3c3439ba32bfd9dfcc41544e8ca1c2be760b3.jpeg",
+          "rights_holder": "Antonina Vyshnevska",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-7b8722dde734a9ce",
+          "publication_decision_id": "DEC-b25cdc24af2d06f2",
+          "game_use": true,
+          "game_use_decision_id": "DEC-ba852a673e8eaca6",
+          "card_file": "a8c02ab1965753ba6a09cc7743dbbf92aa32bd199d1b7c081a6cfd1f8ba99c6c.jpeg",
+          "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.16.51 1791294802.JPG",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.51_1791294802.JPG",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0007/84dca9bfe6953dca",
+          "file": "0951ed503bdaf395b3c447712fb9647b79274774e6a79bc07d9fd9730ee949d2.jpeg",
+          "rights_holder": "Antonina Vyshnevska",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-e9dfb95f3e25fd16",
+          "publication_decision_id": "DEC-f34cb1b91a1d27a9",
+          "game_use": true,
+          "game_use_decision_id": "DEC-64c0aa69c599c962",
+          "card_file": "c77e8b0d81e38782801b121a3b5abf0b0558c2680722c2c673a6be77f7b92c43.jpeg",
+          "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.14.01 1791297518.JPG",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.01_1791297518.JPG",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0007/95937d0798f92853",
+          "file": "e6761bb4132264e5e857640bd94d1206cf8c35bb00b6214f000f271619c9b058.jpeg",
+          "rights_holder": "Antonina Vyshnevska",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-d90f40516b956390",
+          "publication_decision_id": "DEC-fd017b99992a51e5",
+          "game_use": true,
+          "game_use_decision_id": "DEC-403070c67b9264f1",
+          "card_file": "f18a183ea315870d9d23f745d2461baa69d467dd601c211c433c772e2743ddff.jpeg",
+          "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.14.12 1791297523.JPG",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.14.12_1791297523.JPG",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0007/8ffe98b55464b044",
+          "file": "4c4ddd9f8a959776f57aca8230d63ff8ef2f07a1917d28fd73e8a063d160388a.jpeg",
+          "rights_holder": "Antonina Vyshnevska",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-19c4528005646eb1",
+          "publication_decision_id": "DEC-b82f433b408bded4",
+          "game_use": true,
+          "game_use_decision_id": "DEC-dc702a9ebbe716cd",
+          "card_file": "1c61a1bc9b0f0fa39600b5ecc8680e1e4cce751e6a2ab1b6cf40936cd26f694f.jpeg",
+          "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.13.06 1791297508.JPG",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.13.06_1791297508.JPG",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0007/d7901cec6f45e030",
+          "file": "975d593e1ccf9103c1a54825f777d7b44aee79f487407c083fd60a1477b8b614.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-48d65a5f54cf4696",
+          "publication_decision_id": "DEC-4e30eb33d23a0020",
+          "game_use": true,
+          "game_use_decision_id": "DEC-3ce0ec9d936df49e",
+          "card_file": "d6e669b44de127c078d3a9789b0afed23de100081173b78ff5c36d1bc10bc4ee.jpeg",
+          "title": "File:Murad II Türbesi 7943.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Murad_II_T%C3%BCrbesi_7943.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0007/060bfa77c23d3ddf",
+          "file": "5670576a065d9cf57b4a6b3d127ab704adfa701ad40ea65148bcae8ba7cfe084.jpeg",
+          "rights_holder": "Antonina Vyshnevska",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Antonina Vyshnevska, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-def915122a3680c8",
+          "publication_decision_id": "DEC-4263002bdec50821",
+          "game_use": true,
+          "game_use_decision_id": "DEC-a7344303f8817ca5",
+          "card_file": "ef47acbbccbd5e3f873ffab6c26c0dda5002ae208e2cc5f25244a485569ff4a6.jpeg",
+          "title": "File:Sultan II. Murat Türbesi 2017-06-30 19.16.03 1791297488.JPG",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Sultan_II._Murat_T%C3%BCrbesi_2017-06-30_19.16.03_1791297488.JPG",
+          "width": 1067,
+          "height": 1600
+        }
+      ],
+      "location": {
+        "latitude": 40.190553,
+        "longitude": 29.046121,
+        "accuracy_m": 20.0,
+        "represents": "point_feature",
+        "verification_decision_id": "DEC-df598fe4a8763705",
+        "map_decision_id": "DEC-641738e10e283156"
+      },
+      "checkin": null,
+      "site_notice": "Türbe ve kabir alanıdır. Ziyaret sırasında sessiz olun, sandukalara dokunmayın ve ziyaret saatlerine uyun.",
+      "illustration": "representative_drawing"
+    },
+    {
+      "monument_id": "BUR-0008",
+      "name": "Cem Sultan Türbesi",
+      "alternative_names": [],
+      "type": "türbe",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "Muradiye Mahallesi, 2. Murad Caddesi, Osmangazi/Bursa",
+      "catalog_decision_id": "DEC-971f41ea56ad6cee",
+      "facts": [
+        {
+          "fact_id": "BUR-0008-F001",
+          "title": "Aslında Şehzade Mustafa için",
+          "text": "Bugün Cem Sultan Türbesi diye bilinen yapı, Fatih Sultan Mehmed'in oğlu Şehzade Mustafa için 1479'da yapılmıştır.",
+          "category": "construction",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 73,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-1494028d7a7a3d2e",
+          "publication_decision_id": "DEC-aaa21f012af75fa8",
+          "game_use": true,
+          "game_use_decision_id": "DEC-4003b426227b9131",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Şehzade Sultan Mustafa ve Sultan Cem Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/sehzade-sultan-mustafa-ve-sultan-cem-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Cem Sultan Türbesi aslında kimin için yapılmıştır?",
+            "choices": [
+              "Şehzade Mahmud",
+              "Şehzade Mustafa",
+              "Cem Sultan",
+              "II. Murad"
+            ],
+            "answer_index": 1,
+            "explanation": "Yapı 1479'da Fatih'in oğlu Şehzade Mustafa için yapılmış; Cem Sultan 1499'da buraya defnedilmiştir.",
+            "decision_id": "DEC-4003b426227b9131"
+          }
+        },
+        {
+          "fact_id": "BUR-0008-F002",
+          "title": "Cem Sultan'ın dönüşü",
+          "text": "Avrupa'da sürgündeyken ölen Cem Sultan'ın naaşı 1499'da Bursa'ya getirilmiş ve kardeşi Şehzade Mustafa'nın türbesine defnedilmiştir. Yapı zamanla onun adıyla anılmaya başlanmıştır.",
+          "category": "burial_practice",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 73,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-62cab2cf3b824c1d",
+          "publication_decision_id": "DEC-971a7fa23e9bf5e6",
+          "game_use": true,
+          "game_use_decision_id": "DEC-cfde0b805e772ac9",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Cem Sultan Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/cem-sultan-turbesi"
+            },
+            {
+              "title": "Şehzade Sultan Mustafa ve Sultan Cem Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/sehzade-sultan-mustafa-ve-sultan-cem-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Cem Sultan'ın naaşı hangi yıl Bursa'ya getirilmiştir?",
+            "choices": [
+              "1499",
+              "1481",
+              "1451",
+              "1855"
+            ],
+            "answer_index": 0,
+            "explanation": "1495'te İtalya'da ölen Cem Sultan'ın naaşı 1499'da Bursa'ya getirilmiştir.",
+            "decision_id": "DEC-cfde0b805e772ac9"
+          }
+        },
+        {
+          "fact_id": "BUR-0008-F003",
+          "title": "Dört şehzade",
+          "text": "Türbede Şehzade Mustafa, Cem Sultan, Şehzade Abdullah ve Şehzade Alemşah gömülüdür.",
+          "category": "burial_practice",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 73,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-baf773e6874167fb",
+          "publication_decision_id": "DEC-9439bb4dd4dbc078",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Şehzade Sultan Mustafa ve Sultan Cem Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/sehzade-sultan-mustafa-ve-sultan-cem-turbesi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0008-F004",
+          "title": "Altıgen plan",
+          "text": "Altıgen planlı türbe taş ve tuğladan örülmüştür. Altıgen bir kasnağa oturan kubbesinin dışı kurşunla kaplıdır; girişte mermer bir revak vardır.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 75,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-cb7a18cdd6d42759",
+          "publication_decision_id": "DEC-c447310f7ae000fe",
+          "game_use": true,
+          "game_use_decision_id": "DEC-9633710126bfdea1",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Şehzade Sultan Mustafa ve Sultan Cem Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/sehzade-sultan-mustafa-ve-sultan-cem-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Cem Sultan Türbesi'nin planı hangi biçimdedir?",
+            "choices": [
+              "Kare",
+              "Daire",
+              "Sekizgen",
+              "Altıgen"
+            ],
+            "answer_index": 3,
+            "explanation": "Türbe altıgen planlıdır ve altıgen bir kasnağa oturan kubbeyle örtülüdür.",
+            "decision_id": "DEC-9633710126bfdea1"
+          }
+        },
+        {
+          "fact_id": "BUR-0008-F005",
+          "title": "Yaldızlı çiniler",
+          "text": "Duvarların alt bölümü altın yaldızlı firuze ve lacivert altıgen çinilerle, üst bölümü kalem işiyle süslenmiştir.",
+          "category": "artistic_feature",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 75,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-9e32c79e664957b8",
+          "publication_decision_id": "DEC-6d997956b88805fd",
+          "game_use": true,
+          "game_use_decision_id": "DEC-bae8f0a3b6769a2d",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Cem Sultan Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/cem-sultan-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Cem Sultan Türbesi'nin duvar çinileri hangi renklerdedir?",
+            "choices": [
+              "Kırmızı ve sarı",
+              "Siyah ve beyaz",
+              "Yeşil ve mor",
+              "Firuze ve lacivert"
+            ],
+            "answer_index": 3,
+            "explanation": "Duvarların alt kısmı altın yaldızlı firuze ve lacivert çinilerle kaplıdır.",
+            "decision_id": "DEC-bae8f0a3b6769a2d"
+          }
+        },
+        {
+          "fact_id": "BUR-0008-F006",
+          "title": "Kubbedeki yazı kuşağı",
+          "text": "Türbenin kubbesi kalem işi nakışlarla bezelidir: kubbe yüzeyini hatâyî ve rûmî motifler kaplar, kubbenin eteğinde ise besmele ile birlikte Âyetü'l-kürsî yazılıdır. Mihrabın iki yanında birbirinin ayna görüntüsü gibi (müsennâ) yazılmış birer besmele, bunların altında da celî sülüs hatla yazılmış bir ibare yer alır.",
+          "category": "inscription",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+            "pdf_physical_page": 75,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-0bccd3e4a84eb953",
+          "publication_decision_id": "DEC-75ada85694efb361",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Semavi Eyice, “Cem Sultan Türbesi”",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/cem-sultan-turbesi-2"
+            }
+          ],
+          "quest": null
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0008/f17927cd52d1d54a",
+          "file": "cc3296379b719f6f984f8c6fd44cb4ce516a5615008e2f30c4b722cbe9b0b21d.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-04a191bc5be0e301",
+          "publication_decision_id": "DEC-08a7ad7888cb6f96",
+          "game_use": true,
+          "game_use_decision_id": "DEC-7235da2057aa561b",
+          "card_file": "3a2d523d5dbc43008fb1131d4d6f7adcfd37e3ab8749249e1c33848d97eba5d3.jpeg",
+          "title": "File:Bursa Cem Sultan Turbesi in 1993 105.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Cem_Sultan_Turbesi_in_1993_105.jpg",
+          "width": 1600,
+          "height": 1044
+        },
+        {
+          "image_id": "commons/BUR-0008/6b3ea8d7e9d3a298",
+          "file": "b5031311e78184a614f987b3b441969e915cd190f5b5096fc03ca8c80831adb6.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-364318c5f52a42a4",
+          "publication_decision_id": "DEC-9e9c87b208a8e039",
+          "game_use": true,
+          "game_use_decision_id": "DEC-2f0306da388c298b",
+          "card_file": "07a0b7b1aad4e8a6791d8a23b70fd62256ff0382796720424a1a84546571a4f5.jpeg",
+          "title": "File:Cem Sultan Türbesi 7952.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7952.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0008/329fe5a9bb762660",
+          "file": "1c3e6383a9ec4856da4e2ab3fca3e625e7fc3f8e82f548c486c158f78b4f5264.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-771c253708a37655",
+          "publication_decision_id": "DEC-f1b66039a3983da4",
+          "game_use": true,
+          "game_use_decision_id": "DEC-06c47f0904db700a",
+          "card_file": "5f8df5899af59bfda286a054dbb367fb47663d70e61aba4c15015712b57deda3.jpeg",
+          "title": "File:Cem Sultan Türbesi 7961.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7961.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0008/e4e6c15ffc089c3a",
+          "file": "46f159697184cd5e80bc8f244a0e9810e715ab18b9224a88cfd865277bf241df.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-88116715715fc8ea",
+          "publication_decision_id": "DEC-7b43f2ca9fc451f1",
+          "game_use": true,
+          "game_use_decision_id": "DEC-6cbd32c920571b07",
+          "card_file": "7475c7713d614dedf5428bd96e1ea6fac42a442d95ed5f4a5032b90b1ebe7bd7.jpeg",
+          "title": "File:Cem Sultan Türbesi 7959.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7959.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0008/5681958550686955",
+          "file": "59b7588ed7231affb9e0824b572373f851b5dfe96fbe7ab76e72cad7e71386d9.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-17dd739ca00211f1",
+          "publication_decision_id": "DEC-15c3f2c4b0557139",
+          "game_use": true,
+          "game_use_decision_id": "DEC-8fc7eb9199a32c90",
+          "card_file": "623d8ba4872fde93313ebac14357784ef8fa4b12bae194008c96704971882c55.jpeg",
+          "title": "File:Cem Sultan Türbesi 7967.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_7967.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0008/94c31d3a674a21d6",
+          "file": "03a54f2f5f2e36be67a221d4114094001a99ef7ed53dd8b3fbb9082652956767.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-949c0ef0a6dafb43",
+          "publication_decision_id": "DEC-450896d5f0160cf3",
+          "game_use": true,
+          "game_use_decision_id": "DEC-93eb171e2b5ad31a",
+          "card_file": "70f607911a31663a783a2ca6bd7080cdf63b867962600a255e02b8b193f0c7a6.jpeg",
+          "title": "File:Cem Sultan Türbesi 8009.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Cem_Sultan_T%C3%BCrbesi_8009.jpg",
+          "width": 1600,
+          "height": 1065
+        }
+      ],
+      "location": {
+        "latitude": 40.190555,
+        "longitude": 29.04563,
+        "accuracy_m": 25.0,
+        "represents": "point_feature",
+        "verification_decision_id": "DEC-30d34c9349915458",
+        "map_decision_id": "DEC-5927b7a870dc847c"
+      },
+      "checkin": null,
+      "site_notice": "Bu türbe 1479'da Fatih Sultan Mehmed'in oğlu Şehzade Mustafa için yapılmıştır; Cem Sultan 1499'da buraya defnedilmiştir. Muradiye'deki Kanuni'nin oğlu Şehzade Mustafa'nın türbesiyle karıştırılmamalıdır. Türbe ve kabir alanıdır. Ziyaret sırasında sessiz olun, sandukalara dokunmayın ve ziyaret saatlerine uyun.",
+      "illustration": "representative_drawing"
+    },
+    {
+      "monument_id": "BUR-0009",
+      "name": "Koza Han",
+      "alternative_names": [
+        "Koza Hanı"
+      ],
+      "type": "han",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "Hanlar Bölgesi, Osmangazi/Bursa",
+      "catalog_decision_id": "DEC-8ab7185481c1b8ed",
+      "facts": [
+        {
+          "fact_id": "BUR-0009-F001",
+          "title": "Bir vakıf hanı",
+          "text": "Koza Han'ı Sultan II. Bayezid, İstanbul'daki külliyesine gelir sağlamak için yaptırmıştır.",
+          "category": "foundation_purpose",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 8,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-ea09e6b61536c8b4",
+          "publication_decision_id": "DEC-972dfb77ade55917",
+          "game_use": true,
+          "game_use_decision_id": "DEC-faaea7c305e18a57",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Koza Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/koza-han"
+            }
+          ],
+          "quest": {
+            "question": "Koza Han'ın gelirleri nereye aktarılmak üzere yapılmıştır?",
+            "choices": [
+              "Bursa Ulu Cami'ye",
+              "Edirne Sarayı'na",
+              "Mekke vakıflarına",
+              "İstanbul'daki II. Bayezid külliyesine"
+            ],
+            "answer_index": 3,
+            "explanation": "II. Bayezid hanı, İstanbul'daki külliyesine gelir sağlamak için yaptırmıştır.",
+            "decision_id": "DEC-faaea7c305e18a57"
+          }
+        },
+        {
+          "fact_id": "BUR-0009-F002",
+          "title": "1490–1491",
+          "text": "Han 1490–1491 yıllarında inşa edilmiştir. Kaynak kitap yapımın Mart 1489'da başladığını yazar; başlangıç yılı kaynaklar arasında farklıdır.",
+          "category": "construction",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 8,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-57afd549c0c65eaf",
+          "publication_decision_id": "DEC-374e76147b303960",
+          "game_use": true,
+          "game_use_decision_id": "DEC-250d7a23618228a9",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Koza Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/koza-han"
+            },
+            {
+              "title": "Koza Hanı (Semavi Eyice, 2002)",
+              "publisher": "TDV İslâm Ansiklopedisi",
+              "url": "https://islamansiklopedisi.org.tr/koza-hani"
+            }
+          ],
+          "quest": {
+            "question": "Koza Han hangi yıllarda inşa edilmiştir?",
+            "choices": [
+              "1507–1508",
+              "1425–1426",
+              "1490–1491",
+              "1396–1400"
+            ],
+            "answer_index": 2,
+            "explanation": "Resmî kaynaklara göre Koza Han 1490–1491'de inşa edilmiştir.",
+            "decision_id": "DEC-250d7a23618228a9"
+          }
+        },
+        {
+          "fact_id": "BUR-0009-F003",
+          "title": "1950'ye doğru yapılan büyük restorasyon",
+          "text": "Koza Han, 1950'ye doğru kapsamlı bir restorasyondan geçti: sonradan eklenen yapılar temizlendi, han ve avlusundaki mescit özgün mimarisine uygun biçimde yeniden düzenlendi. Avludaki köşk mescidin onarımı ise daha erken bir tarihle de anılır; Kültür envanteri mescidin onarımları arasında 1946 yılını sayar.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 11,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-e914b8be0241d44a",
+          "publication_decision_id": "DEC-ca27722f153d3b37",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Semavi Eyice, “Koza Hanı” (tam metin)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/koza-hani"
+            },
+            {
+              "title": "Koza Han Mescidi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/koza-han-mescidi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0009-F004",
+          "title": "Mimar Pulad Şah oğlu",
+          "text": "Hanın mimarı Pulad Şah oğlu Abdülûlâ'dır; adı kaynaklarda Abdullah ve Abdülali biçimlerinde de yazılır.",
+          "category": "historical_person",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 8,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-47f4153feb5b18b1",
+          "publication_decision_id": "DEC-2915132a28f9ee26",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Koza Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/koza-han"
+            },
+            {
+              "title": "Koza Han Mescidi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/koza-han-mescidi"
+            },
+            {
+              "title": "Koza Hanı (Semavi Eyice, 2002)",
+              "publisher": "TDV İslâm Ansiklopedisi",
+              "url": "https://islamansiklopedisi.org.tr/koza-hani"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0009-F005",
+          "title": "Avlu ve İç Koza Han",
+          "text": "Han, iki katlı odaların çevrelediği geniş bir avlu ile doğusuna bitişik tek katlı ahır bölümünden oluşur. Bu bölüm bugün İç Koza Han olarak bilinir.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 9,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-dee9fb4f5161bbe4",
+          "publication_decision_id": "DEC-d4a075ade816e99f",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Koza Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/koza-han"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0009-F006",
+          "title": "İç Koza Han: ahır bölümü",
+          "text": "Koza Han'ın, yük hayvanlarının barındırıldığı bir ahır bölümü de vardır. “İç Koza Han” diye de anılan bu bölüm, ortasında avlu bulunan, revaklarla çevrili, tek katlı ve moloz taştan bir yapıdır; avlusuna hanın doğu cephesindeki bir açıklıktan girilir. Bugün yeme içme mekânı olarak kullanılıyor.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 10,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-c24c0fce4b43b724",
+          "publication_decision_id": "DEC-1976eded1ad31250",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Semavi Eyice, “Koza Hanı” (tam metin)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/koza-hani"
+            },
+            {
+              "title": "Bursa and Cumalıkızık World Heritage Site Management Plan 2021–2026",
+              "publisher": "Bursa Büyükşehir Belediyesi — Bursa Alan Başkanlığı (hazırlayan: Dizayn Turizm)",
+              "url": "https://antalya.ktb.gov.tr/Eklenti/93128,uyp-bursa-and-cumalikizik-management-planpdf.pdf"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0009-F007",
+          "title": "Avludaki köşk mescit",
+          "text": "Avlunun ortasında, sekiz ayak üzerine oturan ve altında şadırvan bulunan bir köşk mescit yer alır.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 10,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-931c7e9439dee98f",
+          "publication_decision_id": "DEC-f5836304d060a65a",
+          "game_use": true,
+          "game_use_decision_id": "DEC-de421b3171d76326",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Koza Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/koza-han"
+            },
+            {
+              "title": "Koza Han Mescidi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/koza-han-mescidi"
+            }
+          ],
+          "quest": {
+            "question": "Koza Han avlusunun ortasında ne bulunur?",
+            "choices": [
+              "Hamam",
+              "Köşk mescit",
+              "Saat kulesi",
+              "Türbe"
+            ],
+            "answer_index": 1,
+            "explanation": "Avlunun ortasında altında şadırvan bulunan bir köşk mescit vardır.",
+            "decision_id": "DEC-de421b3171d76326"
+          }
+        },
+        {
+          "fact_id": "BUR-0009-F008",
+          "title": "Kaybolan ahşap mescit",
+          "text": "Hanın avlusundaki sekizgen köşk mescidin yanında bir zamanlar ahşaptan ikinci bir mescit daha bulunuyordu. Bu bilgi eski bir belgeden gelir; ek mescidin, asıl mescit cemaate yetmediği için yapıldığı düşünülür. Ahşap mescitten bugün hiçbir iz kalmamıştır.",
+          "category": "construction",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 10,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-60afd34d6ef29c1d",
+          "publication_decision_id": "DEC-4ee263f96accddc9",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Semavi Eyice, “Koza Hanı” (tam metin)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/koza-hani"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0009-F009",
+          "title": "Kayıtlardaki onarımlar",
+          "text": "Koza Han ve avlusundaki mescit yüzyıllar boyunca defalarca onarıldı. Kültür envanteri mescit için 1630, 1671, 1784, 1946 ve 2007 yıllarındaki onarımları kaydeder. Ansiklopedi kayıtlarına göre han da 1671-72 ve 1785 yıllarında tamir görmüş; bu onarımlardan birinde kubbelerin kurşunu sökülerek çatı kiremitle örtülmüştür.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 11,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-523bc98323662e84",
+          "publication_decision_id": "DEC-a3b3cc02535c765c",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Koza Han Mescidi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/koza-han-mescidi"
+            },
+            {
+              "title": "Semavi Eyice, “Koza Hanı” (tam metin)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/koza-hani"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0009-F010",
+          "title": "Yaşayan bir çarşı",
+          "text": "Koza Han, yapıldığı günden bu yana ticaret için kullanılmaktadır.",
+          "category": "function",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 11,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-36d443dbda7ca244",
+          "publication_decision_id": "DEC-e0d1484423481e7d",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Koza Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/koza-han"
+            }
+          ],
+          "quest": null
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0009/bbe6889993d1b4ef",
+          "file": "2b1a4e850ad6a6219aa80ea88029e35e733d954282c31cfd972060a807408de7.jpeg",
+          "rights_holder": "Jocelyn Erskine-Kellie",
+          "license": "CC-BY-SA-2.0",
+          "attribution": "Fotoğraf: Jocelyn Erskine-Kellie, CC BY-SA 2.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-8d34ebe7b3f2ce53",
+          "publication_decision_id": "DEC-5789af03049bcf49",
+          "game_use": true,
+          "game_use_decision_id": "DEC-378ecb7018b70b3b",
+          "card_file": "e91c30eb5e4fb27a264ab074fe2e5564957e896b3a3cae42acc37e7a691282cf.jpeg",
+          "title": "File:Koza Han, Bursa1.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Koza_Han,_Bursa1.jpg",
+          "width": 1600,
+          "height": 1057
+        },
+        {
+          "image_id": "commons/BUR-0009/5bd9fcb521311e8a",
+          "file": "ac57de4f18f6386b15d4d9e69a31fc425449bba3b938c111b7bedbe6550175b2.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-7d8dd2c62ec45e34",
+          "publication_decision_id": "DEC-19985d39153cbe2d",
+          "game_use": true,
+          "game_use_decision_id": "DEC-c8094070f63110ca",
+          "card_file": "9cfd65d78e1d76744f7bc13ce0ee7b6aa23cf9983790d701f5e0aa4c3b9fee51.jpeg",
+          "title": "File:KOZA HANI KOZA HAN BURSA - panoramio (4).jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:KOZA_HANI_KOZA_HAN_BURSA_-_panoramio_(4).jpg",
+          "width": 1600,
+          "height": 1513
+        },
+        {
+          "image_id": "commons/BUR-0009/6d934f8e20d3a72f",
+          "file": "0cd86f002a1158a37b67995e8c0205488e9cef31abfc684ab49cb73fe412b994.jpeg",
+          "rights_holder": "Francesco Bini",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-863ca777ecd549e7",
+          "publication_decision_id": "DEC-0e3faab4a3f1ae68",
+          "game_use": true,
+          "game_use_decision_id": "DEC-aee00d75a2fb4391",
+          "card_file": "0845ef9e08621523fc73482ff5f08e2dffcc8c12d270c573801cbc6e73859eb1.jpeg",
+          "title": "File:Bursa, bazaar, koza han, 01 ingresso.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_bazaar,_koza_han,_01_ingresso.jpg",
+          "width": 1600,
+          "height": 1142
+        },
+        {
+          "image_id": "commons/BUR-0009/dbc3168189383d37",
+          "file": "e4f29a32e285071d07623bdc51b4d9f994ea0c371d21049c236bb076e1380fa9.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-367256e73ad69325",
+          "publication_decision_id": "DEC-202b161a69435501",
+          "game_use": true,
+          "game_use_decision_id": "DEC-53ea523578787ebb",
+          "card_file": "d014b0fe9a209dc56eee2e6a4124e94538bb88c94a2d0048eb0954c57412cbe6.jpeg",
+          "title": "File:Bursa Koza Han in 1993 031.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Koza_Han_in_1993_031.jpg",
+          "width": 1600,
+          "height": 1039
+        },
+        {
+          "image_id": "commons/BUR-0009/7fc730bdd5949b6f",
+          "file": "2b06fadaa086694f5157bfcdb79bdad32e791b6779ae4f163c2e9de73b469310.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-6733b62db8fa9cb4",
+          "publication_decision_id": "DEC-817509c51873b562",
+          "game_use": true,
+          "game_use_decision_id": "DEC-64f71b5b515a6488",
+          "card_file": "3b695111b188e5640adc891b0b4ab6321aff5d152dd5e0ca47cbd170da91d405.jpeg",
+          "title": "File:Bursa Koza Han in 2014 7185.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Koza_Han_in_2014_7185.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0009/d81aebd6b32fd828",
+          "file": "37dbdfe6dd3f8ea75079e349a80ec397deeaa0a31cac8baa0ef58fabf14d1149.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-eaa108397c0bb4e9",
+          "publication_decision_id": "DEC-6018f4d49c5caf65",
+          "game_use": true,
+          "game_use_decision_id": "DEC-49e177adcda5ffe8",
+          "card_file": "3cafd55ec163e409c74b79087efd380e802c6135af93106f0dfde29b34df2daf.jpeg",
+          "title": "File:Bursa Koza Han Exterior north gate in 1993 034.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Koza_Han_Exterior_north_gate_in_1993_034.jpg",
+          "width": 1600,
+          "height": 1033
+        }
+      ],
+      "location": {
+        "latitude": 40.18437,
+        "longitude": 29.063537,
+        "accuracy_m": 46.0,
+        "represents": "building_footprint_centroid",
+        "verification_decision_id": "DEC-512147d76a3def3d",
+        "map_decision_id": "DEC-54c850e44964c541"
+      },
+      "checkin": null,
+      "site_notice": null,
+      "illustration": "representative_drawing"
+    },
+    {
+      "monument_id": "BUR-0013",
+      "name": "Pirinç Han",
+      "alternative_names": [
+        "Pirinç Hanı"
+      ],
+      "type": "han",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "Hanlar Bölgesi, Osmangazi/Bursa (Cumhuriyet Caddesi'nden yaya erişim)",
+      "catalog_decision_id": "DEC-bee300fbf967fe3a",
+      "facts": [
+        {
+          "fact_id": "BUR-0013-F001",
+          "title": "II. Bayezid'in ikinci hanı",
+          "text": "Pirinç Han'ı Sultan II. Bayezid, İstanbul'daki camisine ve imaretine gelir sağlamak amacıyla yaptırmıştır.",
+          "category": "foundation_purpose",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 22,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-09233727b685dcdc",
+          "publication_decision_id": "DEC-e3a0a02eacb2cf6e",
+          "game_use": true,
+          "game_use_decision_id": "DEC-f6466367ed799228",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Pirinç Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/pirinc-han"
+            },
+            {
+              "title": "Pirinç Han (Han-ı Cedid-i Sani)",
+              "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+              "url": "https://alanbaskanligi.bursa.bel.tr/pirinc-han-han-i-cedid-i-sani-han-i-cedid-i-evvel/"
+            }
+          ],
+          "quest": {
+            "question": "Pirinç Han'ı hangi padişah yaptırmıştır?",
+            "choices": [
+              "Yıldırım Bayezid",
+              "II. Murad",
+              "Orhan Gazi",
+              "II. Bayezid"
+            ],
+            "answer_index": 3,
+            "explanation": "Pirinç Han, II. Bayezid tarafından İstanbul'daki camisine gelir sağlamak için yaptırılmıştır.",
+            "decision_id": "DEC-f6466367ed799228"
+          }
+        },
+        {
+          "fact_id": "BUR-0013-F002",
+          "title": "Mimarlar",
+          "text": "Hanın mimarı Sultan Şah oğlu Yakub Şah, yardımcısı Abdullah oğlu Ali'dir.",
+          "category": "historical_person",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 22,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-625848cdef992fb6",
+          "publication_decision_id": "DEC-c58c878f70ecae96",
+          "game_use": true,
+          "game_use_decision_id": "DEC-dd0b1813860f6418",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Pirinç Han (Han-ı Cedid-i Sani)",
+              "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+              "url": "https://alanbaskanligi.bursa.bel.tr/pirinc-han-han-i-cedid-i-sani-han-i-cedid-i-evvel/"
+            },
+            {
+              "title": "Pirinç Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/pirinc-han"
+            }
+          ],
+          "quest": {
+            "question": "Pirinç Han'ın mimarı kimdir?",
+            "choices": [
+              "Mimar Sinan",
+              "Hacı İvaz Paşa",
+              "Mimar Kasım",
+              "Yakub Şah"
+            ],
+            "answer_index": 3,
+            "explanation": "Hanın mimarı Sultan Şah oğlu Yakub Şah, yardımcısı Abdullah oğlu Ali'dir.",
+            "decision_id": "DEC-dd0b1813860f6418"
+          }
+        },
+        {
+          "fact_id": "BUR-0013-F003",
+          "title": "1507–1508",
+          "text": "Hanın inşaatı Mayıs 1507'de başlamış ve Temmuz 1508'de tamamlanmıştır. Resmî kaynaklar yapım dönemini daha geniş tutarak 1490–1508 olarak verir.",
+          "category": "construction",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 22,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-1e5c21d4c25586df",
+          "publication_decision_id": "DEC-8346bc866d763307",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Pirinç Hanı (Doğan Yavaş, 2007)",
+              "publisher": "TDV İslâm Ansiklopedisi",
+              "url": "https://islamansiklopedisi.org.tr/pirinc-hani"
+            },
+            {
+              "title": "Pirinç Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/pirinc-han"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0013-F004",
+          "title": "Kare avlulu iki katlı han",
+          "text": "Han, büyük ve kare bir avlunun çevresine dizilen iki katlı odalardan oluşur; odaların önünde iki kat boyunca revaklar uzanır.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 23,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-71419ebd2ad2adaf",
+          "publication_decision_id": "DEC-567c7249d76d5c89",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Pirinç Han (Han-ı Cedid-i Sani)",
+              "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+              "url": "https://alanbaskanligi.bursa.bel.tr/pirinc-han-han-i-cedid-i-sani-han-i-cedid-i-evvel/"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0013-F005",
+          "title": "Yirmi yıllık restorasyon",
+          "text": "1855 depreminde zarar gören han, 1983'te başlayıp 2004'te tamamlanan uzun bir restorasyondan geçmiştir.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 25,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-5db19dc4e8682426",
+          "publication_decision_id": "DEC-35c1821d2c617ce6",
+          "game_use": true,
+          "game_use_decision_id": "DEC-ffa56ffe8d2b8877",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Pirinç Han (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/pirinc-han"
+            },
+            {
+              "title": "Pirinç Han (Han-ı Cedid-i Sani)",
+              "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+              "url": "https://alanbaskanligi.bursa.bel.tr/pirinc-han-han-i-cedid-i-sani-han-i-cedid-i-evvel/"
+            }
+          ],
+          "quest": {
+            "question": "Pirinç Han'ın büyük restorasyonu hangi yıl tamamlanmıştır?",
+            "choices": [
+              "1983",
+              "2004",
+              "1855",
+              "1960"
+            ],
+            "answer_index": 1,
+            "explanation": "1983'te başlayan restorasyon 2004'te tamamlanmıştır.",
+            "decision_id": "DEC-ffa56ffe8d2b8877"
+          }
+        },
+        {
+          "fact_id": "BUR-0013-F006",
+          "title": "İkinci yeni han",
+          "text": "Koza Han'dan sonra yapıldığı için eski kayıtlarda 'Hân-ı Cedîd-i Sânî' yani 'ikinci yeni han' adıyla anılır.",
+          "category": "historical_event",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 22,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-39b0bd77c37fc186",
+          "publication_decision_id": "DEC-6d490ca79f959875",
+          "game_use": true,
+          "game_use_decision_id": "DEC-bfc4703d2ef73c2d",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Pirinç Han (Han-ı Cedid-i Sani)",
+              "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+              "url": "https://alanbaskanligi.bursa.bel.tr/pirinc-han-han-i-cedid-i-sani-han-i-cedid-i-evvel/"
+            },
+            {
+              "title": "Pirinç Hanı (Doğan Yavaş, 2007)",
+              "publisher": "TDV İslâm Ansiklopedisi",
+              "url": "https://islamansiklopedisi.org.tr/pirinc-hani"
+            }
+          ],
+          "quest": {
+            "question": "Pirinç Han eski kayıtlarda hangi adla anılır?",
+            "choices": [
+              "Beylik Han",
+              "Emir Han",
+              "Fidan Han",
+              "Hân-ı Cedîd-i Sânî"
+            ],
+            "answer_index": 3,
+            "explanation": "Koza Han'dan sonra yapıldığı için 'ikinci yeni han' anlamında Hân-ı Cedîd-i Sânî denir.",
+            "decision_id": "DEC-bfc4703d2ef73c2d"
+          }
+        },
+        {
+          "fact_id": "BUR-0013-F007",
+          "title": "Batı kanadındaki ahır",
+          "text": "Pirinç Han'ın odaları doğu, kuzey ve güney kanatlarını dolanır; batı kanadı ise baştan sona tek bir beşik tonozla örtülüdür. Araştırmacılar bu farklı örtünün, batı bölümünün hayvanlar için ahır olarak kullanıldığına işaret ettiğini düşünüyor. 1677 tarihli bir onarım kaydında ahırın kemer ayaklarından söz edilmesi de handa bir ahır bulunduğunu doğrular.",
+          "category": "architecture",
+          "certainty": "reported",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 23,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-e76438ee7d1496bf",
+          "publication_decision_id": "DEC-0a9e11237b35f170",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Doğan Yavaş, “Pirinç Hanı” (tam metin)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/pirinc-hani"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0013-F008",
+          "title": "Cadde için kesilen köşe",
+          "text": "Hanın kuzeydoğu köşesi, 1903–1906 yıllarında Hamidiye Caddesi açılırken kesilmiştir.",
+          "category": "historical_event",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 23,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-40ecc1518d78b9ff",
+          "publication_decision_id": "DEC-dbcd00377974fd1c",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Pirinç Han (Han-ı Cedid-i Sani)",
+              "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+              "url": "https://alanbaskanligi.bursa.bel.tr/pirinc-han-han-i-cedid-i-sani-han-i-cedid-i-evvel/"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0013-F010",
+          "title": "Belgesiz bir çatı rivayeti",
+          "text": "Bazı yazarlara göre Pirinç Han'ın kurşun çatı örtüsü 17. yüzyılda, o dönemin yaygın uygulamasına uygun olarak satılmış ve çatı kiremitle kaplanmıştır. Ancak bunu doğrulayan bir arşiv belgesi bugüne kadar bulunamadı; bu yüzden bilgi kesinleşmiş bir onarım olayı değil, belgesiz bir görüş olarak aktarılır.",
+          "category": "restoration",
+          "certainty": "uncertain",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 25,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-89cdc75756e7c9b4",
+          "publication_decision_id": "DEC-6df78880f02b038b",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Doğan Yavaş, “Pirinç Hanı” (tam metin)",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/pirinc-hani"
+            }
+          ],
+          "quest": null
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0013/3e5326e930616273",
+          "file": "84c7a154d70318c93bd781337e3026aa99206d441667c9ed95281360e4747202.jpeg",
+          "rights_holder": "Carl Ha",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-8c4c6d4494c7e1ca",
+          "publication_decision_id": "DEC-4ab1503da1b97a09",
+          "game_use": true,
+          "game_use_decision_id": "DEC-8e813f6ad937cf21",
+          "card_file": "d090524309368950b07f8ca697fe435db5bef6d5fa54b4721e3c502a4f451d99.jpeg",
+          "title": "File:Bursa, Pirinç Hanı, southern wing, 2.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_southern_wing,_2.jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0013/3db9066b0f4140b3",
+          "file": "459501aaffb3870a781a0426c16bf988a13d5c58ab10f81a34df5aa1260770dd.jpeg",
+          "rights_holder": "Carl Ha",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-8184de5fe4a0a7f7",
+          "publication_decision_id": "DEC-4e7ffe9fc3161ed2",
+          "game_use": true,
+          "game_use_decision_id": "DEC-477d0acfcf8420dc",
+          "card_file": "a927cec6f6fdb341702ae7a9bfa8d6afec5e350bdd46fc555facbdd01b1bf5dc.jpeg",
+          "title": "File:Bursa, Pirinç Hanı, exterior, eastern entrance, left spandrel.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_exterior,_eastern_entrance,_left_spandrel.jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0013/e6ed5fbad838c232",
+          "file": "377cd859cd0e2df286e257ed3b8fd742423841897fe0db98311a1475fd8b7d1a.jpeg",
+          "rights_holder": "Carl Ha",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-64b17a74a473fecd",
+          "publication_decision_id": "DEC-e4e0ccf3949a4944",
+          "game_use": true,
+          "game_use_decision_id": "DEC-5dfa8dc62840f595",
+          "card_file": "ba1daa37618b9a075f40ad8dfab448b6ceb02b6e2480667f54e5c7eb5a034f57.jpeg",
+          "title": "File:Bursa, Pirinç Hanı, northern wing, first floor hallway towards east.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_northern_wing,_first_floor_hallway_towards_east.jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0013/d73b6502ac64ff15",
+          "file": "ea32abec3ae32aaebd269f06d8c6a2b374b9a09ff5c53475c9f00b9f69ccc72e.jpeg",
+          "rights_holder": "Carl Ha",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-e720ea7d883c871f",
+          "publication_decision_id": "DEC-84a2fc0fa61ba1dc",
+          "game_use": true,
+          "game_use_decision_id": "DEC-37955430c946a9ac",
+          "card_file": "28e505ce0f5218367b766e657eed1889041e335967815f3f8ea97d5d46129284.jpeg",
+          "title": "File:Bursa, Pirinç Hanı, exterior, eastern entrance.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_exterior,_eastern_entrance.jpg",
+          "width": 1532,
+          "height": 1600
+        },
+        {
+          "image_id": "commons/BUR-0013/4452611f4e1ebaba",
+          "file": "195bc22f3d3a17ab86bbe057a36ab29f36769ff2cff8e9f256ba88f0470d34b6.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-fdb53821cc2fb703",
+          "publication_decision_id": "DEC-f2bc81f7bfb2913a",
+          "game_use": true,
+          "game_use_decision_id": "DEC-5d4abcc0c94f28ed",
+          "card_file": "8e079d611037467e3611162770bc46a267f95d8231a240239ab56d705edd557d.jpeg",
+          "title": "File:Bursa Pirinç Han 2014 7164.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_Pirin%C3%A7_Han_2014_7164.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0013/66c667ecceb585fc",
+          "file": "50e8eac417203e8fee0fa961093d8a963b62eb2a1269fdcb0ca6b296a2a1b4f3.jpeg",
+          "rights_holder": "Carl Ha",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-6ae5860fb256ac08",
+          "publication_decision_id": "DEC-d22d1fad582fa2be",
+          "game_use": true,
+          "game_use_decision_id": "DEC-07fd509e7ffac07c",
+          "card_file": "20cc08ad60f6d707cfa0afc83366093b4f31c66f3b86d73965bdb6d777f0afdc.jpeg",
+          "title": "File:Bursa, Pirinç Hanı, southern wing.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Pirin%C3%A7_Han%C4%B1,_southern_wing.jpg",
+          "width": 1600,
+          "height": 1067
+        }
+      ],
+      "location": {
+        "latitude": 40.185717,
+        "longitude": 29.060274,
+        "accuracy_m": 46.0,
+        "represents": "building_footprint_centroid",
+        "verification_decision_id": "DEC-c4b58ed6e74e096f",
+        "map_decision_id": "DEC-31ef746270b4a425"
+      },
+      "checkin": null,
+      "site_notice": null,
+      "illustration": "representative_drawing"
+    },
+    {
+      "monument_id": "BUR-0014",
+      "name": "Yıldırım Bayezid Bedesteni",
+      "alternative_names": [],
+      "type": "bedesten",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "Atatürk Caddesi, Osmangazi/Bursa (Ulu Cami'nin alt kısmındaki çarşı)",
+      "catalog_decision_id": "DEC-bc442c6909ecc3c6",
+      "facts": [
+        {
+          "fact_id": "BUR-0014-F001",
+          "title": "Osmanlı'nın ilk bedesteni",
+          "text": "Yıldırım Bayezid'in 14. yüzyılın sonunda yaptırdığı bedesten, Osmanlı döneminde yapılan ilk bedestendir.",
+          "category": "construction",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 29,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-53205ba4250b82c2",
+          "publication_decision_id": "DEC-b87abca8a882c0fd",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d4f74bd663f35ace",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Yıldırım Bayezid Bedesteni (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/yildirim-beyazid-bedesteni"
+            }
+          ],
+          "quest": {
+            "question": "Bursa Bedesteni hangi bakımdan önemlidir?",
+            "choices": [
+              "Bursa'nın en eski camisidir",
+              "İlk Osmanlı sarayıdır",
+              "İlk Osmanlı darphanesidir",
+              "Osmanlı döneminde yapılan ilk bedestendir"
+            ],
+            "answer_index": 3,
+            "explanation": "Kültür Portalı'na göre Osmanlı döneminde yapılan ilk bedestendir.",
+            "decision_id": "DEC-d4f74bd663f35ace"
+          }
+        },
+        {
+          "fact_id": "BUR-0014-F002",
+          "title": "Değerli malların güvenli çarşısı",
+          "text": "Bedesten, en değerli malların alınıp satıldığı ve güvenle saklandığı bir ticaret merkeziydi; bu yönüyle dönemin bankacılık ve borsacılığının çekirdeği sayılır.",
+          "category": "foundation_purpose",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 29,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-076180fa5e5f4f25",
+          "publication_decision_id": "DEC-777faeee68fd8b1c",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Yıldırım Bayezid Bedesteni (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/yildirim-beyazid-bedesteni"
+            },
+            {
+              "title": "Bedesten",
+              "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+              "url": "https://alanbaskanligi.bursa.bel.tr/bedesten/"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0014-F003",
+          "title": "Altı paye, on dört kubbe",
+          "text": "Bedestenin içi, enine uzanan dikdörtgen bir salondur. Ortada tek sıra halinde dizilen altı kalın paye bu salonu on dört bölüme ayırır ve her bölümün üstü bir kubbeyle örtülüdür; yapının çatısını böylece toplam on dört kubbe oluşturur.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 29,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-c013a3a40d1ba4ed",
+          "publication_decision_id": "DEC-0e330b35c04fe4b8",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Semavi Eyice, “Bedesten” — Bursa Bedesteni bölümü",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/bedesten-2"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0014-F005",
+          "title": "Yangın ve 1960 restorasyonu",
+          "text": "Kapalıçarşı yangınında ağır hasar gören bedesten 1960 yılında restore edilmiştir. Yangının yılı kaynaklarda farklıdır (1956 ve 1958).",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 29,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-060461055fd5c785",
+          "publication_decision_id": "DEC-061954fe0f6a2b23",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Yıldırım Bayezid Bedesteni (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/yildirim-beyazid-bedesteni"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0014-F006",
+          "title": "Bugün kuyumcular çarşısı",
+          "text": "Bedesten bugün kuyumcular çarşısı olarak kullanılmaktadır.",
+          "category": "function",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 29,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-79a1c5c59e707b25",
+          "publication_decision_id": "DEC-5634252a249061e5",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d07c22557a577fcc",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Yıldırım Bayezid Bedesteni (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/yildirim-beyazid-bedesteni"
+            },
+            {
+              "title": "Bedesten",
+              "publisher": "Bursa Büyükşehir Belediyesi – Bursa Alan Başkanlığı",
+              "url": "https://alanbaskanligi.bursa.bel.tr/bedesten/"
+            }
+          ],
+          "quest": {
+            "question": "Bedesten bugün hangi çarşı olarak kullanılıyor?",
+            "choices": [
+              "Baharatçılar çarşısı",
+              "Sahaflar çarşısı",
+              "Kuyumcular çarşısı",
+              "İpekçiler çarşısı"
+            ],
+            "answer_index": 2,
+            "explanation": "Bedesten bugün kuyumcular çarşısıdır.",
+            "decision_id": "DEC-d07c22557a577fcc"
+          }
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0014/627013d53111b5c6",
+          "file": "3d8ad1e769b3eed7352a7cc2a38badb09421049a75cc6969cdfe485cc277b336.jpeg",
+          "rights_holder": "Carl Ha",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-475c3a3445050502",
+          "publication_decision_id": "DEC-3cf017bdfe063ba4",
+          "game_use": true,
+          "game_use_decision_id": "DEC-33e9b0edf75ea1f9",
+          "card_file": "79f0216358180cabac2d1c476d8f5ab3bcb785abb8aaa62292b23a3ba378ba09.jpeg",
+          "title": "File:Bursa, Bedesten, exterior, eastern facade from south-east.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_exterior,_eastern_facade_from_south-east.jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0014/46979696181a206a",
+          "file": "5b224d17be957358b35318708ad29ecaf6d53bfe83489ca6aa04fe61c564f460.jpeg",
+          "rights_holder": "Carl Ha",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-042d3cc5b6d8a4ca",
+          "publication_decision_id": "DEC-6d5e18d217d08d42",
+          "game_use": true,
+          "game_use_decision_id": "DEC-218d1f6bee3e94a4",
+          "card_file": "b9525e93c1204f3788e4bc8d880ba515e5b1e0dd0c714ba9b3ffe639b4d80a85.jpeg",
+          "title": "File:Bursa, Bedesten, interior, inscription on a pillar.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_interior,_inscription_on_a_pillar.jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0014/d8ec4a1e11195875",
+          "file": "254ab933280c8f6d4286ff94ae0a171c0cf2b91cb1f08b1dfc9e04d861adb75c.jpeg",
+          "rights_holder": "Robert Prazeres",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Robert Prazeres, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-792468e6b3306d3f",
+          "publication_decision_id": "DEC-2064cb2c90a6968b",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d71ea5d064200c91",
+          "card_file": "34dff3bf19557c2d12f7a3d5d88e94352f170e38c665fbd60eaf50cbca7c9cbe.jpeg",
+          "title": "File:Bursa bedesten DSCF1672.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_bedesten_DSCF1672.jpg",
+          "width": 1381,
+          "height": 1600
+        },
+        {
+          "image_id": "commons/BUR-0014/387b72b79f64eefe",
+          "file": "2c9cac16c3f17e2d169430660f149799e8e3c21780ea5f3fee9b563af6fad877.jpeg",
+          "rights_holder": "Carl Ha",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-df102e7e6bed6c26",
+          "publication_decision_id": "DEC-be2f01f8db76ba4b",
+          "game_use": true,
+          "game_use_decision_id": "DEC-f957bd358f0477a9",
+          "card_file": "2f22761db07bf3bfefa31ed374ec0944339aa2ae30160d1494df3755c30539e0.jpeg",
+          "title": "File:Bursa, Bedesten, interior with shops.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_interior_with_shops.jpg",
+          "width": 1067,
+          "height": 1600
+        },
+        {
+          "image_id": "commons/BUR-0014/3f89e70990094ca3",
+          "file": "d2abd2275d664883b00636fc97641b9fd50cb43df4f10daafe389500f12f7039.jpeg",
+          "rights_holder": "Carl Ha",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Carl Ha, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-7c138c2c1ae460ac",
+          "publication_decision_id": "DEC-51c0d33afaee9d3c",
+          "game_use": true,
+          "game_use_decision_id": "DEC-0971cb58589a277d",
+          "card_file": "71ab1be9c4e5a90276acd98c18c4e8e500ce3af720fe8a30951866135d1b4f1d.jpeg",
+          "title": "File:Bursa, Bedesten, interior, exterior wall with arches and dome.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_Bedesten,_interior,_exterior_wall_with_arches_and_dome.jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0014/7c92f5d688ccc601",
+          "file": "de2a4c86e79e5b49c0013a4efe5b9e38cce6d3cc7aacdda05c85ddd84f937ccb.jpeg",
+          "rights_holder": "Robert Prazeres",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Robert Prazeres, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-e37ec6e83cf6600c",
+          "publication_decision_id": "DEC-73527877081269c0",
+          "game_use": true,
+          "game_use_decision_id": "DEC-b0628f65cf41fc8e",
+          "card_file": "428f07a665e5547b384521214e5f4c1773ae83d4b00c5f181ba5dc143d03fdb7.jpeg",
+          "title": "File:Bursa bedesten DSCF1674.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa_bedesten_DSCF1674.jpg",
+          "width": 1200,
+          "height": 1600
+        }
+      ],
+      "location": {
+        "latitude": 40.185135,
+        "longitude": 29.062114,
+        "accuracy_m": 37.0,
+        "represents": "area_centroid",
+        "verification_decision_id": "DEC-e691209718676420",
+        "map_decision_id": "DEC-2c6455ac9d9ab349"
+      },
+      "checkin": null,
+      "site_notice": "Kuyumcular çarşısıdır; mesai saatleri dışında kapalıdır.",
+      "illustration": "representative_drawing"
+    },
+    {
+      "monument_id": "BUR-0019",
+      "name": "Osman Gazi Türbesi",
+      "alternative_names": [],
+      "type": "türbe",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "2. Osmangazi Caddesi, Tophane, Osmangazi/Bursa",
+      "catalog_decision_id": "DEC-4e4f49633c44dea8",
+      "facts": [
+        {
+          "fact_id": "BUR-0019-F001",
+          "title": "Gümüşlü Kümbet vasiyeti",
+          "text": "Kaynaklara göre Osman Gazi, Bursa kuşatması sırasında 'Gümüşlü Kümbet' denen yapıya gömülmeyi vasiyet etmiştir. Bursa'yı 1326'da alan oğlu Orhan Gazi, babasının naaşını Söğüt'ten buraya taşıtmıştır.",
+          "category": "historical_event",
+          "certainty": "reported",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 119,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-8a16d6758c76331b",
+          "publication_decision_id": "DEC-a19381554286172c",
+          "game_use": true,
+          "game_use_decision_id": "DEC-5f4e608c274e6c24",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Osman Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Osman Gazi'nin naaşını Bursa'ya kim taşıtmıştır?",
+            "choices": [
+              "I. Murad",
+              "Yıldırım Bayezid",
+              "II. Murad",
+              "Orhan Gazi"
+            ],
+            "answer_index": 3,
+            "explanation": "Bursa'yı 1326'da alan Orhan Gazi, babasının naaşını Söğüt'ten Gümüşlü Kümbet'e taşıtmıştır.",
+            "decision_id": "DEC-5f4e608c274e6c24"
+          }
+        },
+        {
+          "fact_id": "BUR-0019-F002",
+          "title": "1801 yangını",
+          "text": "Osman Gazi'nin gömülü olduğu yuvarlak planlı Bizans yapısı 1801'deki bir yangında zarar görmüştür.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 119,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-ce84833d31c62899",
+          "publication_decision_id": "DEC-7f5a5edf78117c3e",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Osman Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0019-F003",
+          "title": "1855 depremi",
+          "text": "Türbe 1855 depreminde ağır hasar görmüştür. Yıkımın boyutu kaynaklarda farklı anlatılır: Kültür Portalı tamamen yıkıldığını, kaynak kitaptaki arşiv belgesi tamamen yıkılmadığını belirtir.",
+          "category": "historical_event",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 119,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-72e8e18cb2346ada",
+          "publication_decision_id": "DEC-d9d36e03a4bd6262",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Osman Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0019-F004",
+          "title": "Abdülaziz'in yeniden yaptırdığı türbe",
+          "text": "Bugünkü türbeyi 1863'te Sultan Abdülaziz yeniden yaptırmıştır.",
+          "category": "construction",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 120,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-af581709476bd144",
+          "publication_decision_id": "DEC-0417abedce7a944d",
+          "game_use": true,
+          "game_use_decision_id": "DEC-0f09bf8728381734",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Osman Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Osman Gazi Türbesi'nin bugünkü binasını kim yaptırmıştır?",
+            "choices": [
+              "Orhan Gazi",
+              "II. Abdülhamid",
+              "Sultan Abdülaziz",
+              "II. Mahmud"
+            ],
+            "answer_index": 2,
+            "explanation": "Bugünkü türbe 1863'te Sultan Abdülaziz tarafından yeniden yaptırılmıştır.",
+            "decision_id": "DEC-0f09bf8728381734"
+          }
+        },
+        {
+          "fact_id": "BUR-0019-F005",
+          "title": "Sekizgen türbe",
+          "text": "Türbe sekizgen planlıdır ve kubbeyle örtülüdür.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 122,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-f17918877f089f6e",
+          "publication_decision_id": "DEC-d6292fd343fb054e",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d2e1e08066b60ce5",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Osman Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Osman Gazi Türbesi'nin planı hangi biçimdedir?",
+            "choices": [
+              "Kare",
+              "Altıgen",
+              "Dikdörtgen",
+              "Sekizgen"
+            ],
+            "answer_index": 3,
+            "explanation": "Türbe sekizgen planlıdır.",
+            "decision_id": "DEC-d2e1e08066b60ce5"
+          }
+        },
+        {
+          "fact_id": "BUR-0019-F006",
+          "title": "Sedef kakmalı korkuluk",
+          "text": "Osman Gazi'nin ahşap sandukasının çevresi sedef kakmalı korkuluklarla çevrilidir.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 122,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-f9d31cfd3f525b26",
+          "publication_decision_id": "DEC-67daed5f46de6bc0",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Osman Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0019-F007",
+          "title": "On yedi sanduka",
+          "text": "Türbede on yedi sanduka bulunur ve bunlardan beşinin sahibi bilinir: kurucu Osman Gazi, onun oğlu Alâeddin Bey, Orhan Gazi'nin hanımı Asporça Hatun, bu evlilikten doğan İbrahim ve I. Murad'ın şehzadesi Savcı Bey.",
+          "category": "historical_person",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 122,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-29de295ba1f7ef16",
+          "publication_decision_id": "DEC-884fa6d2dca2eeca",
+          "game_use": true,
+          "game_use_decision_id": "DEC-bf5861bb3dce440d",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Osman Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Osman Gazi Türbesi'nde kaç sanduka vardır?",
+            "choices": [
+              "4",
+              "17",
+              "5",
+              "21"
+            ],
+            "answer_index": 1,
+            "explanation": "Türbede 17 sanduka vardır; beşinin kime ait olduğu bilinir.",
+            "decision_id": "DEC-bf5861bb3dce440d"
+          }
+        },
+        {
+          "fact_id": "BUR-0019-F008",
+          "title": "UNESCO Dünya Mirası",
+          "text": "Türbenin bulunduğu alan, 2014'te UNESCO Dünya Mirası Listesi'ne giren 'Bursa ve Cumalıkızık: Osmanlı İmparatorluğu'nun Doğuşu' alanının bir parçasıdır.",
+          "category": "historical_event",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 123,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-0073c0732832536d",
+          "publication_decision_id": "DEC-96abcc829263d52a",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d0519f411af34c16",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Osman Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/osmangazi-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Bursa ve Cumalıkızık hangi yıl UNESCO Dünya Mirası Listesi'ne girmiştir?",
+            "choices": [
+              "2008",
+              "2020",
+              "2014",
+              "1999"
+            ],
+            "answer_index": 2,
+            "explanation": "Alan 2014'te UNESCO Dünya Mirası Listesi'ne kaydedilmiştir.",
+            "decision_id": "DEC-d0519f411af34c16"
+          }
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0019/b82193f38df50d5e",
+          "file": "5d0827214c25b8617bdcc73c4fafb8fda87c52a47f117a795aec1c17215cf2dd.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-c44bd86d814104fe",
+          "publication_decision_id": "DEC-5468ee2397cd8f69",
+          "game_use": true,
+          "game_use_decision_id": "DEC-b0a4c552442225b9",
+          "card_file": "c33dfebf4cef16a6e1e39fc8e31bfc52d5c5db02dbeabf7509d4df1be72e667c.jpeg",
+          "title": "File:OSMAN GAZİ TÜRBESİ BURSA - panoramio (3).jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio_(3).jpg",
+          "width": 1600,
+          "height": 1365
+        },
+        {
+          "image_id": "commons/BUR-0019/57774d967b5e4748",
+          "file": "f50879b57c978f6cc09d3af9824da0ab64362a3cd40c4f4b1330d5983bf4364a.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-8e9d5d5d25194552",
+          "publication_decision_id": "DEC-a46ed3e851b6fcb2",
+          "game_use": true,
+          "game_use_decision_id": "DEC-bd83242642e20cf7",
+          "card_file": "368075080c5427f0d79148e91e23780f3d6708663b5e02deaec6e26d2b8fe95b.jpeg",
+          "title": "File:OSMAN GAZİ TÜRBESİ BURSA - panoramio.jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_-_panoramio.jpg",
+          "width": 1600,
+          "height": 1227
+        },
+        {
+          "image_id": "commons/BUR-0019/a0e105374963470b",
+          "file": "5531cecb85d3dbe2bd0587379404bb63c1821dc77113e06d7fcbf44b376b9046.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-2c9e308d11da17a3",
+          "publication_decision_id": "DEC-54f0430b1b1f8621",
+          "game_use": true,
+          "game_use_decision_id": "DEC-120c89082bfae534",
+          "card_file": "5dda8bac707f2d4a6ec07d27b8928b0eea2836090ac447d92f0cec560b1274fe.jpeg",
+          "title": "File:OSMAN GAZİ TÜRBESİ - panoramio.jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:OSMAN_GAZ%C4%B0_T%C3%9CRBES%C4%B0_-_panoramio.jpg",
+          "width": 1600,
+          "height": 1360
+        },
+        {
+          "image_id": "commons/BUR-0019/8c9684500d66d7f3",
+          "file": "0b31cc9149117c63a44bd7436f3ba375e605b6d54280ee35acab8e85483a4b3d.jpeg",
+          "rights_holder": "Francesco Bini",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-96b21631e28cf16d",
+          "publication_decision_id": "DEC-ab89b297155e8c96",
+          "game_use": true,
+          "game_use_decision_id": "DEC-4cf462fbfbbc87b2",
+          "card_file": "0cda1f08d3b3ab6c46569a7bfbe0bf39217ad3d9b62e74ebec77cc9dec56633b.jpeg",
+          "title": "File:Bursa, tophane, tomba di osman gazi, 1863, interno 08 grata.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_osman_gazi,_1863,_interno_08_grata.jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0019/e5fc004f52fdbc18",
+          "file": "a7226181fd20f6a34bbdbac58e6c5e7222685e6b94e9a9f8d22c6270b53e2b44.jpeg",
+          "rights_holder": "Francesco Bini",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-c0283e626de7e365",
+          "publication_decision_id": "DEC-0e5d2965c319a557",
+          "game_use": true,
+          "game_use_decision_id": "DEC-ddc47ed99bef17fe",
+          "card_file": "f3b3a395b1e727eb4946f5b8208e38a7c16cad41f53dbb0641c3ff408c2c7502.jpeg",
+          "title": "File:Bursa, tophane, tomba di osman gazi, 1863, interno 06.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_osman_gazi,_1863,_interno_06.jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0019/a5811efa593fb100",
+          "file": "7b2b4347dc053a556de932cbf59bba41df66a3ae028ee0e22cb15e890a952035.jpeg",
+          "rights_holder": "Francesco Bini",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-1255c334c61481da",
+          "publication_decision_id": "DEC-a42c781fb29d0eac",
+          "game_use": true,
+          "game_use_decision_id": "DEC-05eefd5118105486",
+          "card_file": "70d9d881c0160191c1befb0930a8c947c4c57d34599c7385d8d35d21104619f0.jpeg",
+          "title": "File:Bursa, tophane, tomba di osman gazi, 1863, 01.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_osman_gazi,_1863,_01.jpg",
+          "width": 1002,
+          "height": 1600
+        }
+      ],
+      "location": {
+        "latitude": 40.186831,
+        "longitude": 29.057366,
+        "accuracy_m": 13.0,
+        "represents": "building_footprint_centroid",
+        "verification_decision_id": "DEC-a8507d0e52b9dcac",
+        "map_decision_id": "DEC-c11cb121bd49122b"
+      },
+      "checkin": null,
+      "site_notice": "Türbe ve kabir alanıdır. Ziyaret sırasında sessiz olun, sandukalara dokunmayın ve ziyaret saatlerine uyun.",
+      "illustration": "representative_drawing"
+    },
+    {
+      "monument_id": "BUR-0020",
+      "name": "Orhan Gazi Türbesi",
+      "alternative_names": [],
+      "type": "türbe",
+      "city": "Bursa",
+      "district": "Osmangazi",
+      "address": "Osmangazi Caddesi, Tophane, Osmangazi/Bursa",
+      "catalog_decision_id": "DEC-3bc32613254e7c98",
+      "facts": [
+        {
+          "fact_id": "BUR-0020-F001",
+          "title": "Bursa'nın fatihi",
+          "text": "Türbe, Osmanlı Devleti'nin ikinci padişahı ve Bursa'nın fatihi Orhan Gazi'ye aittir.",
+          "category": "historical_person",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 115,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-81f03894150de3cd",
+          "publication_decision_id": "DEC-2b1586d4ac0c2e13",
+          "game_use": true,
+          "game_use_decision_id": "DEC-bcc88813695acf1a",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Orhan Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/orhangazi-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Orhan Gazi Osmanlı Devleti'nin kaçıncı padişahıdır?",
+            "choices": [
+              "Üçüncü",
+              "Dördüncü",
+              "İkinci",
+              "Birinci"
+            ],
+            "answer_index": 2,
+            "explanation": "Orhan Gazi, Osman Gazi'nin oğlu ve Osmanlı Devleti'nin ikinci padişahıdır.",
+            "decision_id": "DEC-bcc88813695acf1a"
+          }
+        },
+        {
+          "fact_id": "BUR-0020-F003",
+          "title": "Depremde yıkılan türbe",
+          "text": "Türbe 1855 Bursa depreminde tamamen yıkılmıştır.",
+          "category": "historical_event",
+          "certainty": "reported",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 116,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-9e200f5da8a577e4",
+          "publication_decision_id": "DEC-e6622faddf207379",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Orhan Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/orhangazi-turbesi"
+            },
+            {
+              "title": "Orhan Gazi Türbesi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/orhan-gazi-turbesi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0020-F004",
+          "title": "1863'te yeniden yapıldı",
+          "text": "Bugünkü türbeyi 1863'te Sultan Abdülaziz yeniden yaptırmıştır.",
+          "category": "construction",
+          "certainty": "uncertain",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 116,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-35b4e3bedca6c389",
+          "publication_decision_id": "DEC-d4e88bf2d26def29",
+          "game_use": true,
+          "game_use_decision_id": "DEC-a69ae5ed32288585",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Orhan Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/orhangazi-turbesi"
+            },
+            {
+              "title": "Orhan Gazi Türbesi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/orhan-gazi-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Orhan Gazi Türbesi'nin bugünkü binası hangi yıl yapılmıştır?",
+            "choices": [
+              "1868",
+              "1863",
+              "1326",
+              "1855"
+            ],
+            "answer_index": 1,
+            "explanation": "Resmî kaynaklara göre türbe 1863'te Sultan Abdülaziz tarafından yeniden yaptırılmıştır.",
+            "decision_id": "DEC-a69ae5ed32288585"
+          }
+        },
+        {
+          "fact_id": "BUR-0020-F005",
+          "title": "Kare plan, tek kubbe",
+          "text": "Kare planlı türbenin her bir kenarı dıştan yaklaşık 16,80 metredir ve yapı tek kubbeyle örtülüdür.",
+          "category": "architecture",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 116,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-49f1c5d70286c365",
+          "publication_decision_id": "DEC-0c8dd8abdde1c6cc",
+          "game_use": true,
+          "game_use_decision_id": "DEC-80139f9d2a8e293c",
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Orhan Gazi Türbesi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/orhan-gazi-turbesi"
+            },
+            {
+              "title": "Orhan Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/orhangazi-turbesi"
+            }
+          ],
+          "quest": {
+            "question": "Orhan Gazi Türbesi'nin planı hangi biçimdedir?",
+            "choices": [
+              "Altıgen",
+              "Daire",
+              "Kare",
+              "Sekizgen"
+            ],
+            "answer_index": 2,
+            "explanation": "Türbe kare planlıdır ve tek kubbeyle örtülüdür.",
+            "decision_id": "DEC-80139f9d2a8e293c"
+          }
+        },
+        {
+          "fact_id": "BUR-0020-F006",
+          "title": "Yangından depreme, depremden bugüne",
+          "text": "Orhan Gazi Türbesi, 1855'teki yıkımdan önce de birçok kez onarılmıştı; Dünya Mirası Alan Yönetim Planı, yapının 1801'de bir yangında hasar gördüğünü belirtir. 1863'te yeniden yapılan türbe için Kültür envanteri 2009 yılında bir onarım daha kaydeder.",
+          "category": "restoration",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 117,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-9a80aec5db40a997",
+          "publication_decision_id": "DEC-b0c9188fccf83753",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Bursa and Cumalıkızık World Heritage Site Management Plan 2021–2026",
+              "publisher": "Bursa Büyükşehir Belediyesi — Bursa Alan Başkanlığı (hazırlayan: Dizayn Turizm)",
+              "url": "https://antalya.ktb.gov.tr/Eklenti/93128,uyp-bursa-and-cumalikizik-management-planpdf.pdf"
+            },
+            {
+              "title": "Orhan Gazi Türbesi (Kültür Envanteri)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/kulturenvanteri/orhan-gazi-turbesi"
+            },
+            {
+              "title": "Doğan Yavaş, “Orhan Gazi Türbesi”",
+              "publisher": "TDV İslâm Ansiklopedisi (KÜRE Ansiklopedi yayımı)",
+              "url": "https://kureansiklopedi.com/tr/detay/orhan-gazi-turbesi"
+            }
+          ],
+          "quest": null
+        },
+        {
+          "fact_id": "BUR-0020-F008",
+          "title": "UNESCO Dünya Mirası",
+          "text": "Türbenin bulunduğu alan, 2014'te UNESCO Dünya Mirası Listesi'ne giren 'Bursa ve Cumalıkızık: Osmanlı İmparatorluğu'nun Doğuşu' alanının bir parçasıdır.",
+          "category": "historical_event",
+          "certainty": "documented",
+          "source": {
+            "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+            "pdf_physical_page": 117,
+            "page_kind": "physical"
+          },
+          "editorial_decision_id": "DEC-cb7ae57c48d36410",
+          "publication_decision_id": "DEC-0030580e95111d60",
+          "game_use": false,
+          "game_use_decision_id": null,
+          "basis": "independent_corroboration",
+          "sources": [
+            {
+              "title": "Orhan Gazi Türbesi (Gezilecek Yerler)",
+              "publisher": "T.C. Kültür ve Turizm Bakanlığı – Kültür Portalı",
+              "url": "https://www.kulturportali.gov.tr/turkiye/bursa/gezilecekyer/orhangazi-turbesi"
+            }
+          ],
+          "quest": null
+        }
+      ],
+      "images": [
+        {
+          "image_id": "commons/BUR-0020/154c5bdb94d3bc6a",
+          "file": "ed68e448a4c6f9a78e5d8e8014b88486ab2b8d06ed2a2645afa6c48bffb20c2e.jpeg",
+          "rights_holder": "Mustafa DUMAN",
+          "license": "CC-BY-3.0",
+          "attribution": "Fotoğraf: Mustafa DUMAN, CC BY 3.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-f30d128953172ba7",
+          "publication_decision_id": "DEC-3ab90bae5a8f1c1b",
+          "game_use": true,
+          "game_use_decision_id": "DEC-df683456498b4d48",
+          "card_file": "481a41474064b853abf36a1bd224e2ddf2bf9eec41fae3dc8972d3495634d443.jpeg",
+          "title": "File:ORHANGAZİ TÜRBESİ BURSA OSMANGAZİ - panoramio.jpg",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:ORHANGAZ%C4%B0_T%C3%9CRBES%C4%B0_BURSA_OSMANGAZ%C4%B0_-_panoramio.jpg",
+          "width": 1600,
+          "height": 1208
+        },
+        {
+          "image_id": "commons/BUR-0020/5c10f5495b7ae92f",
+          "file": "75b728dfd5377ae801180272c749ef676921d72b32e24abab1d7ebf5744aa137.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-86b44314f2a91944",
+          "publication_decision_id": "DEC-5cd004d03512a4a5",
+          "game_use": true,
+          "game_use_decision_id": "DEC-a290bc35793d2fc9",
+          "card_file": "d16253cc601b9975b63272d6300f170a480270657e994cb51188a5864f432c62.jpeg",
+          "title": "File:Orhan Gazi Türbesi 6896.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Orhan_Gazi_T%C3%BCrbesi_6896.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0020/28dbd1e92e6d775f",
+          "file": "346fccb983cbaf9fcae0303355beeced8dad16b98bab4ee8579393fd2aa6bfcb.jpeg",
+          "rights_holder": "Dosseman",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Dosseman, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-d19ece5ab18a0909",
+          "publication_decision_id": "DEC-9f3e4e2e3172c998",
+          "game_use": true,
+          "game_use_decision_id": "DEC-996a4563cdee0ace",
+          "card_file": "ff71cf99a520a003029f6585f92b83eb6d691faa4b2762080fabd880bae69299.jpeg",
+          "title": "File:Orhan Gazi Türbesi 6895.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Orhan_Gazi_T%C3%BCrbesi_6895.jpg",
+          "width": 1600,
+          "height": 1065
+        },
+        {
+          "image_id": "commons/BUR-0020/fdcc3622f2150b2b",
+          "file": "50ec3124ff81c585ce738a92e03a25b7088e30f50ed54036cdc5a8e8b0adafcf.jpeg",
+          "rights_holder": "Francesco Bini",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Francesco Bini, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-7a8d0f02aea8cdd5",
+          "publication_decision_id": "DEC-2217bd41e1cbcdd1",
+          "game_use": true,
+          "game_use_decision_id": "DEC-b961578b2350592a",
+          "card_file": "28e330f7c8feb4a2c66d0c31c796ce53872232a037f29f813cc078aa60726155.jpeg",
+          "title": "File:Bursa, tophane, tomba di orhan gazi, interno 01.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Bursa,_tophane,_tomba_di_orhan_gazi,_interno_01.jpg",
+          "width": 1600,
+          "height": 1067
+        },
+        {
+          "image_id": "commons/BUR-0020/fed261043bf9e86d",
+          "file": "2dd3b4a4cc0c46148e2c9f3e1674932736064be63b5e2599998005ebf420ac9e.jpeg",
+          "rights_holder": "Maurice Flesier",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Maurice Flesier, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-3de8ffc43d569aa3",
+          "publication_decision_id": "DEC-124270950e120851",
+          "game_use": true,
+          "game_use_decision_id": "DEC-b78be201ab70f2fb",
+          "card_file": "393261606de4313e72d8560baa3d32cfa1437d0db69e5420433d890fdad7fdc1.jpeg",
+          "title": "File:Tomb of Nilüfer Hatun, wife of Sultan Orhan of the Ottoman Empire.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Tomb_of_Nil%C3%BCfer_Hatun,_wife_of_Sultan_Orhan_of_the_Ottoman_Empire.jpg",
+          "width": 1600,
+          "height": 1200
+        },
+        {
+          "image_id": "commons/BUR-0020/f7b53114b8503b6e",
+          "file": "e6406906b97eb1efd1a535229b854b7bca11f22da0988c94dad43d3edaf2d2a5.jpeg",
+          "rights_holder": "Maurice Flesier",
+          "license": "CC-BY-SA-4.0",
+          "attribution": "Fotoğraf: Maurice Flesier, CC BY-SA 4.0, Wikimedia Commons",
+          "rights_decision_id": "DEC-d6308b7fbdc19b68",
+          "publication_decision_id": "DEC-5b10882432255453",
+          "game_use": true,
+          "game_use_decision_id": "DEC-d2b97a903c464ccd",
+          "card_file": "633fa6d3abc7c55c4faa56a5894185773723cc50ea2cc3239079c544b2130222.jpeg",
+          "title": "File:Dome of Orhan Ghazi Tomb.jpg",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Dome_of_Orhan_Ghazi_Tomb.jpg",
+          "width": 1600,
+          "height": 1200
+        }
+      ],
+      "location": {
+        "latitude": 40.186728,
+        "longitude": 29.057663,
+        "accuracy_m": 14.0,
+        "represents": "building_footprint_centroid",
+        "verification_decision_id": "DEC-0c4912b67c886e50",
+        "map_decision_id": "DEC-b52b1c36708373be"
+      },
+      "checkin": null,
+      "site_notice": "Türbe ve kabir alanıdır. Ziyaret sırasında sessiz olun, sandukalara dokunmayın ve ziyaret saatlerine uyun.",
+      "illustration": "representative_drawing"
+    }
+  ]
+}

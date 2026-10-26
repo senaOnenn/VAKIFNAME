@@ -1,0 +1,740 @@
+{
+ "description": "Kör değerlendirme v3 — cevabı katalogda olmayan sorular (Görev 13 başlangıcında yazıldı).",
+ "items": [
+  {
+   "q": "Ulu Cami'nin minaresinin yüksekliği kaç metre?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Ulu Cami'de kaç pencere bulunur?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Ulu Cami'yi inşa eden usta kim?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Ulu Cami'nin kubbelerinin yüksekliği ne kadar?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Ulu Cami'de kaç hat levhası var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Ulu Cami'nin bahçesinde kaç ağaç var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Ulu Cami'nin mihrabını yapan usta kimdir?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Ulu Cami'nin minberi hangi yıl onarıldı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Süleyman Çelebi hangi yıl doğdu?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Tevfik Paşa neden sürgün edildi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ulu"
+  },
+  {
+   "q": "Muradiye Camii'nin yüksekliği ne kadar?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Muradiye Camii'nin minberini kim yaptırdı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Muradiye Camii kaç kişilik?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Muradiye Camii'nin kubbesini kim onardı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Parvillée Muradiye Camii'nde hangi çinileri yeniledi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Muradiye Camii'nin minareleri kaç metre?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Muradiye Camii'nin ilk müezzini kimdi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Muradiye Camii'ni Yunan askerleri ne zaman terk etti?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Muradiye Camii 2012'de kaç ay restore edildi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Muradiye Camii'nin halıları nereden geldi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_muradiye"
+  },
+  {
+   "q": "Muradiye Medresesi'nde kaç müderris görev yaptı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "Muradiye Medresesi'nin ilk müderrisinin adı ne?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "Muradiye Medresesi'nin dershane kubbesinin çapı ne?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "Muradiye Medresesi müzesinin müdürü kim?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "Müzede kaç el yazması sergileniyor?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "Muradiye Medresesi kaç yıl kanser tarama merkezi olarak kullanıldı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "Muradiye Medresesi'nin kapısını kim yaptı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "Muradiye Medresesi'nde hangi dersler verilirdi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "Muradiye Medresesi'nin çinileri ne renk?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "Muradiye Medresesi'nin avlusundaki şadırvanı kim yaptırdı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_medrese"
+  },
+  {
+   "q": "II. Murad Türbesi'nin yüksekliği ne kadar?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "II. Murad'ın annesi kimdir?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "II. Murad hangi savaşta öldü?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "II. Murad Türbesi'ni hangi mimar tasarladı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "II. Murad Türbesi'nin kubbesi neden yıkıldı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "II. Murad Türbesi'nin pencereleri kaç tane?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "II. Murad Türbesi'nin restorasyonunu hangi firma yaptı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "II. Murad Türbesi'nde kaç hafız görev yapardı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "II. Murad Türbesi'nin kapısı hangi ağaçtan?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "II. Murad Türbesi'nin çinileri ne renk?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_ii_murad"
+  },
+  {
+   "q": "Cem Sultan'ın annesi kimdir?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Cem Sultan öldüğünde kaç yaşındaydı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin yüksekliği ne kadar?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin mimarının adı ne?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Cem Sultan Türbesi depremde yıkıldı mı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin kubbesi neden yıkıldı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Cem Sultan Türbesi 2010'da restore edildi mi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Şehzade Abdullah kimin oğlu?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Cem Sultan'ın naaşı hangi şehirden getirildi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Cem Sultan Türbesi'nin kapısının üstünde hangi kitabe var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_cem"
+  },
+  {
+   "q": "Koza Han'ın yüksekliği ne kadar?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  },
+  {
+   "q": "Koza Han'ın kaç odası var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  },
+  {
+   "q": "Koza Han depremde yıkıldı mı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  },
+  {
+   "q": "Koza Han'ın kubbelerine kurşun ne zaman eklendi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  },
+  {
+   "q": "Koza Han'ı 2018'de kim yeniledi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  },
+  {
+   "q": "Koza Han'da kaç ipek tüccarı vardı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  },
+  {
+   "q": "Koza Han'ın mescidini kim yaptırdı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  },
+  {
+   "q": "Koza Han'ın kapısı kaç metre?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  },
+  {
+   "q": "Koza Han hangi depremde yıkıldı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  },
+  {
+   "q": "Pirinç Han'ın yüksekliği ne kadar?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Pirinç Han'ın kaç odası bulunur?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Pirinç Han'a kurşun örtü ne zaman eklendi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Pirinç Han'ın mimarının annesi kimdir?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Pirinç Han'ın kapısını kim yaptı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Pirinç Han'ı 2004'te kim restore etti?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Pirinç Han'ın taç kapısındaki yazı ne anlatır?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Pirinç Han'da en çok hangi tüccarlar kalırdı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Pirinç Han'ın ahırında kaç deve kalırdı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Pirinç Han'ın mescidini kim yaptırdı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_pirinc"
+  },
+  {
+   "q": "Bedestenin yüksekliği ne kadar?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Bedestende kaç dükkân vardır?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Bedesteni hangi usta inşa etti?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Bedesten depremde yıkıldı mı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Bedestenin kubbelerine kurşun ne zaman eklendi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Bedesteni 1960'ta kim restore etti?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Bedestende hangi mücevherler satılır?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Bedestenin kapıları kaç tane?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Bedestenin duvarları hangi taştan?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Bedesten hangi yıl tamamen yıkıldı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_bedesten"
+  },
+  {
+   "q": "Osman Gazi'nin annesi kimdir?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nin yüksekliği ne kadar?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Osman Gazi Türbesi'ni hangi mimar yaptı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nin şamdanları nereden geldi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Osman Gazi'nin kardeşi kimdir?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nin kubbesi kaç metre?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Osman Gazi hangi yıl öldü?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nin pencere sayısı nedir?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Gümüşlü Kümbet'i kim inşa etti?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Osman Gazi Türbesi'nin korkuluklarını kim yaptırdı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_osman"
+  },
+  {
+   "q": "Orhan Gazi'nin annesi kimdir?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nin yüksekliği ne kadar?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nin kubbesinin çapı ne?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'ni hangi mimar yaptı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nin kitabesi ne diyor?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'ni 2009'da hangi kurum onardı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Orhan Gazi kaç yıl hüküm sürdü?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nde kaç kişi gömülü?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'nin kapısı nereye açılır?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Orhan Gazi Türbesi'ne kurşun örtü ne zaman eklendi?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_orhan"
+  },
+  {
+   "q": "Muradiye külliyesinde kaç türbe var?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_kulliye"
+  },
+  {
+   "q": "Muradiye'deki Şehzade Ahmed Türbesi'ni kim yaptırdı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_kulliye"
+  },
+  {
+   "q": "Hüma Hatun Türbesi kimin?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_kulliye"
+  },
+  {
+   "q": "Muradiye külliyesindeki hamam ne zaman yapıldı?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_kulliye"
+  },
+  {
+   "q": "Muradiye'deki imaret bugün ne olarak kullanılıyor?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_kulliye"
+  },
+  {
+   "q": "Koza Han'ın kubbelerinin kurşunu neden söküldü?",
+   "ctx": null,
+   "expect": "no_answer",
+   "gold": [],
+   "group": "v3_un_koza"
+  }
+ ]
+}

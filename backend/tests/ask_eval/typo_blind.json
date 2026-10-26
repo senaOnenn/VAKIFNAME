@@ -1,0 +1,572 @@
+{
+ "description": "Kör yazım hatası seti (Görev 25): motor ayarı bittikten sonra, sonuç görülmeden yazıldı ve bir kez çalıştırıldı. Geliştirme setindeki soru/olgu çiftleri tekrar edilmedi.",
+ "items": [
+  {
+   "q": "ulu caminin mimrı kim",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F002"
+   ]
+  },
+  {
+   "q": "ulu cami minarelri ne zmn yapildi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F009"
+   ]
+  },
+  {
+   "q": "ulu camide sadirvan nerde",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F008"
+   ]
+  },
+  {
+   "q": "ulu caminin miharbındaki süslemeler ne zaman",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F006"
+   ]
+  },
+  {
+   "q": "ulu cami ne zaman onarildi deprmden sonra",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F010"
+   ]
+  },
+  {
+   "q": "müezzin mahfili ne zman yapıldı ulu camide",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F007"
+   ]
+  },
+  {
+   "q": "ulu caminin planı nasil",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F004"
+   ]
+  },
+  {
+   "q": "ulu camii minberinin ustasi kim",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0001-F005"
+   ]
+  },
+  {
+   "q": "muradiye camiinin cinileri ne renk",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F005"
+   ]
+  },
+  {
+   "q": "muradiye camisinde fransiz usta kimdi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F007"
+   ]
+  },
+  {
+   "q": "muradiye camii hangi tipte",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F002"
+   ]
+  },
+  {
+   "q": "muradiye camisinde yunan sancagi nasil bulundu",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F008"
+   ]
+  },
+  {
+   "q": "muradiye camiini kim yaptirmis",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0003-F001"
+   ]
+  },
+  {
+   "q": "muradiye medresesinin avlusu nasil",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F001"
+   ]
+  },
+  {
+   "q": "muradiye medresesi dispnser olarak kullanildi mi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F005",
+    "BUR-0005-F006"
+   ]
+  },
+  {
+   "q": "muradiye medresi depremde zarar gordu mu",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0005-F004"
+   ]
+  },
+  {
+   "q": "murad türbesnin duvarları neyle örülmüş",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F005"
+   ]
+  },
+  {
+   "q": "murad turbesindeki sutunlar nerden geldi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F007"
+   ]
+  },
+  {
+   "q": "2. murad turbesinde kac mezar var",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F003"
+   ]
+  },
+  {
+   "q": "murad türbesinin palnı nasıl",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0007-F006"
+   ]
+  },
+  {
+   "q": "cem sultan turbesi kimin icin yapildi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F001"
+   ]
+  },
+  {
+   "q": "cem sultanin naasi ne zmn getirildi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F002"
+   ]
+  },
+  {
+   "q": "cem sultan turbesinin cinileri nasil",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F005"
+   ]
+  },
+  {
+   "q": "cem sutlan türbesinin kubbesinde ne yazıyor",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0008-F006"
+   ]
+  },
+  {
+   "q": "koza hanın avlsunda ne var",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F007",
+    "BUR-0009-F005"
+   ]
+  },
+  {
+   "q": "koza han bugun ne icin kullaniliyor",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F010"
+   ]
+  },
+  {
+   "q": "koza han ne zman restore edildi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F003",
+    "BUR-0009-F009"
+   ]
+  },
+  {
+   "q": "koza hanin ahir bolumu nerde",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F006",
+    "BUR-0009-F005"
+   ]
+  },
+  {
+   "q": "koza hanı neden yaptrıldı",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0009-F001"
+   ]
+  },
+  {
+   "q": "pirinç hanı kim yaptırmış",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F001"
+   ]
+  },
+  {
+   "q": "pirinc han ne zamn yapildi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F003"
+   ]
+  },
+  {
+   "q": "pirinc hnin eski adi ne",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F006"
+   ]
+  },
+  {
+   "q": "pirinç hanın köşesi neden kesildi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F008"
+   ]
+  },
+  {
+   "q": "pirinç hanın çatısı neyle kaplı",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0013-F010"
+   ]
+  },
+  {
+   "q": "bedestni kim yaptirdi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F001"
+   ]
+  },
+  {
+   "q": "bedesten ne icin kullnilirdi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F002"
+   ]
+  },
+  {
+   "q": "bedestende kac paye var",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F003"
+   ]
+  },
+  {
+   "q": "bedesten yangnda zarar gordu mu",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0014-F005"
+   ]
+  },
+  {
+   "q": "osman gazi turbesi ne zman yapildi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F004"
+   ]
+  },
+  {
+   "q": "osman gazi türbesi depremde yıkıldımı",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F003"
+   ]
+  },
+  {
+   "q": "osman gazi turbesinin plani nasil",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F005"
+   ]
+  },
+  {
+   "q": "osman gazinin sandukasi neyle cevrili",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F006"
+   ]
+  },
+  {
+   "q": "osman gazi türbesi unesco listesinde mi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0019-F008"
+   ]
+  },
+  {
+   "q": "orhan gazi turbesini kim yaptrdi",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F004"
+   ]
+  },
+  {
+   "q": "orhan gazi türbesinin palni nasil",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F005"
+   ]
+  },
+  {
+   "q": "orhna gazi turbesi kime ait",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F001"
+   ]
+  },
+  {
+   "q": "orhan gazi türbesi yangında hasar gördü mü",
+   "ctx": null,
+   "group": "blind_typo",
+   "expect": "answer",
+   "gold": [
+    "BUR-0020-F006"
+   ]
+  },
+  {
+   "q": "ulu caminin kac minaresi var",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "ulu cami kac kisi alir",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "koza hanin kac odasi vr",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "koza han kac katli",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "muradiye camisinin minaresi kac metre",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "pirinc hani kim restore etmis",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "bedestenin mimari kim",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "cem sultan nerde dogdu",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "osman gazi ne zaman oldu",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "orhan gazi turbesinin mimarı kim",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "yesil turbe ne zmn yapildi",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "emirsultan camii kimin",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "irgandi koprusu kac metre",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "hisar ne zman yapildi",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "koza hanin giris ucreti ne kadar",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "ulu cami bugun acik mi",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "qwe rty",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "mrb nbr",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "cumalikizik ne zaman kuruldu",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  },
+  {
+   "q": "muradiye medresesinin kac ogrencisi vardi",
+   "ctx": null,
+   "group": "unanswerable",
+   "expect": "no_answer",
+   "gold": []
+  }
+ ]
+}
