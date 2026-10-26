@@ -1,6 +1,102 @@
 # VAKIFNAME
 VAKIFNAME - Oyunlaştırılmış Kültür Turu &amp; RAG Destekli Canlı Vasiyet Platformu (Team HisGuard)
 
+## Takım için hızlı başlangıç
+
+**Amaç:** Bursa'daki vakıf eserlerini (10 eserlik dijital katalog, editörün onayladığı 76 tarihî bilgi) eser sayfaları,
+fotoğraf galerisi, harita, keşif görevleri ve dijital pasaportla oyunlaştırılmış bir kültür turuna dönüştürmek. Tarihî
+bilgiler yalnızca insan onayından geçmiş kayıtlardan gelir; yapay zekâ rehberi bu kayıtların dışına çıkamaz.
+
+### Dallar
+
+| Dal | Durum | Kullanım |
+|---|---|---|
+| `develop` | **Kararlı ortak sürüm.** Backend ve frontend testleri geçer; testers ortamında doğrulanmış rehber sürümünü içerir. | Yeni işler buradan dallanır. |
+| `feat/game` | Oyun geliştirme dalı (`develop` ile aynı noktadan başlar) | Oyun ekibi. |
+| `feat/ai-guide-photo-analysis` | **Henüz tam doğrulanmadı** (bkz. o daldaki `docs/GELISTIRME_NOTLARI_YAPAY_ZEKA.md`) | Yalnızca yapay zekâ rehberi geliştirmesi. |
+| `main` | Önceki birleştirilmiş sürüm | `develop`, gözden geçirme sonrası PR ile birleştirilir. |
+
+### Kurulum (gizli anahtar veya canlı veritabanı gerekmez)
+
+```bash
+git clone git@github.com:senaOnenn/VAKIFNAME.git && cd VAKIFNAME
+git switch develop            # oyun ekibi: git switch feat/game
+
+# Backend (Python 3.10+; 3.12 ile test edildi)
+cd backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env && set -a && . ./.env && set +a     # sahte/varsayılan değerler
+uvicorn app.main:app --reload --port 8000
+
+# Frontend (ayrı terminal; Node 20.19+ veya 22.12+)
+cd frontend
+cp .env.example .env          # VITE_API_BASE_URL=http://127.0.0.1:8000
+npm ci
+npm run dev                   # http://localhost:5173  ·  demo oyun: http://localhost:5173/?mod=demo
+```
+
+### Ortam değişkenleri
+
+Tam liste ve açıklamalar: `backend/.env.example` ve `frontend/.env.example`. Oyun geliştirmesi için yeterli olanlar:
+
+| Değişken | Değer | Ne işe yarar |
+|---|---|---|
+| `VAKIFNAME_DEMO_API` | `on` | Kurgusal demo mekânları, demo check-in ve pasaport uçları (`/places`, `/quests/...`) |
+| `VAKIFNAME_PUBLIC_CATALOG_FILE` | `tests/ask_eval/catalog_snapshot.json` | Örnek gerçek katalog (10 eser, 76 onaylı olgu) |
+| `VAKIFNAME_GUIDE_MODE` | `off` | Yapay zekâ rehberi kapalı; anahtar gerekmez |
+| `VITE_API_BASE_URL` | `http://127.0.0.1:8000` | Frontend'in bağlandığı backend |
+
+Anahtarlar (OpenRouter/NVIDIA, dahili erişim anahtarı) depoda **yoktur**; yalnızca yetkili sunucuda korumalı dosyalarda
+tutulur. `.env` dosyaları Git'e girmez.
+
+### Örnek veriyle geliştirme
+
+- **Demo oyun:** `data/places.json` kurgusal mekânlardır; `VAKIFNAME_DEMO_API=on` ile `/places` ve demo görevler çalışır.
+- **Gerçek katalog:** `backend/tests/ask_eval/catalog_snapshot.json` onaylı olguların test anlık görüntüsüdür. Fotoğraf
+  dosyaları depoda olmadığı için galeride görseller yüklenmez (kayıtlar ve kaynak bilgileri görünür).
+- **Kurgusal yayın akışı:** `backend/scripts/e2e_fictional_catalog.py <boş-dizin>` BUR-9xxx kurgusal kataloğu üretir.
+- Dahili V20 verisi, inceleme veritabanı, kitap görselleri ve 121 fotoğraflık ZIP arşivinin görselleri depoda yoktur;
+  bunlara bağlı testler kendiliğinden atlanır.
+
+### Oyun bölümünün klasör yapısı
+
+```text
+frontend/src/
+  demo/DemoGame.tsx                      Demo Keşif Oyunu (?mod=demo; üretim derlemesine girmez)
+  components/Quest*.tsx                  Görev paneli, görev durumu rozeti, görev bölümü
+  components/PassportSection.tsx, Seal.tsx   Dijital pasaport ve mühürler
+  components/Place*.tsx, MapSection.tsx  Mekân listesi, kartı, ayrıntısı ve harita (Leaflet)
+  hooks/useCheckIn.ts, useSelectedPlace.ts, useApi.ts
+  api/client.ts, api/types.ts            Backend istemcisi ve tipler
+  demoUser.ts, visitor.ts                Demo kullanıcı ve ziyaretçi kimliği (kişisel veri yok)
+  QuestPassport.test.tsx                 Görev + pasaport akış testleri
+backend/app/
+  routes.py, services.py, models.py      Demo mekân, check-in, görev ve pasaport uçları
+  monument_routes.py, progress.py        Gerçek eser görevleri, check-in, mühür ve pasaport
+  geo.py                                 Mesafe/yarıçap doğrulaması
+backend/tests/test_api.py, test_batch_and_quests.py, test_hardening.py
+data/places.json                         Kurgusal demo mekânları
+```
+
+### Test komutları
+
+```bash
+cd backend && python -m pytest -q     # özel veri yoksa ilgili testler atlanır (skipped)
+cd frontend && npm test               # vitest
+cd frontend && npx tsc -b             # TypeScript denetimi
+cd frontend && npm run build          # derleme + genel paket denetimi (scripts/check-public-build.mjs)
+```
+
+### Önerilen Git iş akışı (oyun ekibi)
+
+1. `git switch feat/game && git pull` — güncel oyun dalı.
+2. Küçük işler için kısa dallar: `git switch -c feat/game-<konu>`; commit'ler küçük ve açıklayıcı olsun.
+3. `develop`'taki yenilikleri almak için `git fetch origin && git merge origin/develop` (paylaşılan dalda rebase ve
+   `--force` kullanılmaz).
+4. İş bitince `feat/game-<konu>` → `feat/game` PR'ı; oyun özelliği tamamlanınca `feat/game` → `develop` PR'ı.
+5. Commit öncesi backend/frontend testleri ve `npx tsc -b`. `.env`, anahtar, veritabanı, görsel ve PDF eklenmez.
+
 ## Backend'i çalıştırma
 
 Gereksinim: Python 3.10+
