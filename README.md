@@ -71,6 +71,87 @@ CORS yalnızca tarayıcıların hangi sitelerden istek atabileceğini belirler. 
 - **Konum doğrulanmaz:** Check-in, istemcinin bildirdiği koordinatlara güvenir. Bu bir simülasyondur; GPS sahteciliğini engellemez ve kullanıcının eseri gerçekten ziyaret ettiğini kanıtlamaz.
 - **Kimlik doğrulama yoktur:** `user_id` serbest metindir.
 
+## Dahili V20 veri katmanı
+
+> **Yalnızca yetkili dahili geliştirme içindir.** Tarihsel editör onayı ve kaynak/görsel lisans incelemesi tamamlanmadı. Hiçbir kayıt genel API'de, haritada, check-in akışında veya frontend'de kullanılmaz.
+
+V20 bilgi tabanı (10 `BUR-xxxx` eseri, 80 olgu, karantinadaki 57 aday kayıt), orijinal PDF'ler, dahili RAG paketi ve görseller repository **dışında**, yalnızca sunucu kullanıcısının okuyabildiği bir dizinde tutulur (varsayılan `/var/lib/vakifname-internal`, `VAKIFNAME_INTERNAL_DATA_DIR` ile değiştirilebilir, izinler `0700`/`0600`):
+
+```
+v20/            V20 bilgi tabanı, freeze manifesti, editoryal raporlar
+sources/        Orijinal PDF'ler
+rag/runtime/    Dahili RAG teslim paketi (V3 çekirdek, FAISS indeksi)
+rag/venv/       RAG bağımlılıkları için ayrı sanal ortam
+images/monuments/BUR-xxxx/*.jpeg
+manifests/      source_registry.json, source_page_audit.json, image_manifest.json
+models/         Yerel embedding modeli (sabit revizyon)
+```
+
+- Kod: `backend/app/internal/`. Genel uygulama (`app.main`) bu paketi içe aktarmaz; `/places`, check-in ve pasaport sözleşmeleri değişmedi.
+- Kaynak sayfaları **fiziksel PDF sayfasıdır** (1 tabanlı). V20 basılı sayfa numarası içermez; türetilmez.
+- V20'de koordinatlar boştur ve `null` olarak tutulur. Doğrulanmış konumu olmayan eser check-in'e çevrilemez (`to_checkin_place`).
+- Görselin bir esere klasörle bağlanması yayın izni değildir; görseller hiçbir API'den sunulmaz.
+
+### Manifestleri üretme
+
+```bash
+cd backend
+/var/lib/vakifname-internal/rag/venv/bin/pip install -r requirements-internal.txt
+/var/lib/vakifname-internal/rag/venv/bin/python -I scripts/build_internal_manifests.py
+```
+
+### Dahili API (yalnızca loopback)
+
+```bash
+cd backend
+export VAKIFNAME_INTERNAL_TOKEN="$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"
+export VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR=/var/lib/vakifname-internal/models/multilingual-e5-small-614241f
+HF_HUB_OFFLINE=1 /var/lib/vakifname-internal/rag/venv/bin/python -m app.internal.server --port 8765
+```
+
+Yalnızca `127.0.0.1` / `::1` üzerinde dinler, loopback dışındaki istemcileri 403 ile reddeder ve her istekte `X-Internal-Token` başlığı ister (401). CORS ve OpenAPI sayfaları kapalıdır. Anahtar frontend'e konmamalıdır.
+
+| Metot | Yol | Açıklama |
+|---|---|---|
+| GET | `/internal/status` | Kayıt sayıları ve erişim politikası |
+| GET | `/internal/catalog/monuments[/{id}]` | Eserler, olgular, açık sorunlar |
+| GET | `/internal/catalog/facts/{fact_id}` | Tek olgu ve kaynak referansı |
+| GET | `/internal/catalog/issues` | Açık editoryal sorunlar |
+| GET | `/internal/catalog/drafts` | Karantinadaki aday kayıtlar (yalnızca editoryal inceleme) |
+| GET | `/internal/catalog/images` | Görsel envanteri (yalnızca meta veri) |
+| POST | `/internal/rag/ask` | `{"question": "..."}` — kaynak kontrollü, LLM'siz cevap |
+
+RAG embedding modeli (`intfloat/multilingual-e5-small`) çalışma sırasında ağdan **indirilmez**. `VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR` yerel bir model klasörünü göstermiyorsa anlamsal arama gerektiren sorular kaynak göstermeden `retrieval_unavailable` döner; kural tabanlı cevaplar (tarih çelişkisi, kubbe sayısı, güncel bilgi reddi) çalışmaya devam eder.
+
+### Embedding modeli
+
+Model bir kez, sabit bir revizyonla ve yalnızca gerekli dosyalarla korumalı dizine indirilir (`trust_remote_code` kullanılmaz; depoda Python kodu yoktur):
+
+```bash
+umask 077
+/var/lib/vakifname-internal/rag/venv/bin/python -I -c "
+from huggingface_hub import snapshot_download
+snapshot_download('intfloat/multilingual-e5-small',
+    revision='614241f622f53c4eeff9890bdc4f31cfecc418b3',
+    local_dir='/var/lib/vakifname-internal/models/multilingual-e5-small-614241f',
+    allow_patterns=['config.json', 'model.safetensors', 'modules.json', '1_Pooling/config.json',
+                    'sentence_bert_config.json', 'sentencepiece.bpe.model', 'special_tokens_map.json',
+                    'tokenizer.json', 'tokenizer_config.json'])"
+export VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR=/var/lib/vakifname-internal/models/multilingual-e5-small-614241f
+```
+
+Anlamsal arama ilk kullanıldığında indeksteki 80 belge vektörü yerel modelle yeniden kodlanıp karşılaştırılır (indeks değiştirilmez). En düşük kosinüs benzerliği `0.999`'un altındaysa cevaplar `retrieval_reliable: false` ve `embedding_index_mismatch` uyarısı taşır; ölçümler `/internal/status` içinde `rag_index_compatibility` alanında görünür. Mevcut teslim indeksi bu revizyonla birebir üretilmemiştir (en düşük kosinüs ≈0.97); bu nedenle anlamsal arama sonuçları şimdilik güvenilir sayılmaz.
+
+### Testler
+
+Kurgusal veriyle çalışan testler her ortamda çalışır. Gerçek veri ve RAG testleri, korumalı dizin ve `requirements-internal.txt` bağımlılıkları yoksa; gerçek model testleri `VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR` tanımlı değilse atlanır:
+
+```bash
+cd backend
+HF_HUB_OFFLINE=1 VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR=/var/lib/vakifname-internal/models/multilingual-e5-small-614241f \
+  /var/lib/vakifname-internal/rag/venv/bin/python -m pytest
+```
+
 ## Frontend'i çalıştırma
 
 React + TypeScript + Vite ile yazılmış web arayüzü `frontend/` klasöründedir. Eser, görev ve pasaport verilerini doğrudan backend'den alır; frontend içinde sabit eser listesi yoktur.

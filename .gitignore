@@ -221,3 +221,9 @@ __marimo__/
 
 # Tasarım aktarım prototipi (yalnızca yerel referans)
 /imports/chatgpt_sites_v1/
+
+# Dahili tarihsel veri: asla commit edilmez (bkz. README, "Dahili V20 veri katmanı").
+# Veri repository dışında, /var/lib/vakifname-internal altında tutulur; bunlar yanlışlıkla
+# repo köküne kopyalanabilecek bilinen konumlardır.
+/VAKIFNAME_SERVER_TRANSFER/
+/vakifname-internal/
