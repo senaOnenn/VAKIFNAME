@@ -1,0 +1,70 @@
+// S6: KURGUSAL veri + geçici DB ile uçtan uca temel kimlik yayını.
+//   onayla : dahili ekranda kişisel test hesabıyla yapılandırılmış kimlik formu (BUR-9001), başka hiçbir karar yok.
+//   genel  : dışa aktarıcı çalıştıktan sonra production önizlemesinde eser yeniden başlatma olmadan görünür.
+const fs = require('fs')
+const { scenario } = require('./lib.cjs')
+const [phase, BASE, out, workdir] = process.argv.slice(2)
+const secret = (name) => fs.readFileSync(`${workdir}/${name}`, 'utf8').trim()
+
+if (phase === 'onayla') {
+  scenario('S6-onay', async ({ browser, check }) => {
+    const page = await (await browser.newContext({ viewport: { width: 1366, height: 900 } })).newPage()
+    await page.goto(BASE + '/?mod=envanter')
+    await page.getByLabel('Dahili erişim anahtarı').fill(secret('token'))
+    await page.getByRole('button', { name: 'Oturum aç' }).click()
+    const bar = page.getByRole('region', { name: 'İncelemeci kimliği' })
+    await bar.getByLabel('İncelemeci hesabı').fill('e2e.editor')
+    await bar.getByLabel('Kişisel kimlik bilgisi').fill(secret('reviewer_credential'))
+    await bar.getByRole('button', { name: 'İncelemeci olarak giriş yap' }).click()
+    await bar.getByText('Tarayıcı Testi Editörü (geçici DB)').waitFor()
+    check('1. Kişisel editör hesabıyla giriş', true)
+    await page.getByRole('region', { name: /Eser tablosu/ }).getByRole('button', { name: 'Test Eser BUR-9001' }).click()
+    const panel = page.locator('article.review-panel')
+    await panel.getByRole('heading', { name: 'Kaynak ve konum araştırması' }).waitFor()
+    check('2. Resmî kaynak araştırması panelde', (await panel.getByText('S-9001-KP').count()) > 0)
+    await panel.getByRole('button', { name: 'Eser kimliği ve katalog meta verisinin yayını: karar ver' }).click()
+    const form = panel.getByRole('group', { name: /Temel kimlik/ })
+    await form.waitFor()
+    await form.getByLabel('Eser adı (yayında görünecek)').selectOption('Test Eseri BUR-9001')
+    await form.getByRole('radio', { name: /Test Mahallesi, Test Caddesi/ }).check()
+    check('3. Ad ve adres iddiası seçildi', true)
+    await form.getByRole('checkbox', { name: /S-9001-KP/ }).check()
+    await form.getByRole('checkbox', { name: /D-9001-01/ }).check()
+    check('4. Tutarsızlık değerlendirildi; eksik kalmadı', (await form.getByRole('list', { name: 'Kimlik onayı için eksikler' }).count()) === 0)
+    await panel.getByLabel('Editör kararı').selectOption('approved')
+    await panel.getByLabel('Kaynak kontrolü').selectOption('verified_on_page')
+    await panel.getByLabel(/Karar gerekçesi/).fill('KURGUSAL TEST: resmî portal kaydıyla ad ve adres karşılaştırıldı.')
+    const save = panel.getByRole('button', { name: 'Kararı kaydet' })
+    await save.and(page.locator(':enabled')).waitFor({ timeout: 8000 })
+    await save.click()
+    const row = panel.getByRole('list', { name: 'BUR-9001 kararları' }).locator('li').filter({ hasText: 'Eser kimliği' })
+    await row.getByText('Onaylandı').waitFor()
+    check('5-6. Kaynak kontrolü + gerekçeyle kimlik yayın kararı kaydedildi', true)
+    const preview = await (await page.request.get(BASE + '/internal/review/publication-preview', {
+      headers: { 'X-Vakifname-Review': '1' } })).json()
+    check('Yayın önizlemesi: 1 eser, 0 olgu, 0 görsel', preview.monuments_publishable === 1 &&
+          preview.facts_publishable === 0 && preview.images_publishable === 0)
+    await page.screenshot({ path: `${out}/s6-onay.png` })
+  })
+} else {
+  scenario('S6-genel', async ({ browser, check }) => {
+    const page = await (await browser.newContext({ viewport: { width: 1366, height: 900 } })).newPage()
+    await page.goto(BASE + '/')
+    const list = page.getByRole('list', { name: 'Gerçek eser listesi' })
+    await list.waitFor({ timeout: 10000 })
+    check('8-9. Public API güncellendi; onaylı eser ana sayfada (yeniden başlatma yok)',
+          (await list.getByRole('article').count()) === 1 && await list.getByText('Test Eseri BUR-9001').isVisible())
+    check('Konumsuz eser haritaya konmadı; açıklayıcı boş durum', await page.getByText('Haritada henüz onaylı konum yok').isVisible()
+          && (await page.locator('.leaflet-marker-icon').count()) === 0)
+    await page.getByRole('button', { name: 'Ayrıntıları gör: Test Eseri BUR-9001' }).click()
+    const panel = page.getByRole('complementary', { name: 'Eser ayrıntıları' })
+    await panel.getByText('Test Mahallesi, Test Caddesi').waitFor()
+    const text = await panel.innerText()
+    check('Ayrıntıda onaysız olgu yok', !text.includes('KURGUSAL OLGU'))
+    check('Check-in kapalı', text.includes('konum tabanlı görev açılmadı'))
+    const html = await page.content()
+    check('Araştırma notu, gerekçe ve incelemeci adı sızmıyor',
+          !html.includes('Test notu.') && !html.includes('KURGUSAL TEST') && !html.includes('Tarayıcı Testi Editörü'))
+    await page.screenshot({ path: `${out}/s6-genel.png`, fullPage: true })
+  })
+}

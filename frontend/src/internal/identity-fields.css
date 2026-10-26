@@ -1,0 +1,40 @@
+/* Temel kimlik karar formu (yalnızca dahili envanter parçasıyla yüklenir). */
+.identity-fields {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper-50);
+  min-width: 0;
+}
+
+.identity-fields fieldset {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--line);
+  min-width: 0;
+}
+
+.identity-fields legend {
+  font-weight: 700;
+}
+
+.identity-fields__choice {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  min-height: 44px;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.identity-fields__choice input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.15rem;
+}

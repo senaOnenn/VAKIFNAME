@@ -1,0 +1,486 @@
+/* Eser hikâyesi, galeri, keşif görevi ve kart fotoğrafları. Mevcut tasarım belirteçlerini (styles.css :root) kullanır. */
+
+.monument-story {
+  background: var(--paper-50);
+  scroll-margin-top: calc(var(--header-height) + 0.5rem);
+}
+
+.monument-story__grid {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.monument-story__header {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+
+.monument-story__header .section__title {
+  margin: 0;
+}
+
+.monument-story__alt,
+.monument-story__address {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.story-galleries {
+  display: grid;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.story-archive {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.story-archive h3 {
+  margin: 0;
+}
+
+.story-archive__note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+
+.story-archive__conflict {
+  font-style: italic;
+}
+
+.story-gallery {
+  display: grid;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.story-gallery__main {
+  margin: 0;
+  background: var(--green-950);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.story-gallery__main img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  background: var(--green-950);
+}
+
+.story-gallery__main figcaption {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--paper);
+  background: var(--green-900);
+}
+
+.story-gallery__main figcaption a {
+  color: var(--gold-300);
+}
+
+.story-gallery__thumbs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 0.4rem;
+}
+
+.story-gallery__thumbs button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+}
+
+.story-gallery__thumbs button.is-active {
+  border-color: var(--copper);
+}
+
+.story-gallery__thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.story-gallery--empty {
+  padding: 1rem;
+  background: #e4e3d5;
+  border-radius: var(--radius-sm);
+  color: var(--green-900);
+}
+
+.monument-story__story h3,
+.monument-story__quest h3 {
+  font-family: var(--font-display);
+  margin: 0 0 0.75rem;
+}
+
+.story-groups {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.story-groups h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--copper);
+}
+
+.story-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.story-fact {
+  padding-left: 0.9rem;
+  border-left: 3px solid var(--sand);
+}
+
+.story-fact h5 {
+  margin: 0 0 0.2rem;
+  font-size: 1rem;
+  color: var(--green-900);
+}
+
+.story-fact p {
+  margin: 0;
+}
+
+.story-fact__certainty {
+  display: inline-block;
+  margin-top: 0.3rem !important;
+  font-size: 0.75rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: var(--amber-bg);
+  color: var(--amber-ink);
+}
+
+.story-fact__sources {
+  margin-top: 0.35rem !important;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.story-fact__sources a {
+  color: var(--green-700);
+}
+
+.story-note {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+.monument-story__quest {
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  background: var(--paper);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sheet);
+}
+
+.quest-player {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.quest-progress__bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.quest-progress__bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-600), var(--copper));
+  transition: width 0.4s ease;
+}
+
+.quest-progress p {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+}
+
+.quest-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.quest-card {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper-50);
+}
+
+.quest-card--done {
+  border-color: var(--green-700);
+  background: var(--success-bg);
+}
+
+.quest-card fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.quest-card legend {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.quest-card__choice {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.quest-card__choice:hover {
+  background: var(--surface);
+}
+
+.quest-card__feedback {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.quest-card__feedback--wrong {
+  color: var(--danger-ink);
+}
+
+.quest-card__feedback--right {
+  color: var(--success-ink);
+}
+
+.seal-banner {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--green-900);
+  color: var(--paper);
+}
+
+.seal-banner p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.seal-banner__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem !important;
+  color: var(--gold-300);
+}
+
+.seal-banner__seal {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  color: var(--gold-400);
+}
+
+.visit-status {
+  border-top: 1px solid var(--line);
+  padding-top: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.visit-status h4 {
+  margin: 0 0 0.35rem;
+}
+
+.visit-status p {
+  margin: 0 0 0.35rem;
+}
+
+.visit-status svg {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.12em;
+}
+
+/* Kart fotoğrafı: çizimle aynı yükseklikte, atıf altta. */
+.place-card__photo {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: var(--green-950);
+}
+
+.place-card__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.place-card__credit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.68rem;
+  line-height: 1.3;
+  color: var(--paper);
+  background: linear-gradient(transparent, rgb(18 48 42 / 85%));
+}
+
+.place-card__lead {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.place-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+}
+
+.place-card__chips span {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.place-card__chips .chip--seal {
+  background: var(--green-900);
+  color: var(--gold-300);
+}
+
+.detail-panel__cover {
+  margin: 0 0 0.5rem;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.detail-panel__cover img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.detail-panel__cover figcaption {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  padding-top: 0.25rem;
+}
+
+.credit a {
+  text-decoration: underline;
+}
+
+/* Pasaport: iki ayrı mühür türü. */
+.seal-columns {
+  display: grid;
+  gap: 1rem;
+}
+
+.seal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.seal-list li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.seal-list .passport__stamp-seal {
+  width: 28px;
+  height: 28px;
+}
+
+.seal-progress {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+}
+
+.seal-progress li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+}
+
+@media (min-width: 720px) {
+  .seal-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 960px) {
+  .monument-story__grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+    align-items: start;
+  }
+
+  .monument-story__header {
+    grid-column: 1 / -1;
+  }
+
+  .monument-story__story {
+    grid-column: 1;
+  }
+
+  .story-gallery {
+    grid-column: 1;
+  }
+
+  .monument-story__quest {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    position: sticky;
+    top: calc(var(--header-height) + 1rem);
+  }
+}

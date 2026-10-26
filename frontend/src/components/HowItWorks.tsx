@@ -1,20 +1,11 @@
-const STEPS = [
-  {
-    title: 'Bir eser keşfet.',
-    text: 'Listeden ya da haritadan bir eser seç; ayrıntılarını ve görev alanını incele.',
-  },
-  {
-    title: 'Görevini tamamla.',
-    text: 'Eserin görev alanında demo check-in yap. Sonuç yalnızca backend onaylarsa kabul edilir.',
-  },
-  {
-    title: 'Mührünü topla.',
-    text: 'Kazandığın her mühür dijital pasaportuna eklenir; kayıp vakfiyenin izini mühür mühür sür.',
-  },
-]
+export interface Step {
+  title: string
+  text: string
+}
 
-/** Yeni tasarımın "Merak edin. İzini sürün." bölümü, oyun akışına uyarlandı. */
-export function HowItWorks() {
+
+/** Yeni tasarımın "Merak edin. İzini sürün." bölümü. Adımlar kullanan sayfadan gelir (genel platform / demo). */
+export function HowItWorks({ steps, lead }: { steps: Step[]; lead: string }) {
   return (
     <section className="section journey" aria-labelledby="journey-title">
       <div className="container journey__inner">
@@ -24,10 +15,10 @@ export function HowItWorks() {
             <br />
             İzini sür.
           </h2>
-          <p className="section__lead">VAKIFNAME nasıl oynanır?</p>
+          <p className="section__lead">{lead}</p>
         </div>
         <ol className="journey__list">
-          {STEPS.map((step, index) => (
+          {steps.map((step, index) => (
             <li key={step.title}>
               <span className="journey__number" aria-hidden="true">
                 {String(index + 1).padStart(2, '0')}

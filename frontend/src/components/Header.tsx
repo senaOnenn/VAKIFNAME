@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { CloseIcon, MenuIcon } from './Icons'
 
-const NAV_LINKS = [
+export interface NavLink {
+  href: string
+  label: string
+}
+
+const NAV_LINKS: NavLink[] = [
   { href: '#kesfet', label: 'Keşfet' },
   { href: '#harita', label: 'Harita' },
   { href: '#gorevler', label: 'Görevler' },
@@ -9,7 +14,7 @@ const NAV_LINKS = [
 ]
 
 /** Yeni tasarımın kemer biçimli logosu; belirli bir eseri temsil etmez. */
-function BrandMark() {
+export function BrandMark() {
   return (
     <svg className="brand__mark" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true" focusable="false">
       <path d="M5 35V18Q20-8 35 18v17H5zM12 35V20q8-13 16 0v15M1 35h38M20 3V0" />
@@ -17,7 +22,10 @@ function BrandMark() {
   )
 }
 
-export function Header() {
+export function Header({
+  links = NAV_LINKS,
+  subtitle = 'Bursa’nın Kayıp Vakfiyesi',
+}: { links?: NavLink[]; subtitle?: string } = {}) {
   // Menü düğmesi yalnızca dar ekranlarda görünür; geniş ekranda bağlantılar her zaman açıktır (CSS).
   const [open, setOpen] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -41,7 +49,7 @@ export function Header() {
           <span className="brand__text">
             <span className="brand__name">VAKIFNAME</span>
             <span className="brand__sub" aria-hidden="true">
-              Bursa’nın Kayıp Vakfiyesi
+              {subtitle}
             </span>
           </span>
         </a>
@@ -58,7 +66,7 @@ export function Header() {
         </button>
         <nav id="ana-menu" className={`site-nav${open ? ' site-nav--open' : ''}`} aria-label="Ana menü">
           <ul className="nav">
-            {NAV_LINKS.map(({ href, label }) => (
+            {links.map(({ href, label }) => (
               <li key={href}>
                 <a className="nav__link" href={href} onClick={() => setOpen(false)}>
                   {label}

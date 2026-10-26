@@ -1,0 +1,21 @@
+// S1b: Demo Keşif Oyunu yalnızca geliştirme sunucusunda (otomatik test). Demo check-in → demo pasaportunda mühür.
+const { scenario } = require('./lib.cjs')
+const [DEV, out] = process.argv.slice(2)
+
+scenario('S1b-demo', async ({ browser, check }) => {
+  const ctx = await browser.newContext({ geolocation: { latitude: 41, longitude: 29 }, permissions: ['geolocation'] })
+  const page = await ctx.newPage()
+  await page.goto(DEV + '/?mod=demo')
+  await page.getByRole('navigation', { name: 'Uygulama bölümleri' }).waitFor()
+  check('Geliştirme çubuğu yalnızca geliştirme sunucusunda (demo/envanter)', true)
+  const list = page.getByRole('list', { name: 'Eser listesi' })
+  await list.waitFor()
+  check('Demo oyunu 3 kurgusal mekânı listeliyor', (await list.getByRole('article').count()) === 3)
+  const questList = page.getByRole('list', { name: 'Görev listesi' })
+  await questList.waitFor()
+  await questList.getByRole('button').first().click()
+  await page.getByRole('complementary', { name: 'Aktif görev' }).getByRole('button', { name: /Demo konumuyla görevi dene/ }).click()
+  await page.getByRole('region', { name: 'Dijital Miras Pasaportu' }).getByText(/Toplam mühür\s*1/).waitFor()
+  check('Demo check-in sonrası demo pasaportunda 1 mühür', true)
+  await page.screenshot({ path: `${out}/s1b-demo-pasaport.png`, fullPage: true })
+})

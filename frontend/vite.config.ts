@@ -1,11 +1,50 @@
 /// <reference types="vitest/config" />
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
+import { heroVideoAsset } from './heroVideo.ts'
+
+const LOOPBACK = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1'])
+
+/**
+ * Dahili inceleme sunucusu (backend/app/internal/server.py) yalnızca loopback üzerinde dinler. Yalıtılmış tarayıcı
+ * testleri ayrı bir portu `VAKIFNAME_REVIEW_API_TARGET` ile seçer; hedef loopback dışında olamaz.
+ */
+function reviewApiTarget(): string {
+  const value = process.env.VAKIFNAME_REVIEW_API_TARGET ?? 'http://127.0.0.1:8765'
+  const url = new URL(value)
+  if (url.protocol !== 'http:' || !['127.0.0.1', '[::1]'].includes(url.hostname)) {
+    throw new Error('VAKIFNAME_REVIEW_API_TARGET yalnızca http://127.0.0.1:<port> olabilir.')
+  }
+  return url.origin
+}
+
+/**
+ * `/internal` isteklerini yalnızca bu makinedeki tarayıcılardan kabul eder. Geliştirme sunucusu `--host` ile ağa
+ * açılsa bile proxy başka cihazlardan gelen istekleri dahili sunucuya iletmez. Eklentinin ara katmanı Vite'ın
+ * kendi proxy'sinden önce çalışır.
+ */
+function internalLoopbackOnly(): Plugin {
+  return {
+    name: 'vakifname-internal-loopback-only',
+    configureServer(server) {
+      server.middlewares.use('/internal', (req, res, next) => {
+        if (LOOPBACK.has(req.socket.remoteAddress ?? '')) return next()
+        res.statusCode = 403
+        res.end()
+      })
+    },
+  }
+}
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), internalLoopbackOnly(), heroVideoAsset()],
   // Backend'in varsayılan CORS listesindeki port; preview de aynı portu kullanır.
-  server: { port: 5173, strictPort: true },
+  // `/internal` proxy'si yalnızca geliştirme sunucusunda vardır; `preview` ve üretim derlemesi dahili API'ye erişmez.
+  server: {
+    port: 5173,
+    strictPort: true,
+    proxy: { '/internal': { target: reviewApiTarget(), changeOrigin: false, xfwd: false } },
+  },
   preview: { port: 5173, strictPort: true },
   test: {
     environment: 'jsdom',

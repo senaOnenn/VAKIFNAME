@@ -1,0 +1,31 @@
+/* Demo Keşif Oyunu'na özgü stiller. Yalnızca geliştirme sunucusunda yüklenir; genel derlemeye girmez. */
+.badge--demo {
+  background: var(--amber-bg);
+  color: var(--amber-ink);
+  border: 1px dashed #c9a649;
+}
+
+/* Demo işaretleyiciler renkten bağımsız olarak kesikli çerçeve ve içi boş merkezle ayrılır. */
+.map-marker--demo .map-marker__pin {
+  background: var(--paper-50);
+  border: 3px dashed var(--green-900);
+}
+
+.map-marker--demo .map-marker__pin::after {
+  inset: 5px;
+  background: transparent;
+  border: 3px solid var(--green-900);
+}
+
+.map-marker--demo.map-marker--selected .map-marker__pin {
+  background: var(--gold-300);
+}
+
+.map-marker--demo.map-marker--selected .map-marker__pin::after {
+  background: transparent;
+}
+
+.map-legend__swatch.map-marker--demo .map-marker__pin::after {
+  inset: 3px;
+  border-width: 2px;
+}

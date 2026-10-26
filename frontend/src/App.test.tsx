@@ -27,6 +27,8 @@ vi.mock('./components/PlaceMap', () => ({
 }))
 
 beforeEach(() => {
+  // Bu dosya Demo Keşif Oyunu'nu test eder; varsayılan sayfa artık Gerçek Bursa Eserleri kataloğudur.
+  window.history.replaceState(null, '', '/?mod=demo')
   mapControl.shouldCrash = false
   vi.spyOn(console, 'error').mockImplementation(() => {})
 })
@@ -42,7 +44,8 @@ describe('ana sayfa', () => {
   it('başlığı, sloganı ve ana aksiyonu gösterir', async () => {
     stubFetch(placeRoutes())
     render(<App />)
-    expect(screen.getByRole('heading', { level: 1, name: 'VAKIFNAME' })).toBeInTheDocument()
+    // Demo oyunu geliştirme araçlarıyla birlikte ayrı parçada (lazy) yüklenir.
+    expect(await screen.findByRole('heading', { level: 1, name: 'VAKIFNAME' })).toBeInTheDocument()
     expect(screen.getByText('Geçmişi Keşfet, Mirası Yaşat.')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Eserleri Keşfet' })).toHaveAttribute('href', '#kesfet')
     await screen.findByRole('list', { name: 'Eser listesi' })
@@ -51,7 +54,7 @@ describe('ana sayfa', () => {
   it('ana menüde Keşfet, Harita, Görevler ve Pasaport bölümlerine çalışan bağlantılar verir', async () => {
     stubFetch(placeRoutes())
     const { container } = render(<App />)
-    const nav = screen.getByRole('navigation', { name: 'Ana menü' })
+    const nav = await screen.findByRole('navigation', { name: 'Ana menü' })
     const targets = { Keşfet: '#kesfet', Harita: '#harita', Görevler: '#gorevler', Pasaport: '#pasaport' }
     for (const [label, href] of Object.entries(targets)) {
       expect(within(nav).getByRole('link', { name: label })).toHaveAttribute('href', href)
@@ -169,7 +172,7 @@ describe('eser ayrıntıları', () => {
     expect(panel).toHaveTextContent('Bu kayıt için kaynak bilgisi bulunmuyor.')
     expect(panel).toHaveTextContent(/Kurgusal demo kaydı.*gerçek bir tarihî eseri temsil etmez/)
     expect(panel).toHaveFocus()
-    expect(window.location.search).toBe('?eser=test-a')
+    expect(window.location.search).toBe('?mod=demo&eser=test-a')
     expect(screen.getByRole('button', { name: 'Detayları gör: Test Mekânı A' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('button', { name: 'İşaretleyici: Test Mekânı A' })).toHaveAttribute('aria-pressed', 'true')
   })
@@ -197,18 +200,18 @@ describe('eser ayrıntıları', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Ayrıntıları kapat' }))
     expect(screen.getByText(/listeden ya da haritadan bir eser seç/)).toBeInTheDocument()
     expect(cardButton).toHaveFocus()
-    expect(window.location.search).toBe('')
+    expect(window.location.search).toBe('?mod=demo')
   })
 
   it('adresteki geçersiz eser ID için "bulunamadı" mesajı gösterir', async () => {
-    window.history.replaceState(null, '', '/?eser=olmayan-eser')
+    window.history.replaceState(null, '', '/?mod=demo&eser=olmayan-eser')
     await renderLoaded()
     const panel = screen.getByRole('complementary', { name: 'Eser ayrıntıları' })
     const alert = await within(panel).findByRole('alert')
     expect(alert).toHaveTextContent('Eser bulunamadı')
     expect(alert).toHaveTextContent('olmayan-eser')
     await userEvent.click(within(panel).getByRole('button', { name: 'Seçimi temizle' }))
-    expect(window.location.search).toBe('')
+    expect(window.location.search).toBe('?mod=demo')
   })
 
   it('ayrıntı isteği başarısız olursa hatayı bildirir', async () => {
@@ -295,7 +298,7 @@ describe('harita seçimi duyurusu', () => {
     await userEvent.click(screen.getByRole('button', { name: 'İşaretleyici: Test Mekânı B' }))
     window.history.back()
     expect(await within(detailPanel()).findByRole('heading', { name: 'Test Mekânı A' })).toBeInTheDocument()
-    expect(window.location.search).toBe('?eser=test-a')
+    expect(window.location.search).toBe('?mod=demo&eser=test-a')
     expect(announcer()).toBeEmptyDOMElement()
   })
 

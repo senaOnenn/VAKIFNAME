@@ -67,6 +67,8 @@ function fakeBackend(places: Place[] = PLACES) {
 }
 
 beforeEach(() => {
+  // Görev ve pasaport yalnızca Demo Keşif Oyunu'ndadır (`?mod=demo`).
+  window.history.replaceState(null, '', '/?mod=demo')
   vi.spyOn(console, 'error').mockImplementation(() => {})
 })
 
@@ -81,7 +83,10 @@ const demoButton = () => within(panel()).getByRole('button', { name: /Demo konum
 async function renderApp(routes: Routes) {
   const fetchMock = stubFetch(routes)
   render(<App />)
-  await screen.findByRole('list', { name: 'Görev listesi' })
+  // Dosyanın ilk testinde `?mod=demo` iki tembel modülü (DevModes → DemoGame) ilk kez dönüştürür (~0,7 sn) ve ilk rol
+  // sorgusu erişilebilirlik ağacını soğuk kurar (~0,4 sn); toplam, varsayılan 1 sn `findBy` sınırını makine yüküne
+  // göre aşıyordu (aralıklı hata). Ürün davranışı değil, soğuk başlangıç süresi; yalnızca bu ilk bekleme uzatılır.
+  await screen.findByRole('list', { name: 'Görev listesi' }, { timeout: 5000 })
   // Pasaport yüklenince görev durumları "Tekrar kontrol ediliyor" durumundan çıkar.
   await within(passportSection()).findByText('Toplam mühür')
   return fetchMock

@@ -31,13 +31,22 @@ function detailMessage(body: unknown): string | undefined {
   return undefined
 }
 
-async function request(path: string, signal?: AbortSignal, json?: unknown): Promise<unknown> {
+export interface RequestOptions {
+  /** Varsayılan 10 sn; yapay zekâ rehberi gibi yavaş uçlar için uzatılır. */
+  timeoutMs?: number
+  headers?: Record<string, string>
+  /** Yalnızca rehber test oturumu çerezi için `include`; diğer uçlar çerez göndermez. */
+  credentials?: RequestCredentials
+  method?: 'DELETE'
+}
+
+async function request(path: string, signal?: AbortSignal, json?: unknown, options: RequestOptions = {}): Promise<unknown> {
   const controller = new AbortController()
   let timedOut = false
   const timer = setTimeout(() => {
     timedOut = true
     controller.abort()
-  }, REQUEST_TIMEOUT_MS)
+  }, options.timeoutMs ?? REQUEST_TIMEOUT_MS)
   const forwardAbort = () => controller.abort()
   if (signal?.aborted) controller.abort()
   signal?.addEventListener('abort', forwardAbort)
@@ -47,13 +56,14 @@ async function request(path: string, signal?: AbortSignal, json?: unknown): Prom
     try {
       response = await fetch(`${API_BASE_URL}${path}`, {
         ...(json === undefined
-          ? { headers: { Accept: 'application/json' } }
+          ? { method: options.method ?? 'GET', headers: { Accept: 'application/json', ...options.headers } }
           : {
               method: 'POST',
-              headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+              headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...options.headers },
               body: JSON.stringify(json),
             }),
         signal: controller.signal,
+        ...(options.credentials ? { credentials: options.credentials } : {}),
       })
     } catch (error) {
       if (signal?.aborted) throw error
@@ -61,7 +71,7 @@ async function request(path: string, signal?: AbortSignal, json?: unknown): Prom
       throw new ApiError('network', 'Sunucuya ulaşılamadı.')
     }
 
-    const body: unknown = await response.json().catch(() => undefined)
+    const body: unknown = response.status === 204 ? null : await response.json().catch(() => undefined)
     if (!response.ok) {
       const message = detailMessage(body) ?? `Sunucu bir hata döndürdü (HTTP ${response.status}).`
       throw new ApiError('http', message, response.status)
@@ -72,6 +82,16 @@ async function request(path: string, signal?: AbortSignal, json?: unknown): Prom
     clearTimeout(timer)
     signal?.removeEventListener('abort', forwardAbort)
   }
+}
+
+/** Genel API'ye GET isteği; hata türleri `ApiError` ile aynıdır. Gerçek eser kataloğu istemcisi bunu kullanır. */
+export function apiGet(path: string, signal?: AbortSignal, options?: RequestOptions): Promise<unknown> {
+  return request(path, signal, undefined, options)
+}
+
+/** Genel API'ye JSON gövdeli POST isteği (keşif sorusu cevabı gibi). */
+export function apiPost(path: string, json: unknown, signal?: AbortSignal, options?: RequestOptions): Promise<unknown> {
+  return request(path, signal, json, options)
 }
 
 const isFiniteNumber = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
@@ -148,7 +168,7 @@ function isCheckInResponse(value: unknown, placeId: string): value is CheckInRes
   return r.success === true && isStamp(stamp) && stamp.place_id === placeId
 }
 
-function isPassport(value: unknown, userId: string): value is Passport {
+export function isPassport(value: unknown, userId: string): value is Passport {
   if (!value || typeof value !== 'object') return false
   const p = value as Record<string, unknown>
   return (
