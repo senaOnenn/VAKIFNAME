@@ -1,0 +1,68 @@
+/* VAKIFNAME tasarım token'ları — Palet A: Gece Laciverdi + Altın (CLAUDE.md §5). Yeşil/zümrüt kullanılmaz.
+   Web ve mobil aynı token'ları kullanır; yerleşim farkı bileşen CSS'indedir. */
+@font-face {
+  /* Cormorant Garamond (SIL OFL 1.1), Latin + Türkçe alt kümesi. Lisans: public/fonts/OFL-Cormorant-Garamond.txt */
+  font-family: 'VAKIFNAME Serif';
+  src: url('../assets/fonts/cormorant-garamond-latin-ext.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Zemin ve yüzeyler */
+  --vk-night-deep: #090c22;
+  --vk-night: #0f1330;
+  --vk-surface: #1a2050;
+  --vk-surface-2: #232b66;
+  /* Metin */
+  --vk-ivory: #f3ead3;
+  --vk-ivory-dim: #c9c2ae;
+  /* Altın (vurgu ve altın mühür) */
+  --vk-gold-deep: #8a6a22;
+  --vk-gold: #c9a24b;
+  --vk-gold-bright: #e9c874;
+  /* Teknoloji ışıması (indigo) */
+  --vk-indigo: #4a5bff;
+  --vk-indigo-soft: #8fa2ff;
+  /* Mühür kırmızısı: koyu zeminde düşük kontrast; yalnızca dekor/büyük öge, metin için --vk-seal-soft */
+  --vk-seal: #8e2a3a;
+  --vk-seal-soft: #c2455a;
+  /* Durum */
+  --vk-danger: #ff8a9b;
+
+  --vk-gold-gradient: linear-gradient(135deg, var(--vk-gold-bright), var(--vk-gold) 55%, var(--vk-gold-deep));
+  --vk-night-gradient: radial-gradient(120% 90% at 50% 0%, #1b2262 0%, var(--vk-night) 55%, var(--vk-night-deep) 100%);
+
+  /* Yazı tipleri */
+  --vk-font-display: 'VAKIFNAME Serif', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --vk-font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+
+  /* Boşluk, yarıçap, gölge */
+  --vk-space-1: 0.25rem;
+  --vk-space-2: 0.5rem;
+  --vk-space-3: 0.75rem;
+  --vk-space-4: 1rem;
+  --vk-space-5: 1.5rem;
+  --vk-space-6: 2rem;
+  --vk-space-7: 3rem;
+  --vk-radius: 14px;
+  --vk-radius-lg: 22px;
+  --vk-shadow-gold: 0 0 0 1px rgb(201 162 75 / 0.35), 0 12px 40px rgb(0 0 0 / 0.45);
+  --vk-glow-indigo: 0 0 60px rgb(74 91 255 / 0.35);
+
+  /* Hareket */
+  --vk-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --vk-dur-fast: 180ms;
+  --vk-dur: 420ms;
+  --vk-dur-slow: 900ms;
+}
+
+/* Hareket azaltma tercihine saygı: süreler sıfırlanır, animasyon yalnızca son hâli gösterir. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --vk-dur-fast: 0.01ms;
+    --vk-dur: 0.01ms;
+    --vk-dur-slow: 0.01ms;
+  }
+}

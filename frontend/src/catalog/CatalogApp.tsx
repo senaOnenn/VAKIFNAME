@@ -1,3 +1,4 @@
+import '../styles.css'
 import { forwardRef, lazy, Suspense, useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { ApiErrorMessage } from '../components/ApiErrorMessage'
 import { ArchitectureDrawing, drawingVariantFor } from '../components/ArchitectureDrawing'

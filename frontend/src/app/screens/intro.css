@@ -1,0 +1,169 @@
+.vk-intro {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  animation: vk-intro-out 700ms var(--vk-ease) 4500ms forwards;
+}
+.vk-intro__halo {
+  position: absolute;
+  inset: -20%;
+  z-index: -2;
+  background:
+    radial-gradient(40% 35% at 50% 48%, rgb(74 91 255 / 0.32), transparent 70%),
+    radial-gradient(30% 25% at 50% 52%, rgb(233 200 116 / 0.14), transparent 70%);
+  animation: vk-halo 6s ease-in-out infinite alternate;
+}
+.vk-intro__ornament {
+  position: absolute;
+  width: min(120vmin, 980px);
+  aspect-ratio: 1;
+  z-index: -1;
+  opacity: 0;
+  animation:
+    vk-ornament-in 2200ms var(--vk-ease) 200ms forwards,
+    vk-spin 120s linear infinite;
+}
+.vk-intro__center {
+  display: grid;
+  justify-items: center;
+  gap: var(--vk-space-4);
+  padding: var(--vk-space-5);
+  text-align: center;
+}
+.vk-intro__title {
+  display: flex;
+  font-size: clamp(2.4rem, 11vw, 6.5rem);
+  font-weight: 600;
+  line-height: 1;
+}
+.vk-intro__letter {
+  display: inline-block;
+  background: linear-gradient(100deg, var(--vk-gold-deep) 0%, var(--vk-gold-bright) 40%, #fff3cf 50%, var(--vk-gold-bright) 60%, var(--vk-gold-deep) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(18px) scale(1.12);
+  letter-spacing: 0.08em;
+  animation:
+    vk-letter-in 1100ms var(--vk-ease) calc(700ms + var(--i) * 120ms) forwards,
+    vk-shimmer 2600ms ease-in-out 2600ms 1;
+}
+.vk-intro__rule {
+  width: min(52vw, 260px);
+  opacity: 0;
+  transform: scaleX(0.2);
+  animation: vk-rule-in 1200ms var(--vk-ease) 2200ms forwards;
+}
+.vk-intro__tagline {
+  font-family: var(--vk-font-display);
+  font-size: clamp(1.1rem, 3.4vw, 1.6rem);
+  font-style: italic;
+  color: var(--vk-ivory-dim);
+  letter-spacing: 0.06em;
+  opacity: 0;
+  animation: vk-fade-up 1100ms var(--vk-ease) 2700ms forwards;
+}
+.vk-intro__skip {
+  position: absolute;
+  bottom: max(var(--vk-space-5), env(safe-area-inset-bottom));
+  right: var(--vk-space-5);
+  opacity: 0;
+  animation: vk-fade-up 600ms var(--vk-ease) 900ms forwards;
+}
+
+@keyframes vk-letter-in {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+    letter-spacing: 0.04em;
+  }
+}
+@keyframes vk-shimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+@keyframes vk-rule-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes vk-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes vk-ornament-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7) rotate(-20deg);
+  }
+  to {
+    opacity: 0.32;
+    transform: scale(1) rotate(0);
+  }
+}
+@keyframes vk-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes vk-halo {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+@keyframes vk-intro-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Hareket azaltma: yazı hazır gelir, yalnızca kısa bir belirme kalır. */
+@media (prefers-reduced-motion: reduce) {
+  .vk-intro,
+  .vk-intro__halo,
+  .vk-intro__ornament,
+  .vk-intro__letter,
+  .vk-intro__rule,
+  .vk-intro__tagline,
+  .vk-intro__skip {
+    animation: none;
+  }
+  .vk-intro__ornament {
+    opacity: 0.28;
+  }
+  .vk-intro__letter {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    background-position: 0 0;
+  }
+  .vk-intro__rule,
+  .vk-intro__tagline,
+  .vk-intro__skip {
+    opacity: 1;
+    transform: none;
+  }
+}

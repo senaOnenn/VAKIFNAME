@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react'
-import CatalogApp from './catalog/CatalogApp'
+import VakifnameApp from './app/VakifnameApp'
 import { readMode } from './mode'
 
 // Geliştirme araçları (dahili envanter, Demo Keşif Oyunu ve mod seçici) tek bir parçadadır. `import.meta.env.DEV`
@@ -7,7 +7,7 @@ import { readMode } from './mode'
 // scripts/check-public-build.mjs). Koşul burada doğrudan yazılmalı: başka modülden gelen sabit dinamik import'u elemez.
 const DevModes = import.meta.env.DEV ? lazy(() => import('./dev/DevModes')) : null
 
-/** Genel platform: yalnızca yayın onaylı gerçek Bursa eserleri. */
+/** Genel platform: yeni VAKIFNAME arayüzü (açılış → giriş → şehir). Eski katalog arayüzü (`catalog/`) artık yönlendirilmez. */
 export default function App() {
   const [mode] = useState(readMode)
   if (DevModes && mode !== 'katalog') {
@@ -17,5 +17,5 @@ export default function App() {
       </Suspense>
     )
   }
-  return <CatalogApp />
+  return <VakifnameApp />
 }

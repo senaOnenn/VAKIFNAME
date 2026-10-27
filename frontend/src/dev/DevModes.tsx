@@ -1,3 +1,4 @@
+import '../styles.css'
 import { lazy, Suspense } from 'react'
 import { ModeSwitch } from '../components/ModeSwitch'
 import type { AppMode } from '../mode'

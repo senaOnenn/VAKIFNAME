@@ -1,0 +1,105 @@
+/* Yeni arayüz sayfayı kaplar: tarayıcı varsayılan kenar boşluğu ve beyaz zemin kalkar (eski arayüzü etkilemez). */
+body:has(.vk-app) {
+  margin: 0;
+  background: var(--vk-night-deep);
+}
+
+/* Yeni arayüzün temel kuralları. Yalnızca `.vk-app` içinde geçerlidir (eski styles.css ile çakışmaz). */
+.vk-app {
+  min-height: 100dvh;
+  background: var(--vk-night-gradient);
+  color: var(--vk-ivory);
+  font-family: var(--vk-font-ui);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.vk-app *,
+.vk-app *::before,
+.vk-app *::after {
+  box-sizing: border-box;
+}
+.vk-app h1,
+.vk-app h2,
+.vk-app h3 {
+  font-family: var(--vk-font-display);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+.vk-app p {
+  margin: 0;
+}
+.vk-app a {
+  color: var(--vk-gold-bright);
+}
+.vk-app :focus-visible {
+  outline: 3px solid var(--vk-indigo-soft);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.vk-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Süslü düğme: altın çerçeveli, uçları yontulmuş (parşömen şerit düğmelerinin koda dönük hâli) */
+.vk-btn {
+  --notch: 14px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vk-space-3);
+  min-height: 52px;
+  padding: 0 var(--vk-space-6);
+  border: 0;
+  font: 600 1rem/1 var(--vk-font-ui);
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--vk-night);
+  background: var(--vk-gold-gradient);
+  clip-path: polygon(var(--notch) 0, calc(100% - var(--notch)) 0, 100% 50%, calc(100% - var(--notch)) 100%, var(--notch) 100%, 0 50%);
+  transition: filter var(--vk-dur-fast) var(--vk-ease), transform var(--vk-dur-fast) var(--vk-ease);
+}
+.vk-btn:hover:not(:disabled) {
+  filter: brightness(1.08) saturate(1.05);
+  transform: translateY(-1px);
+}
+.vk-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.vk-btn--ghost {
+  /* Yontulmuş uçlar kenarlığı kesmesin diye ikincil düğme hap biçimindedir. */
+  clip-path: none;
+  border-radius: 999px;
+  color: var(--vk-gold-bright);
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--vk-gold);
+}
+.vk-btn--light {
+  color: #1f1f1f;
+  background: #f8f6f0;
+}
+.vk-btn--block {
+  width: 100%;
+}
+.vk-link-btn {
+  background: none;
+  border: 0;
+  padding: var(--vk-space-2);
+  color: var(--vk-ivory-dim);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.vk-link-btn:hover {
+  color: var(--vk-gold-bright);
+}

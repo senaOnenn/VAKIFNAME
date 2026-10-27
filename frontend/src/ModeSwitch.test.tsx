@@ -15,19 +15,14 @@ const pathsOf = (fetchMock: ReturnType<typeof stubFetch>) =>
   fetchMock.mock.calls.map(([input]) => new URL(String(input), window.location.href).pathname)
 
 describe('genel platform ve geliştirme ortamı ayrımı', () => {
-  it('varsayılan sayfa genel platformdur: mod seçici, geliştirme çubuğu veya demo bağlantısı yok', async () => {
+  it('varsayılan sayfa genel platformdur: açılışla başlar; mod seçici, geliştirme çubuğu veya demo bağlantısı yok', async () => {
     const fetchMock = stubFetch({ '/monuments': { body: EMPTY_CATALOG } })
     render(<App />)
-    expect(await screen.findByText('Henüz yayımlanmış gerçek eser yok')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'VAKIFNAME' })).toBeInTheDocument()
     expect(screen.queryByRole('navigation', { name: 'Uygulama bölümleri' })).not.toBeInTheDocument()
     expect(document.body).not.toHaveTextContent(/Geliştirme ortamı|Demo Keşif Oyunu|Gerçek Bursa Envanteri/)
-    const nav = screen.getByRole('navigation', { name: 'Ana menü' })
-    expect(within(nav).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual([
-      '#katalog', '#katalog-harita', '#hikaye', '#pasaport-tanitim',
-    ])
     const paths = pathsOf(fetchMock)
     expect(paths.some((p) => p.startsWith('/internal') || p.startsWith('/places') || p.endsWith('/passport'))).toBe(false)
-    expect(screen.queryByText('Harita yer tutucusu')).not.toBeInTheDocument()
   })
 
   it('geliştirme sunucusunda ?mod=demo yalnızca otomatik testler için Demo Keşif Oyununu açar', async () => {

@@ -1,0 +1,109 @@
+.vk-city {
+  min-height: 100dvh;
+  padding: 0 var(--vk-space-4) var(--vk-space-7);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+.vk-city__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vk-space-3);
+  padding: var(--vk-space-4) 0;
+}
+.vk-city__logo {
+  font: 600 1.25rem var(--vk-font-display);
+  letter-spacing: 0.14em;
+  color: var(--vk-gold-bright);
+}
+.vk-city__who {
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-3);
+}
+.vk-city__chip {
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgb(201 162 75 / 0.5);
+  color: var(--vk-ivory-dim);
+  font-size: 0.8rem;
+  max-width: 60vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vk-city__intro {
+  display: grid;
+  justify-items: center;
+  gap: var(--vk-space-3);
+  text-align: center;
+  padding: var(--vk-space-6) 0;
+}
+.vk-city__intro h1 {
+  font-size: clamp(1.9rem, 6vw, 3.2rem);
+  color: var(--vk-ivory);
+}
+.vk-city__intro p {
+  color: var(--vk-ivory-dim);
+  max-width: 34rem;
+}
+.vk-city__rule {
+  width: 160px;
+}
+.vk-city__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--vk-space-4);
+  grid-template-columns: 1fr;
+}
+.vk-city__card {
+  display: grid;
+  gap: var(--vk-space-2);
+  min-height: 8.5rem;
+  padding: var(--vk-space-5);
+  border-radius: var(--vk-radius-lg);
+  text-decoration: none;
+  color: var(--vk-ivory);
+  align-content: end;
+  background: linear-gradient(160deg, rgb(35 43 102 / 0.7), rgb(15 19 48 / 0.9));
+  transition: transform var(--vk-dur) var(--vk-ease), box-shadow var(--vk-dur) var(--vk-ease);
+}
+.vk-city__card--open {
+  box-shadow: var(--vk-shadow-gold), var(--vk-glow-indigo);
+}
+.vk-city__card--open:hover {
+  transform: translateY(-3px);
+}
+.vk-city__card--soon {
+  opacity: 0.55;
+  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.2);
+}
+.vk-city__name {
+  font: 600 1.9rem var(--vk-font-display);
+  letter-spacing: 0.03em;
+}
+.vk-city__card--open .vk-city__name {
+  color: var(--vk-gold-bright);
+}
+.vk-city__note {
+  color: var(--vk-ivory-dim);
+  font-size: 0.9rem;
+}
+.vk-city__go {
+  color: var(--vk-gold-bright);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+@media (min-width: 640px) {
+  .vk-city__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 960px) {
+  .vk-city__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
