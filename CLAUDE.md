@@ -1,0 +1,86 @@
+# VAKIFNAME — Claude çalışma kuralları
+
+> Bu dosya her oturumun başında okunur. Görev listesi için `TASK.md`. Kararlar değişirse önce burası güncellenir.
+
+## 1. Proje nedir
+**VAKIFNAME**, Vakıf Katılım'ın **Vakıf Eserleri Envanter Projesi** için yapılan bir **tanıtım ve keşif platformudur** (KÖK&KOD Hackathon, takım HisGuard).
+Envanter projesi: Hatay (117 eser, 2022), Konya (289, 2024), Bursa (385) ve Kütahya (141) (2025), İzmir ve Manisa (2026 başladı). İki yıl süren, Türkçe/İngilizce, ciltli yayınlar.
+**Amaç:** Bu yayınlardaki eserleri herkes için ulaşılabilir kılmak ve insanları eserleri **yerinde ziyarete** teşvik etmek. Oyunlaştırma bunun **aracıdır**, amaç değildir.
+**Kapsam:** Bursa yalnızca pilot. Ürün, başarılı olursa tüm Türkiye ve turistler için büyüyecek şekilde kurulur. Arayüzde, logoda ve metinlerde "Bursa'ya özel" ifade **kullanılmaz** (örn. "Gerçek Bursa Eserleri" yasak). Şehir bir veri alanıdır.
+
+## 2. Ürün vizyonu (ekibin kararları; klasördeki eski kararları ezer)
+1. **Funnel önce gelir.** Siteyi açan kişi ilk 5 saniyede ne olduğunu anlamalı ve içine çekilmeli. Uzun metinli tek sayfa yasak.
+2. **Akış:** Açılış animasyonu (VAKIFNAME yazısı, atlanabilir) → Giriş/Kayıt (+ Google, + "üye olmadan keşfet") → Şehir seçimi (Türkiye haritası, Bursa açık, diğerleri "yakında") → Rota → Eser → Rozet.
+3. **Eserler ayrı sayfada** (Keşfet/Eserler: liste, harita, şehir ve tür filtresi). Ana sayfa eser kataloğu değildir.
+4. **Eser sayfası kitabi bilgiyle açılmaz.** Eseri **animasyonlu bir karakter** anlatır: eserin tarihî karakteri varsa o, yoksa yerel rehber. **Sesli ve altyazılı.** Ayrıntılı, kaynaklı bilgi ikinci katmandır ("Daha fazla / Kaynaklar"), gizlenmez (bkz. §4).
+5. **"Esere Sor" kaldırılır.** Yerine kullanıcı karakterle **konuşur/mesajlaşır** (mevcut rehber hattı: `guide`).
+6. **Oyun akışı (27 Ekim kararı): kademeli ödül, ziyaret en üst kademe.** Ziyaret en zor adım olduğu için ilk kapı **değildir**; herkes online döngüye girer, ziyaret "daha değerli olanı al" hedefidir:
+   (a) **Dinle ve konuş:** karakter anlatımı + en az 1 mesaj → küçük ödül (XP, yapboz parçası belirir).
+   (b) **Rozeti Al → kısa sorular** (çoktan seçmeli, eşleştirme görsel↔eser, doğru/yanlış): eser başına **5 soru, ≥4 doğru (%80)** → **Bilgi mührü** (indigo/gümüş).
+   (c) **Eseri ziyaret et** (konum doğrulaması) → mühür **altın yaldızlı, parlak** hâle gelir: **Ziyaret mührü**.
+   Backend zaten iki mührü ayırır (`knowledge` ve `visit`, `backend/app/progress.py`).
+7. **Rota:** kullanıcıya **en yakın, rozeti alınmamış** eser **önerilir**; rozet alınınca sıradaki en yakın gelir. Başlangıçta en yakın **3 eser açık**, kalanlar kilitli; her bilgi mührü sonrası bir kilit açılır. Rota yönlendirmedir, ziyaret kilidi değildir.
+8. **Kayıp Vakfiye:** pilotta 10 eser = 10 yapboz parçası. Parça bilgi mührüyle (online) kazanılır; 10 parça = vakfiye tamamlanır. **Altın vakfiye** (tüm parçalar altın) yalnızca ziyaretle gelir, böylece ziyaret için sebep kalır.
+9. **Login:** kendi mekanizmamız (e-posta+parola) **ve Google ile giriş**. Üye olmadan keşfetmek de mümkün (misafir).
+10. **İki tasarım:** web (responsive) ve mobil. Aynı bileşenler ve veri; farklı yerleşim.
+11. **İstatistik:** ziyaretçi sayısı, eser görüntülenme, en çok ilgi gören eserler (sponsor istedi). Kişisel veri tutmadan.
+12. **Dil:** Türkçe ve İngilizce (sponsor yayınları iki dilli).
+
+## 3. Sponsor ve jüri beklentileri (şartname + 23 Ekim toplantısı)
+- **Çalışan MVP şart.** Statik tasarım, mock-up, ekran görüntüsü ana ürün sayılmaz; temel akışlar final sırasında **uçtan uca canlı** gösterilir.
+- **Zorunlu işlevler (şartname 5.1.1):** birden fazla eser keşfi, tarihçe/görsel/kaynak bilgisi, **içerik ekleme ve düzenleme** (yönetim), yeni eser eklemeye uygun mimari.
+- **Veri doğruluğu (5.1.3):** her tarihî iddiada **kaynak gösterilir**; **doğrulanmamış içerik kesin bilgi gibi sunulmaz**.
+- **Erişilebilirlik (5.1.4):** sesli anlatım, altyazı, alternatif metin, kontrast, yazı boyutu, klavye, ekran okuyucu — **tasarımda değil çalışan üründe**.
+- **Görseller:** sponsorun ilettiği kaynaklar Bursa'nın 3 ciltlik envanter PDF'leridir (`veriler/`); toplantıda bu görsellerin kullanılması vurgulandı. **Karar (27 Ekim):** PDF'lerden görsel ayıklama ayrı bir süreçte yapılır; **şimdilik mevcut görsellerle** (Wikimedia Commons) devam edilir. Her görselde atıf/lisans satırı kalır.
+- **Oyun:** kullanıcıdan fotoğraf çekmesini istemek **istenmedi**. Doğru görseli seçme/eşleştirme istendi. Görsele tıklanınca eser bilgisi açılır.
+- **Fiziksel ziyaret teşviki** yaratıcılığımıza bırakıldı: bu yüzden ziyaret doğrulaması oyunun kilididir.
+- **Tanıtım videosu** sunumda zorunlu beklenti.
+- **Takvim:** özellik dondurma 3 Kasım (ekip kararı), geliştirme 7 Kasım'da biter, final 7–8 Kasım (fiziki, 7 kişilik jüri). 28 Ekim yarım gün, 29 Ekim tatil. Sunumu yalnızca takım üyeleri yapar.
+
+## 4. Veri ve güven kuralları (pazarlık konusu değil)
+- Tarihî bilgi **yalnızca onaylı katalogdan** gelir (`public_catalog`, her kayıtta kaynak sayfası ve karar kimliği). Modelin kendi "bilgisi" cevap olarak sunulmaz.
+- Karakterin ağzından çıkan her tarihî cümle onaylı bir `fact_id`'ye bağlanır. Bağlanamayan cümle gösterilmez.
+- **Karakter bir canlandırmadır.** Tarihî kişilerin "sözleri" gerçek alıntı gibi sunulmaz; arayüzde "canlandırma / kurgu" etiketi bulunur. Kurgu ile tarihî iddia karışmaz.
+- Kaynak bulunamıyorsa dürüst cevap: "Bunu kaynaklarımda bulamadım." Uydurma yok.
+- Koordinat ve konum doğrulaması onaylı olmadan eserde ziyaret mührü verilmez. Demo modu **ekranda açıkça** "demo" yazar.
+- Quiz cevapları **sunucuda** doğrulanır; doğru şık istemciye gönderilmez.
+- Kitap PDF'leri, ham metin, görsel arşivleri ve `.env` **asla** commit'lenmez/public repoya konmaz. Görsel izni/lisansı her görsel için kayıtlıdır; üçüncü taraf lisans sorumluluğu bizdedir.
+
+## 5. Manevi değerler ve ton
+- Eserlerin çoğu **ibadet mekânı veya türbe**. Saygılı, sade, sakin bir dil. Şakacı/oyuncak bir üslup yok; oyunlaştırma **vakarlı** kalır.
+- Ses ve müzik **otomatik başlamaz**; kullanıcı başlatır, kapatma her zaman görünür. İbadet mekânı/türbe uyarıları (katalogdaki `site_notice` metni: sessiz olun, sandukalara dokunmayın vb.) ziyaret ve oyun adımından önce görünür tutulur. Namaz vakti hesaplama özelliği **yoktur**.
+- Dinî figür, ayet, hat veya levha **uydurulmaz**; ayet/hadis/kitabe yalnızca onaylı kaynaktan.
+- Gerçek tarihî şahsiyetlerin görsel temsili saygılı, çizim/illüstrasyon dilinde olur; fotogerçekçi yüz üretimi yok.
+- **Renk paleti (27 Ekim kararı, "A · Gece Laciverdi + Altın"):** yeşil/zümrüt **yok**. Zemin gece laciverdi `#0F1330`, yüzey `#1A2050`, metin fildişi `#F3EAD3`, altın `#C9A24B`, parlak altın `#E9C874` (altın mühür/vurgu), teknoloji ışımaları indigo `#4A5BFF` (açık ton `#8FA2FF`), mühür kırmızısı `#8E2A3A` (balmumu). Tarih = altın/fildişi/çini kobaltı; teknoloji = ince indigo ışıma ve geometrik (girih) desen. Kırmızı `#8E2A3A` koyu zeminde düşük kontrastlıdır: yalnızca dekor/büyük ögede, metin için açık tonu kullan. Animasyon `prefers-reduced-motion`'a saygı duyar.
+
+## 6. Teknik yapı
+- **Backend:** FastAPI (`backend/app`), onaylı katalog + quest/ilerleme (SQLite) + rehber (`guide`) + Esere Sor altyapısı (`ask`, arayüzden kalkar ama arama motoru rehberin kaynağıdır).
+- **Frontend:** React + TypeScript + Vite (`frontend/src`). Harita: Leaflet.
+- **Rehber sağlayıcısı** tek yerden seçilir: `VAKIFNAME_GUIDE_PROVIDER` (`openrouter` | `claude-cli`), bkz. `backend/.env.example`. Giriş/anahtar yoksa **sessiz geçiş yok**; rehber kapanır, kaynaklı arama sürer. Hesap açılış logunda yazar.
+- **Tasarım kodla yapılır.** Figma yalnızca renk/yazı tipi karar belgesi ve sunum içindir. Tasarım token'ları tek dosyada: `frontend/src/design/tokens.css` (oluşturulacak).
+- Yeni env eklenince `backend/.env.example`'a **seçenekleriyle birlikte yorum satırı** yazılır.
+
+### Çalıştırma
+```bash
+# backend
+cd backend && set -a && . ./.env && set +a && .venv/bin/uvicorn app.main:app --port 8000
+# frontend
+cd frontend && npm run dev          # http://localhost:5173
+# testler
+cd backend && .venv/bin/python -m pytest
+cd frontend && npm test && npx tsc -b && npm run build
+```
+Medya (görsel) ve giriş videosu repoda yoktur: görseller `backend/tests/ask_eval/media/` (git'e girmez), video `~/vakifname-video-assets/hero.mp4`.
+
+## 7. Çalışma biçimi
+- **Önce anla, sonra yaz.** Büyük değişiklikte plan → onay → uygulama. Ekip kodu sorgulamadan ilerlemişti; biz **gerekçeli** ilerleriz.
+- **İnce çalışırız, sıkıştırmayız.** Takvim baskısı kalite ve doğruluk kuralını (§4) gevşetmez. Kapsamı kısarız, kaliteyi değil.
+- Değişiklik küçük ve test edilebilir olur. Commit öncesi: backend + frontend testleri ve `npx tsc -b` geçer.
+- **Commit ve push yalnızca kullanıcı isteyince.** Commit mesajına **Claude ortak yazar (Co-Authored-By) satırı eklenmez**. **Ana dal `feat/game`** (`main` değil; `main` geride kaldı). Yeni işler `feat/game`'den dal alır, bittiğinde `feat/game`'e birleşir. `feat/game`'e birleştirme/push yalnızca kullanıcı isteyince.
+- Kullanıcı arayüz metinleri Türkçe; ayrıca İngilizce katmanı. Kod/komut olduğu gibi kalır; commit mesajları İngilizce.
+- Kullanıcının makinesine zarar verebilecek işlem (sudo, silme, başka hesaba harcama) önce sorulur.
+- LLM çağrıları API'den değil, **abonelik oturumu** (`claude -p`) üzerinden; hesap seçimi `CLAUDE_CONFIG_DIR` ile.
+
+## 8. Kaynaklar (proje sahibinin Mac'inde)
+- `~/hackathon-drive/` — şartname, bilgi notu, toplantı notları, oyun senaryosu, marka varlıkları (`game/vakifname_brand_assets`), giriş videoları, ciltli yayın PDF'leri (`veriler/`), eser görselleri (`images/`, `Eserler_ve_görseller_ayrıştırılmış/`).
+- Eski senaryo (`game/VAKIFNAME-oyun senaryosu.docx`) **kısmen geçersiz**: bu dosyadaki §2 kararları önceliklidir.
