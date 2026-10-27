@@ -8,7 +8,7 @@
 - ✅ Backend sağlam: onaylı katalog (10 eser), kaynaklı olgular, sunucuda doğrulanan sorular, SQLite ilerleme, test süiti.
 - ✅ Rehber hattı: sağlayıcı seçimi (`claude-cli` / `openrouter`), gerçek giriş kontrolü. **`feat/game`'e birleşti (2c16b4f).** Ana dal: `feat/game`.
 - ❌ Arayüz: tek uzun sayfa, funnel yok, oyun yok, eser sayfası kitabi, giriş yok. **Baştan yapılacak.**
-- ❌ Konum doğrulaması 10 eserde de kapalı (`checkin_available: false`).
+- ✅ Konum koordinatları onaylı (katalog). ❌ Check-in: yarıçap ve `gps_checkin` kararı yok (`checkin_available: false`); Faz 5'te.
 - ❌ Hesap sistemi yok (tarayıcıda üretilen takma kimlik var).
 
 ## Karar bekleyenler (bunlar çözülmeden ilgili iş başlamaz)
@@ -20,23 +20,23 @@
 | K4 | **Karakter görseli.** Tarihî karakter için hangi eserlerde figür var? | Eser başına `narrator` alanı: tarihî şahsiyet (Yıldırım Bayezid, Osman Gazi, Orhan Gazi, Cem Sultan, II. Murad) **veya** yerel rehber. Çizim/illüstrasyon dili; fotogerçekçi yüz yok. |
 | K5 | ✅ **KARARLI (27 Ekim).** Şimdilik **mevcut görsellerle** devam. Sponsorun kaynağı Bursa'nın 3 ciltlik PDF'i; görselleri ayrı bir süreçte ayıklayıp geçeceğiz. | — (kullanım izni için organizatöre ayrıca sorulacak) |
 | K6 | **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
-| K7 | **Konum doğrulaması:** her eserin koordinatını kullanıcı **eser eser** iletir. **Yarıçap:** eser noktasına bu kadar metre yakın olan telefon "orada" sayılır. | Katalogda 10 eser için koordinat var (doğruluk 13–46 m) ama onaysız. Yakın eserler çakışır (Muradiye'de 4 eser 42–95 m arayla; Osman/Orhan Gazi 28 m): yarıçap **eser başına** ve küçük (≈25–40 m), ya da külliye tek "alan" olur. Onaysız eserde "demo konumu" açık etiketle. |
+| K7 | ✅ **KARARLI (27 Ekim).** Koordinatlar **onaylıdır**, katalogdakiler kullanılır; kendi eklediğimiz konum verisi yok. Kayıtlar: noktalar `backend/tests/ask_eval/catalog_snapshot.json`, adaylar `data/real_catalog/monument_research.json`, onay kararları sunucuda `review.sqlite3`. | Ziyaret (Faz 5) için eser başına yarıçap yapılandırılabilir olur; yakın eserler (Muradiye'de 4 eser, Osman/Orhan Gazi) çakışmasın diye küçük başlanır. Sahada ince ayar sonra. |
 | K8 | **Misafir ilerlemesi.** Üye olmadan toplanan rozetler giriş yapınca birleşir mi? | Evet: cihazdaki ilerleme girişte hesaba **birleştirilir**. |
 | K9 | **Yeni dil:** EN metinler nereden? | Ciltli yayınlar iki dilli; onaylı olgulara `text_en` alanı. Çeviri uydurma değil, kaynaktan. |
 
 ## Faz 0 — Zemin (önce)
 - [ ] Bu iki dosyayı ekiple paylaş; eleştiri notu (ekran görüntülü, tek sayfa) hazırla.
 - [ ] Kararları K1–K9 üzerinden kapat (hepsi gerekmez; K1, K2, K5, K6 önce).
-- [ ] `frontend/src/design/tokens.css`: renk (**Palet A: gece laciverdi + altın**, CLAUDE.md §5), yazı tipi, boşluk, hareket süreleri, gölge.
+- [x] `frontend/src/design/tokens.css`: renk (**Palet A: gece laciverdi + altın**, CLAUDE.md §5), yazı tipi, boşluk, hareket süreleri, gölge.
 - [ ] Marka SVG'leri (`game/vakifname_brand_assets`) çoğunlukla altın/krem, uyumlu; `uye_olmadan_kesfet.svg` içindeki yeşil (`#28584a`) yeni palete uyarlanır. Web ve mobil aynı token'ları kullanır.
 - [ ] Eski arayüzden **tutulacaklar** (api client, tipler, harita bileşeni) ve **atılacaklar** (Hero, HowItWorks, PlaceCard vb. sayfalar) listesi.
 - [ ] Bilgi mimarisi ve ekran listesi: Açılış · Giriş/Kayıt · Şehir · Rota/Harita · Eserler · Eser · Rozeti Al · Pasaport/Vakfiye · Hesap · (yönetim).
 
 ## Faz 1 — Tasarım sistemi ve iskelet (web + mobil)
-- [ ] Yönlendirme (router) ve ekran iskeletleri; mobil için alt gezinme, web için üst gezinme.
-- [ ] **Açılış animasyonu:** "VAKIFNAME" yazısı, ardından Giriş sayfasına geçiş; atlanabilir, `prefers-reduced-motion`'da statik.
-- [ ] **Giriş/Kayıt ekranı:** Google ile devam, e-posta+parola, "üye olmadan keşfet". Mevcut marka SVG'leri (`giris_yap`, `uye_olmadan_kesfet`, `maceraya_basla`) kullanılır.
-- [ ] **Şehir seçimi:** Türkiye haritası (`vakifname_turkiye_haritasi_asset.svg`); Bursa açık, diğerleri "yakında".
+- [x] Yönlendirme (`react-router-dom`) ve ilk ekran iskeletleri (`/`, `/giris`, `/sehir`, `/bursa` yer tutucu). [ ] Mobil için alt gezinme, web için üst gezinme.
+- [x] **Açılış animasyonu:** "VAKIFNAME" yazısı, ardından Giriş sayfasına geçiş; atlanabilir, `prefers-reduced-motion`'da statik.
+- [x] **Giriş/Kayıt ekranı** (arayüz; sunucu yok, geçici oturum): Google ile devam, e-posta+parola, "üye olmadan keşfet". Parşömen/yeşil marka SVG'leri yerine düğmeler palet A ile kodla çizildi.
+- [~] **Şehir seçimi:** kart listesi hazır (Bursa açık). [ ] Türkiye haritası (`vakifname_turkiye_haritasi_asset.svg`); Bursa açık, diğerleri "yakında".
 - [ ] Ortak bileşenler: düğme, kart, rozet/mühür, kilit, ilerleme, altyazılı oynatıcı, karakter sahnesi.
 - [ ] Ekran okuyucu, klavye gezinmesi, kontrast, yazı boyutu: **bileşen seviyesinde** başlangıçtan itibaren.
 
