@@ -39,7 +39,14 @@ def answers(monument_id: str) -> list[tuple[str, int]]:
     return [(f["fact_id"], f["quest"]["answer_index"]) for f in m["facts"] if f.get("quest")]
 
 
+def unlock(c, user_id: str, monument_id: str):
+    """Eseri kullanıcının rotasında açılmış say: soru cevaplama rota kilidine uyar; bu dosyadaki testler kilitle değil,
+    hesap erişimi ve birleştirmeyle ilgilidir (kilit testleri: test_route.py, test_game.py)."""
+    c.app.state.monument_progress.plan_unlocks(user_id, lambda done, unlocked: (None, [monument_id]))
+
+
 def earn_knowledge_seal(c, user_id: str, monument_id: str):
+    unlock(c, user_id, monument_id)
     for quest_id, idx in answers(monument_id):
         r = c.post(f"/monuments/{monument_id}/quests/{quest_id}/answer", json={"user_id": user_id, "choice_index": idx})
         assert r.status_code == 200, r.text
@@ -467,6 +474,7 @@ def test_account_progress_requires_own_session(c):
     assert stranger.post("/auth/register", json={"email": "baska@example.com", "password": PASSWORD}).status_code == 201
     anonymous = TestClient(c.app)
     quest_id, idx = answers("BUR-0005")[0]
+    unlock(c, owner, "BUR-0005")
 
     def calls(client):
         return [client.get(f"/users/{owner}/seals"),

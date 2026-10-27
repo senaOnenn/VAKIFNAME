@@ -1,8 +1,10 @@
 """Rota API'si: şehirdeki onaylı eserlerin yürüyüş önerisi ve kilit durumu (kurallar için bkz. `route_engine.py`).
 
-Rota yönlendirmedir, ziyaret kilidi değildir. Eksik kilitler yalnızca bu uçta, okuma sırasında açılır ve kalıcı yazılır;
-bilgi mührü kazanıldıktan sonraki ilk çağrı sınırı yeniden doldurur. Koordinatı olmayan eser rotaya girmez. İlerleme
-uçlarındaki gibi hesap kimliğiyle (`u-…`) yalnızca o hesabın oturumuyla okunur (`require_progress_access`).
+Rota yönlendirmedir, ziyaret kilidi değildir. Eksik kilitler bu uçta, okuma sırasında açılır ve kalıcı yazılır; bilgi
+mührü kazanıldıktan sonraki ilk çağrı sınırı yeniden doldurur. Tek istisna: rotayı hiç açmamış kullanıcı doğrudan bir
+eserin oyun ucuna gelirse ilk sınır orada, bu uçla aynı kuralla doldurulur (`monument_locked`). Koordinatı olmayan eser
+rotaya girmez. İlerleme uçlarındaki gibi hesap kimliğiyle (`u-…`) yalnızca o hesabın oturumuyla okunur
+(`require_progress_access`).
 """
 
 from typing import Annotated, Optional
@@ -21,10 +23,48 @@ CITY_NOT_FOUND = "Bu şehir için rota bulunamadı."
 LOCATION_PAIR = "Konum için enlem ve boylam birlikte gönderilmelidir."
 
 
-def _city_points(request: Request, slug: str) -> list[Point]:
-    catalog = request.app.state.monuments.catalog
+def city_points(catalog, slug: str) -> list[Point]:
+    """Şehrin rotaya giren eserleri: koordinatı olan onaylı eserler."""
     return [Point(m.monument_id, m.name, m.type, m.location.latitude, m.location.longitude)
             for m in catalog.monuments if m.location is not None and route_engine.city_slug(m.city) == slug]
+
+
+def _city_points(request: Request, slug: str) -> list[Point]:
+    return city_points(request.app.state.monuments.catalog, slug)
+
+
+def plan_city(points: list[Point], completions: list[dict], unlocked: set[str],
+              location: Optional[tuple[float, float]] = None) -> RoutePlan:
+    """`MonumentProgressStore.plan_unlocks` içinde çağrılır: depodaki tamamlananlarla şehrin rotası."""
+    done = [Completion(c["monument_id"], c["earned_at"], c["visit"]) for c in completions]
+    return route_engine.plan_route(points, done, unlocked, location)
+
+
+def monument_locked(request: Request, monument, user_id: str) -> bool:
+    """Eser bu kullanıcı için kilitli mi (sınav ve soru cevaplama kapısı)?
+
+    Açık sayılır: bilgi mührü kazanılmış (tamamlanmış) ya da rotada kilidi açılmış eser. Kullanıcının o şehirde hiç açık
+    eseri yoksa (rotayı henüz hiç açmamışsa) sınır, `GET /route`'un konumsuz çağrısıyla aynı biçimde burada ilk kez
+    doldurulur ve kalıcı yazılır; aksi halde sınır yalnızca rota ucunda doldurulur. Koordinatı olmayan eser rotaya
+    girmediği için kilitlenmez.
+    """
+    if monument.location is None:
+        return False
+    store: MonumentProgressStore = request.app.state.monument_progress
+    if monument.monument_id in store.unlocked(user_id):
+        return False
+    points = _city_points(request, route_engine.city_slug(monument.city))
+    city_ids = {p.monument_id for p in points}
+
+    def planner(completions: list[dict], unlocked: set[str]) -> tuple[bool, tuple[str, ...]]:
+        if monument.monument_id in unlocked or any(c["monument_id"] == monument.monument_id for c in completions):
+            return False, ()
+        if unlocked & city_ids:
+            return True, ()
+        plan = plan_city(points, completions, unlocked)
+        return monument.monument_id not in plan.new_unlocks, plan.new_unlocks
+
+    return store.plan_unlocks(user_id, planner)
 
 
 @router.get("/route")
@@ -40,8 +80,7 @@ def get_route(request: Request, response: Response, city: Annotated[str, Query(m
     location = (lat, lng) if lat is not None else None
 
     def planner(completions: list[dict], unlocked: set[str]) -> tuple[RoutePlan, tuple[str, ...]]:
-        done = [Completion(c["monument_id"], c["earned_at"], c["visit"]) for c in completions]
-        plan = route_engine.plan_route(points, done, unlocked, location)
+        plan = plan_city(points, completions, unlocked, location)
         return plan, plan.new_unlocks
 
     store: MonumentProgressStore = request.app.state.monument_progress

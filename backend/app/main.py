@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+import random
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -12,6 +14,8 @@ from fastapi.responses import JSONResponse
 
 from .accounts import AccountStore
 from .ask.service import AskService
+from .game import GameSettings
+from .game_routes import router as game_router
 from .ask_routes import RateLimiter, router as ask_router
 from .auth_routes import router as auth_router
 from .people_routes import router as people_router
@@ -119,6 +123,12 @@ def create_app(
     # tanımlı değilse (testler) bellek içi depo kullanılır ve yeniden başlatmada sıfırlanır.
     progress_db = progress_db or (Path(os.environ["VAKIFNAME_PROGRESS_DB"]) if os.environ.get("VAKIFNAME_PROGRESS_DB") else None)
     app.state.monument_progress = MonumentProgressStore(progress_db)
+    # Oyun döngüsü (bkz. app/game_routes.py): ziyaret yarıçapı `VAKIFNAME_VISIT_RADIUS_M` (varsayılan 35 m) ve sunum modu
+    # ziyareti `VAKIFNAME_VISIT_SIMULATION=on|off` (varsayılan off). Geçersiz değer açılışta hata verir. Saat ve
+    # rastgelelik testlerde değiştirilebilir.
+    app.state.game_settings = GameSettings.from_env()
+    app.state.game_clock = lambda: datetime.now(timezone.utc)
+    app.state.game_rng = random.SystemRandom()
     # Hesaplar ve oturumlar `VAKIFNAME_ACCOUNTS_DB` dosyasında (ilerlemeden ayrı); tanımlı değilse bellek içi (testler).
     accounts_db = accounts_db or (Path(os.environ["VAKIFNAME_ACCOUNTS_DB"]) if os.environ.get("VAKIFNAME_ACCOUNTS_DB") else None)
     app.state.accounts = AccountStore(accounts_db)
@@ -188,6 +198,7 @@ def create_app(
     app.include_router(ask_router)
     app.include_router(guide_router)
     app.include_router(monument_router)
+    app.include_router(game_router)
     app.include_router(route_router)
     app.include_router(people_router)
     app.include_router(auth_router)
