@@ -16,7 +16,7 @@
 |---|---|---|
 | K1 | ✅ **KARARLI (27 Ekim).** Eser başına **5 kısa soru**, **≥4 doğru (%80)** = rozet. Yanlışta farklı soru havuzundan tekrar. | — |
 | K2 | **Karakterle "konuşulması" neyi kapsar?** (Akış 27 Ekim'de değişti: bu adım artık ilk kademe, ziyaret kilit değil.) | Anlatımı sonuna kadar dinlemek **+ en az 1 mesaj/soru**. (Sesi dinlemeyen/duyamayan için altyazıyı okumak da sayılır.) |
-| K3 | **Karakterin sesi.** Önceden kaydedilmiş anlatım mı, canlı TTS mi? | Anlatım **önceden üretilir** (kalite + kontrol + lisans). Sohbet cevapları metin + tarayıcı `speechSynthesis` (opsiyonel dinle). |
+| K3 | ◐ **VARSAYILAN UYGULANDI (Faz 4): tarayıcı seslendirmesi + altyazı.** **Karakterin sesi.** Önceden kaydedilmiş anlatım mı, canlı TTS mi? | Anlatım **önceden üretilir** (kalite + kontrol + lisans). Sohbet cevapları metin + tarayıcı `speechSynthesis` (opsiyonel dinle). |
 | K4 | **Karakter görseli.** Tarihî karakter için hangi eserlerde figür var? | Eser başına `narrator` alanı: tarihî şahsiyet (Yıldırım Bayezid, Osman Gazi, Orhan Gazi, Cem Sultan, II. Murad) **veya** yerel rehber. Çizim/illüstrasyon dili; fotogerçekçi yüz yok. |
 | K5 | ✅ **KARARLI (27 Ekim).** Şimdilik **mevcut görsellerle** devam. Sponsorun kaynağı Bursa'nın 3 ciltlik PDF'i; görselleri ayrı bir süreçte ayıklayıp geçeceğiz. | — (kullanım izni için organizatöre ayrıca sorulacak) |
 | K6 | **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
@@ -59,12 +59,14 @@
 - Not (Faz 5): soru-cevap ucu kilide bakmıyor; kilitli eserin soruları API'den cevaplanabiliyor → Faz 5 "kilit atlatma" testinde kapatılacak.
 - Not (ölçek): eski istemci doğrulayıcısı eser kimliğini `BUR-0000` biçimine kilitliyor (`catalog/catalogClient.ts`); yeni şehir eklenirken genelleştirilmeli. Bursa'ya özel başka sabitler: `getRoute('bursa', …)` çağrıları (eser ve eserler sayfası).
 
-## Faz 4 — Eser sayfası: karakter anlatımı
-- [ ] `narrator` alanı (tarihî karakter | yerel rehber) ve karakter varlıkları (illüstrasyon + konuşma animasyonu).
-- [ ] **Anlatım:** onaylı `fact_id`'lerden derlenen kısa senaryo, ses + altyazı, ilerleme çubuğu, duraklat/hız, "canlandırma" etiketi.
-- [ ] **Sohbet:** karakter ile mesajlaşma (mevcut `guide`), kaynaklı cümleler, kaynak yoksa dürüst cevap. "Esere Sor" arayüzden kaldırılır.
-- [ ] İkinci katman: "Daha fazla" — tarihçe, mimari, kaynak sayfası, galeri.
-- [ ] Erişilebilirlik: transkript, altyazı boyutu/kontrastı, sessiz mod.
+## Faz 4 — Eser sayfası: karakter anlatımı ◐ (27 Ekim, dal `feat/narrator`)
+- [~] Anlatıcı: şimdilik **her eserde yerel rehber** = ekibin "Çırak Kâşif" karakter videosu (sessiz döngü, konuşurken oynar; `~/vakifname-video-assets/narrator-guide.mp4`, repoya girmez, Vite eklentisiyle sunulur). [ ] **Tarihî karakterler K4 kararını bekliyor.**
+- [x] **Anlatım:** onaylı kayıtlardan derlenen metin (en fazla 6 bilgi, hikâye sırası, belgelenmişler önce); her tarihî cümle `fact_id`'ye bağlı ve kayıttan aynen; rivayet/kesin olmayan bilgi seste de belirtilir. Ses + altyazı, önceki/sonraki, hız, sessiz mod, "canlandırma" etiketi.
+- [x] **Sohbet:** "Rehbere sor" mevcut `guide` hattına bağlı (kaynaklı cümleler, dayandığı kayıtlar); rehber kapalıysa dürüst bilgi. "Esere Sor" yeni arayüzde yok.
+- [x] İkinci katman: tarihçe, kaynak sayfası, kesinlik etiketi, galeri (Faz 3).
+- [x] Erişilebilirlik: tam metin (transkript), büyük altyazı, sessiz mod; ses otomatik başlamaz.
+- **Karar (K3, varsayılan, 27 Ekim):** seslendirme tarayıcının Türkçe sesiyle (Web Speech API; lisans/anahtar gerektirmez). Türkçe ses yoksa altyazı kendiliğinden ilerler. Önceden üretilmiş stüdyo kaydı sonra eklenebilir.
+- Not (Faz 5): "dinledi" ve "sordu" olayları şimdilik yalnızca arayüzde; Kademe 1 için sunucuya kaydedilecek.
 
 ## Faz 5 — Gerçek oyun: dinle → soru → ziyaretle altın
 - [ ] **Kademe 1 — Dinle ve konuş:** anlatım bitince + en az 1 mesaj ⇒ küçük ödül (XP, yapboz parçası belirir). Sunucuda kayıtlı.

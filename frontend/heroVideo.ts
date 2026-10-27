@@ -18,6 +18,9 @@ import type { Plugin } from 'vite'
 const here = dirname(fileURLToPath(import.meta.url))
 export const DEFAULT_HERO_VIDEO = resolve(here, '..', '..', 'vakifname-video-assets', 'hero.mp4')
 export const HERO_VIDEO_FILE = 'media/hero.mp4'
+/** Eser sayfasındaki yerel rehber karakterinin sessiz konuşma döngüsü (ekibin karakter videosu; ses tarayıcıda üretilir). */
+export const DEFAULT_NARRATOR_VIDEO = resolve(here, '..', '..', 'vakifname-video-assets', 'narrator-guide.mp4')
+export const NARRATOR_VIDEO_FILE = 'media/narrator-guide.mp4'
 const MAX_BYTES = 25 * 1024 * 1024
 
 export type VideoCheck = { ok: true; size: number } | { ok: false; reason: string }
@@ -85,21 +88,25 @@ function send(path: string, size: number, rangeHeader: string | undefined, metho
   createReadStream(path, { start, end }).pipe(res)
 }
 
-export function heroVideoAsset(source = process.env.VAKIFNAME_HERO_VIDEO ?? DEFAULT_HERO_VIDEO): Plugin {
+export function heroVideoAsset(
+  source = process.env.VAKIFNAME_HERO_VIDEO ?? DEFAULT_HERO_VIDEO,
+  file = HERO_VIDEO_FILE,
+  label = 'Giriş videosu',
+): Plugin {
   let base = '/'
   return {
-    name: 'vakifname-hero-video',
+    name: file === HERO_VIDEO_FILE ? 'vakifname-hero-video' : `vakifname-video:${file}`,
     configResolved(config) {
       base = config.base
     },
     configureServer(server) {
-      const route = `${base.replace(/\/$/, '')}/${HERO_VIDEO_FILE}`
+      const route = `${base.replace(/\/$/, '')}/${file}`
       server.middlewares.use((req, res, next) => {
         const path = (req.url ?? '').split('?')[0]
         if (path !== route || (req.method !== 'GET' && req.method !== 'HEAD')) return next()
         const check = inspectHeroVideo(source)
         if (!check.ok) {
-          server.config.logger.warn(`Giriş videosu sunulamadı (${check.reason}): ${source}`, { timestamp: true })
+          server.config.logger.warn(`${label} sunulamadı (${check.reason}): ${source}`, { timestamp: true })
           res.statusCode = 404
           res.end()
           return
@@ -108,13 +115,13 @@ export function heroVideoAsset(source = process.env.VAKIFNAME_HERO_VIDEO ?? DEFA
       })
     },
     generateBundle() {
-      if (process.env.VITE_HERO_VIDEO_URL) return
+      if (file === HERO_VIDEO_FILE && process.env.VITE_HERO_VIDEO_URL) return
       const check = inspectHeroVideo(source)
       if (!check.ok) {
-        this.warn(`Giriş videosu derlemeye eklenmedi (${check.reason}): ${source}. Sayfa temsilî çizimle açılır.`)
+        this.warn(`${label} derlemeye eklenmedi (${check.reason}): ${source}. Sayfa temsilî çizimle açılır.`)
         return
       }
-      this.emitFile({ type: 'asset', fileName: HERO_VIDEO_FILE, source: readFileSync(source) })
+      this.emitFile({ type: 'asset', fileName: file, source: readFileSync(source) })
     },
   }
 }

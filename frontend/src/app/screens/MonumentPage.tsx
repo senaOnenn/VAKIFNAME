@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { getMonument, getRoute, mediaUrl, progressId, statusMap, typeLabel, useLoad, type MonumentFact } from '../api'
-import { GoldRule, Ornament } from '../components/Ornament'
+import { Narrator } from '../components/Narrator'
+import { GoldRule } from '../components/Ornament'
 import { StatusBadge } from '../components/StatusBadge'
 import { useAuth } from '../session'
 import './discover.css'
@@ -35,7 +36,7 @@ function FactItem({ f }: { f: MonumentFact }) {
 }
 
 /**
- * Eser sayfası. Sıra: görsel ve kimlik → (Faz 4) karakter anlatımı → ziyaret uyarısı → kaynaklı ayrıntı (ikinci
+ * Eser sayfası. Sıra: görsel ve kimlik → karakter anlatımı ve sohbet → ziyaret uyarısı → kaynaklı ayrıntı (ikinci
  * katman, gizlenmez) → galeri (her görselde atıf).
  */
 export default function MonumentPage() {
@@ -71,11 +72,7 @@ export default function MonumentPage() {
       </header>
 
       <div className="vk-mon__body">
-        <section className="vk-narrator vk-narrator--soon" aria-labelledby="anlatim">
-          <Ornament className="vk-narrator__orn" />
-          <h2 id="anlatim">Rehberin anlatımı</h2>
-          <p>Bu eseri yakında rehberimiz sesli ve altyazılı olarak anlatacak; sorularını ona yazabileceksin.</p>
-        </section>
+        <Narrator monument={d} />
 
         {d.site_notice && (
           <aside className="vk-notice" aria-label="Ziyaret uyarısı">
