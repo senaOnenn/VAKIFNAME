@@ -68,14 +68,16 @@
 - **Karar (K3, varsayılan, 27 Ekim):** seslendirme tarayıcının Türkçe sesiyle (Web Speech API; lisans/anahtar gerektirmez). Türkçe ses yoksa altyazı kendiliğinden ilerler. Önceden üretilmiş stüdyo kaydı sonra eklenebilir.
 - Not (Faz 5): "dinledi" ve "sordu" olayları şimdilik yalnızca arayüzde; Kademe 1 için sunucuya kaydedilecek.
 
-## Faz 5 — Gerçek oyun: dinle → soru → ziyaretle altın
-- [ ] **Kademe 1 — Dinle ve konuş:** anlatım bitince + en az 1 mesaj ⇒ küçük ödül (XP, yapboz parçası belirir). Sunucuda kayıtlı.
-- [ ] **Kademe 2 — "Rozeti Al" → quiz:** çoktan seçmeli, görsel↔eser eşleştirme, doğru/yanlış. Sorular onaylı olgulardan (`game_use`). **5 soru, ≥4 doğru (%80)** ⇒ **Bilgi mührü**. Yanlışta farklı havuzdan tekrar. Doğru cevap istemciye gitmez.
-- [ ] **Kademe 3 — Ziyaret:** konum doğrulaması (K7) ⇒ mühür **altın yaldızlı ve parlak** olur (**Ziyaret mührü**). "Demo modu" anahtarı açıkça etiketli (jüri evde de görebilsin).
-- [ ] Ziyaret ve oyun adımından önce eserin `site_notice` uyarısı gösterilir (sessizlik, ibadet, ziyaret saatleri).
-- [ ] **Rozet/mühür animasyonları:** bilgi mührü basılır, ziyaretle altına dönüşür (parlama), yapboz parçası yerine oturur.
-- [ ] **Pasaport/yapboz:** 10 parça (bilgi mührüyle dolar); tamamlanınca "Kayıp Vakfiye bulundu". **Altın vakfiye** yalnızca tüm parçalar ziyaretle altınlaşınca.
-- [ ] Testler: ziyaret olmadan altın mühür verilmez, kilit atlatma denemesi, tekrar rozet, %80 sınırı (4/5 geçer, 3/5 kalır).
+## Faz 5 — Gerçek oyun: dinle → soru → ziyaretle altın ✅ (27 Ekim, dal `feat/game-loop`)
+- [x] **Kademe 1 — Dinle ve sor:** anlatımın sonuna kadar dinlenmesi ve rehbere en az 1 soru sunucuya kaydedilir (`engagement`). Rehber kapalıysa (veya yalnızca test kullanıcılarına açıksa) soru şartı aranmaz (K2 ✅).
+- [x] **Kademe 2 — "Rozeti Al":** 5 soru (çoktan seçmeli, görsel seçme, "bu bilgi bu eserle mi ilgili" doğru/yanlış), **≥4 doğru = bilgi mührü** (K1). Sorular yalnızca onaylı `game_use` kayıtlardan; yanlış ifade uydurulmaz (doğru/yanlış, başka türdeki bir eserin kaydından gelir; eser adı geçen kayıt kullanılmaz). Cevaplar sunucuda; tek gönderim, süre aşımı, başkasının sınavı 403. Kilitli eserde sınav 403; eski soru-cevap ucu da kilide uyar.
+- [x] **Kademe 3 — Ziyaret:** bilgi mühründen sonra; onaylı koordinata yarıçap içinde konum → **altın mühür**. Konum saklanmaz. **Sunum modu** (simülasyon) yalnızca `VAKIFNAME_VISIT_SIMULATION=on` iken ve açıkça etiketli.
+- [x] Mühür animasyonları (basılma, altın parıltı), sonuçta soru soru açıklama + kaynak + kesinlik etiketi, yeniden deneme.
+- [x] **Pasaport:** 10 parçalık Kayıp Vakfiye yapbozu (bilgi mührü = parça, ziyaret = altın) ve eser eser mühürler.
+- [x] Testler: backend 93 oyun testi (sınır 4/5–3/5, kilit atlatma, sızıntı, süre, birleştirme/silme); frontend 9 akış testi; tarayıcıda gerçek sunucuyla uçtan uca (misafir → rota → dinle → sor → 5/5 → mühür → sunum modunda altın → pasaport → rota 3/10).
+- Not: varsayılan 35 m yarıçap bina merkezinden ölçülüyor (doğruluk 13–46 m); büyük yapılarda (Ulu Cami 55×69 m) kapıdaki ziyaretçi dışarıda kalabilir → **sahada ince ayar** gerek.
+- Not: eski `POST /monuments/{id}/check-in` (katalog `checkin` noktası olan eserlerde; şu an hiç yok) bilgi mührü aramıyor → yeni arayüz `/visit` kullanıyor; eski uç kaldırılabilir.
+- Not: sınavdaki görsel dosya adları genel katalogdaki görsellerle eşleştirilebilir (katalog açık olduğu sürece kaçınılmaz); gerekirse sınava özel geçici görsel adresleri.
 
 ## Faz 6 — Yönetim, istatistik, ölçek
 - [ ] **İçerik ekleme/düzenleme** (şartname 5.1.1): yeni eser eklenince harita, rota ve karakter hattına düşer. Mevcut dahili inceleme araçları (`internal/`) tekrar kullanılır.

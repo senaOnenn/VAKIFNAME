@@ -5,6 +5,7 @@ import { getMonument, mediaUrl, progressId, startQuiz, submitQuiz, useLoad, type
 import { Seal } from '../components/Seal'
 import { useAuth } from '../session'
 import './discover.css'
+import './monument.css'
 import './quiz.css'
 
 function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: number | undefined; onChange: (v: number) => void }) {
@@ -124,7 +125,14 @@ export default function QuizPage() {
                   <p className="vk-quiz__q">{i + 1}. {q?.prompt}</p>
                   <p className="vk-quiz__verdict">{r.correct ? 'Doğru' : 'Yanlış'}</p>
                   <p>{r.explanation}</p>
-                  {r.fact && <p className="vk-quiz__src">Kaynak: {r.fact.source}</p>}
+                  {r.fact && (
+                    <p className="vk-quiz__src">
+                      {r.fact.certainty && r.fact.certainty !== 'documented' && (
+                        <span className="vk-cert vk-cert--uncertain">{r.fact.certainty === 'reported' ? 'Rivayet' : 'Kesin değil'}</span>
+                      )}{' '}
+                      Kaynak: {typeof r.fact.source === 'string' ? r.fact.source : '—'}
+                    </p>
+                  )}
                 </li>
               )
             })}

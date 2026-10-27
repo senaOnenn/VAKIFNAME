@@ -109,7 +109,9 @@ def _normalized(text: str) -> str:
 # --- Soru havuzları -------------------------------------------------------------------------------------------------
 
 def _fact_view(f: PublicFact) -> dict:
-    return {"title": f.title, "text": f.text, "source": f.source.model_dump(mode="json"), "certainty": f.certainty}
+    # Sözleşme (frontend/src/app/api.ts QuizResult): kaynak tek satırlık metindir.
+    return {"title": f.title, "text": f.text, "source": f"{f.source.title}, s. {f.source.pdf_physical_page}",
+            "certainty": f.certainty}
 
 
 def _image_attribution(img: PublicImage) -> str:

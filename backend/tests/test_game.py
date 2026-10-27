@@ -483,7 +483,7 @@ def test_four_of_five_passes_and_awards_the_knowledge_seal_once(c):
         if item["kind"] == "image_pick":
             assert res["fact"] is None
         else:
-            assert {"title", "text", "source"} <= set(res["fact"]) and res["fact"]["source"]["pdf_physical_page"] >= 1
+            assert {"title", "text", "source"} <= set(res["fact"]) and re.search(r", s\. \d+$", res["fact"]["source"])
 
     s = state(c, user)
     assert s["knowledge"] == {"earned_at": seal["earned_at"]} and s["ready_for_quiz"] is False

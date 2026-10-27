@@ -159,7 +159,7 @@ export interface QuizResult {
     correct: boolean
     correct_choice: number
     explanation: string
-    fact: { title: string; text: string; source: string } | null
+    fact: { title: string; text: string; source: string; certainty?: string } | null
   }[]
   knowledge_seal: { earned_at: string; new: boolean } | null
 }
