@@ -1,0 +1,81 @@
+.vk-seal {
+  display: inline-block;
+  position: relative;
+}
+.vk-seal svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.vk-seal__rim {
+  stroke: var(--vk-gold);
+  stroke-width: 1.4;
+}
+.vk-seal__ring {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.55);
+  stroke-width: 1.2;
+}
+.vk-seal__star {
+  fill: rgb(255 255 255 / 0.85);
+}
+.vk-seal--empty .vk-seal__rim {
+  stroke: rgb(201 194 174 / 0.5);
+  stroke-dasharray: 3 3;
+}
+.vk-seal--empty .vk-seal__ring {
+  stroke: rgb(201 194 174 / 0.35);
+}
+.vk-seal--empty .vk-seal__star {
+  fill: rgb(201 194 174 / 0.25);
+}
+.vk-seal--gold {
+  filter: drop-shadow(0 0 14px rgb(233 200 116 / 0.55));
+}
+.vk-seal--gold .vk-seal__star {
+  fill: #3a2a08;
+}
+.vk-seal--gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(115deg, transparent 35%, rgb(255 255 255 / 0.65) 50%, transparent 65%);
+  background-size: 250% 100%;
+  mix-blend-mode: overlay;
+  animation: vk-seal-shine 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+.vk-seal--stamp {
+  animation: vk-seal-stamp 900ms var(--vk-ease) both;
+}
+@keyframes vk-seal-stamp {
+  0% {
+    transform: scale(2.4) rotate(-18deg);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(0.92) rotate(3deg);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes vk-seal-shine {
+  from {
+    background-position: 130% 0;
+  }
+  to {
+    background-position: -130% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vk-seal--stamp,
+  .vk-seal--gold::after {
+    animation: none;
+  }
+}

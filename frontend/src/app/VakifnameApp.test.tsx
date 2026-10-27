@@ -210,7 +210,8 @@ describe('kabuk, hesap ve şehir seçimi', () => {
       expect(within(nav).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual(['/sehir', '/eserler', '/pasaport', '/hesap'])
     }
     await userEvent.click(within(screen.getByRole('navigation', { name: 'Alt menü' })).getByRole('link', { name: /Pasaport/ }))
-    expect(screen.getByRole('heading', { name: 'Pasaport' })).toBeInTheDocument()
+    expect(window.location.pathname).toBe('/pasaport')
+    expect(within(screen.getByRole('navigation', { name: 'Ana menü' })).getByRole('link', { name: 'Pasaport' })).toHaveAttribute('aria-current', 'page')
   })
 
   it('oturum yoksa kabuk sayfaları girişe yönlendirir', async () => {

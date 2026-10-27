@@ -9,8 +9,9 @@ import City from './screens/City'
 import Intro, { INTRO_SEEN_KEY } from './screens/Intro'
 import MonumentPage from './screens/MonumentPage'
 import Monuments from './screens/Monuments'
-import Pending from './screens/Pending'
+import Passport from './screens/Passport'
 import Privacy from './screens/Privacy'
+import QuizPage from './screens/QuizPage'
 import RoutePage from './screens/RoutePage'
 import { useAuth } from './session'
 
@@ -52,7 +53,8 @@ export default function VakifnameApp() {
             <Route path="/bursa" element={<Navigate to="/rota/bursa" replace />} />
             <Route path="/eserler" element={<Monuments />} />
             <Route path="/eser/:id" element={<MonumentPage />} />
-            <Route path="/pasaport" element={<Pending title="Pasaport" text="Mühürlerin ve Kayıp Vakfiye yapbozu burada olacak. Çok yakında." />} />
+            <Route path="/eser/:id/rozet" element={<QuizPage />} />
+            <Route path="/pasaport" element={<Passport />} />
             <Route path="/hesap" element={<Account />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

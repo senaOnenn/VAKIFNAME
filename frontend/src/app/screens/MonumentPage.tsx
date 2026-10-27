@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
-import { getMonument, getRoute, mediaUrl, progressId, statusMap, typeLabel, useLoad, type MonumentFact } from '../api'
+import { getGame, getMonument, getRoute, mediaUrl, progressId, sendEngagement, statusMap, typeLabel, useLoad, type MonumentFact } from '../api'
+import { GamePanel } from '../components/GamePanel'
 import { Narrator } from '../components/Narrator'
 import { GoldRule } from '../components/Ornament'
 import { StatusBadge } from '../components/StatusBadge'
@@ -46,6 +47,11 @@ export default function MonumentPage() {
   const m = useLoad((s) => getMonument(id, s), [id])
   const route = useLoad((s) => getRoute('bursa', uid, null, s).catch(() => null), [uid])
   const status = statusMap(route.data)[id]
+  // Oyun durumu (Faz 5). Uç yoksa veya hata verirse panel gösterilmez; eser bilgisi yine okunur.
+  const game = useLoad((s) => getGame(id, uid, s), [id, uid])
+  const engage = (event: 'listened' | 'asked') => {
+    sendEngagement(id, uid, event).then(game.reload, () => undefined)
+  }
 
   if (m.loading) return <main className="vk-page"><p className="vk-page__state" role="status">Eser yükleniyor…</p></main>
   if (m.error || !m.data)
@@ -72,7 +78,9 @@ export default function MonumentPage() {
       </header>
 
       <div className="vk-mon__body">
-        <Narrator monument={d} />
+        <Narrator monument={d} onListened={() => engage('listened')} onAsked={() => engage('asked')} />
+
+        {game.data && <GamePanel id={id} uid={uid} game={game.data} onChange={() => { game.reload(); route.reload() }} />}
 
         {d.site_notice && (
           <aside className="vk-notice" aria-label="Ziyaret uyarısı">

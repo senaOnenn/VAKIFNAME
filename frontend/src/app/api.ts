@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { apiGet } from '../api/client'
+import { apiGet, apiPost } from '../api/client'
 import { getVisitorId } from '../visitor'
 import type { AuthState } from './session'
 
@@ -122,3 +122,78 @@ export function citySlug(name: string): string {
     .replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c')
     .normalize('NFKD').replace(/[̀-ͯ]/g, '')
 }
+
+// --- Oyun (Faz 5): sözleşme backend/app/game_routes.py ile aynıdır --------------------------------------------------
+export interface GameState {
+  monument_id: string
+  locked: boolean
+  listened: boolean
+  asked: boolean
+  /** Rehber kapalıysa soru sormak şart değildir. */
+  guide_required: boolean
+  ready_for_quiz: boolean
+  quiz_size: number
+  pass_mark: number
+  knowledge: { earned_at: string } | null
+  visit: { earned_at: string; demo: boolean } | null
+  visit_radius_m: number
+  demo_visit_allowed: boolean
+  site_notice: string | null
+}
+export type QuizQuestion =
+  | { qid: string; kind: 'choice'; prompt: string; choices: string[] }
+  | { qid: string; kind: 'image_pick'; prompt: string; images: { file: string; attribution: string | null }[] }
+  | { qid: string; kind: 'true_false'; prompt: string; statement: string }
+export interface Quiz {
+  quiz_id: string
+  expires_at: string
+  questions: QuizQuestion[]
+}
+export interface QuizResult {
+  score: number
+  total: number
+  passed: boolean
+  results: {
+    qid: string
+    correct: boolean
+    correct_choice: number
+    explanation: string
+    fact: { title: string; text: string; source: string } | null
+  }[]
+  knowledge_seal: { earned_at: string; new: boolean } | null
+}
+export type VisitStatus = 'gold' | 'already' | 'out_of_range' | 'needs_knowledge' | 'demo_disabled'
+export interface VisitResult {
+  status: VisitStatus
+  distance_m: number | null
+  radius_m: number
+  visit_seal: { earned_at: string } | null
+}
+
+const enc = encodeURIComponent
+export const getGame = (id: string, userId: string, signal?: AbortSignal) =>
+  apiGet(`/monuments/${enc(id)}/game?user_id=${enc(userId)}`, signal, WITH_COOKIE) as Promise<GameState>
+export const sendEngagement = (id: string, userId: string, event: 'listened' | 'asked') =>
+  apiPost(`/monuments/${enc(id)}/engagement`, { user_id: userId, event }, undefined, WITH_COOKIE) as Promise<GameState>
+export const startQuiz = (id: string, userId: string) =>
+  apiPost(`/monuments/${enc(id)}/quiz`, { user_id: userId }, undefined, WITH_COOKIE) as Promise<Quiz>
+export const submitQuiz = (quizId: string, userId: string, answers: { qid: string; choice: number }[]) =>
+  apiPost(`/quiz/${enc(quizId)}/submit`, { user_id: userId, answers }, undefined, WITH_COOKIE) as Promise<QuizResult>
+export const sendVisit = (id: string, userId: string, body: { latitude?: number; longitude?: number; demo?: boolean }) =>
+  apiPost(`/monuments/${enc(id)}/visit`, { user_id: userId, ...body }, undefined, WITH_COOKIE) as Promise<VisitResult>
+
+export interface SealBookEntry {
+  monument_id: string
+  monument_name: string
+  kind: 'knowledge' | 'visit'
+  earned_at: string
+  demo?: boolean
+}
+export interface SealBook {
+  user_id: string
+  knowledge_seals: SealBookEntry[]
+  visit_seals: SealBookEntry[]
+  monuments: { monument_id: string; name: string; quests: number; solved: number; checkin_available: boolean }[]
+}
+export const getSealBook = (userId: string, signal?: AbortSignal) =>
+  apiGet(`/users/${enc(userId)}/seals`, signal, WITH_COOKIE) as Promise<SealBook>

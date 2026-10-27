@@ -1,0 +1,35 @@
+.vk-puzzle {
+  margin: 0 auto;
+  width: min(100%, 900px);
+}
+.vk-puzzle svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.vk-piece__hole {
+  fill: rgb(35 43 102 / 0.55);
+  stroke: rgb(201 162 75 / 0.55);
+  stroke-width: 2;
+  stroke-dasharray: 8 7;
+}
+.vk-piece__edge {
+  fill: none;
+  stroke: rgb(107 82 38 / 0.6);
+  stroke-width: 2;
+}
+.vk-piece--found {
+  filter: drop-shadow(0 4px 10px rgb(0 0 0 / 0.35));
+}
+.vk-piece--gold .vk-piece__edge {
+  stroke: #fff3cf;
+  stroke-width: 3;
+}
+.vk-piece__gilt {
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+.vk-piece--gold {
+  filter: drop-shadow(0 0 12px rgb(233 200 116 / 0.6));
+}
