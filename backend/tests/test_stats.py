@@ -70,4 +70,17 @@ def test_admin_stats_requires_admin_session(c):
     c.post("/stats/hit", json={"page": "eser", "monument_id": "BUR-0001"})
     body = c.get("/admin/stats?days=7").json()
     assert len(body["days"]) == 7 and body["monuments"][0]["name"] == "Bursa Ulu Camii"
+    assert body["game"] == {"players": 0, "listened": 0, "asked": 0, "knowledge": 0, "visit": 0, "visit_simulated": 0}
     assert c.get("/admin/stats?days=0").status_code == 422
+
+
+def test_funnel_counts_tiers_without_identities():
+    from app.progress import MonumentProgressStore
+    p = MonumentProgressStore()
+    for u in ("ziyaretci-a", "ziyaretci-b"):
+        p._db.execute("INSERT INTO engagement VALUES (?, 'BUR-0001', 'listened', '2026-10-27T10:00:00+00:00')", (u,))
+    p._db.execute("INSERT INTO engagement VALUES ('ziyaretci-a', 'BUR-0001', 'asked', '2026-10-27T10:00:00+00:00')")
+    p.add_seal("ziyaretci-a", "BUR-0001", "Bursa Ulu Camii", "knowledge")
+    out = p.funnel()
+    assert out == {"players": 2, "listened": 2, "asked": 1, "knowledge": 1, "visit": 0, "visit_simulated": 0}
+    assert "ziyaretci" not in str(out)

@@ -296,6 +296,20 @@ class MonumentProgressStore:
             ])
         return {"answers": answers, "seals": seals, "unlocks": unlocks}
 
+    def funnel(self) -> dict:
+        """Yönetim istatistiği (tüm zamanlar): oyun kademelerine ulaşan (kişi, eser) çifti sayıları ve tekil oyuncu
+        sayısı. Kimlik veya eser bazında kişi bilgisi döndürmez."""
+        with self._lock:
+            one = lambda sql: self._db.execute(sql).fetchone()[0]  # noqa: E731
+            return {
+                "players": one("SELECT COUNT(DISTINCT user_id) FROM engagement"),
+                "listened": one("SELECT COUNT(*) FROM engagement WHERE event = 'listened'"),
+                "asked": one("SELECT COUNT(*) FROM engagement WHERE event = 'asked'"),
+                "knowledge": one("SELECT COUNT(*) FROM seals WHERE kind = 'knowledge'"),
+                "visit": one("SELECT COUNT(*) FROM seals WHERE kind = 'visit' AND simulated = 0"),
+                "visit_simulated": one("SELECT COUNT(*) FROM seals WHERE kind = 'visit' AND simulated = 1"),
+            }
+
     def delete_user(self, user_id: str) -> None:
         """Kullanıcının bütün soru cevaplarını, mühürlerini, rota kilitlerini, kademe olaylarını ve sınavlarını siler
         (hesap silme, KVKK)."""

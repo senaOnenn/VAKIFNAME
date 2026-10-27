@@ -80,8 +80,8 @@
 - Not: sınavdaki görsel dosya adları genel katalogdaki görsellerle eşleştirilebilir (katalog açık olduğu sürece kaçınılmaz); gerekirse sınava özel geçici görsel adresleri.
 
 ## Faz 6 — Yönetim, istatistik, ölçek
-- [ ] **İçerik ekleme/düzenleme** (şartname 5.1.1): yeni eser eklenince harita, rota ve karakter hattına düşer. Mevcut dahili inceleme araçları (`internal/`) tekrar kullanılır.
-- [ ] **İstatistik:** ziyaretçi, eser görüntülenme, en çok ilgi gören; çerezsiz/anonim sayaç.
+- [ ] **İçerik ekleme/düzenleme** (şartname 5.1.1) — **karar bekliyor (taslak + onay mı, doğrudan yayın mı?)**. Bulgu: ekibin dahili aracı yalnızca mevcut taslakları onaylayıp yayımlıyor; yeni eser ekleme/düzenleme ucu yok. yeni eser eklenince harita, rota ve karakter hattına düşer. Mevcut dahili inceleme araçları (`internal/`) tekrar kullanılır.
+- [x] **İstatistik** (dal `feat/admin-stats`): çerezsiz/anonim günlük sayaçlar (tekil ziyaretçi, sayfa ve eser görüntüleme; IP/tarayıcı diske yazılmaz, günlük tuz yalnızca bellekte; Do Not Track/GPC'ye uyulur). Yönetici panosu `/yonetim` (yöneticiler `VAKIFNAME_ADMIN_EMAILS`): tarih aralığı, KPI, günlük ziyaretçi grafiği, en çok ilgi gören eserler, sayfalar, oyun hunisi (dinleyen → soran → bilgi mührü → ziyaret; sunum modu ayrı sayılır).
 - [ ] Yeni şehir ekleme şeması (il alanı, eser, narrator). ⬇ 60–80 eserlik sponsor paketi gelince içe aktarma.
 - [ ] ⬇ İngilizce katmanı (K9).
 

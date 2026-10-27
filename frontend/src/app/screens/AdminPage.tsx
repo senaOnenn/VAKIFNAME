@@ -81,6 +81,25 @@ export default function AdminPage() {
             )}
           </section>
 
+          {shown.game && (
+            <section className="vk-admin__card" aria-labelledby="huni">
+              <h2 id="huni">Oyun hunisi</h2>
+              <p className="vk-admin__note">Tüm zamanlar, tarih aralığından bağımsız. Sayılar (kişi, eser) çiftidir; {shown.game.players.toLocaleString('tr-TR')} tekil oyuncu.</p>
+              <BarChart
+                label="Oyun kademelerine ulaşan sayısı"
+                rows={[
+                  { name: 'Anlatımı dinleyen', value: shown.game.listened },
+                  { name: 'Rehbere soran', value: shown.game.asked },
+                  { name: 'Bilgi mührü alan', value: shown.game.knowledge },
+                  { name: 'Eseri ziyaret eden', value: shown.game.visit },
+                ]}
+              />
+              {shown.game.visit_simulated > 0 && (
+                <p className="vk-admin__note">Ayrıca {shown.game.visit_simulated.toLocaleString('tr-TR')} sunum modu (simüle edilmiş) ziyaret; ziyaret sayısına katılmaz.</p>
+              )}
+            </section>
+          )}
+
           <section className="vk-admin__card" aria-labelledby="sayfalar">
             <h2 id="sayfalar">Sayfalar</h2>
             <table className="vk-admin__pages">

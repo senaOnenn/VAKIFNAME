@@ -49,5 +49,6 @@ def admin_stats(request: Request, response: Response, days: Annotated[int, Query
     names = {m.monument_id: m.name for m in request.app.state.monuments.catalog.monuments}
     for m in data["monuments"]:
         m["name"] = names.get(m["monument_id"], m["monument_id"])
+    data["game"] = request.app.state.monument_progress.funnel()  # tüm zamanlar; tarih aralığından bağımsız
     response.headers["Cache-Control"] = "no-store"
     return data

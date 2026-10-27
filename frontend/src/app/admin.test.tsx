@@ -13,6 +13,7 @@ const STATS = {
   totals: { visitors: 8, pageviews: 23, monument_views: 7 },
   pages: [{ page: 'eser', views: 7 }, { page: 'sehir', views: 4 }],
   monuments: [{ monument_id: 'BUR-1001', name: 'Bursa Ulu Camii', views: 5 }, { monument_id: 'BUR-1009', name: 'Koza Han', views: 2 }],
+  game: { players: 4, listened: 6, asked: 3, knowledge: 2, visit: 1, visit_simulated: 1 },
 }
 
 function open(path: string) {
@@ -62,6 +63,8 @@ describe('yönetim paneli', () => {
     expect(screen.getByText('Tekil ziyaretçi (günlük toplam)').nextSibling).toHaveTextContent('8')
     expect(screen.getByRole('img', { name: 'Eser sayfası görüntülemeleri' })).toBeInTheDocument()
     expect(screen.getByRole('cell', { name: 'Eser sayfası' })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Oyun kademelerine ulaşan sayısı' })).toBeInTheDocument()
+    expect(screen.getByText(/1 sunum modu \(simüle edilmiş\) ziyaret/)).toBeInTheDocument()
     expect(screen.getAllByRole('row').length).toBeGreaterThan(3)
     await userEvent.click(screen.getByRole('button', { name: 'Son 7 gün' }))
     const urls = f.mock.calls.map(([u]) => String(u)).filter((u) => u.includes('/admin/stats'))

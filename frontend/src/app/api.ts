@@ -218,6 +218,8 @@ export interface AdminStats {
   totals: { visitors: number; pageviews: number; monument_views: number }
   pages: { page: string; views: number }[]
   monuments: { monument_id: string; name: string; views: number }[]
+  /** Tüm zamanlar; tarih aralığından bağımsız. Kişi bilgisi içermez. */
+  game?: { players: number; listened: number; asked: number; knowledge: number; visit: number; visit_simulated: number }
 }
 export const getAdminStats = (days: number, signal?: AbortSignal) =>
   apiGet(`/admin/stats?days=${days}`, signal, WITH_COOKIE) as Promise<AdminStats>

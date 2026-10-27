@@ -52,3 +52,7 @@
   color: var(--vk-gold-bright);
   font-weight: 600;
 }
+.vk-admin__note {
+  color: var(--vk-ivory-dim);
+  font-size: 0.85rem;
+}
