@@ -33,11 +33,11 @@
 - [ ] Bilgi mimarisi ve ekran listesi: Açılış · Giriş/Kayıt · Şehir · Rota/Harita · Eserler · Eser · Rozeti Al · Pasaport/Vakfiye · Hesap · (yönetim).
 
 ## Faz 1 — Tasarım sistemi ve iskelet (web + mobil)
-- [x] Yönlendirme (`react-router-dom`) ve ilk ekran iskeletleri (`/`, `/giris`, `/sehir`, `/bursa` yer tutucu). [ ] Mobil için alt gezinme, web için üst gezinme.
+- [x] Yönlendirme (`react-router-dom`) ve ilk ekran iskeletleri (`/`, `/giris`, `/sehir`, `/bursa` yer tutucu). Mobil alt sekme çubuğu + web üst menü (Keşfet, Eserler, Pasaport, Hesap) ✅; sayfa geçişinde en üste dönüş.
 - [x] **Açılış animasyonu:** "VAKIFNAME" yazısı, ardından Giriş sayfasına geçiş; atlanabilir, `prefers-reduced-motion`'da statik.
 - [x] **Giriş/Kayıt ekranı** (arayüz; sunucu yok, geçici oturum): Google ile devam, e-posta+parola, "üye olmadan keşfet". Parşömen/yeşil marka SVG'leri yerine düğmeler palet A ile kodla çizildi.
-- [~] **Şehir seçimi:** kart listesi hazır (Bursa açık). [ ] Türkiye haritası (`vakifname_turkiye_haritasi_asset.svg`); Bursa açık, diğerleri "yakında".
-- [ ] Ortak bileşenler: düğme, kart, rozet/mühür, kilit, ilerleme, altyazılı oynatıcı, karakter sahnesi.
+- [x] **Şehir seçimi:** Türkiye haritası (Natural Earth sınırı, palet A; 3,2 MB'lık parşömen PNG yerine ~7 KB SVG yol) + erişilebilir şehir kartları; Bursa açık, diğerleri "yakında".
+- [~] Ortak bileşenler: düğme, kart, süs (girih), ikonlar ✅. [ ] rozet/mühür, kilit, ilerleme, altyazılı oynatıcı, karakter sahnesi (ilgili fazlarda).
 - [ ] Ekran okuyucu, klavye gezinmesi, kontrast, yazı boyutu: **bileşen seviyesinde** başlangıçtan itibaren.
 
 ## Faz 2 — Hesap sistemi (backend + frontend)

@@ -1,0 +1,100 @@
+.vk-tmap {
+  margin: 0 auto;
+  width: min(100%, 980px);
+}
+.vk-tmap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.vk-tmap__outline {
+  fill: none;
+  stroke: var(--vk-gold);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.vk-tmap__label {
+  font: 600 22px var(--vk-font-display);
+  letter-spacing: 0.04em;
+  paint-order: stroke;
+  stroke: var(--vk-night);
+  stroke-width: 5px;
+}
+.vk-tmap__city--soon circle {
+  fill: var(--vk-surface-2);
+  stroke: var(--vk-ivory-dim);
+  stroke-width: 1.5;
+  opacity: 0.8;
+}
+.vk-tmap__city--soon .vk-tmap__label {
+  fill: var(--vk-ivory-dim);
+  font-size: 18px;
+  opacity: 0.75;
+}
+.vk-tmap__city--open {
+  cursor: pointer;
+}
+.vk-tmap__city--open circle:not(.vk-tmap__pulse) {
+  fill: var(--vk-gold-bright);
+  stroke: var(--vk-night);
+  stroke-width: 2.5;
+}
+.vk-tmap__city--open .vk-tmap__label {
+  fill: var(--vk-gold-bright);
+  font-size: 26px;
+}
+.vk-tmap__pulse {
+  fill: none;
+  stroke: var(--vk-gold-bright);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: vk-tmap-pulse 2.4s var(--vk-ease) infinite;
+}
+.vk-tmap__city--open:hover circle:not(.vk-tmap__pulse),
+.vk-tmap__city--open:focus-visible circle:not(.vk-tmap__pulse) {
+  fill: #fff3cf;
+}
+.vk-tmap__city--open:focus-visible {
+  outline: none;
+}
+.vk-tmap__city--open:focus-visible .vk-tmap__label {
+  text-decoration: underline;
+}
+@keyframes vk-tmap-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vk-tmap__pulse {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+/* Dar ekranda harita küçülür: etiket ve işaretler izdüşüm biriminde büyütülür ki okunabilsin. */
+@media (max-width: 600px) {
+  .vk-tmap__label {
+    font-size: 40px;
+    stroke-width: 8px;
+  }
+  .vk-tmap__city--soon .vk-tmap__label {
+    font-size: 34px;
+  }
+  .vk-tmap__city--open .vk-tmap__label {
+    font-size: 48px;
+  }
+  .vk-tmap__city--soon circle {
+    r: 9px;
+  }
+  .vk-tmap__city--open circle:not(.vk-tmap__pulse) {
+    r: 14px;
+  }
+}

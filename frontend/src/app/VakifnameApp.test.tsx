@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -89,6 +89,26 @@ describe('giriş / kayıt', () => {
   })
 })
 
+describe('kabuk ve gezinme', () => {
+  beforeEach(() => window.sessionStorage.setItem(INTRO_SEEN_KEY, '1'))
+
+  it('üst ve alt menüde aynı dört bölüm vardır; sayfa değişir', async () => {
+    open('/giris')
+    await userEvent.click(screen.getByRole('button', { name: 'Üye olmadan keşfet' }))
+    for (const name of ['Ana menü', 'Alt menü']) {
+      const nav = screen.getByRole('navigation', { name })
+      expect(within(nav).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual(['/sehir', '/eserler', '/pasaport', '/hesap'])
+    }
+    await userEvent.click(within(screen.getByRole('navigation', { name: 'Alt menü' })).getByRole('link', { name: /Pasaport/ }))
+    expect(screen.getByRole('heading', { name: 'Pasaport' })).toBeInTheDocument()
+  })
+
+  it('oturum yoksa kabuk sayfaları girişe yönlendirir', () => {
+    open('/pasaport')
+    expect(screen.getByRole('heading', { name: 'Maceraya katıl' })).toBeInTheDocument()
+  })
+})
+
 describe('şehir seçimi', () => {
   beforeEach(() => window.sessionStorage.setItem(INTRO_SEEN_KEY, '1'))
 
@@ -100,7 +120,10 @@ describe('şehir seçimi', () => {
   it('Bursa açık, diğer şehirler "yakında" ve tıklanamaz', async () => {
     open('/giris')
     await userEvent.click(screen.getByRole('button', { name: 'Üye olmadan keşfet' }))
-    expect(screen.getByRole('link', { name: /Bursa/ })).toHaveAttribute('href', '/bursa')
+    const cards = screen.getByRole('list', { name: 'Şehirler' })
+    expect(within(cards).getByRole('link', { name: /Bursa/ })).toHaveAttribute('href', '/bursa')
+    // Harita: Bursa işareti bağlantıdır, diğer şehirler değildir.
+    expect(screen.getByRole('link', { name: 'Bursa: Pilot şehir · 10 eser' })).toHaveAttribute('href', '/bursa')
     const list = screen.getByRole('list', { name: 'Şehirler' })
     expect(list.querySelectorAll('a')).toHaveLength(1)
     expect(screen.getAllByText('Yakında').length).toBeGreaterThanOrEqual(5)
@@ -109,6 +132,7 @@ describe('şehir seçimi', () => {
   it('çıkış oturumu kapatır', async () => {
     open('/giris')
     await userEvent.click(screen.getByRole('button', { name: 'Üye olmadan keşfet' }))
+    await userEvent.click(screen.getAllByRole('link', { name: /Hesap/ })[0])
     await userEvent.click(screen.getByRole('button', { name: 'Çıkış' }))
     expect(screen.getByRole('heading', { name: 'Maceraya katıl' })).toBeInTheDocument()
   })

@@ -1,58 +1,20 @@
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { CITIES } from '../cities'
 import { GoldRule } from '../components/Ornament'
-import { endSession, useSession } from '../session'
+import { TurkeyMap } from '../components/TurkeyMap'
 import './city.css'
 
-interface City {
-  slug: string
-  name: string
-  /** Vakıf Katılım envanter projesinin yayımlanmış/süren şehirleri (bilgi notu). */
-  note: string
-  open: boolean
-}
-
-// Şehir verisi ileride sunucudan gelecek (il alanı); şimdilik envanter projesinin şehirleri sabit listelenir.
-const CITIES: City[] = [
-  { slug: 'bursa', name: 'Bursa', note: 'Pilot şehir · 10 eser', open: true },
-  { slug: 'kutahya', name: 'Kütahya', note: 'Yakında', open: false },
-  { slug: 'konya', name: 'Konya', note: 'Yakında', open: false },
-  { slug: 'hatay', name: 'Hatay', note: 'Yakında', open: false },
-  { slug: 'izmir', name: 'İzmir', note: 'Yakında', open: false },
-  { slug: 'manisa', name: 'Manisa', note: 'Yakında', open: false },
-]
-
-/** Şehir seçimi: Bursa açık, diğerleri "yakında". */
+/** Şehir seçimi: Türkiye haritası + erişilebilir şehir listesi. Bursa açık, diğerleri "yakında". */
 export default function City() {
-  const session = useSession()
-  const navigate = useNavigate()
-  if (!session) return <Navigate to="/giris" replace />
-
   return (
     <main className="vk-city">
-      <header className="vk-city__bar">
-        <span className="vk-city__logo">VAKIFNAME</span>
-        <div className="vk-city__who">
-          <span className="vk-city__chip">
-            {session.kind === 'guest' ? 'Misafir' : `Geçici oturum · ${session.email ?? ''}`}
-          </span>
-          <button
-            type="button"
-            className="vk-link-btn"
-            onClick={() => {
-              endSession()
-              navigate('/giris', { replace: true })
-            }}
-          >
-            Çıkış
-          </button>
-        </div>
-      </header>
-
       <section className="vk-city__intro">
         <h1>Nereyi keşfetmek istersin?</h1>
         <GoldRule className="vk-city__rule" />
-        <p>Her şehir, Vakıf Eserleri Envanter Projesi’nde belgelenmiş eserlerle birlikte açılır.</p>
+        <p>Her şehir, Vakıf Eserleri Envanter Projesi’nde belgelenmiş eserleriyle açılır.</p>
       </section>
+
+      <TurkeyMap cities={CITIES} />
 
       <ul className="vk-city__grid" aria-label="Şehirler">
         {CITIES.map((c) => (

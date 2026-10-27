@@ -1,0 +1,105 @@
+.vk-shell {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+.vk-shell__skip {
+  position: absolute;
+  left: -999px;
+}
+.vk-shell__skip:focus {
+  left: var(--vk-space-4);
+  top: var(--vk-space-2);
+  z-index: 10;
+  padding: var(--vk-space-2) var(--vk-space-4);
+  background: var(--vk-surface);
+  border-radius: 8px;
+}
+.vk-shell__top {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-5);
+  padding: var(--vk-space-3) var(--vk-space-5);
+  background: rgb(9 12 34 / 0.72);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgb(201 162 75 / 0.18);
+}
+.vk-shell__logo {
+  font: 600 1.25rem var(--vk-font-display);
+  letter-spacing: 0.14em;
+  color: var(--vk-gold-bright) !important;
+  text-decoration: none;
+}
+.vk-shell__topnav {
+  display: none;
+  gap: var(--vk-space-2);
+}
+.vk-shell__toplink {
+  padding: var(--vk-space-2) var(--vk-space-3);
+  border-radius: 999px;
+  color: var(--vk-ivory-dim) !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.vk-shell__toplink:hover {
+  color: var(--vk-ivory) !important;
+}
+.vk-shell__toplink.active {
+  color: var(--vk-night) !important;
+  background: var(--vk-gold-gradient);
+}
+.vk-shell__chip {
+  margin-left: auto;
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgb(201 162 75 / 0.5);
+  color: var(--vk-ivory-dim);
+  font-size: 0.8rem;
+  max-width: 45vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vk-shell__main {
+  padding-bottom: 5.5rem; /* mobil alt çubuğun altında içerik kalmasın */
+}
+.vk-shell__tabs {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: var(--vk-space-2) var(--vk-space-2) max(var(--vk-space-2), env(safe-area-inset-bottom));
+  background: rgb(9 12 34 / 0.92);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgb(201 162 75 / 0.25);
+}
+.vk-shell__tab {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: var(--vk-space-2) 0;
+  min-height: 52px;
+  color: var(--vk-ivory-dim) !important;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.vk-shell__tab.active {
+  color: var(--vk-gold-bright) !important;
+}
+@media (min-width: 900px) {
+  .vk-shell__topnav {
+    display: flex;
+  }
+  .vk-shell__tabs {
+    display: none;
+  }
+  .vk-shell__main {
+    padding-bottom: var(--vk-space-6);
+  }
+}
