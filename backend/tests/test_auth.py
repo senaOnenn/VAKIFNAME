@@ -424,7 +424,7 @@ def test_merge_user_keeps_account_rows_and_fills_unsolved_answers():
     assert sorted(x["kind"] for x in s.seals("u-hesap")) == ["knowledge", "visit"]
     assert next(x for x in s.seals("u-hesap") if x["kind"] == "visit")["earned_at"] == hesap_visit
     assert s.seals("misafir") == [] and s.solved("misafir") == set()
-    assert s.merge_user("u-hesap", "u-hesap") == {"answers": 0, "seals": 0}
+    assert s.merge_user("u-hesap", "u-hesap") == {"answers": 0, "seals": 0, "unlocks": 0}
 
 
 # --- Hesap silme (KVKK) ------------------------------------------------------------------------------------------

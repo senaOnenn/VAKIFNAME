@@ -22,6 +22,7 @@ from .guide.service import GuideService, GuideSettings, budget_from_env
 from .guide_routes import BodyLimit, InFlight, TesterSessions, guide_mode, router as guide_router
 from .monument_routes import router as monument_router
 from .public_catalog import PublicCatalogRepository
+from .route_routes import router as route_router
 from .routes import router
 from .progress import MonumentProgressStore
 from .services import PlaceRepository, ProgressStore
@@ -186,6 +187,7 @@ def create_app(
     app.include_router(ask_router)
     app.include_router(guide_router)
     app.include_router(monument_router)
+    app.include_router(route_router)
     app.include_router(auth_router)
     if app.state.ask.model_dir is not None:
         # Model ve dizin arka planda hazırlanır; o sırada kelime araması çalışır.
