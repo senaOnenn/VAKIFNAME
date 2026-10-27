@@ -237,9 +237,22 @@ def test_google_links_to_existing_account_with_same_email(c):
     r = c.post("/auth/google", json={"id_token": "sahte-belirtec-a"})
     assert r.status_code == 200 and r.json()["user_id"] == user_id and r.json()["provider"] == "google"
     assert c.app.state.accounts.get_user(user_id)["google_sub"] == "sub-a"
-    # Parola girişi de aynı hesaba açılmaya devam eder.
-    c.post("/auth/logout")
-    assert c.post("/auth/login", json={"email": "ayse@example.com", "password": PASSWORD}).json()["user_id"] == user_id
+
+
+def test_google_link_drops_unverified_password_and_its_sessions(c):
+    """Önceden hesap ele geçirme: e-postayı doğrulamadan parolayla kaydeden kişi, gerçek sahip Google ile bağlanınca
+    hem parolasını hem açık oturumunu kaybeder."""
+    attacker = TestClient(c.app)
+    user_id = register(attacker, email="kurban@example.com").json()["user_id"]
+    assert attacker.get("/auth/me").status_code == 200
+    c.app.state.google_verifier = FakeGoogle({"sahte-belirtec-k": GoogleIdentity("sub-k", "kurban@example.com")})
+    assert c.post("/auth/google", json={"id_token": "sahte-belirtec-k"}).json()["user_id"] == user_id
+    assert attacker.get("/auth/me").status_code == 401
+    assert c.app.state.accounts.get_user(user_id)["password_hash"] is None
+    r = attacker.post("/auth/login", json={"email": "kurban@example.com", "password": PASSWORD})
+    assert r.status_code == 401 and r.json()["detail"] == LOGIN_FAILED
+    # Gerçek sahibin Google oturumu sürer.
+    assert c.get("/auth/me").json()["user_id"] == user_id
 
 
 def test_google_email_already_linked_to_another_google_account_is_409(c):

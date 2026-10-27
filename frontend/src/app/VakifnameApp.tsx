@@ -8,18 +8,19 @@ import Auth from './screens/Auth'
 import City from './screens/City'
 import Intro, { INTRO_SEEN_KEY } from './screens/Intro'
 import Pending from './screens/Pending'
-import { useSession } from './session'
+import Privacy from './screens/Privacy'
+import { useAuth } from './session'
 
 /** Açılış yalnızca oturum başına bir kez gösterilir; oturumu olan kullanıcı doğrudan şehir seçimine geçer. */
 function Home() {
-  const session = useSession()
+  const auth = useAuth()
   let seen = false
   try {
     seen = window.sessionStorage.getItem(INTRO_SEEN_KEY) === '1'
   } catch {
     /* yoksay */
   }
-  if (session) return <Navigate to="/sehir" replace />
+  if (auth.status === 'user' || auth.status === 'guest') return <Navigate to="/sehir" replace />
   return seen ? <Navigate to="/giris" replace /> : <Intro />
 }
 
@@ -41,6 +42,7 @@ export default function VakifnameApp() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/giris" element={<Auth />} />
+          <Route path="/gizlilik" element={<Privacy />} />
           <Route element={<AppShell />}>
             <Route path="/sehir" element={<City />} />
             <Route path="/bursa" element={<Pending title="Bursa" text="Rota ve eserler bu sayfada yapım aşamasında. Çok yakında." />} />

@@ -21,7 +21,7 @@
 | K5 | ✅ **KARARLI (27 Ekim).** Şimdilik **mevcut görsellerle** devam. Sponsorun kaynağı Bursa'nın 3 ciltlik PDF'i; görselleri ayrı bir süreçte ayıklayıp geçeceğiz. | — (kullanım izni için organizatöre ayrıca sorulacak) |
 | K6 | **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
 | K7 | ✅ **KARARLI (27 Ekim).** Koordinatlar **onaylıdır**, katalogdakiler kullanılır; kendi eklediğimiz konum verisi yok. Kayıtlar: noktalar `backend/tests/ask_eval/catalog_snapshot.json`, adaylar `data/real_catalog/monument_research.json`, onay kararları sunucuda `review.sqlite3`. | Ziyaret (Faz 5) için eser başına yarıçap yapılandırılabilir olur; yakın eserler (Muradiye'de 4 eser, Osman/Orhan Gazi) çakışmasın diye küçük başlanır. Sahada ince ayar sonra. |
-| K8 | **Misafir ilerlemesi.** Üye olmadan toplanan rozetler giriş yapınca birleşir mi? | Evet: cihazdaki ilerleme girişte hesaba **birleştirilir**. |
+| K8 | ✅ **KARARLI (Faz 2'de uygulandı).** **Misafir ilerlemesi.** Üye olmadan toplanan rozetler giriş yapınca birleşir mi? | Evet: cihazdaki ilerleme girişte hesaba **birleştirilir**. |
 | K9 | **Yeni dil:** EN metinler nereden? | Ciltli yayınlar iki dilli; onaylı olgulara `text_en` alanı. Çeviri uydurma değil, kaynaktan. |
 
 ## Faz 0 — Zemin (önce)
@@ -40,12 +40,15 @@
 - [~] Ortak bileşenler: düğme, kart, süs (girih), ikonlar ✅. [ ] rozet/mühür, kilit, ilerleme, altyazılı oynatıcı, karakter sahnesi (ilgili fazlarda).
 - [ ] Ekran okuyucu, klavye gezinmesi, kontrast, yazı boyutu: **bileşen seviyesinde** başlangıçtan itibaren.
 
-## Faz 2 — Hesap sistemi (backend + frontend)
-- [ ] Kullanıcı tablosu, parola özeti (argon2/bcrypt), oturum çerezi (HttpOnly, SameSite), oran sınırı.
-- [ ] **Google ile giriş:** kimlik belirtecini **sunucuda doğrula** (istemciye güvenme); hesapları e-posta ile eşleştir.
-- [ ] Misafir ilerlemesinin girişte birleştirilmesi (K8).
-- [ ] KVKK/aydınlatma metni ve veri silme isteği (hesap silme).
-- [ ] Testler: kayıt, giriş, Google belirteci (sahte doğrulayıcıyla), oturum süresi, yetkisiz erişim.
+## Faz 2 — Hesap sistemi (backend + frontend) ✅ (27 Ekim, dal `feat/auth`)
+- [x] Kullanıcı tablosu, parola özeti (stdlib scrypt), oturum çerezi `vk_session` (HttpOnly, SameSite=Lax, 30 gün; sunucuda yalnızca özet), oran sınırı (`VAKIFNAME_AUTH_RATE`).
+- [x] **Google ile giriş:** kimlik belirteci **sunucuda doğrulanır** (PyJWT + Google JWKS); arayüzde Google'ın resmî düğmesi (GIS). [ ] **Canlı deneme için `VITE_GOOGLE_CLIENT_ID` + `VAKIFNAME_GOOGLE_CLIENT_ID` gerekli (K6).**
+- [x] Misafir ilerlemesi girişte hesaba taşınır (K8 ✅): mühürde hesabınki kalır; çözülmemiş soruyu misafir çözdüyse o alınır.
+- [x] Hesap kimliğiyle (`u-<uuid>`) tutulan ilerleme yalnızca o hesabın oturumuyla okunur/yazılır.
+- [x] Aydınlatma metni sayfası (`/gizlilik`, sistemin gerçekte sakladığı verilere göre; yayın öncesi kurumun KVKK metniyle değiştirilmeli) ve hesap silme (KVKK: kişisel alanlar boşaltılır, oturum ve ilerleme silinir).
+- [x] **Karar (27 Ekim, varsayılan):** parolalı kayıtta e-posta doğrulaması yok; bu yüzden Google aynı e-postalı hesaba bağlanınca doğrulanmamış parola silinir ve açık oturumlar kapatılır (önceden hesap ele geçirme önlemi).
+- [x] Testler: backend 56 auth testi (toplam 530), frontend sahte auth sunucusuyla 17 akış testi; gerçek sunucuyla tarayıcıda uçtan uca (kayıt → yenileme → çıkış → yanlış parola → giriş → hesap silme) denendi.
+- Not: arayüz API'ye **`localhost:8000`** ile gitmeli (127.0.0.1 farklı site sayılır, çerez gitmez). Kapsam dışı: parola sıfırlama, e-posta doğrulama, profil düzenleme.
 
 ## Faz 3 — Eserler ve keşif
 - [ ] **Eserler sayfası:** kart ızgarası, şehir ve tür filtresi, harita görünümü, kilit durumu.

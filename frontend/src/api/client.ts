@@ -1,6 +1,7 @@
 import type { CheckInResponse, CheckInStatus, Passport, Place, Stamp } from './types'
 
-const DEFAULT_API_BASE_URL = 'http://127.0.0.1:8000'
+// localhost (127.0.0.1 değil): oturum çerezi SameSite=Lax; arayüz localhost:5173'teyken aynı site sayılır.
+const DEFAULT_API_BASE_URL = 'http://localhost:8000'
 const REQUEST_TIMEOUT_MS = 10_000
 
 export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL).replace(/\/+$/, '')

@@ -1,0 +1,64 @@
+.vk-account__info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--vk-space-2) var(--vk-space-5);
+  margin: var(--vk-space-4) 0;
+  text-align: left;
+}
+.vk-account__info dt {
+  color: var(--vk-ivory-dim);
+}
+.vk-account__info dd {
+  margin: 0;
+  color: var(--vk-ivory);
+  overflow-wrap: anywhere;
+}
+.vk-account__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-3);
+  justify-content: center;
+}
+.vk-account__danger {
+  display: grid;
+  gap: var(--vk-space-3);
+  justify-items: center;
+  margin-top: var(--vk-space-6);
+  padding: var(--vk-space-5);
+  border-radius: var(--vk-radius);
+  border: 1px solid rgb(194 69 90 / 0.5);
+  max-width: 32rem;
+}
+.vk-account__danger h2 {
+  font-size: 1.3rem;
+  color: var(--vk-seal-soft);
+}
+.vk-btn--danger {
+  color: #fff;
+  background: linear-gradient(135deg, var(--vk-seal-soft), var(--vk-seal));
+}
+.vk-privacy {
+  text-align: left;
+  justify-items: stretch;
+  max-width: 44rem;
+  margin: 0 auto;
+}
+.vk-privacy h1 {
+  text-align: center;
+}
+.vk-privacy h2 {
+  font-size: 1.35rem;
+  color: var(--vk-gold-bright);
+  margin-top: var(--vk-space-3);
+}
+.vk-privacy ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: var(--vk-space-2);
+  color: var(--vk-ivory);
+}
+.vk-privacy .vk-btn {
+  justify-self: center;
+  margin-top: var(--vk-space-4);
+}

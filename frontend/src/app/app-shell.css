@@ -103,3 +103,9 @@
     padding-bottom: var(--vk-space-6);
   }
 }
+.vk-shell__loading {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  color: var(--vk-ivory-dim);
+}

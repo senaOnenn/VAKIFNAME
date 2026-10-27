@@ -187,3 +187,16 @@
     background: linear-gradient(90deg, transparent, rgb(9 12 34 / 0.45));
   }
 }
+.vk-auth__error--form {
+  padding: var(--vk-space-2) var(--vk-space-3);
+  border-radius: 8px;
+  background: rgb(255 138 155 / 0.1);
+}
+.vk-google-slot {
+  min-height: 44px;
+  display: grid;
+  justify-items: center;
+}
+.vk-auth__legal {
+  text-align: center;
+}

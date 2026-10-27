@@ -1,6 +1,6 @@
 import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import { CompassIcon, DomeIcon, SealIcon, UserIcon } from './components/Icons'
-import { useSession } from './session'
+import { displayName, useAuth } from './session'
 import './app-shell.css'
 
 const NAV = [
@@ -12,8 +12,9 @@ const NAV = [
 
 /** Oturum açılmış sayfaların kabuğu: web'de üst menü, mobilde alt sekme çubuğu (aynı bağlantılar). */
 export default function AppShell() {
-  const session = useSession()
-  if (!session) return <Navigate to="/giris" replace />
+  const auth = useAuth()
+  if (auth.status === 'loading') return <p className="vk-shell__loading" role="status">Yükleniyor…</p>
+  if (auth.status === 'none') return <Navigate to="/giris" replace />
   return (
     <div className="vk-shell">
       <a className="vk-shell__skip" href="#icerik">İçeriğe geç</a>
@@ -25,7 +26,7 @@ export default function AppShell() {
           ))}
         </nav>
         <span className="vk-shell__chip">
-          {session.kind === 'guest' ? 'Misafir' : `Geçici oturum · ${session.email ?? ''}`}
+          {displayName(auth)}
         </span>
       </header>
       <div id="icerik" className="vk-shell__main">

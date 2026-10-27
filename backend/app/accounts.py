@@ -196,7 +196,17 @@ class AccountStore:
             if user is not None:
                 if user["google_sub"] is not None:
                     raise GoogleAccountConflict()
-                self._db.execute("UPDATE users SET google_sub=? WHERE id=?", (sub, user["id"]))
+                # Önceden hesap ele geçirme önlemi: parolalı kayıtta e-posta doğrulanmaz. Google e-postanın sahibini
+                # doğruladığı için bağlama anında doğrulanmamış parola silinir ve hesabın açık oturumları kapatılır;
+                # böylece e-postayı önceden kaydeden üçüncü kişi hesaba parolayla girmeye devam edemez.
+                self._db.execute("BEGIN IMMEDIATE")
+                try:
+                    self._db.execute("UPDATE users SET google_sub=?, password_hash=NULL WHERE id=?", (sub, user["id"]))
+                    self._db.execute("DELETE FROM sessions WHERE user_id=?", (user["id"],))
+                    self._db.execute("COMMIT")
+                except BaseException:
+                    self._db.execute("ROLLBACK")
+                    raise
                 return self._user("id=?", (user["id"],))
             return self._insert_user(email, None, sub, display_name)
 
