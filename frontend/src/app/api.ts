@@ -135,9 +135,10 @@ export interface GameState {
   quiz_size: number
   pass_mark: number
   knowledge: { earned_at: string } | null
-  visit: { earned_at: string; demo: boolean } | null
+  visit: { earned_at: string; simulated: boolean } | null
   visit_radius_m: number
-  demo_visit_allowed: boolean
+  /** Jüri sunumu için açıkça etiketli ziyaret simülasyonu açık mı (`VAKIFNAME_VISIT_SIMULATION`). */
+  simulated_visit_allowed: boolean
   site_notice: string | null
 }
 export type QuizQuestion =
@@ -162,7 +163,7 @@ export interface QuizResult {
   }[]
   knowledge_seal: { earned_at: string; new: boolean } | null
 }
-export type VisitStatus = 'gold' | 'already' | 'out_of_range' | 'needs_knowledge' | 'demo_disabled'
+export type VisitStatus = 'gold' | 'already' | 'out_of_range' | 'needs_knowledge' | 'simulation_disabled'
 export interface VisitResult {
   status: VisitStatus
   distance_m: number | null
@@ -179,7 +180,7 @@ export const startQuiz = (id: string, userId: string) =>
   apiPost(`/monuments/${enc(id)}/quiz`, { user_id: userId }, undefined, WITH_COOKIE) as Promise<Quiz>
 export const submitQuiz = (quizId: string, userId: string, answers: { qid: string; choice: number }[]) =>
   apiPost(`/quiz/${enc(quizId)}/submit`, { user_id: userId, answers }, undefined, WITH_COOKIE) as Promise<QuizResult>
-export const sendVisit = (id: string, userId: string, body: { latitude?: number; longitude?: number; demo?: boolean }) =>
+export const sendVisit = (id: string, userId: string, body: { latitude?: number; longitude?: number; simulate?: boolean }) =>
   apiPost(`/monuments/${enc(id)}/visit`, { user_id: userId, ...body }, undefined, WITH_COOKIE) as Promise<VisitResult>
 
 export interface SealBookEntry {
@@ -187,7 +188,7 @@ export interface SealBookEntry {
   monument_name: string
   kind: 'knowledge' | 'visit'
   earned_at: string
-  demo?: boolean
+  simulated?: boolean
 }
 export interface SealBook {
   user_id: string

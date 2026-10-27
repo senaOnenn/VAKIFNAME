@@ -10,7 +10,7 @@ const VISIT_TEXT: Record<VisitResult['status'], string> = {
   already: 'Bu eserin altın mührü zaten sende.',
   out_of_range: 'Eserin önünde görünmüyorsun.',
   needs_knowledge: 'Önce bilgi mührünü almalısın.',
-  demo_disabled: 'Demo ziyaret şu anda kapalı.',
+  simulation_disabled: 'Ziyaret simülasyonu şu anda kapalı.',
 }
 
 /**
@@ -23,7 +23,7 @@ export function GamePanel({ id, uid, game, onChange }: { id: string; uid: string
   const tier1 = game.listened && (game.asked || !game.guide_required)
   const seal = game.visit ? 'gold' : game.knowledge ? 'knowledge' : 'empty'
 
-  async function doVisit(body: { latitude?: number; longitude?: number; demo?: boolean }) {
+  async function doVisit(body: { latitude?: number; longitude?: number; simulate?: boolean }) {
     setBusy(true)
     try {
       const r = await sendVisit(id, uid, body)
@@ -100,15 +100,15 @@ export function GamePanel({ id, uid, game, onChange }: { id: string; uid: string
             <strong>Ziyaret et, altın mühür al</strong>
             <p>
               {game.visit
-                ? `Eseri ziyaret ettin ✓ Mührün altın.${game.visit.demo ? ' (demo ziyaret)' : ''}`
+                ? `Eseri ziyaret ettin ✓ Mührün altın.${game.visit.simulated ? ' (sunum modu: simüle edilmiş ziyaret)' : ''}`
                 : `Eserin önüne git; konumun ${game.visit_radius_m} m içinde doğrulanınca mührün altına dönüşür. Konumun kaydedilmez.`}
             </p>
             {game.knowledge && !game.visit && (
               <div className="vk-game__actions">
                 <button type="button" className="vk-btn" onClick={locate} disabled={busy}>Konumumu doğrula</button>
-                {game.demo_visit_allowed && (
-                  <button type="button" className="vk-btn vk-btn--ghost" onClick={() => void doVisit({ demo: true })} disabled={busy}>
-                    Demo: ziyareti simüle et
+                {game.simulated_visit_allowed && (
+                  <button type="button" className="vk-btn vk-btn--ghost" onClick={() => void doVisit({ simulate: true })} disabled={busy}>
+                    Sunum modu: ziyareti simüle et
                   </button>
                 )}
               </div>

@@ -12,7 +12,7 @@ vi.mock('./components/RouteMap', () => ({ default: () => <div>harita</div> }))
 const ID = 'BUR-1001'
 const game = (over: Partial<GameState> = {}): GameState => ({
   monument_id: ID, locked: false, listened: false, asked: false, guide_required: true, ready_for_quiz: false,
-  quiz_size: 5, pass_mark: 4, knowledge: null, visit: null, visit_radius_m: 35, demo_visit_allowed: false, site_notice: null,
+  quiz_size: 5, pass_mark: 4, knowledge: null, visit: null, visit_radius_m: 35, simulated_visit_allowed: false, site_notice: null,
   ...over,
 })
 const DETAIL = {
@@ -121,25 +121,25 @@ describe('mühür yolu (eser sayfası)', () => {
     })
     vi.stubGlobal('navigator', { ...navigator, geolocation: { getCurrentPosition: (ok: PositionCallback) => ok({ coords: { latitude: 40.1839, longitude: 29.0619 } } as GeolocationPosition) } })
     open(`/eser/${ID}`)
-    expect(screen.queryByRole('button', { name: /Demo/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Sunum modu/ })).not.toBeInTheDocument()
     await userEvent.click(await screen.findByRole('button', { name: 'Konumumu doğrula' }))
     expect(await screen.findByText('Ziyaretin doğrulandı. Mührün altına dönüştü!')).toBeInTheDocument()
     expect(visitBody).toMatchObject({ latitude: 40.1839, longitude: 29.0619 })
-    expect(visitBody).not.toHaveProperty('demo')
+    expect(visitBody).not.toHaveProperty('simulate')
   })
 
-  it('demo ziyaret yalnızca izinliyse görünür ve açıkça demo olarak gönderilir', async () => {
+  it('ziyaret simülasyonu yalnızca izinliyse görünür ve açıkça simülasyon olarak gönderilir', async () => {
     let visitBody: Record<string, unknown> = {}
-    server(game({ knowledge: { earned_at: '2026-10-27T10:00:00Z' }, demo_visit_allowed: true }), {
+    server(game({ knowledge: { earned_at: '2026-10-27T10:00:00Z' }, simulated_visit_allowed: true }), {
       [`/monuments/${ID}/visit`]: (init?: RequestInit) => {
         visitBody = JSON.parse(String(init!.body))
         return { body: { status: 'gold', distance_m: null, radius_m: 35, visit_seal: { earned_at: '2026-10-27T11:00:00Z' } } }
       },
     })
     open(`/eser/${ID}`)
-    await userEvent.click(await screen.findByRole('button', { name: 'Demo: ziyareti simüle et' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Sunum modu: ziyareti simüle et' }))
     await screen.findByText('Ziyaretin doğrulandı. Mührün altına dönüştü!')
-    expect(visitBody).toMatchObject({ demo: true })
+    expect(visitBody).toMatchObject({ simulate: true })
   })
 })
 
@@ -201,12 +201,12 @@ describe('Rozeti Al (sınav)', () => {
 })
 
 describe('pasaport', () => {
-  it('yapboz bulunan ve altın parçaları sayar; mühür listesi demo ziyareti belirtir', async () => {
+  it('yapboz bulunan ve altın parçaları sayar; mühür listesi simüle edilmiş ziyareti belirtir', async () => {
     const summary = (id: string, name: string) => ({
       monument_id: id, name, type: 'cami', city: 'Bursa', district: 'Osmangazi', address: '-', location: null,
       checkin_available: false, fact_count: 1, game_fact_count: 1, image_count: 0, illustration: 'representative_drawing',
     })
-    const seal = (id: string, name: string, kind: string, demo = false) => ({ user_id: 'x', monument_id: id, monument_name: name, kind, earned_at: '2026-10-27T10:00:00Z', demo })
+    const seal = (id: string, name: string, kind: string, simulated = false) => ({ user_id: 'x', monument_id: id, monument_name: name, kind, earned_at: '2026-10-27T10:00:00Z', simulated })
     const fetchMock = stubFetch({})
     // Misafir kimliği önceden sabitlenir ki mühür defteri yolu bilinsin.
     const vid = 'ziyaretci-0b8f2c1e-1a2b-4c3d-8e9f-0123456789ab'
@@ -225,7 +225,7 @@ describe('pasaport', () => {
     expect(screen.getByText('3 parçadan 2 parça bulundu, 1 parça altın. Her bilgi mührü bir parça getirir.')).toBeInTheDocument()
     expect(screen.getByRole('img', { name: /Kayıp Vakfiye: 3 parçadan 2 parça bulundu, 1 parça altın/ })).toBeInTheDocument()
     const list = within(screen.getByRole('region', { name: 'Mühürler' }))
-    expect(list.getByText(/Altın · ziyaret .*\(demo\)/)).toBeInTheDocument()
+    expect(list.getByText(/Altın · ziyaret .*\(simülasyon\)/)).toBeInTheDocument()
     expect(list.getByText('Henüz yok')).toBeInTheDocument()
   })
 })

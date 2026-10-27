@@ -62,7 +62,7 @@ export default function Passport() {
                   <Seal kind={kind} label={kind === 'gold' ? 'Altın mühür' : kind === 'knowledge' ? 'Bilgi mührü' : 'Mühür yok'} size={64} />
                   <span className="vk-passport__name">{m.name}</span>
                   <span className="vk-passport__meta">
-                    {v ? `Altın · ziyaret ${date(v.earned_at)}${v.demo ? ' (demo)' : ''}` : k ? `Bilgi mührü · ${date(k.earned_at)}` : 'Henüz yok'}
+                    {v ? `Altın · ziyaret ${date(v.earned_at)}${v.simulated ? ' (simülasyon)' : ''}` : k ? `Bilgi mührü · ${date(k.earned_at)}` : 'Henüz yok'}
                   </span>
                 </Link>
               </li>
