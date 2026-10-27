@@ -6,6 +6,9 @@ sızdırılmaz.
 
 Keşif soruları yalnızca yayın ve oyun onaylı olgulardan gelir; doğru cevap istemciye gönderilmez, sunucuda denetlenir.
 Bilgi mührü uzaktan kazanılır; ziyaret mührü yalnızca GPS check-in onaylı eserde, yarıçap içindeki check-in ile verilir.
+
+İlerleme uçları misafir kimliğiyle (`ziyaretci-…`) eskisi gibi çalışır; hesap kimliğiyle (`u-…`) yalnızca o hesabın oturum
+çereziyle okunur ve yazılır (bkz. `auth_routes.require_progress_access`).
 """
 
 from dataclasses import dataclass
@@ -16,6 +19,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 from . import services
+from .auth_routes import require_progress_access
 from .models import CheckInRequest, CheckInResponse, Passport, UserId
 from .progress import MonumentProgressStore
 from .public_catalog import (
@@ -78,6 +82,7 @@ def check_in(request: Request, body: CheckInRequest, monument_id: Annotated[Monu
 
     Harita konumunun doğrulanmış olması check-in izni değildir. Koordinatlar istemciden gelir ve doğrulanmaz.
     """
+    require_progress_access(request, body.user_id)
     m = _catalog(request).get(monument_id)
     if m is None:
         raise HTTPException(status_code=404, detail=NOT_FOUND)
@@ -105,6 +110,7 @@ def _quest_progress(m, solved: set[str]) -> dict:
 
 @router.get("/monuments/{monument_id}/quests")
 def get_quests(request: Request, monument_id: Annotated[MonumentId, Path()], user_id: Optional[UserId] = None):
+    require_progress_access(request, user_id)
     m = _catalog(request).get(monument_id)
     if m is None:
         raise HTTPException(status_code=404, detail=NOT_FOUND)
@@ -116,6 +122,7 @@ def get_quests(request: Request, monument_id: Annotated[MonumentId, Path()], use
 @router.post("/monuments/{monument_id}/quests/{quest_id}/answer")
 def answer_quest(request: Request, body: AnswerRequest, monument_id: Annotated[MonumentId, Path()],
                  quest_id: Annotated[str, Path(pattern=r"^BUR-\d{4}-F\d{3}$")]):
+    require_progress_access(request, body.user_id)
     m = _catalog(request).get(monument_id)
     if m is None:
         raise HTTPException(status_code=404, detail=NOT_FOUND)
@@ -145,12 +152,14 @@ def answer_quest(request: Request, body: AnswerRequest, monument_id: Annotated[M
 
 @router.get("/users/{user_id}/monument-passport", response_model=Passport)
 def get_monument_passport(request: Request, user_id: Annotated[UserId, Path()]):
+    require_progress_access(request, user_id)
     return services.get_passport(user_id, request.app.state.monument_progress)
 
 
 @router.get("/users/{user_id}/seals")
 def get_seals(request: Request, user_id: Annotated[UserId, Path()]):
     """Kalıcı dijital pasaport: bilgi mühürleri (uzaktan) ve ziyaret mühürleri (GPS) ayrı listelenir."""
+    require_progress_access(request, user_id)
     seals = _progress(request).seals(user_id)
     catalog = _catalog(request)
     solved = _progress(request).solved(user_id)

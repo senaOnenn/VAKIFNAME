@@ -6,7 +6,9 @@
   check-in ile verilir. GPS onayı olmayan eserde bu mühür kazanılamaz.
 
 Aynı mühür ikinci kez verilmez (birincil anahtar). Doğru cevap bir kez kaydedilir; yanlış denemeler yalnızca sayılır.
-Kullanıcı kimliği tarayıcıda üretilen takma bir kimliktir; kişisel veri tutulmaz.
+Kullanıcı kimliği tarayıcıda üretilen takma bir misafir kimliği (`ziyaretci-…`) ya da hesap kimliğidir (`u-…`, bkz.
+`accounts.py`); bu depoda kişisel veri tutulmaz. Misafir ilerlemesi girişte hesaba taşınır (`merge_user`), hesap
+silinince ilerlemesi de silinir (`delete_user`).
 """
 
 import sqlite3
@@ -100,6 +102,47 @@ class MonumentProgressStore:
         with self._lock:
             return [dict(r) for r in self._db.execute(
                 "SELECT * FROM seals WHERE user_id=? ORDER BY earned_at, monument_id", (user_id,)).fetchall()]
+
+    # --- Hesaplar -------------------------------------------------------------------
+
+    def _transaction(self, statements: list[tuple[str, tuple]]) -> list[int]:
+        # Çağıran kilidi tutar. Bağlantı otomatik onay kipindedir; işlem açıkça açılıp kapatılır.
+        self._db.execute("BEGIN IMMEDIATE")
+        try:
+            counts = [self._db.execute(sql, args).rowcount for sql, args in statements]
+            self._db.execute("COMMIT")
+        except BaseException:
+            self._db.execute("ROLLBACK")
+            raise
+        return counts
+
+    def merge_user(self, from_id: str, to_id: str) -> dict:
+        """Misafir ilerlemesini (`from_id`) hesaba (`to_id`) tek işlemde taşır ve misafir satırlarını siler.
+
+        Hiçbir kayıt ikilenmez. Hesapta aynı mühür varsa hesabınki kalır. Hesapta aynı soru varsa satır hesabınkidir;
+        yalnızca hesabın henüz doğru cevaplamadığı soru misafirde doğru cevaplanmışsa o cevap zamanı alınır (aksi halde
+        misafirken kazanılan bilgi mührü taşınır ama sorusu çözülmemiş görünürdü) ve deneme sayıları toplanır.
+        """
+        if from_id == to_id:
+            return {"answers": 0, "seals": 0}
+        with self._lock:
+            answers, seals, _, _ = self._transaction([
+                ("INSERT INTO quest_answers (user_id, monument_id, quest_id, attempts, correct_at) "
+                 "SELECT ?, monument_id, quest_id, attempts, correct_at FROM quest_answers WHERE user_id=? "
+                 "ON CONFLICT (user_id, quest_id) DO UPDATE SET attempts = attempts + excluded.attempts, "
+                 "correct_at = COALESCE(correct_at, excluded.correct_at)", (to_id, from_id)),
+                ("INSERT OR IGNORE INTO seals (user_id, monument_id, kind, monument_name, earned_at) "
+                 "SELECT ?, monument_id, kind, monument_name, earned_at FROM seals WHERE user_id=?", (to_id, from_id)),
+                ("DELETE FROM quest_answers WHERE user_id=?", (from_id,)),
+                ("DELETE FROM seals WHERE user_id=?", (from_id,)),
+            ])
+        return {"answers": answers, "seals": seals}
+
+    def delete_user(self, user_id: str) -> None:
+        """Kullanıcının bütün soru cevaplarını ve mühürlerini siler (hesap silme, KVKK)."""
+        with self._lock:
+            self._transaction([("DELETE FROM quest_answers WHERE user_id=?", (user_id,)),
+                               ("DELETE FROM seals WHERE user_id=?", (user_id,))])
 
     # --- `services.check_in` arayüzü (yalnızca ziyaret mührü) ---------------------------
 

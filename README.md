@@ -135,6 +135,30 @@ Testler (`backend` klasöründe, sanal ortam aktifken): `python -m pytest`
 | POST | `/quests/{place_id}/check-in` | `{"user_id", "latitude", "longitude"}` ile konum check-in'i |
 | GET | `/users/{user_id}/passport` | Kullanıcının mühürleri |
 
+### Hesap sistemi
+
+E-posta+parola ve Google ile giriş (`app/accounts.py`, `app/auth_routes.py`, `app/google_auth.py`). Oturum `vk_session`
+çereziyle taşınır (HttpOnly, SameSite=Lax, 30 gün); arayüz `fetch` çağrılarında `credentials: 'include'` kullanır.
+
+| Metot | Yol | Açıklama |
+|---|---|---|
+| POST | `/auth/register` | `{"email", "password", "display_name"?, "visitor_id"?}` → 201 + çerez; e-posta kayıtlıysa 409 |
+| POST | `/auth/login` | `{"email", "password", "visitor_id"?}` → 200 + çerez; hatalı bilgide tek tip 401 |
+| POST | `/auth/google` | `{"id_token", "visitor_id"?}` → belirteç sunucuda doğrulanır; yapılandırılmamışsa 503 |
+| POST | `/auth/logout` | Oturumu sunucuda siler, çerezi temizler (204) |
+| GET | `/auth/me` | Oturumdaki kullanıcı `{"user_id", "email", "display_name", "provider"}`; yoksa 401 |
+| DELETE | `/auth/me` | Hesabı, oturumlarını ve ilerlemesini siler (KVKK silme hakkı, 204) |
+
+- Parola yalnızca scrypt özeti, oturum belirteci yalnızca SHA-256 özeti olarak saklanır. Girişte e-postanın kayıtlı
+  olup olmadığı sızdırılmaz. `/auth/*` POST istekleri istemci başına sınırlıdır (varsayılan 10/dk, 60/saat → 429).
+- `visitor_id` (`ziyaretci-<uuid>`) verilirse bu cihazda misafirken kazanılan ilerleme hesaba taşınır; aynı kayıt
+  hesapta varsa hesabınki kalır.
+- Hesap kimliğiyle (`u-<uuid>`) tutulan ilerleme (`/users/{user_id}/seals`, `/monument-passport`, soru cevaplama,
+  check-in) yalnızca aynı hesabın oturumuyla okunur/yazılır (oturum yoksa 401, başka hesapsa 403). Misafir kimlikleri
+  eskisi gibi çalışır.
+- Ortam değişkenleri (`VAKIFNAME_ACCOUNTS_DB`, `VAKIFNAME_COOKIE_SECURE`, `VAKIFNAME_GOOGLE_CLIENT_ID`,
+  `VAKIFNAME_AUTH_RATE`) seçenekleriyle `backend/.env.example` içindedir.
+
 ### Eser verisi
 
 Eserler `data/places.json` dosyasından okunur. Farklı bir dosya kullanmak için `VAKIFNAME_PLACES_FILE` ortam değişkenini ayarlayın.
@@ -165,7 +189,8 @@ CORS yalnızca tarayıcıların hangi sitelerden istek atabileceğini belirler. 
 
 - **İlerleme bellekte tutulur:** Sunucu yeniden başlatıldığında tüm mühürler silinir. Birden fazla worker ile çalıştırıldığında her worker'ın kendi verisi olur.
 - **Konum doğrulanmaz:** Check-in, istemcinin bildirdiği koordinatlara güvenir. Bu bir simülasyondur; GPS sahteciliğini engellemez ve kullanıcının eseri gerçekten ziyaret ettiğini kanıtlamaz.
-- **Kimlik doğrulama yoktur:** `user_id` serbest metindir.
+- **Demo uçlarında kimlik doğrulama yoktur:** demo pasaportunda `user_id` serbest metindir. Gerçek eser ilerlemesinde
+  hesap kimlikleri (`u-…`) oturumla korunur (bkz. "Hesap sistemi"); misafir kimlikleri tarayıcıda üretilen takma adlardır.
 
 ## Dahili V20 veri katmanı
 

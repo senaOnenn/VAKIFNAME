@@ -10,8 +10,11 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .accounts import AccountStore
 from .ask.service import AskService
 from .ask_routes import RateLimiter, router as ask_router
+from .auth_routes import router as auth_router
+from .google_auth import google_verifier_from_env
 from .guide.lexicon import TurkishLexicon
 from .guide.privacy import FaceScreen
 from .guide.registry import DEFAULT_MODELS, build_provider, log_selection
@@ -25,12 +28,14 @@ from .services import PlaceRepository, ProgressStore
 
 # Rehber logları (yalnızca durum, aşama, süre, token sayısı, HTTP durumu ve hata kodu; soru, fotoğraf ve anahtar yazılmaz)
 # zaman damgasıyla uvicorn çıktısına gider. Yapılandırılmamış Python yalnızca WARNING ve üstünü, damgasız yazıyordu.
-_guide_log = logging.getLogger("vakifname.guide")
-if not _guide_log.handlers:
-    _h = logging.StreamHandler()
-    _h.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s"))
-    _guide_log.addHandler(_h)
-    _guide_log.setLevel(logging.INFO)
+# Hesap logları (`vakifname.auth`) yalnızca ret nedeni kodunu yazar; e-posta, parola ve belirteç yazılmaz.
+for _name in ("vakifname.guide", "vakifname.auth"):
+    _log = logging.getLogger(_name)
+    if not _log.handlers:
+        _h = logging.StreamHandler()
+        _h.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s"))
+        _log.addHandler(_h)
+        _log.setLevel(logging.INFO)
 
 DEFAULT_PLACES_FILE = Path(__file__).resolve().parents[2] / "data" / "places.json"
 # Dahili dışa aktarıcının (`python -m app.internal.publish`) ürettiği, yalnızca yayın onaylı kayıtları içeren anlık görüntü.
@@ -55,8 +60,10 @@ def cors_origins_from_env() -> list[str]:
     return origins
 
 
-def _json_safe_error(error: dict) -> dict:
+def _json_safe_error(error: dict, echo_input: bool = True) -> dict:
     """Hata kaydını JSON'a çevrilebilir hale getirir; NaN/Infinity gibi değerleri yanıtta tekrar yazmaz."""
+    if not echo_input:
+        error = {k: v for k, v in error.items() if k != "input"}
     error = jsonable_encoder(error)
     for key in ("input", "ctx"):
         try:
@@ -68,7 +75,9 @@ def _json_safe_error(error: dict) -> dict:
 
 
 async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
-    return JSONResponse(status_code=422, content={"detail": [_json_safe_error(e) for e in exc.errors()]})
+    # Hesap uçlarında girdi (parola, belirteç) hata yanıtında geri yazılmaz.
+    echo = not request.url.path.startswith("/auth/")
+    return JSONResponse(status_code=422, content={"detail": [_json_safe_error(e, echo) for e in exc.errors()]})
 
 
 def demo_api_from_env() -> bool:
@@ -85,6 +94,7 @@ def create_app(
     public_catalog_file: Optional[Path] = None,
     demo_api: Optional[bool] = None,
     progress_db: Optional[Path] = None,
+    accounts_db: Optional[Path] = None,
     ask_model_dir: Optional[Path] = None,
     ask_index_dir: Optional[Path] = None,
     ask_encoder=None,
@@ -107,6 +117,14 @@ def create_app(
     # tanımlı değilse (testler) bellek içi depo kullanılır ve yeniden başlatmada sıfırlanır.
     progress_db = progress_db or (Path(os.environ["VAKIFNAME_PROGRESS_DB"]) if os.environ.get("VAKIFNAME_PROGRESS_DB") else None)
     app.state.monument_progress = MonumentProgressStore(progress_db)
+    # Hesaplar ve oturumlar `VAKIFNAME_ACCOUNTS_DB` dosyasında (ilerlemeden ayrı); tanımlı değilse bellek içi (testler).
+    accounts_db = accounts_db or (Path(os.environ["VAKIFNAME_ACCOUNTS_DB"]) if os.environ.get("VAKIFNAME_ACCOUNTS_DB") else None)
+    app.state.accounts = AccountStore(accounts_db)
+    # Google ile giriş yalnızca `VAKIFNAME_GOOGLE_CLIENT_ID` verilince açılır; testler sahte doğrulayıcı koyar.
+    app.state.google_verifier = google_verifier_from_env()
+    # `/auth/*` POST istekleri için `VAKIFNAME_AUTH_RATE=dakika/saat/genel-dakika` (varsayılan 10/60/300), istemci adresine göre.
+    a_min, a_hour, a_global = (int(x) for x in os.environ.get("VAKIFNAME_AUTH_RATE", "10/60/300").split("/"))
+    app.state.auth_limiter = RateLimiter(per_minute=a_min, per_hour=a_hour, global_per_minute=a_global)
     # "Esere Sor": yalnızca genel katalogdan. `VAKIFNAME_ASK_MODEL_DIR` yerel embedding modelini gösterir; yoksa veya
     # yüklenemezse kelime aramasıyla çalışır. Dizin `VAKIFNAME_ASK_INDEX_DIR` altında manifestiyle saklanır.
     ask_model_dir = ask_model_dir or (Path(os.environ["VAKIFNAME_ASK_MODEL_DIR"]) if os.environ.get("VAKIFNAME_ASK_MODEL_DIR") else None)
@@ -148,7 +166,7 @@ def create_app(
     app.state.guide_login_limiter = RateLimiter(per_minute=5, per_hour=20, global_per_minute=30)
 
     # CORS yalnızca tarayıcıların hangi sitelerden çağrı yapabileceğini belirler; erişim kontrolü değildir. Kimlik bilgisi
-    # (çerez) yalnızca açıkça listelenen origin'lerle ve yalnızca rehber test oturumu için kullanılır ('*' reddedilir).
+    # (çerez: rehber test oturumu ve hesap oturumu) yalnızca açıkça listelenen origin'lerle kullanılır ('*' reddedilir).
     app.add_middleware(
         CORSMiddleware,
         allow_origins=cors_origins,
@@ -168,6 +186,7 @@ def create_app(
     app.include_router(ask_router)
     app.include_router(guide_router)
     app.include_router(monument_router)
+    app.include_router(auth_router)
     if app.state.ask.model_dir is not None:
         # Model ve dizin arka planda hazırlanır; o sırada kelime araması çalışır.
         app.state.ask.engine()
