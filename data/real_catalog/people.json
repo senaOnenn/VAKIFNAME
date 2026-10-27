@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "note": "Eser sayfasındaki kişi kartları (CLAUDE.md §2.4, K4: anlatıcı yerel rehberdir; tarihî kişi kartla görünür). Her kart yayımlanmış bir kayda (fact_id) bağlıdır ve kartta o kaydın metni aynen gösterilir; `match` kaydın metninde geçmezse kart gösterilmez.",
+  "people": [
+    {"monument_id": "BUR-0001", "person": "Yıldırım Bayezid", "role": "bani", "fact_id": "BUR-0001-F001", "match": "Yıldırım Bayezid"},
+    {"monument_id": "BUR-0003", "person": "Sultan II. Murad", "role": "bani", "fact_id": "BUR-0003-F001", "match": "II. Murad"},
+    {"monument_id": "BUR-0007", "person": "Sultan II. Murad", "role": "medfun", "fact_id": "BUR-0007-F003", "match": "II. Murad"},
+    {"monument_id": "BUR-0007", "person": "Fatih Sultan Mehmed", "role": "bani", "fact_id": "BUR-0007-F001", "match": "Fatih Sultan Mehmed"},
+    {"monument_id": "BUR-0008", "person": "Cem Sultan ve Şehzade Mustafa", "role": "medfun", "fact_id": "BUR-0008-F003", "match": "Cem Sultan"},
+    {"monument_id": "BUR-0009", "person": "Sultan II. Bayezid", "role": "bani", "fact_id": "BUR-0009-F001", "match": "II. Bayezid"},
+    {"monument_id": "BUR-0013", "person": "Sultan II. Bayezid", "role": "bani", "fact_id": "BUR-0013-F001", "match": "II. Bayezid"},
+    {"monument_id": "BUR-0014", "person": "Yıldırım Bayezid", "role": "bani", "fact_id": "BUR-0014-F001", "match": "Yıldırım Bayezid"},
+    {"monument_id": "BUR-0019", "person": "Osman Gazi", "role": "medfun", "fact_id": "BUR-0019-F007", "match": "Osman Gazi"},
+    {"monument_id": "BUR-0019", "person": "Sultan Abdülaziz", "role": "yeniden_yaptiran", "fact_id": "BUR-0019-F004", "match": "Abdülaziz"},
+    {"monument_id": "BUR-0020", "person": "Orhan Gazi", "role": "medfun", "fact_id": "BUR-0020-F001", "match": "Orhan Gazi"}
+  ]
+}

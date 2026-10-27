@@ -1,0 +1,58 @@
+.vk-people {
+  display: grid;
+  gap: var(--vk-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+}
+.vk-person {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--vk-space-4);
+  align-items: start;
+  padding: var(--vk-space-4);
+  border-radius: var(--vk-radius-lg);
+  background: linear-gradient(150deg, rgb(35 43 102 / 0.75), rgb(15 19 48 / 0.9));
+  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.3);
+}
+.vk-person__medal {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #2d3478, var(--vk-night) 70%);
+  box-shadow: 0 0 0 2px var(--vk-gold), 0 0 0 6px rgb(201 162 75 / 0.2), 0 0 0 7px rgb(201 162 75 / 0.6);
+}
+.vk-person__medal span {
+  font: 600 1.7rem var(--vk-font-display);
+  letter-spacing: 0.04em;
+  background: var(--vk-gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.vk-person__body {
+  display: grid;
+  gap: var(--vk-space-1);
+}
+.vk-person__role {
+  color: var(--vk-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+}
+.vk-person__name {
+  font-size: 1.5rem;
+  color: var(--vk-ivory);
+}
+.vk-person__text {
+  color: var(--vk-ivory-dim);
+  font-size: 0.92rem;
+}
+.vk-person__src {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-2);
+  align-items: center;
+  color: rgb(201 194 174 / 0.75);
+  font-size: 0.75rem;
+}

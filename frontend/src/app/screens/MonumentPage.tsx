@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
-import { getGame, getMonument, getRoute, mediaUrl, progressId, sendEngagement, statusMap, typeLabel, useLoad, type MonumentFact } from '../api'
+import { getGame, getMonument, getPeople, getRoute, mediaUrl, progressId, sendEngagement, statusMap, typeLabel, useLoad, type MonumentFact } from '../api'
 import { GamePanel } from '../components/GamePanel'
+import { PeopleCards } from '../components/PeopleCards'
 import { Narrator } from '../components/Narrator'
 import { GoldRule } from '../components/Ornament'
 import { StatusBadge } from '../components/StatusBadge'
@@ -49,6 +50,8 @@ export default function MonumentPage() {
   const status = statusMap(route.data)[id]
   // Oyun durumu (Faz 5). Uç yoksa veya hata verirse panel gösterilmez; eser bilgisi yine okunur.
   const game = useLoad((s) => getGame(id, uid, s), [id, uid])
+  // Tarihî kişiler kartla görünür; anlatıcı yerel rehberdir (K4). Yüklenemezse kart gösterilmez.
+  const people = useLoad((s) => getPeople(id, s).catch(() => []), [id])
   const engage = (event: 'listened' | 'asked') => {
     sendEngagement(id, uid, event).then(game.reload, () => undefined)
   }
@@ -78,6 +81,8 @@ export default function MonumentPage() {
       </header>
 
       <div className="vk-mon__body">
+        <PeopleCards people={people.data ?? []} />
+
         <Narrator monument={d} onListened={() => engage('listened')} onAsked={() => engage('asked')} />
 
         {game.data && <GamePanel id={id} uid={uid} game={game.data} onChange={() => { game.reload(); route.reload() }} />}

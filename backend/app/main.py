@@ -14,6 +14,7 @@ from .accounts import AccountStore
 from .ask.service import AskService
 from .ask_routes import RateLimiter, router as ask_router
 from .auth_routes import router as auth_router
+from .people_routes import router as people_router
 from .google_auth import google_verifier_from_env
 from .guide.lexicon import TurkishLexicon
 from .guide.privacy import FaceScreen
@@ -188,6 +189,7 @@ def create_app(
     app.include_router(guide_router)
     app.include_router(monument_router)
     app.include_router(route_router)
+    app.include_router(people_router)
     app.include_router(auth_router)
     if app.state.ask.model_dir is not None:
         # Model ve dizin arka planda hazırlanır; o sırada kelime araması çalışır.

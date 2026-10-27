@@ -12,7 +12,7 @@ Envanter projesi: Hatay (117 eser, 2022), Konya (289, 2024), Bursa (385) ve Küt
 1. **Funnel önce gelir.** Siteyi açan kişi ilk 5 saniyede ne olduğunu anlamalı ve içine çekilmeli. Uzun metinli tek sayfa yasak.
 2. **Akış:** Açılış animasyonu (VAKIFNAME yazısı, atlanabilir) → Giriş/Kayıt (+ Google, + "üye olmadan keşfet") → Şehir seçimi (Türkiye haritası, Bursa açık, diğerleri "yakında") → Rota → Eser → Rozet.
 3. **Eserler ayrı sayfada** (Keşfet/Eserler: liste, harita, şehir ve tür filtresi). Ana sayfa eser kataloğu değildir.
-4. **Eser sayfası kitabi bilgiyle açılmaz.** Eseri **animasyonlu bir karakter** anlatır: eserin tarihî karakteri varsa o, yoksa yerel rehber. **Sesli ve altyazılı.** Ayrıntılı, kaynaklı bilgi ikinci katmandır ("Daha fazla / Kaynaklar"), gizlenmez (bkz. §4).
+4. **Eser sayfası kitabi bilgiyle açılmaz.** Eseri **animasyonlu bir karakter** anlatır. **Karar (K4, 27 Ekim):** anlatıcı her eserde **yerel rehberdir** (ekibin Çırak Kâşif karakteri); tarihî kişi adına konuşulmaz, yalnızca **portre kartıyla** görünür ("Eserin banisi", "Burada yatıyor", "Yeniden yaptıran"; baş harf madalyonu, kartta onaylı kaydın metni ve kaynağı). **Sesli ve altyazılı.** Ayrıntılı, kaynaklı bilgi ikinci katmandır ("Daha fazla / Kaynaklar"), gizlenmez (bkz. §4).
 5. **"Esere Sor" kaldırılır.** Yerine kullanıcı karakterle **konuşur/mesajlaşır** (mevcut rehber hattı: `guide`).
 6. **Oyun akışı (27 Ekim kararı): kademeli ödül, ziyaret en üst kademe.** Ziyaret en zor adım olduğu için ilk kapı **değildir**; herkes online döngüye girer, ziyaret "daha değerli olanı al" hedefidir:
    (a) **Dinle ve konuş:** karakter anlatımı + en az 1 mesaj → küçük ödül (XP, yapboz parçası belirir).

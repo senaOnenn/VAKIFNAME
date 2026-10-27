@@ -197,3 +197,16 @@ export interface SealBook {
 }
 export const getSealBook = (userId: string, signal?: AbortSignal) =>
   apiGet(`/users/${enc(userId)}/seals`, signal, WITH_COOKIE) as Promise<SealBook>
+
+// --- Tarihî kişi kartları (K4): backend/app/people_routes.py --------------------------------------------------------
+export interface PersonCard {
+  name: string
+  role: 'bani' | 'medfun' | 'yeniden_yaptiran'
+  role_label: string
+  fact_id: string
+  text: string
+  certainty: string
+  source: string
+}
+export const getPeople = (id: string, signal?: AbortSignal) =>
+  apiGet(`/monuments/${enc(id)}/people`, signal).then((b) => ((b as { people?: PersonCard[] }).people ?? []))
