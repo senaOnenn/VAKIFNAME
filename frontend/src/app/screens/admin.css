@@ -1,0 +1,54 @@
+.vk-admin__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-2);
+}
+.vk-admin__body {
+  display: grid;
+  gap: var(--vk-space-5);
+  transition: opacity var(--vk-dur) var(--vk-ease);
+}
+.vk-admin__body.is-loading {
+  opacity: 0.5;
+}
+.vk-admin__kpis {
+  display: grid;
+  gap: var(--vk-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+.vk-admin__card {
+  display: grid;
+  gap: var(--vk-space-4);
+  padding: var(--vk-space-5);
+  border-radius: var(--vk-radius-lg);
+  background: var(--vk-surface);
+  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.18);
+}
+.vk-admin__card h2 {
+  font-size: 1.4rem;
+}
+.vk-admin table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.vk-admin th,
+.vk-admin td {
+  text-align: left;
+  padding: var(--vk-space-2) var(--vk-space-3);
+  border-bottom: 1px solid rgb(201 162 75 / 0.15);
+}
+.vk-admin th {
+  color: var(--vk-ivory-dim);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.vk-admin td:not(:first-child),
+.vk-admin th:not(:first-child) {
+  text-align: right;
+}
+.vk-admin__table summary {
+  cursor: pointer;
+  color: var(--vk-gold-bright);
+  font-weight: 600;
+}

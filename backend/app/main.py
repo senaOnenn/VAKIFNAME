@@ -15,6 +15,8 @@ from .ask.service import AskService
 from .ask_routes import RateLimiter, router as ask_router
 from .auth_routes import router as auth_router
 from .people_routes import router as people_router
+from .stats import StatsStore
+from .stats_routes import router as stats_router
 from .google_auth import google_verifier_from_env
 from .guide.lexicon import TurkishLexicon
 from .guide.privacy import FaceScreen
@@ -127,6 +129,10 @@ def create_app(
     # `/auth/*` POST istekleri için `VAKIFNAME_AUTH_RATE=dakika/saat/genel-dakika` (varsayılan 10/60/300), istemci adresine göre.
     a_min, a_hour, a_global = (int(x) for x in os.environ.get("VAKIFNAME_AUTH_RATE", "10/60/300").split("/"))
     app.state.auth_limiter = RateLimiter(per_minute=a_min, per_hour=a_hour, global_per_minute=a_global)
+    # Anonim ziyaret istatistikleri (çerezsiz; bkz. app/stats.py). Dosya yoksa bellekte tutulur.
+    stats_db = os.environ.get("VAKIFNAME_STATS_DB", "").strip()
+    app.state.stats = StatsStore(Path(stats_db) if stats_db else None)
+    app.state.stats_limiter = RateLimiter(per_minute=120, per_hour=3000, global_per_minute=3000)
     # "Esere Sor": yalnızca genel katalogdan. `VAKIFNAME_ASK_MODEL_DIR` yerel embedding modelini gösterir; yoksa veya
     # yüklenemezse kelime aramasıyla çalışır. Dizin `VAKIFNAME_ASK_INDEX_DIR` altında manifestiyle saklanır.
     ask_model_dir = ask_model_dir or (Path(os.environ["VAKIFNAME_ASK_MODEL_DIR"]) if os.environ.get("VAKIFNAME_ASK_MODEL_DIR") else None)
@@ -190,6 +196,7 @@ def create_app(
     app.include_router(monument_router)
     app.include_router(route_router)
     app.include_router(people_router)
+    app.include_router(stats_router)
     app.include_router(auth_router)
     if app.state.ask.model_dir is not None:
         # Model ve dizin arka planda hazırlanır; o sırada kelime araması çalışır.

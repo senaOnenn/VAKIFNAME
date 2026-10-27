@@ -4,6 +4,7 @@ import '../design/tokens.css'
 import '../design/base.css'
 import AppShell from './AppShell'
 import Account from './screens/Account'
+import AdminPage from './screens/AdminPage'
 import Auth from './screens/Auth'
 import City from './screens/City'
 import Intro, { INTRO_SEEN_KEY } from './screens/Intro'
@@ -14,6 +15,7 @@ import Privacy from './screens/Privacy'
 import QuizPage from './screens/QuizPage'
 import RoutePage from './screens/RoutePage'
 import { useAuth } from './session'
+import { trackPage } from './stats'
 
 /** Açılış yalnızca oturum başına bir kez gösterilir; oturumu olan kullanıcı doğrudan şehir seçimine geçer. */
 function Home() {
@@ -28,11 +30,12 @@ function Home() {
   return seen ? <Navigate to="/giris" replace /> : <Intro />
 }
 
-/** Sayfa değişince en üste dön (tarayıcı yeni sayfayı önceki kaydırma konumunda açmasın). */
-function ScrollToTop() {
+/** Sayfa değişince en üste dön ve sayfayı anonim olarak say (bkz. stats.ts). */
+function OnNavigate() {
   const { pathname } = useLocation()
   useEffect(() => {
     window.scrollTo(0, 0)
+    trackPage(pathname)
   }, [pathname])
   return null
 }
@@ -42,7 +45,7 @@ export default function VakifnameApp() {
   return (
     <div className="vk-app">
       <BrowserRouter>
-        <ScrollToTop />
+        <OnNavigate />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/giris" element={<Auth />} />
@@ -56,6 +59,7 @@ export default function VakifnameApp() {
             <Route path="/eser/:id/rozet" element={<QuizPage />} />
             <Route path="/pasaport" element={<Passport />} />
             <Route path="/hesap" element={<Account />} />
+            <Route path="/yonetim" element={<AdminPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

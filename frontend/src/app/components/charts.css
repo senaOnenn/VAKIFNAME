@@ -1,0 +1,64 @@
+.vk-chart {
+  position: relative;
+}
+.vk-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.vk-chart__tick {
+  fill: var(--vk-ivory-dim);
+  font: 12px var(--vk-font-ui);
+  font-variant-numeric: tabular-nums;
+}
+.vk-chart__label {
+  fill: var(--vk-ivory);
+  font: 600 13px var(--vk-font-ui);
+}
+.vk-chart__name {
+  fill: var(--vk-ivory);
+  font: 14px var(--vk-font-ui);
+}
+.vk-chart rect:focus-visible,
+.vk-chart g:focus-visible {
+  outline: 2px solid var(--vk-indigo-soft);
+  outline-offset: 2px;
+}
+.vk-chart__tip {
+  position: absolute;
+  top: 0;
+  transform: translate(-50%, -110%);
+  display: grid;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--vk-night-deep);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.5), inset 0 0 0 1px rgb(201 162 75 / 0.3);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.vk-chart__tip strong {
+  color: var(--vk-ivory);
+  font-size: 1rem;
+}
+.vk-chart__tip span {
+  color: var(--vk-ivory-dim);
+  font-size: 0.78rem;
+}
+.vk-stat {
+  display: grid;
+  gap: 4px;
+  padding: var(--vk-space-4);
+  border-radius: var(--vk-radius);
+  background: var(--vk-surface);
+  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.18);
+}
+.vk-stat__label {
+  color: var(--vk-ivory-dim);
+  font-size: 0.85rem;
+}
+.vk-stat__value {
+  font: 600 2rem var(--vk-font-ui);
+  color: var(--vk-ivory);
+}

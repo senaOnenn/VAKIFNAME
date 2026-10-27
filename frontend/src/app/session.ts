@@ -11,6 +11,8 @@ export interface AuthUser {
   email: string | null
   display_name: string | null
   provider: 'password' | 'google'
+  /** Yönetici paneli (`/yonetim`) için; sunucu `VAKIFNAME_ADMIN_EMAILS` listesine göre belirler. */
+  is_admin?: boolean
 }
 export type AuthState =
   | { status: 'loading' }

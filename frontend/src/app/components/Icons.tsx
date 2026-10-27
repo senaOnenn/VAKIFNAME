@@ -14,3 +14,6 @@ export const SealIcon = () => (
 export const UserIcon = () => (
   <svg {...base}><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>
 )
+export const ChartIcon = () => (
+  <svg {...base}><path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3" /></svg>
+)

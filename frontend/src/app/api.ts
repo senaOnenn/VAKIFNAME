@@ -211,3 +211,13 @@ export interface PersonCard {
 }
 export const getPeople = (id: string, signal?: AbortSignal) =>
   apiGet(`/monuments/${enc(id)}/people`, signal).then((b) => ((b as { people?: PersonCard[] }).people ?? []))
+
+// --- Yönetim: istatistik (backend/app/stats_routes.py) -------------------------------------------------------------
+export interface AdminStats {
+  days: { day: string; visitors: number; pageviews: number }[]
+  totals: { visitors: number; pageviews: number; monument_views: number }
+  pages: { page: string; views: number }[]
+  monuments: { monument_id: string; name: string; views: number }[]
+}
+export const getAdminStats = (days: number, signal?: AbortSignal) =>
+  apiGet(`/admin/stats?days=${days}`, signal, WITH_COOKIE) as Promise<AdminStats>

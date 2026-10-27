@@ -1,5 +1,5 @@
 import { Navigate, NavLink, Outlet } from 'react-router-dom'
-import { CompassIcon, DomeIcon, SealIcon, UserIcon } from './components/Icons'
+import { ChartIcon, CompassIcon, DomeIcon, SealIcon, UserIcon } from './components/Icons'
 import { displayName, useAuth } from './session'
 import './app-shell.css'
 
@@ -15,13 +15,14 @@ export default function AppShell() {
   const auth = useAuth()
   if (auth.status === 'loading') return <p className="vk-shell__loading" role="status">Yükleniyor…</p>
   if (auth.status === 'none') return <Navigate to="/giris" replace />
+  const nav = auth.status === 'user' && auth.user.is_admin ? [...NAV, { to: '/yonetim', label: 'Yönetim', Icon: ChartIcon }] : NAV
   return (
     <div className="vk-shell">
       <a className="vk-shell__skip" href="#icerik">İçeriğe geç</a>
       <header className="vk-shell__top">
         <NavLink to="/sehir" className="vk-shell__logo">VAKIFNAME</NavLink>
         <nav aria-label="Ana menü" className="vk-shell__topnav">
-          {NAV.map(({ to, label }) => (
+          {nav.map(({ to, label }) => (
             <NavLink key={to} to={to} className="vk-shell__toplink">{label}</NavLink>
           ))}
         </nav>
@@ -33,7 +34,7 @@ export default function AppShell() {
         <Outlet />
       </div>
       <nav aria-label="Alt menü" className="vk-shell__tabs">
-        {NAV.map(({ to, label, Icon }) => (
+        {nav.map(({ to, label, Icon }) => (
           <NavLink key={to} to={to} className="vk-shell__tab">
             <Icon />
             <span>{label}</span>

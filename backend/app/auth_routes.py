@@ -20,6 +20,7 @@ from typing import Annotated, Optional
 from fastapi import APIRouter, HTTPException, Request, Response
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field, StringConstraints
 
+from .admin import is_admin
 from .accounts import SESSION_TTL, AccountStore, EmailTaken, GoogleAccountConflict, Provider, is_account_id, normalize_email
 from .google_auth import GoogleUnavailable, InvalidGoogleToken
 
@@ -95,7 +96,8 @@ def _limit(request: Request):
 
 
 def _public(user: dict, provider: str) -> dict:
-    return {"user_id": user["id"], "email": user["email"], "display_name": user["display_name"], "provider": provider}
+    return {"user_id": user["id"], "email": user["email"], "display_name": user["display_name"], "provider": provider,
+            "is_admin": is_admin(user)}
 
 
 def _signed_in(request: Request, response: Response, user: dict, provider: Provider, visitor_id: Optional[str]) -> dict:
