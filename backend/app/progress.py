@@ -1,9 +1,14 @@
-"""Gerçek eserlerde ziyaretçi ilerlemesi: keşif soruları ve iki ayrı mühür türü (kalıcı SQLite).
+"""Gerçek eserlerde ziyaretçi ilerlemesi: oyun kademeleri ve iki ayrı mühür türü (kalıcı SQLite).
 
-- **Bilgi mührü (`knowledge`)**: Eserin yayın ve oyun onaylı bütün keşif soruları doğru cevaplanınca verilir. Uzaktan
-  kazanılabilir; fiziksel ziyaret iddia etmez.
-- **Ziyaret mührü (`visit`)**: Yalnızca `gps_checkin` kararıyla onaylanmış giriş noktasında, yarıçap içinde yapılan
-  check-in ile verilir. GPS onayı olmayan eserde bu mühür kazanılamaz.
+- **Kademe 1 (`engagement`)**: anlatımı sonuna kadar dinleme (`listened`) ve rehbere soru sorma (`asked`) olayları.
+  Olay bir kez kaydedilir (birincil anahtar); soru metni saklanmaz.
+- **Bilgi mührü (`knowledge`)**: "Rozeti Al" sınavında (`quizzes`, bkz. `game.py`) 5 sorudan en az 4'ü doğru
+  cevaplanınca ya da eski akışta eserin bütün keşif soruları doğru cevaplanınca verilir. Uzaktan kazanılabilir; fiziksel
+  ziyaret iddia etmez. Sınavın doğru cevapları yalnızca bu depoda, sunucuda durur.
+- **Ziyaret mührü (`visit`)**: bilgi mühründen sonra, eserin onaylı konumunun yarıçapı içinde yapılan ziyaretle verilir.
+  Sunum modunda (simülasyon) mesafe denetlenmeden verilen mühür `simulated = 1` ile saklanır ve her yerde simülasyon
+  olarak gösterilir; gerçek ziyaret simülasyon mührünü gerçeğe çevirir. Ziyaretçinin konumu (koordinat) hiçbir tabloda
+  saklanmaz.
 
 Aynı mühür ikinci kez verilmez (birincil anahtar). Doğru cevap bir kez kaydedilir; yanlış denemeler yalnızca sayılır.
 Rotada açılan eserler (`unlocks`, bkz. `route_engine.py`) kalıcıdır; bir kez açılan eser yeniden kilitlenmez.
@@ -12,6 +17,7 @@ Kullanıcı kimliği tarayıcıda üretilen takma bir misafir kimliği (`ziyaret
 silinince ilerlemesi de silinir (`delete_user`).
 """
 
+import json
 import sqlite3
 import threading
 from datetime import datetime, timezone
@@ -21,6 +27,7 @@ from typing import Callable, Iterable, Literal, Optional, TypeVar
 from .models import Stamp
 
 SealKind = Literal["knowledge", "visit"]
+EngagementEvent = Literal["listened", "asked"]
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS quest_answers (
@@ -37,6 +44,7 @@ CREATE TABLE IF NOT EXISTS seals (
     kind TEXT NOT NULL CHECK (kind IN ('knowledge', 'visit')),
     monument_name TEXT NOT NULL,
     earned_at TEXT NOT NULL,
+    simulated INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (user_id, monument_id, kind)
 );
 CREATE TABLE IF NOT EXISTS unlocks (
@@ -45,6 +53,24 @@ CREATE TABLE IF NOT EXISTS unlocks (
     unlocked_at TEXT NOT NULL,
     PRIMARY KEY (user_id, monument_id)
 );
+CREATE TABLE IF NOT EXISTS engagement (
+    user_id TEXT NOT NULL,
+    monument_id TEXT NOT NULL,
+    event TEXT NOT NULL CHECK (event IN ('listened', 'asked')),
+    recorded_at TEXT NOT NULL,
+    PRIMARY KEY (user_id, monument_id, event)
+);
+CREATE TABLE IF NOT EXISTS quizzes (
+    quiz_id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    monument_id TEXT NOT NULL,
+    items TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    submitted_at TEXT,
+    score INTEGER
+);
+CREATE INDEX IF NOT EXISTS quizzes_by_user ON quizzes (user_id, monument_id);
 """
 
 T = TypeVar("T")
@@ -66,6 +92,9 @@ class MonumentProgressStore:
         if path is not None:
             self._db.execute("PRAGMA journal_mode = WAL")
         self._db.executescript(SCHEMA)
+        # Faz 5 öncesi dosyalarda bu sütun yoktur; eski mühürler gerçek (simülasyon olmayan) mühürdür.
+        if "simulated" not in {r["name"] for r in self._db.execute("PRAGMA table_info(seals)")}:
+            self._db.execute("ALTER TABLE seals ADD COLUMN simulated INTEGER NOT NULL DEFAULT 0")
         self._lock = threading.Lock()
 
     def close(self):
@@ -98,14 +127,29 @@ class MonumentProgressStore:
 
     # --- Mühürler -------------------------------------------------------------------
 
-    def add_seal(self, user_id: str, monument_id: str, monument_name: str, kind: SealKind) -> tuple[dict, bool]:
+    def add_seal(self, user_id: str, monument_id: str, monument_name: str, kind: SealKind,
+                 simulated: bool = False) -> tuple[dict, bool]:
+        """Mührü verir; ikinci dönüş değeri mühür bu çağrıda verildiyse True. Yalnızca ziyaret mührü simülasyon olabilir.
+
+        Var olan mühür değişmez; tek istisna: simülasyon ziyaret mührü varken gerçek ziyaret gelirse mühür gerçeğe
+        çevrilir (kazanılma zamanı da gerçek ziyaretinki olur) ve bu çağrı yeni mühür sayılır.
+        """
+        simulated = bool(simulated) and kind == "visit"
         with self._lock:
             cur = self._db.execute(
-                "INSERT INTO seals (user_id, monument_id, kind, monument_name, earned_at) VALUES (?,?,?,?,?) "
-                "ON CONFLICT DO NOTHING", (user_id, monument_id, kind, monument_name, _now()))
+                "INSERT INTO seals (user_id, monument_id, kind, monument_name, earned_at, simulated) "
+                "VALUES (?,?,?,?,?,?) ON CONFLICT (user_id, monument_id, kind) DO UPDATE SET simulated = 0, "
+                "earned_at = excluded.earned_at WHERE seals.simulated = 1 AND excluded.simulated = 0",
+                (user_id, monument_id, kind, monument_name, _now(), int(simulated)))
             row = self._db.execute("SELECT * FROM seals WHERE user_id=? AND monument_id=? AND kind=?",
                                    (user_id, monument_id, kind)).fetchone()
             return dict(row), cur.rowcount == 1
+
+    def seal(self, user_id: str, monument_id: str, kind: SealKind) -> Optional[dict]:
+        with self._lock:
+            row = self._db.execute("SELECT * FROM seals WHERE user_id=? AND monument_id=? AND kind=?",
+                                   (user_id, monument_id, kind)).fetchone()
+            return dict(row) if row else None
 
     def seals(self, user_id: str) -> list[dict]:
         with self._lock:
@@ -153,6 +197,56 @@ class MonumentProgressStore:
                 raise
             return result
 
+    # --- Kademe 1: dinle ve konuş ------------------------------------------------------
+
+    def record_engagement(self, user_id: str, monument_id: str, event: EngagementEvent) -> bool:
+        """Olayı bir kez kaydeder (aynı olay ikinci kez gelirse durum değişmez); yeni kayıtsa True."""
+        with self._lock:
+            cur = self._db.execute("INSERT OR IGNORE INTO engagement (user_id, monument_id, event, recorded_at) "
+                                   "VALUES (?,?,?,?)", (user_id, monument_id, event, _now()))
+            return cur.rowcount == 1
+
+    def engagement(self, user_id: str, monument_id: str) -> set[str]:
+        with self._lock:
+            return {r["event"] for r in self._db.execute(
+                "SELECT event FROM engagement WHERE user_id=? AND monument_id=?", (user_id, monument_id))}
+
+    # --- Kademe 2: sınavlar -----------------------------------------------------------
+
+    def start_quiz(self, quiz_id: str, user_id: str, monument_id: str, created_at: str, expires_at: str,
+                   compose: Callable[[list[dict]], list[dict]]) -> list[dict]:
+        """Yeni sınavı tek işlemde yazar: `compose(önceki sınavın soruları)` soruları üretir (yeniden denemede farklı
+        seçim için). Kullanıcının bu eserdeki önceki sınavları silinir; eser başına en fazla bir sınav tutulur."""
+        with self._lock:
+            self._db.execute("BEGIN IMMEDIATE")
+            try:
+                row = self._db.execute("SELECT items FROM quizzes WHERE user_id=? AND monument_id=? "
+                                       "ORDER BY created_at DESC, rowid DESC LIMIT 1", (user_id, monument_id)).fetchone()
+                items = compose(json.loads(row["items"]) if row else [])
+                self._db.execute("DELETE FROM quizzes WHERE user_id=? AND monument_id=?", (user_id, monument_id))
+                self._db.execute("INSERT INTO quizzes (quiz_id, user_id, monument_id, items, created_at, expires_at) "
+                                 "VALUES (?,?,?,?,?,?)", (quiz_id, user_id, monument_id,
+                                                          json.dumps(items, ensure_ascii=False), created_at, expires_at))
+                self._db.execute("COMMIT")
+            except BaseException:
+                self._db.execute("ROLLBACK")
+                raise
+            return items
+
+    def quiz(self, quiz_id: str) -> Optional[dict]:
+        with self._lock:
+            row = self._db.execute("SELECT * FROM quizzes WHERE quiz_id=?", (quiz_id,)).fetchone()
+        if row is None:
+            return None
+        return {**dict(row), "items": json.loads(row["items"])}
+
+    def close_quiz(self, quiz_id: str, submitted_at: str, score: int) -> bool:
+        """Sınavı gönderilmiş olarak işaretler. Yalnızca ilk gönderim True alır (eş zamanlı ikinci gönderim False)."""
+        with self._lock:
+            cur = self._db.execute("UPDATE quizzes SET submitted_at=?, score=? WHERE quiz_id=? AND submitted_at IS NULL",
+                                   (submitted_at, score, quiz_id))
+            return cur.rowcount == 1
+
     # --- Hesaplar -------------------------------------------------------------------
 
     def _transaction(self, statements: list[tuple[str, tuple]]) -> list[int]:
@@ -169,37 +263,45 @@ class MonumentProgressStore:
     def merge_user(self, from_id: str, to_id: str) -> dict:
         """Misafir ilerlemesini (`from_id`) hesaba (`to_id`) tek işlemde taşır ve misafir satırlarını siler.
 
-        Hiçbir kayıt ikilenmez. Hesapta aynı mühür varsa hesabınki kalır. Hesapta aynı soru varsa satır hesabınkidir;
+        Hiçbir kayıt ikilenmez. Hesapta aynı mühür varsa hesabınki kalır; tek istisna, hesaptaki simülasyon ziyaret
+        mührü misafirin gerçek ziyaret mührüyle gerçeğe çevrilir. Hesapta aynı soru varsa satır hesabınkidir;
         yalnızca hesabın henüz doğru cevaplamadığı soru misafirde doğru cevaplanmışsa o cevap zamanı alınır (aksi halde
         misafirken kazanılan bilgi mührü taşınır ama sorusu çözülmemiş görünürdü) ve deneme sayıları toplanır. Rotada
-        açılmış eserler birleşir (hiçbiri yeniden kilitlenmez); hesapta da açıksa hesabın açılış zamanı kalır.
+        açılmış eserler birleşir (hiçbiri yeniden kilitlenmez); hesapta da açıksa hesabın açılış zamanı kalır. Kademe 1
+        olayları birleşir; misafirin açık sınavları hesaba geçer (girişten sonra hesap kimliğiyle gönderilebilir).
         """
         if from_id == to_id:
             return {"answers": 0, "seals": 0, "unlocks": 0}
         with self._lock:
-            answers, seals, unlocks, _, _, _ = self._transaction([
+            answers, seals, unlocks, *_ = self._transaction([
                 ("INSERT INTO quest_answers (user_id, monument_id, quest_id, attempts, correct_at) "
                  "SELECT ?, monument_id, quest_id, attempts, correct_at FROM quest_answers WHERE user_id=? "
                  "ON CONFLICT (user_id, quest_id) DO UPDATE SET attempts = attempts + excluded.attempts, "
                  "correct_at = COALESCE(correct_at, excluded.correct_at)", (to_id, from_id)),
                 # Misafirin mühürleri kazanılma sırasıyla eklenir: aynı saniyedeki mühürlerin sırası (rowid) korunur.
-                ("INSERT OR IGNORE INTO seals (user_id, monument_id, kind, monument_name, earned_at) "
-                 "SELECT ?, monument_id, kind, monument_name, earned_at FROM seals WHERE user_id=? ORDER BY rowid",
+                ("INSERT INTO seals (user_id, monument_id, kind, monument_name, earned_at, simulated) "
+                 "SELECT ?, monument_id, kind, monument_name, earned_at, simulated FROM seals WHERE user_id=? "
+                 "ORDER BY rowid ON CONFLICT (user_id, monument_id, kind) DO UPDATE SET simulated = 0, "
+                 "earned_at = excluded.earned_at WHERE seals.simulated = 1 AND excluded.simulated = 0",
                  (to_id, from_id)),
                 ("INSERT OR IGNORE INTO unlocks (user_id, monument_id, unlocked_at) "
                  "SELECT ?, monument_id, unlocked_at FROM unlocks WHERE user_id=?", (to_id, from_id)),
+                ("INSERT OR IGNORE INTO engagement (user_id, monument_id, event, recorded_at) "
+                 "SELECT ?, monument_id, event, recorded_at FROM engagement WHERE user_id=?", (to_id, from_id)),
+                ("UPDATE quizzes SET user_id=? WHERE user_id=?", (to_id, from_id)),
                 ("DELETE FROM quest_answers WHERE user_id=?", (from_id,)),
                 ("DELETE FROM seals WHERE user_id=?", (from_id,)),
                 ("DELETE FROM unlocks WHERE user_id=?", (from_id,)),
+                ("DELETE FROM engagement WHERE user_id=?", (from_id,)),
             ])
         return {"answers": answers, "seals": seals, "unlocks": unlocks}
 
     def delete_user(self, user_id: str) -> None:
-        """Kullanıcının bütün soru cevaplarını, mühürlerini ve rota kilitlerini siler (hesap silme, KVKK)."""
+        """Kullanıcının bütün soru cevaplarını, mühürlerini, rota kilitlerini, kademe olaylarını ve sınavlarını siler
+        (hesap silme, KVKK)."""
         with self._lock:
-            self._transaction([("DELETE FROM quest_answers WHERE user_id=?", (user_id,)),
-                               ("DELETE FROM seals WHERE user_id=?", (user_id,)),
-                               ("DELETE FROM unlocks WHERE user_id=?", (user_id,))])
+            self._transaction([(f"DELETE FROM {table} WHERE user_id=?", (user_id,))
+                               for table in ("quest_answers", "seals", "unlocks", "engagement", "quizzes")])
 
     # --- `services.check_in` arayüzü (yalnızca ziyaret mührü) ---------------------------
 

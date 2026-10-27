@@ -5,7 +5,9 @@ ve demo pasaportuna karışmaz. Yayımlanmamış ve bilinmeyen eser aynı 404 ya
 sızdırılmaz.
 
 Keşif soruları yalnızca yayın ve oyun onaylı olgulardan gelir; doğru cevap istemciye gönderilmez, sunucuda denetlenir.
-Bilgi mührü uzaktan kazanılır; ziyaret mührü yalnızca GPS check-in onaylı eserde, yarıçap içindeki check-in ile verilir.
+Soru cevaplama, oyundaki sınav gibi rota kilidine uyar: kilitli eserin sorusu cevaplanamaz (403). Bilgi mührü uzaktan
+kazanılır. Asıl oyun döngüsü (dinle → sınav → ziyaret) `game_routes.py`'dedir; buradaki check-in ucu yalnızca GPS check-in
+onaylı eserde, yarıçap içindeki check-in ile ziyaret mührü verir.
 
 İlerleme uçları misafir kimliğiyle (`ziyaretci-…`) eskisi gibi çalışır; hesap kimliğiyle (`u-…`) yalnızca o hesabın oturum
 çereziyle okunur ve yazılır (bkz. `auth_routes.require_progress_access`).
@@ -20,11 +22,13 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from . import services
 from .auth_routes import require_progress_access
+from .game_routes import LOCKED, seal_view
 from .models import CheckInRequest, CheckInResponse, Passport, UserId
 from .progress import MonumentProgressStore
 from .public_catalog import (
     MediaFile, MonumentId, PublicCatalogRepository, monument_detail, monument_summary, quest_view, quests_of,
 )
+from .route_routes import monument_locked
 
 router = APIRouter(tags=["monuments"])
 
@@ -126,6 +130,8 @@ def answer_quest(request: Request, body: AnswerRequest, monument_id: Annotated[M
     m = _catalog(request).get(monument_id)
     if m is None:
         raise HTTPException(status_code=404, detail=NOT_FOUND)
+    if monument_locked(request, m, body.user_id):
+        raise HTTPException(status_code=403, detail=LOCKED)
     fact = next((f for f in quests_of(m) if f.fact_id == quest_id), None)
     if fact is None:
         raise HTTPException(status_code=404, detail="Bu eser için böyle bir keşif sorusu yok.")
@@ -158,9 +164,11 @@ def get_monument_passport(request: Request, user_id: Annotated[UserId, Path()]):
 
 @router.get("/users/{user_id}/seals")
 def get_seals(request: Request, user_id: Annotated[UserId, Path()]):
-    """Kalıcı dijital pasaport: bilgi mühürleri (uzaktan) ve ziyaret mühürleri (GPS) ayrı listelenir."""
+    """Kalıcı dijital pasaport: bilgi mühürleri (uzaktan) ve ziyaret mühürleri (konum) ayrı listelenir. Ziyaret
+    mühründe `simulated: true`, mesafe denetlenmeden sunum modunda (simülasyon) verilmiş mühürdür ve öyle
+    gösterilmelidir."""
     require_progress_access(request, user_id)
-    seals = _progress(request).seals(user_id)
+    seals = [seal_view(s) for s in _progress(request).seals(user_id)]
     catalog = _catalog(request)
     solved = _progress(request).solved(user_id)
     monuments = []
