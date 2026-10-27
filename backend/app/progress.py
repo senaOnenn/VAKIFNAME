@@ -6,6 +6,7 @@
   check-in ile verilir. GPS onayı olmayan eserde bu mühür kazanılamaz.
 
 Aynı mühür ikinci kez verilmez (birincil anahtar). Doğru cevap bir kez kaydedilir; yanlış denemeler yalnızca sayılır.
+Rotada açılan eserler (`unlocks`, bkz. `route_engine.py`) kalıcıdır; bir kez açılan eser yeniden kilitlenmez.
 Kullanıcı kimliği tarayıcıda üretilen takma bir misafir kimliği (`ziyaretci-…`) ya da hesap kimliğidir (`u-…`, bkz.
 `accounts.py`); bu depoda kişisel veri tutulmaz. Misafir ilerlemesi girişte hesaba taşınır (`merge_user`), hesap
 silinince ilerlemesi de silinir (`delete_user`).
@@ -15,7 +16,7 @@ import sqlite3
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Callable, Iterable, Literal, Optional, TypeVar
 
 from .models import Stamp
 
@@ -38,7 +39,15 @@ CREATE TABLE IF NOT EXISTS seals (
     earned_at TEXT NOT NULL,
     PRIMARY KEY (user_id, monument_id, kind)
 );
+CREATE TABLE IF NOT EXISTS unlocks (
+    user_id TEXT NOT NULL,
+    monument_id TEXT NOT NULL,
+    unlocked_at TEXT NOT NULL,
+    PRIMARY KEY (user_id, monument_id)
+);
 """
+
+T = TypeVar("T")
 
 
 def _now() -> str:
@@ -103,6 +112,47 @@ class MonumentProgressStore:
             return [dict(r) for r in self._db.execute(
                 "SELECT * FROM seals WHERE user_id=? ORDER BY earned_at, monument_id", (user_id,)).fetchall()]
 
+    # --- Rota kilitleri -------------------------------------------------------------
+
+    def _completions(self, user_id: str) -> list[dict]:
+        # Zaman damgası saniye çözünürlüklü; aynı saniyedeki mühürlerde ekleme sırası (rowid) belirler.
+        return [{**dict(r), "visit": bool(r["visit"])} for r in self._db.execute(
+            "SELECT k.monument_id, k.monument_name, k.earned_at, EXISTS (SELECT 1 FROM seals v WHERE v.user_id = k.user_id "
+            "AND v.monument_id = k.monument_id AND v.kind = 'visit') AS visit FROM seals k "
+            "WHERE k.user_id=? AND k.kind='knowledge' ORDER BY k.earned_at DESC, k.rowid DESC", (user_id,)).fetchall()]
+
+    def _unlocked(self, user_id: str) -> set[str]:
+        return {r["monument_id"] for r in self._db.execute("SELECT monument_id FROM unlocks WHERE user_id=?", (user_id,))}
+
+    def completions(self, user_id: str) -> list[dict]:
+        """Tamamlanan eserler (bilgi mühürleri), en son kazanılan önce; `visit`: ziyaret mührü de var mı."""
+        with self._lock:
+            return self._completions(user_id)
+
+    def unlocked(self, user_id: str) -> set[str]:
+        with self._lock:
+            return self._unlocked(user_id)
+
+    def plan_unlocks(self, user_id: str,
+                     planner: Callable[[list[dict], set[str]], tuple[T, Iterable[str]]]) -> T:
+        """Tamamlananları ve açılmış eserleri tek yazma işleminde okur, `planner(tamamlananlar, açılmışlar)` ile yeni
+        açılacakları seçtirir ve kalıcı yazar; `planner`'ın ilk dönüş değerini verir.
+
+        Aynı kullanıcının eş zamanlı istekleri sınırı iki kez dolduramaz (işlem ve kilit). `planner` bu depoyu çağırmamalıdır.
+        """
+        with self._lock:
+            self._db.execute("BEGIN IMMEDIATE")
+            try:
+                result, new_ids = planner(self._completions(user_id), self._unlocked(user_id))
+                now = _now()
+                self._db.executemany("INSERT OR IGNORE INTO unlocks (user_id, monument_id, unlocked_at) VALUES (?,?,?)",
+                                     [(user_id, m, now) for m in new_ids])
+                self._db.execute("COMMIT")
+            except BaseException:
+                self._db.execute("ROLLBACK")
+                raise
+            return result
+
     # --- Hesaplar -------------------------------------------------------------------
 
     def _transaction(self, statements: list[tuple[str, tuple]]) -> list[int]:
@@ -121,28 +171,35 @@ class MonumentProgressStore:
 
         Hiçbir kayıt ikilenmez. Hesapta aynı mühür varsa hesabınki kalır. Hesapta aynı soru varsa satır hesabınkidir;
         yalnızca hesabın henüz doğru cevaplamadığı soru misafirde doğru cevaplanmışsa o cevap zamanı alınır (aksi halde
-        misafirken kazanılan bilgi mührü taşınır ama sorusu çözülmemiş görünürdü) ve deneme sayıları toplanır.
+        misafirken kazanılan bilgi mührü taşınır ama sorusu çözülmemiş görünürdü) ve deneme sayıları toplanır. Rotada
+        açılmış eserler birleşir (hiçbiri yeniden kilitlenmez); hesapta da açıksa hesabın açılış zamanı kalır.
         """
         if from_id == to_id:
-            return {"answers": 0, "seals": 0}
+            return {"answers": 0, "seals": 0, "unlocks": 0}
         with self._lock:
-            answers, seals, _, _ = self._transaction([
+            answers, seals, unlocks, _, _, _ = self._transaction([
                 ("INSERT INTO quest_answers (user_id, monument_id, quest_id, attempts, correct_at) "
                  "SELECT ?, monument_id, quest_id, attempts, correct_at FROM quest_answers WHERE user_id=? "
                  "ON CONFLICT (user_id, quest_id) DO UPDATE SET attempts = attempts + excluded.attempts, "
                  "correct_at = COALESCE(correct_at, excluded.correct_at)", (to_id, from_id)),
+                # Misafirin mühürleri kazanılma sırasıyla eklenir: aynı saniyedeki mühürlerin sırası (rowid) korunur.
                 ("INSERT OR IGNORE INTO seals (user_id, monument_id, kind, monument_name, earned_at) "
-                 "SELECT ?, monument_id, kind, monument_name, earned_at FROM seals WHERE user_id=?", (to_id, from_id)),
+                 "SELECT ?, monument_id, kind, monument_name, earned_at FROM seals WHERE user_id=? ORDER BY rowid",
+                 (to_id, from_id)),
+                ("INSERT OR IGNORE INTO unlocks (user_id, monument_id, unlocked_at) "
+                 "SELECT ?, monument_id, unlocked_at FROM unlocks WHERE user_id=?", (to_id, from_id)),
                 ("DELETE FROM quest_answers WHERE user_id=?", (from_id,)),
                 ("DELETE FROM seals WHERE user_id=?", (from_id,)),
+                ("DELETE FROM unlocks WHERE user_id=?", (from_id,)),
             ])
-        return {"answers": answers, "seals": seals}
+        return {"answers": answers, "seals": seals, "unlocks": unlocks}
 
     def delete_user(self, user_id: str) -> None:
-        """Kullanıcının bütün soru cevaplarını ve mühürlerini siler (hesap silme, KVKK)."""
+        """Kullanıcının bütün soru cevaplarını, mühürlerini ve rota kilitlerini siler (hesap silme, KVKK)."""
         with self._lock:
             self._transaction([("DELETE FROM quest_answers WHERE user_id=?", (user_id,)),
-                               ("DELETE FROM seals WHERE user_id=?", (user_id,))])
+                               ("DELETE FROM seals WHERE user_id=?", (user_id,)),
+                               ("DELETE FROM unlocks WHERE user_id=?", (user_id,))])
 
     # --- `services.check_in` arayüzü (yalnızca ziyaret mührü) ---------------------------
 
