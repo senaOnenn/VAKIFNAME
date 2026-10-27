@@ -57,12 +57,12 @@ export function TurkeyMap({ cities }: { cities: City[] }) {
           return (
             <a
               key={c.slug}
-              href={`/${c.slug}`}
+              href={`/rota/${c.slug}`}
               className="vk-tmap__city vk-tmap__city--open"
               aria-label={`${c.name}: ${c.note}`}
               onClick={(e) => {
                 e.preventDefault()
-                navigate(`/${c.slug}`)
+                navigate(`/rota/${c.slug}`)
               }}
             >
               <circle className="vk-tmap__pulse" cx={x} cy={y} r="10" />

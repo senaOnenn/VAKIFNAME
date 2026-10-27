@@ -20,7 +20,7 @@ export default function City() {
         {CITIES.map((c) => (
           <li key={c.slug}>
             {c.open ? (
-              <Link to={`/${c.slug}`} className="vk-city__card vk-city__card--open">
+              <Link to={`/rota/${c.slug}`} className="vk-city__card vk-city__card--open">
                 <span className="vk-city__name">{c.name}</span>
                 <span className="vk-city__note">{c.note}</span>
                 <span className="vk-city__go" aria-hidden="true">Keşfe başla →</span>

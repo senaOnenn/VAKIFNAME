@@ -224,9 +224,9 @@ describe('kabuk, hesap ve şehir seçimi', () => {
     open('/giris')
     await userEvent.click(await screen.findByRole('button', { name: 'Üye olmadan keşfet' }))
     const cards = screen.getByRole('list', { name: 'Şehirler' })
-    expect(within(cards).getByRole('link', { name: /Bursa/ })).toHaveAttribute('href', '/bursa')
+    expect(within(cards).getByRole('link', { name: /Bursa/ })).toHaveAttribute('href', '/rota/bursa')
     expect(cards.querySelectorAll('a')).toHaveLength(1)
-    expect(screen.getByRole('link', { name: 'Bursa: Pilot şehir · 10 eser' })).toHaveAttribute('href', '/bursa')
+    expect(screen.getByRole('link', { name: 'Bursa: Pilot şehir · 10 eser' })).toHaveAttribute('href', '/rota/bursa')
     expect(screen.getAllByText('Yakında').length).toBeGreaterThanOrEqual(5)
   })
 

@@ -7,8 +7,11 @@ import Account from './screens/Account'
 import Auth from './screens/Auth'
 import City from './screens/City'
 import Intro, { INTRO_SEEN_KEY } from './screens/Intro'
+import MonumentPage from './screens/MonumentPage'
+import Monuments from './screens/Monuments'
 import Pending from './screens/Pending'
 import Privacy from './screens/Privacy'
+import RoutePage from './screens/RoutePage'
 import { useAuth } from './session'
 
 /** Açılış yalnızca oturum başına bir kez gösterilir; oturumu olan kullanıcı doğrudan şehir seçimine geçer. */
@@ -45,8 +48,10 @@ export default function VakifnameApp() {
           <Route path="/gizlilik" element={<Privacy />} />
           <Route element={<AppShell />}>
             <Route path="/sehir" element={<City />} />
-            <Route path="/bursa" element={<Pending title="Bursa" text="Rota ve eserler bu sayfada yapım aşamasında. Çok yakında." />} />
-            <Route path="/eserler" element={<Pending title="Eserler" text="Eser listesi, harita ve filtreler yapım aşamasında. Çok yakında." />} />
+            <Route path="/rota/:city" element={<RoutePage />} />
+            <Route path="/bursa" element={<Navigate to="/rota/bursa" replace />} />
+            <Route path="/eserler" element={<Monuments />} />
+            <Route path="/eser/:id" element={<MonumentPage />} />
             <Route path="/pasaport" element={<Pending title="Pasaport" text="Mühürlerin ve Kayıp Vakfiye yapbozu burada olacak. Çok yakında." />} />
             <Route path="/hesap" element={<Account />} />
           </Route>
