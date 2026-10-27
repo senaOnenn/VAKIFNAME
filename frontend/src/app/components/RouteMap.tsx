@@ -66,6 +66,8 @@ export default function RouteMap({ points, path, start, onSelect, className = ''
           icon={icon(p)}
           title={p.name}
           alt={p.name}
+          // Yakın eserlerde (ör. Osman/Orhan Gazi türbeleri 28 m) sıradaki ve açık duraklar üstte kalır.
+          zIndexOffset={p.next ? 1000 : p.status === 'unlocked' ? 500 : 0}
           eventHandlers={onSelect ? { click: () => onSelect(p.id) } : undefined}
         >
           <Tooltip direction="top" offset={[0, -14]}>{p.name}</Tooltip>

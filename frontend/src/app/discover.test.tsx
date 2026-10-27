@@ -32,23 +32,23 @@ const summary = (id: string, name: string, type: string, lat: number, lng: numbe
 const CATALOG = {
   published_count: 3, data_version: 'test', generated_at: null,
   monuments: [
-    summary('BUR-0001', 'Bursa Ulu Camii', 'cami', 40.1839, 29.0619),
-    summary('BUR-0009', 'Koza Han', 'han', 40.1844, 29.0635),
-    summary('BUR-0019', 'Osman Gazi Türbesi', 'türbe', 40.1868, 29.0574),
+    summary('BUR-1001', 'Bursa Ulu Camii', 'cami', 40.1839, 29.0619),
+    summary('BUR-1009', 'Koza Han', 'han', 40.1844, 29.0635),
+    summary('BUR-1019', 'Osman Gazi Türbesi', 'türbe', 40.1868, 29.0574),
   ],
 }
 const ROUTE: RouteResult = {
   city: 'bursa', total: 10, completed_count: 1,
   start: { source: 'city_center', latitude: 40.1885, longitude: 29.061 },
-  next: 'BUR-0009',
+  next: 'BUR-1009',
   stops: [
-    { monument_id: 'BUR-0009', name: 'Koza Han', type: 'han', latitude: 40.1844, longitude: 29.0635, state: 'unlocked', distance_m: 512, order: 1 },
-    { monument_id: 'BUR-0019', name: 'Osman Gazi Türbesi', type: 'türbe', latitude: 40.1868, longitude: 29.0574, state: 'locked', distance_m: 1480, order: 2 },
+    { monument_id: 'BUR-1009', name: 'Koza Han', type: 'han', latitude: 40.1844, longitude: 29.0635, state: 'unlocked', distance_m: 512, order: 1 },
+    { monument_id: 'BUR-1019', name: 'Osman Gazi Türbesi', type: 'türbe', latitude: 40.1868, longitude: 29.0574, state: 'locked', distance_m: 1480, order: 2 },
   ],
-  completed: [{ monument_id: 'BUR-0001', name: 'Bursa Ulu Camii', earned_at: '2026-10-27T10:00:00+00:00', visit: false }],
+  completed: [{ monument_id: 'BUR-1001', name: 'Bursa Ulu Camii', earned_at: '2026-10-27T10:00:00+00:00', visit: false }],
 }
 const DETAIL = {
-  monument_id: 'BUR-0001', name: 'Bursa Ulu Camii', alternative_names: [], type: 'cami', city: 'Bursa', district: 'Osmangazi',
+  monument_id: 'BUR-1001', name: 'Bursa Ulu Camii', alternative_names: [], type: 'cami', city: 'Bursa', district: 'Osmangazi',
   address: 'Atatürk Caddesi, Osmangazi/Bursa', location: { ...loc(40.1839, 29.0619), represents: 'building_footprint_centroid' },
   checkin_available: false, checkin: null, site_notice: 'Aktif ibadet mekânıdır; sessiz olun.', illustration: 'representative_drawing',
   facts: [
@@ -65,7 +65,7 @@ function routes(overrides: Record<string, unknown> = {}) {
   return stubFetch({
     '/auth/me': { status: 401, body: { detail: 'Oturum açık değil.' } },
     '/monuments': { body: CATALOG },
-    '/monuments/BUR-0001': { body: DETAIL },
+    '/monuments/BUR-1001': { body: DETAIL },
     '/route': { body: ROUTE },
     ...(overrides as Record<string, never>),
   })
@@ -168,7 +168,7 @@ describe('Rota sayfası', () => {
 describe('Eser sayfası', () => {
   it('kaynaklı bilgileri kesinlik etiketiyle, ziyaret uyarısını ve görsel atıflarını gösterir', async () => {
     routes()
-    open('/eser/BUR-0001')
+    open('/eser/BUR-1001')
     expect(await screen.findByRole('heading', { level: 1, name: 'Bursa Ulu Camii' })).toBeInTheDocument()
     expect(screen.getByText('Aktif ibadet mekânıdır; sessiz olun.')).toBeInTheDocument()
     const facts = screen.getByRole('region', { name: 'Tarihçe ve kaynaklar' })
@@ -181,7 +181,7 @@ describe('Eser sayfası', () => {
 
   it('bulunamayan eserde anlaşılır hata ve geri dönüş verir', async () => {
     routes()
-    open('/eser/BUR-9999')
+    open('/eser/BUR-1999')
     expect(await screen.findByText('Eser bulunamadı veya yüklenemedi.')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '← Eserlere dön' })).toHaveAttribute('href', '/eserler')
   })

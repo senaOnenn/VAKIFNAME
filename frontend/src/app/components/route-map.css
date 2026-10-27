@@ -75,3 +75,14 @@
     height: 340px;
   }
 }
+.vk-rmap .leaflet-bar a {
+  background: var(--vk-surface);
+  color: var(--vk-gold-bright) !important;
+  border-bottom-color: rgb(201 162 75 / 0.3);
+}
+.vk-rmap .leaflet-bar a:hover {
+  background: var(--vk-surface-2);
+}
+.vk-rmap .leaflet-bar {
+  border: 1px solid rgb(201 162 75 / 0.4);
+}

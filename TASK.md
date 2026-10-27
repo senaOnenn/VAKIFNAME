@@ -50,11 +50,14 @@
 - [x] Testler: backend 56 auth testi (toplam 530), frontend sahte auth sunucusuyla 17 akış testi; gerçek sunucuyla tarayıcıda uçtan uca (kayıt → yenileme → çıkış → yanlış parola → giriş → hesap silme) denendi.
 - Not: arayüz API'ye **`localhost:8000`** ile gitmeli (127.0.0.1 farklı site sayılır, çerez gitmez). Kapsam dışı: parola sıfırlama, e-posta doğrulama, profil düzenleme.
 
-## Faz 3 — Eserler ve keşif
-- [ ] **Eserler sayfası:** kart ızgarası, şehir ve tür filtresi, harita görünümü, kilit durumu.
-- [ ] **Rota motoru (backend):** kullanıcı konumu → rozetsiz eserleri uzaklığa göre sırala; ilk 3 açık, her rozetten sonra bir kilit açılır. Konum yoksa şehir merkezinden sırala. Birim testli.
-- [ ] Görsele tıklayınca eser bilgisi (toplantı önerisi).
-- [ ] Her görselde atıf/lisans satırı (mevcut görsellerle; PDF'ten ayıklama ayrı süreç, K5).
+## Faz 3 — Eserler ve keşif ✅ (27 Ekim, dal `feat/discover`)
+- [x] **Eserler sayfası** (`/eserler`): kart ızgarası (kapak + atıf satırı), şehir ve tür filtresi, liste/harita görünümü, oyun durumu rozetleri (kilitli, açık, bilgi mührü, altın mühür).
+- [x] **Rota motoru (backend, `GET /route`):** başlangıç önceliği kullanıcı konumu (şehir merkezine 30 km içindeyse) → son tamamlanan eser → şehir merkezi; açık sınır her zaman `min(3, kalan)`, kilitler kalıcı (`unlocks` tablosu, yeniden kilitlenmez); yürüyüş sırası açgözlü en yakın komşu, eşitlikte kimlik sırası. 53 backend testi; misafir→hesap birleştirme ve hesap silme kilitleri de kapsar.
+- [x] **Rota ekranı** (`/rota/:city`): Kayıp Vakfiye ilerlemesi (10 parça), sıradaki durak, sıralı duraklar ve kilitler, bulunan parçalar, "Konumumu kullan"; koyu tonlu OSM haritası ve rota çizgisi.
+- [x] **Eser sayfası** (`/eser/:id`): görsel, ziyaret uyarısı, kaynaklı bilgiler (kesinlik etiketiyle: belgelenmiş / rivayet / kesin değil; kaynak sayfası) ve galeri (her görselde atıf + lisans).
+- [x] Her görselde atıf/lisans satırı (mevcut görsellerle; PDF'ten ayıklama ayrı süreç, K5).
+- Not (Faz 5): soru-cevap ucu kilide bakmıyor; kilitli eserin soruları API'den cevaplanabiliyor → Faz 5 "kilit atlatma" testinde kapatılacak.
+- Not (ölçek): eski istemci doğrulayıcısı eser kimliğini `BUR-0000` biçimine kilitliyor (`catalog/catalogClient.ts`); yeni şehir eklenirken genelleştirilmeli. Bursa'ya özel başka sabitler: `getRoute('bursa', …)` çağrıları (eser ve eserler sayfası).
 
 ## Faz 4 — Eser sayfası: karakter anlatımı
 - [ ] `narrator` alanı (tarihî karakter | yerel rehber) ve karakter varlıkları (illüstrasyon + konuşma animasyonu).

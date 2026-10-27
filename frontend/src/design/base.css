@@ -30,7 +30,7 @@ body:has(.vk-app) {
 .vk-app p {
   margin: 0;
 }
-.vk-app a {
+.vk-app a:not(.vk-btn) {
   color: var(--vk-gold-bright);
 }
 .vk-app :focus-visible {
