@@ -68,11 +68,18 @@ class PublicQuest(_Public):
     answer_index: int = Field(ge=0)
     explanation: Text
     decision_id: DecisionId
+    # İngilizce (Faz 11): kitabın İngilizce bölümünden, yönetici onaylı. Şık sırası Türkçe ile aynıdır.
+    question_en: Optional[Text] = None
+    choices_en: Optional[tuple[Text, ...]] = None
+    explanation_en: Optional[Text] = None
 
     @model_validator(mode="after")
     def _answer(self):
         if self.answer_index >= len(self.choices):
             raise ValueError("Doğru cevap seçeneklerden biri olmalı.")
+        en = (self.question_en, self.choices_en, self.explanation_en)
+        if any(v is not None for v in en) and (None in en or len(self.choices_en) != len(self.choices)):
+            raise ValueError("İngilizce soru, şıklar (aynı sayıda) ve açıklama birlikte verilmeli.")
         return self
 
 
@@ -91,9 +98,16 @@ class PublicFact(_Public):
     basis: Literal["licensed_source", "independent_corroboration"] = "licensed_source"
     sources: tuple[PublicLink, ...] = ()
     quest: Optional[PublicQuest] = None
+    # İngilizce (Faz 11): kitabın İngilizce bölümünden alıntı doğrulamalı ve onaylı; makine çevirisi yoktur.
+    title_en: Optional[Text] = None
+    text_en: Optional[Text] = None
+    en_page: Optional[int] = Field(default=None, ge=1)
+    en_decision_id: Optional[DecisionId] = None
 
     @model_validator(mode="after")
     def _game(self):
+        if (self.title_en is None) != (self.text_en is None) or (self.text_en is None) != (self.en_decision_id is None):
+            raise ValueError(f"{self.fact_id}: İngilizce başlık, metin ve onay kararı birlikte verilmeli.")
         if self.game_use != (self.game_use_decision_id is not None):
             raise ValueError(f"{self.fact_id}: oyun kullanımı yalnızca karar kimliğiyle açılabilir.")
         if self.quest is not None and not self.game_use:
@@ -171,6 +185,9 @@ class PublicMonument(_Public):
     location: Optional[PublicLocation] = None
     checkin: Optional[PublicCheckIn] = None
     site_notice: Optional[Text] = None
+    # İngilizce ad ve ziyaret uyarısı (Faz 11, yönetici onaylı).
+    name_en: Optional[Text] = None
+    site_notice_en: Optional[Text] = None
     # Onaylı fotoğraf yoksa arayüz, açıkça temsilî diye etiketlenmiş çizim gösterir.
     illustration: Literal["representative_drawing"] = "representative_drawing"
 
@@ -224,6 +241,17 @@ def apply_overlay(base: PublicCatalog, overlay: dict) -> PublicCatalog:
             raise ValueError(f"{item['monument_id']}: katalogda olmayan esere görsel eklenemez.")
         m["images"].append(item["image"])
     data["monuments"].extend(overlay.get("monuments", ()))
+    # İngilizce katman: Türkçe kaydı (artık) yayında olmayan çeviri sessizce atlanır.
+    facts = {f["fact_id"]: f for m in data["monuments"] for f in m["facts"]}
+    for t in overlay.get("translations", ()):
+        f = facts.get(t["fact_id"])
+        if f is not None:
+            f.update(title_en=t["title_en"], text_en=t["text_en"], en_page=t.get("en_page"), en_decision_id=t["decision_id"])
+    names = {m["monument_id"]: m for m in data["monuments"]}
+    for t in overlay.get("monument_en", ()):
+        m = names.get(t["monument_id"])
+        if m is not None:
+            m.update(name_en=t.get("name_en"), site_notice_en=t.get("site_notice_en"))
     return PublicCatalog.model_validate(data)
 
 
@@ -296,6 +324,7 @@ def monument_summary(m: PublicMonument) -> dict:
     return {
         "monument_id": m.monument_id,
         "name": m.name,
+        "name_en": m.name_en,
         "alternative_names": list(m.alternative_names),
         "type": m.type,
         "city": m.city,
@@ -309,6 +338,7 @@ def monument_summary(m: PublicMonument) -> dict:
         "image_count": len(m.images),
         "cover": _cover(m),
         "lead": lead.text if lead else None,
+        "lead_en": lead.text_en if lead else None,
         "illustration": m.illustration,
     }
 

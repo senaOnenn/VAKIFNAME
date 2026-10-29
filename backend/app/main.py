@@ -94,7 +94,9 @@ _FIELD_TR = {"title": "Başlık", "text": "Metin", "quote": "Alıntı", "page": 
              "district": "İlçe", "address": "Adres", "latitude": "Enlem", "longitude": "Boylam",
              "site_notice": "Ziyaret uyarısı", "rights_holder": "Hak sahibi", "license": "Lisans",
              "attribution": "Atıf", "source_url": "Kaynak adresi", "source_id": "Kaynak", "category": "Konu",
-             "certainty": "Kesinlik", "monument_id": "Eser", "upload_id": "Yüklenen dosya"}
+             "certainty": "Kesinlik", "monument_id": "Eser", "upload_id": "Yüklenen dosya", "title_en": "İngilizce başlık",
+             "text_en": "İngilizce metin", "quote_en": "İngilizce alıntı", "name_en": "İngilizce ad",
+             "site_notice_en": "İngilizce ziyaret uyarısı", "lang": "Dil"}
 
 
 def _turkish_message(error: dict) -> str:

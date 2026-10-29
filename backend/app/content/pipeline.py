@@ -40,6 +40,46 @@ Yalnızca şu biçimde tek bir JSON nesnesi döndür:
 {{"facts": [{{"title": "", "text": "", "quote": "", "page": 0, "category": "", "certainty": ""}}]}}"""
 
 
+SYSTEM_PROMPT_EN = f"""Sen Vakıf Eserleri Envanter Projesi için çalışan titiz bir araştırma yardımcısısın. Kitap sayfaları iki
+dillidir (Türkçe ve İngilizce bölümler). Görevin: verilen her Türkçe kayıt için, sayfaların İNGİLİZCE bölümünde AYNI
+bilgiyi veren pasajı bulmak.
+Kurallar:
+- Türkçe metni ÇEVİRME. İngilizce metin yalnızca sayfadaki İngilizce pasajdan gelir.
+- "quote_en": sayfadan BİREBİR İngilizce alıntı (kelimeleri değiştirme, "..." kullanma; en az {MIN_QUOTE_WORDS}, en fazla 60 kelime).
+- "text_en": alıntıdaki bilgiyi aşmayan ve Türkçe kaydın iddiasıyla örtüşen 1–2 cümlelik sade İngilizce.
+- "title_en": en fazla 8 kelimelik İngilizce başlık.
+- "page": alıntının geçtiği sayfa numarası ("=== Sayfa N ===").
+- İngilizce bölümde karşılığı yoksa o kaydı ATLA; tahmin etme.
+Yalnızca şu biçimde tek bir JSON nesnesi döndür:
+{{"translations": [{{"fact_id": "", "title_en": "", "text_en": "", "quote_en": "", "page": 0}}]}}"""
+
+
+def translation_candidates(raw: dict, pages: list[str], page_from: int, page_to: int, allowed: set[str],
+                           skip: set[str]) -> tuple[list[dict], int]:
+    """İngilizce adayları denetler: kayıt kimliği verilenlerden, alıntı sayfada birebir, her kayda bir aday."""
+    items = raw.get("translations") if isinstance(raw.get("translations"), list) else []
+    accepted, dropped, seen = [], 0, set(skip)
+    for item in items[:60]:
+        if not isinstance(item, dict):
+            dropped += 1
+            continue
+        fid = str(item.get("fact_id") or "")
+        title, text, quote = (str(item.get(k) or "").strip() for k in ("title_en", "text_en", "quote_en"))
+        try:
+            page = int(item.get("page"))
+        except (TypeError, ValueError):
+            page = page_from
+        found = pdftext.quote_page(pages, page, quote) if len(quote.split()) >= MIN_QUOTE_WORDS else None
+        if fid not in allowed or fid in seen or found is None or not page_from - 1 <= found <= page_to + 1 \
+                or not title or len(text) < 10:
+            dropped += 1
+            continue
+        seen.add(fid)
+        accepted.append({"fact_id": fid, "title_en": title[:120], "text_en": text[:1200], "quote_en": quote[:1500],
+                         "page": found})
+    return accepted, dropped
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
@@ -101,8 +141,8 @@ class Pipeline:
         ok, status = self.provider.available()
         return ok, "" if ok else f"Rehber modeli kullanılamıyor ({status})."
 
-    def submit(self, source_id: str, monument_id: str, page_from: int, page_to: int, actor: str) -> dict:
-        job = self.store.create_job(source_id, monument_id, page_from, page_to, actor)
+    def submit(self, source_id: str, monument_id: str, page_from: int, page_to: int, actor: str, kind: str = "tr") -> dict:
+        job = self.store.create_job(source_id, monument_id, page_from, page_to, actor, kind)
         if self._pool is not None:
             self._pool.submit(self.run, job["job_id"], actor)
         else:
@@ -113,6 +153,8 @@ class Pipeline:
         store = self.store
         job = store.job(job_id)
         store.update_job(job_id, status="running")
+        if job.get("kind") == "en":
+            return self._run_en(job, actor)
         try:
             monument = store.monument(job["monument_id"])
             pages = store.pages(job["source_id"])
@@ -141,6 +183,40 @@ class Pipeline:
                              error="Model çıktısı okunamadı; yeniden deneyin.")
         except Exception:  # noqa: BLE001 — iş başarısız sayılır, sunucu düşmez
             logger.exception("İçerik hattı %s beklenmeyen hata", job_id)
+            store.update_job(job_id, status="failed", finished_at=_now(), error="Beklenmeyen hata.")
+
+
+    def _run_en(self, job: dict, actor: str):
+        store, job_id = self.store, job["job_id"]
+        try:
+            facts = store.published_tr_facts(job["monument_id"])
+            skip = store.translated_fact_ids(job["monument_id"])
+            todo = [f for f in facts if f["fact_id"] not in skip]
+            if not todo:
+                store.update_job(job_id, status="done", candidates=0, dropped=0, finished_at=_now())
+                return
+            pages = store.pages(job["source_id"])
+            chunk = "\n\n".join(f"=== Sayfa {p} ===\n{pages[p - 1][:PAGE_CHARS]}"
+                                for p in range(job["page_from"], job["page_to"] + 1))
+            listing = "\n".join(f"- {f['fact_id']}: {f['title']} — {f['text']}" for f in todo)
+            user = f"Türkçe kayıtlar:\n{listing}\n\nKitap sayfaları:\n{chunk}"
+            result = self.provider.chat(self.model, [{"role": "system", "content": SYSTEM_PROMPT_EN},
+                                                     {"role": "user", "content": user}],
+                                        max_tokens=4000, temperature=0.0, json_mode=True, timeout_s=self.timeout_s)
+            accepted, dropped = translation_candidates(_json_object(result.text), pages, job["page_from"], job["page_to"],
+                                                       {f["fact_id"] for f in todo}, skip)
+            for c in accepted:
+                fid = c.pop("fact_id")
+                store.set_translation(fid, {**c, "source_id": job["source_id"]}, False, actor, origin="pipeline")
+            store.update_job(job_id, status="done", candidates=len(accepted), dropped=dropped, finished_at=_now())
+        except ProviderError as e:
+            store.update_job(job_id, status="failed", finished_at=_now(),
+                             error=f"Model çağrısı başarısız ({e.kind}). Biraz sonra yeniden deneyin.")
+        except (ValueError, KeyError) as e:
+            logger.warning("İngilizce hat %s: model çıktısı okunamadı: %s", job_id, type(e).__name__)
+            store.update_job(job_id, status="failed", finished_at=_now(), error="Model çıktısı okunamadı; yeniden deneyin.")
+        except Exception:  # noqa: BLE001
+            logger.exception("İngilizce hat %s beklenmeyen hata", job_id)
             store.update_job(job_id, status="failed", finished_at=_now(), error="Beklenmeyen hata.")
 
 

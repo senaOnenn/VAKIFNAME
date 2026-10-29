@@ -94,6 +94,8 @@ class ExtractBody(_Body):
     monument_id: Annotated[str, StringConstraints(pattern=r"^[A-Z]{3}-\d{4}$")]
     page_from: int = Field(ge=1)
     page_to: int = Field(ge=1)
+    # tr: yeni Türkçe kayıt adayları; en: yayındaki Türkçe kayıtların kitabın İngilizce bölümündeki karşılıkları (Faz 11).
+    lang: Literal["tr", "en"] = "tr"
 
     @model_validator(mode="after")
     def _range(self):
@@ -140,9 +142,9 @@ def overview(request: Request, response: Response):
              "cities": [{"slug": k, "name": v} for k, v in CITY_NAMES.items()]}
     store = getattr(request.app.state, "content", None)
     if store is None:
-        return {"enabled": False, "sources": [], "monuments": [], "drafts": 0, "vocab": vocab}
+        return {"enabled": False, "sources": [], "monuments": [], "drafts": 0, "translation_drafts": 0, "vocab": vocab}
     return {"enabled": True, "sources": store.sources(), "monuments": store.monuments(), "drafts": store.draft_count(),
-            "vocab": vocab}
+            "translation_drafts": store.translation_draft_count(), "vocab": vocab}
 
 
 @router.post("/uploads", status_code=201)
@@ -200,7 +202,8 @@ def get_monument(request: Request, response: Response, monument_id: MonumentId):
     _admin(request, response)
     store = _store(request)
     return {"monument": _call(store.monument, monument_id), "facts": store.facts(monument_id=monument_id),
-            "images": store.images(monument_id)}
+            "images": store.images(monument_id), "translations": store.translations(monument_id=monument_id),
+            "monument_en": store.monument_en(monument_id)}
 
 
 @router.put("/monuments/{monument_id}")
@@ -257,7 +260,7 @@ def extract(body: ExtractBody, request: Request, response: Response):
         raise HTTPException(status_code=503, detail=why)
     if store.active_job() is not None:
         raise HTTPException(status_code=409, detail="Süren bir aday çıkarma işi var; bitmesini bekleyin.")
-    return pipeline.submit(body.source_id, body.monument_id, body.page_from, body.page_to, actor)
+    return pipeline.submit(body.source_id, body.monument_id, body.page_from, body.page_to, actor, body.lang)
 
 
 @router.get("/jobs/{job_id}")
@@ -279,6 +282,49 @@ def image_action(request: Request, response: Response,
                  action: Annotated[Literal["publish", "withdraw"], Path()]):
     actor = _admin(request, response)
     return _call(_store(request).set_image_status, image_id, action, actor)
+
+
+class TranslationBody(_Body):
+    title_en: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=120)]
+    text_en: LongText
+    quote_en: Annotated[str, StringConstraints(strip_whitespace=True, max_length=1500)] = ""
+    source_id: SourceId
+    page: int = Field(ge=1, le=10000)
+    publish: bool = False
+
+
+class MonumentEnBody(_Body):
+    name_en: Line
+    site_notice_en: Optional[Annotated[str, StringConstraints(strip_whitespace=True, max_length=600)]] = None
+    publish: bool = False
+
+
+@router.get("/translations")
+def list_translations(request: Request, response: Response,
+                      status: Annotated[Optional[Literal["draft", "published", "rejected", "withdrawn"]], Query()] = None,
+                      monument_id: Annotated[Optional[str], Query(pattern=r"^[A-Z]{3}-\d{4}$")] = None):
+    _admin(request, response)
+    return {"translations": _store(request).translations(status, monument_id)}
+
+
+@router.put("/facts/{fact_id}/en")
+def put_translation(body: TranslationBody, request: Request, response: Response, fact_id: FactId):
+    actor = _admin(request, response)
+    return _call(_store(request).set_translation, fact_id, body.model_dump(exclude={"publish"}), body.publish, actor)
+
+
+@router.post("/facts/{fact_id}/en/{action}")
+def translation_action(request: Request, response: Response, fact_id: FactId,
+                       action: Annotated[Literal["publish", "reject", "withdraw"], Path()]):
+    actor = _admin(request, response)
+    return _call(_store(request).translation_action, fact_id, action, actor)
+
+
+@router.put("/monuments/{monument_id}/en")
+def put_monument_en(body: MonumentEnBody, request: Request, response: Response, monument_id: MonumentId):
+    actor = _admin(request, response)
+    data = {"name_en": body.name_en, "site_notice_en": body.site_notice_en or None}
+    return _call(_store(request).set_monument_en, monument_id, data, body.publish, actor)
 
 
 class SourceImageBody(_Body):

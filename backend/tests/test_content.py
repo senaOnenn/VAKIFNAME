@@ -478,3 +478,93 @@ def test_book_image_listed_previewed_and_added_with_page_attribution(c):
     assert c.get(f"/monuments/media/{img['file']}").status_code == 200
     c.post("/auth/logout")
     assert c.get(imgs[0]["url"]).status_code == 401
+
+
+# --- İngilizce (Faz 11) -----------------------------------------------------------------------------------------
+
+EN_PAGES = PAGES + ["The Grand Mosque was commissioned by Sultan Yildirim Bayezid and completed in 1399 with twenty domes.\n"
+                    "Its minbar door carries a wooden inscription dated to the year 802 of the Hijri calendar."]
+
+
+def en_body(sid, **over):
+    return {"title_en": "Completion", "text_en": "The mosque was completed in 1399.", "source_id": sid, "page": 4,
+            "quote_en": "completed in 1399 with twenty domes", "publish": False, **over}
+
+
+def test_translation_of_catalog_fact_publishes_through_overlay(c):
+    login_admin(c)
+    sid = add_source(c, pages=EN_PAGES, title="İki dilli envanter")
+    t = c.put("/admin/content/facts/BUR-0001-F001/en", json=en_body(sid)).json()
+    assert t["status"] == "draft" and t["quote_check"] == "found" and t["fact_title"] and t["origin"] == "manual"
+    f = next(x for x in c.get("/monuments/BUR-0001").json()["facts"] if x["fact_id"] == "BUR-0001-F001")
+    assert f["text_en"] is None  # taslak görünmez
+    assert c.get("/admin/content/overview").json()["translation_drafts"] == 1
+    pub = c.post("/admin/content/facts/BUR-0001-F001/en/publish").json()
+    assert pub["status"] == "published" and pub["decision"]["by"] == ADMIN
+    f = next(x for x in c.get("/monuments/BUR-0001").json()["facts"] if x["fact_id"] == "BUR-0001-F001")
+    assert f["title_en"] == "Completion" and f["text_en"] == "The mosque was completed in 1399." and f["en_page"] == 4
+    assert f["text"] and f["title"]  # Türkçe kayıt aynen kalır
+    c.post("/admin/content/facts/BUR-0001-F001/en/withdraw")
+    f = next(x for x in c.get("/monuments/BUR-0001").json()["facts"] if x["fact_id"] == "BUR-0001-F001")
+    assert f["text_en"] is None
+
+
+def test_translation_rules(c):
+    login_admin(c)
+    no_rights = add_source(c, pages=EN_PAGES, rights=False)
+    assert c.put("/admin/content/facts/BUR-0001-F001/en", json=en_body(no_rights, publish=True)).status_code == 409
+    sid = add_source(c, pages=EN_PAGES + ["extra"], title="İzinli")
+    bad = c.put("/admin/content/facts/BUR-0001-F001/en", json=en_body(sid, quote_en="this sentence is not in the book at all", publish=True))
+    assert bad.status_code == 409
+    assert c.put("/admin/content/facts/BUR-0001-F999/en", json=en_body(sid)).status_code == 404
+    r = c.put("/admin/content/facts/BUR-0001-F001/en", json=en_body(sid, title_en="ab"))
+    assert r.status_code == 422 and "İngilizce başlık en az 3 karakter olmalı." in [e["msg"] for e in r.json()["detail"]]
+
+
+def test_monument_english_name(c):
+    login_admin(c)
+    r = c.put("/admin/content/monuments/BUR-0001/en", json={"name_en": "Grand Mosque of Bursa", "publish": True}).json()
+    assert r["status"] == "published" and r["name_en"] == "Grand Mosque of Bursa"
+    m = next(x for x in c.get("/monuments").json()["monuments"] if x["monument_id"] == "BUR-0001")
+    assert m["name_en"] == "Grand Mosque of Bursa" and m["name"] == "Bursa Ulu Camii"
+    assert c.put("/admin/content/monuments/BUR-9999/en", json={"name_en": "X y", "publish": True}).status_code == 404
+
+
+def test_english_pipeline_finds_book_english_passages_only(c):
+    login_admin(c)
+    sid = add_source(c, pages=EN_PAGES, title="İki dilli envanter")
+    fake = FakeProvider(json.dumps({"translations": [
+        {"fact_id": "BUR-0001-F001", "title_en": "Built by Bayezid", "text_en": "Sultan Yildirim Bayezid commissioned the mosque.",
+         "quote_en": "The Grand Mosque was commissioned by Sultan Yildirim Bayezid", "page": 4},
+        {"fact_id": "BUR-0001-F002", "title_en": "Invented", "text_en": "This is a machine translation guess.",
+         "quote_en": "this passage does not exist in the english section", "page": 4},
+        {"fact_id": "BUR-0019-F001", "title_en": "Other monument", "text_en": "Not this monument's record.",
+         "quote_en": "Its minbar door carries a wooden inscription dated", "page": 4},
+    ]}))
+    c.app.state.content_pipeline.provider = fake
+    job = c.post("/admin/content/extract", json={"source_id": sid, "monument_id": "BUR-0001", "page_from": 3, "page_to": 4,
+                                                 "lang": "en"}).json()
+    job = c.get(f"/admin/content/jobs/{job['job_id']}").json()
+    assert job["status"] == "done" and job["kind"] == "en" and job["candidates"] == 1 and job["dropped"] == 2
+    ts = c.get("/admin/content/translations", params={"monument_id": "BUR-0001"}).json()["translations"]
+    assert [(t["fact_id"], t["origin"], t["status"], t["quote_check"]) for t in ts] == [("BUR-0001-F001", "pipeline", "draft", "found")]
+    user_msg = fake.calls[0]["messages"][1]["content"]
+    assert "BUR-0001-F001" in user_msg and "BUR-0019" not in user_msg  # yalnızca bu eserin yayındaki kayıtları
+    # Hattan gelen çeviri, alıntısı kaynakta bulunmadan yayımlanamaz.
+    t = ts[0]
+    body = {k: t[k] for k in ("title_en", "text_en", "source_id", "page")}
+    assert c.put("/admin/content/facts/BUR-0001-F001/en", json={**body, "quote_en": "", "publish": True}).status_code == 409
+    # İkinci çalıştırmada çevirisi olan kayıt yeniden önerilmez.
+    c.post("/admin/content/extract", json={"source_id": sid, "monument_id": "BUR-0001", "page_from": 3, "page_to": 4, "lang": "en"})
+    assert "BUR-0001-F001" not in fake.calls[1]["messages"][1]["content"]
+
+
+def test_translation_of_withdrawn_content_fact_is_silently_skipped(c):
+    login_admin(c)
+    sid = add_source(c, pages=EN_PAGES, title="İki dilli envanter")
+    fid = c.post("/admin/content/facts", json=fact_body(sid, publish=True)).json()["fact_id"]
+    c.put(f"/admin/content/facts/{fid}/en", json=en_body(sid, publish=True))
+    assert next(x for x in c.get("/monuments/BUR-0001").json()["facts"] if x["fact_id"] == fid)["text_en"]
+    c.post(f"/admin/content/facts/{fid}/withdraw")
+    assert fid not in public_fact_ids(c)
+    assert c.get("/monuments/BUR-0001").status_code == 200  # katalog bozulmaz

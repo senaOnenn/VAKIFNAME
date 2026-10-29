@@ -70,6 +70,12 @@ CREATE TRIGGER IF NOT EXISTS decisions_no_update BEFORE UPDATE ON decisions
     BEGIN SELECT RAISE(ABORT, 'decisions are append-only'); END;
 CREATE TRIGGER IF NOT EXISTS decisions_no_delete BEFORE DELETE ON decisions
     BEGIN SELECT RAISE(ABORT, 'decisions are append-only'); END;
+CREATE TABLE IF NOT EXISTS translations (
+    fact_id TEXT PRIMARY KEY, monument_id TEXT NOT NULL, data TEXT NOT NULL, origin TEXT NOT NULL, status TEXT NOT NULL,
+    created_by TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, decision_id TEXT);
+CREATE TABLE IF NOT EXISTS monument_en (
+    monument_id TEXT PRIMARY KEY, data TEXT NOT NULL, status TEXT NOT NULL, created_by TEXT NOT NULL,
+    created_at TEXT NOT NULL, updated_at TEXT NOT NULL, decision_id TEXT);
 CREATE TABLE IF NOT EXISTS jobs (
     job_id TEXT PRIMARY KEY, source_id TEXT NOT NULL, monument_id TEXT NOT NULL, page_from INTEGER NOT NULL,
     page_to INTEGER NOT NULL, status TEXT NOT NULL, created_by TEXT NOT NULL, created_at TEXT NOT NULL,
@@ -115,6 +121,8 @@ class ContentStore:
         self._db.row_factory = sqlite3.Row
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.executescript(SCHEMA)
+        if "kind" not in {r[1] for r in self._db.execute("PRAGMA table_info(jobs)")}:
+            self._db.execute("ALTER TABLE jobs ADD COLUMN kind TEXT NOT NULL DEFAULT 'tr'")
         # Yarım kalan hat işleri sunucu yeniden başlayınca sürmez; açıkça başarısız sayılır.
         self._db.execute("UPDATE jobs SET status='failed', error='Sunucu yeniden başladı; iş yarıda kaldı.', finished_at=? "
                          "WHERE status IN ('queued','running')", (self._clock(),))
@@ -610,13 +618,137 @@ class ContentStore:
         path = self.media_dir / file
         return path if path.is_file() else None
 
+    # --- İngilizce (Faz 11): kayıt çevirileri ve eser adları ---------------------------------------------------------
+    # Çeviri kitabın İngilizce bölümünden gelir (alıntı + sayfa); makine çevirisi yoktur. Türkçe kaydı yayında olmayan
+    # çeviri katmana yazılsa da genel katalogda görünmez.
+
+    def tr_fact(self, fact_id: str) -> Optional[dict]:
+        """Çevirinin bağlandığı Türkçe kayıt (katalog ya da depo)."""
+        mid = fact_id.rsplit("-F", 1)[0]
+        base = self._base().get(mid)
+        if base is not None:
+            f = next((x for x in base.facts if x.fact_id == fact_id), None)
+            if f is not None:
+                return {"monument_id": mid, "title": f.title, "text": f.text, "origin": "catalog"}
+        r = self._one("SELECT * FROM facts WHERE fact_id=?", (fact_id,))
+        if r is not None:
+            d = json.loads(r["data"])
+            return {"monument_id": r["monument_id"], "title": d["title"], "text": d["text"], "origin": "content"}
+        return None
+
+    def _translation_view(self, r: sqlite3.Row) -> dict:
+        data = json.loads(r["data"])
+        tr = self.tr_fact(r["fact_id"]) or {}
+        check = self._quote_check({"quote": data.get("quote_en", ""), "source_id": data["source_id"], "page": data["page"]})
+        return {"fact_id": r["fact_id"], "monument_id": r["monument_id"], "fact_title": tr.get("title"),
+                "fact_text": tr.get("text"), **data, "origin": r["origin"], "status": r["status"], "quote_check": check,
+                "updated_at": r["updated_at"], "decision": self._decision(r["decision_id"])}
+
+    def translation(self, fact_id: str) -> Optional[dict]:
+        r = self._one("SELECT * FROM translations WHERE fact_id=?", (fact_id,))
+        return self._translation_view(r) if r else None
+
+    def translations(self, status: Optional[str] = None, monument_id: Optional[str] = None) -> list[dict]:
+        sql, args = "SELECT * FROM translations WHERE 1=1", []
+        if status:
+            sql, args = sql + " AND status=?", args + [status]
+        if monument_id:
+            sql, args = sql + " AND monument_id=?", args + [monument_id]
+        return [self._translation_view(r) for r in self._all(sql + " ORDER BY updated_at DESC, fact_id", tuple(args))]
+
+    def set_translation(self, fact_id: str, data: dict, publish: bool, actor: str, origin: str = "manual") -> dict:
+        tr = self.tr_fact(fact_id)
+        if tr is None:
+            raise ContentError("Türkçe kayıt bulunamadı.", 404)
+        src = self.source(data["source_id"])
+        if not 1 <= data["page"] <= src["page_count"]:
+            raise ContentError(f"Sayfa 1–{src['page_count']} aralığında olmalı.", 400)
+        old = self._one("SELECT origin FROM translations WHERE fact_id=?", (fact_id,))
+        origin = old["origin"] if old else origin
+        if publish:
+            self._publish_rules({"quote": data.get("quote_en", ""), "source_id": data["source_id"], "page": data["page"]},
+                                origin)
+        with self._tx():
+            now = self._clock()
+            decision = self._decide("translation", fact_id, "publish", actor, data) if publish else None
+            self._db.execute(
+                "INSERT INTO translations VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(fact_id) DO UPDATE SET data=excluded.data, "
+                "status=excluded.status, updated_at=excluded.updated_at, decision_id=excluded.decision_id",
+                (fact_id, tr["monument_id"], json.dumps(data, ensure_ascii=False), origin,
+                 "published" if publish else "draft", actor, now, now, decision and decision["decision_id"]))
+        self.write_overlay()
+        return self.translation(fact_id)
+
+    def translation_action(self, fact_id: str, action: str, actor: str) -> dict:
+        r = self._one("SELECT * FROM translations WHERE fact_id=?", (fact_id,))
+        if r is None:
+            raise ContentError("Çeviri bulunamadı.", 404)
+        data = json.loads(r["data"])
+        if action == "publish":
+            if r["status"] == "published":
+                raise ContentError("Çeviri zaten yayında.")
+            self._publish_rules({"quote": data.get("quote_en", ""), "source_id": data["source_id"], "page": data["page"]},
+                                r["origin"])
+        elif action == "reject" and r["status"] == "published":
+            raise ContentError("Yayındaki çeviri reddedilemez; önce yayından çekin.")
+        elif action == "withdraw" and r["status"] != "published":
+            raise ContentError("Çeviri yayında değil.")
+        new_status = {"publish": "published", "reject": "rejected", "withdraw": "withdrawn"}[action]
+        with self._tx():
+            decision = self._decide("translation", fact_id, action, actor, data)
+            self._db.execute("UPDATE translations SET status=?, updated_at=?, decision_id=? WHERE fact_id=?",
+                             (new_status, self._clock(), decision["decision_id"] if action == "publish" else None, fact_id))
+        self.write_overlay()
+        return self.translation(fact_id)
+
+    def monument_en(self, monument_id: str) -> Optional[dict]:
+        r = self._one("SELECT * FROM monument_en WHERE monument_id=?", (monument_id,))
+        if r is None:
+            return None
+        return {"monument_id": monument_id, **json.loads(r["data"]), "status": r["status"],
+                "decision": self._decision(r["decision_id"])}
+
+    def set_monument_en(self, monument_id: str, data: dict, publish: bool, actor: str) -> dict:
+        if not self.monument_exists(monument_id):
+            raise ContentError("Eser bulunamadı.", 404)
+        with self._tx():
+            now = self._clock()
+            decision = self._decide("monument_en", monument_id, "publish", actor, data) if publish else None
+            self._db.execute(
+                "INSERT INTO monument_en VALUES (?,?,?,?,?,?,?) ON CONFLICT(monument_id) DO UPDATE SET data=excluded.data, "
+                "status=excluded.status, updated_at=excluded.updated_at, decision_id=excluded.decision_id",
+                (monument_id, json.dumps(data, ensure_ascii=False), "published" if publish else "draft", actor, now, now,
+                 decision and decision["decision_id"]))
+        self.write_overlay()
+        return self.monument_en(monument_id)
+
+    def translated_fact_ids(self, monument_id: str) -> set[str]:
+        """Hattın yeniden önermeyeceği kayıtlar: reddedilmemiş çevirisi olanlar."""
+        return {r["fact_id"] for r in self._all("SELECT fact_id FROM translations WHERE monument_id=? AND status!='rejected'",
+                                                (monument_id,))}
+
+    def published_tr_facts(self, monument_id: str) -> list[dict]:
+        """Eserin yayındaki Türkçe kayıtları (katalog + depo): İngilizce hattın girdisi."""
+        out = []
+        base = self._base().get(monument_id)
+        if base is not None:
+            out += [{"fact_id": f.fact_id, "title": f.title, "text": f.text} for f in base.facts]
+        for r in self._all("SELECT * FROM facts WHERE monument_id=? AND status='published' ORDER BY fact_id", (monument_id,)):
+            d = json.loads(r["data"])
+            out.append({"fact_id": r["fact_id"], "title": d["title"], "text": d["text"]})
+        return out
+
+    def translation_draft_count(self) -> int:
+        return self._one("SELECT COUNT(*) AS n FROM translations WHERE status='draft'")["n"]
+
     # --- Hat işleri -----------------------------------------------------------------------------------------------
 
-    def create_job(self, source_id: str, monument_id: str, page_from: int, page_to: int, actor: str) -> dict:
+    def create_job(self, source_id: str, monument_id: str, page_from: int, page_to: int, actor: str,
+                   kind: str = "tr") -> dict:
         job_id = "JOB-" + secrets.token_hex(6)
-        self._exec("INSERT INTO jobs (job_id, source_id, monument_id, page_from, page_to, status, created_by, created_at) "
-                   "VALUES (?,?,?,?,?,?,?,?)", (job_id, source_id, monument_id, page_from, page_to, "queued", actor,
-                                                self._clock()))
+        self._exec("INSERT INTO jobs (job_id, source_id, monument_id, page_from, page_to, status, created_by, created_at, "
+                   "kind) VALUES (?,?,?,?,?,?,?,?,?)", (job_id, source_id, monument_id, page_from, page_to, "queued", actor,
+                                                        self._clock(), kind))
         return self.job(job_id)
 
     def update_job(self, job_id: str, **fields):
@@ -628,7 +760,7 @@ class ContentStore:
         if r is None:
             raise ContentError("İş bulunamadı.", 404)
         return {k: r[k] for k in ("job_id", "source_id", "monument_id", "page_from", "page_to", "status", "created_at",
-                                  "finished_at", "candidates", "dropped", "error")}
+                                  "finished_at", "candidates", "dropped", "error", "kind")}
 
     def active_job(self) -> Optional[dict]:
         r = self._one("SELECT job_id FROM jobs WHERE status IN ('queued','running') LIMIT 1")
@@ -682,8 +814,15 @@ class ContentStore:
         # Katalog eserlerine eklenenler. Taslak (yayında olmayan) yönetici eserinin kayıtları katmana girmez.
         extra_facts = [{"monument_id": mid, "fact": f} for mid, fs in facts.items() if mid in base for f in fs]
         extra_images = [{"monument_id": mid, "image": i} for mid, imgs in images.items() if mid in base for i in imgs]
+        translations = []
+        for r in self._all("SELECT * FROM translations WHERE status='published' ORDER BY fact_id"):
+            d = json.loads(r["data"])
+            translations.append({"fact_id": r["fact_id"], "title_en": d["title_en"], "text_en": d["text_en"],
+                                 "en_page": d["page"], "decision_id": r["decision_id"]})
+        monument_en = [{"monument_id": r["monument_id"], **json.loads(r["data"]), "decision_id": r["decision_id"]}
+                       for r in self._all("SELECT * FROM monument_en WHERE status='published' ORDER BY monument_id")]
         return {"schema": OVERLAY_SCHEMA, "generated_at": self._clock(), "monuments": monuments,
-                "facts": extra_facts, "images": extra_images}
+                "facts": extra_facts, "images": extra_images, "translations": translations, "monument_en": monument_en}
 
     def write_overlay(self):
         with self._lock:
