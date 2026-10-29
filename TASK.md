@@ -9,8 +9,9 @@
 - ✅ Rehber hattı: sağlayıcı seçimi (`claude-cli` / `openrouter`), gerçek giriş kontrolü. **`feat/game`'e birleşti (2c16b4f).** Ana dal: `feat/game`.
 - ✅ Yeni arayüz (Faz 1–5) ve istatistik (Faz 6) **`feat/game`'e birleşti (29 Ekim, f7f4f6f).**
 - ✅ Konum koordinatları onaylı (katalog). ✅ Ziyaret mührü (yarıçap, sunum modu).
-- ✅ Hesap sistemi (e-posta+parola, Google). ❌ E-posta doğrulama, parola sıfırlama (29 Ekim kararı: zorunlu).
-- ❌ İçerik yönetimi (şartname 5.1.1): karar verildi (29 Ekim, CLAUDE.md §2.13), yapılacak.
+- ✅ Hesap sistemi (e-posta+parola, Google; Google yerelde 29 Ekim'de doğrulandı), e-posta doğrulama, parola sıfırlama.
+- ✅ İçerik yönetimi (şartname 5.1.1), tanıtım sayfası, çok şehir, erişilebilirlik taraması — hepsi `feat/game`'de.
+- ❌ Canlı yayın (`calismalar.tikirsoft.com`): DNS ve sunucu bekleniyor. ❌ Tanıtım videosu, sunum, sahada (telefon + GPS) deneme.
 
 ## 29 Ekim kararları
 1. **İçerik yönetimi:** tek rol yönetici; hat (kitap PDF + eser → aday kayıtlar → taslak) + elle ekleme/düzenleme; onaysız hiçbir şey görünmez (CLAUDE.md §2.13).
@@ -32,34 +33,34 @@
 | # | Konu | Öneri |
 |---|---|---|
 | K1 | ✅ **KARARLI (27 Ekim).** Eser başına **5 kısa soru**, **≥4 doğru (%80)** = rozet. Yanlışta farklı soru havuzundan tekrar. | — |
-| K2 | **Karakterle "konuşulması" neyi kapsar?** (Akış 27 Ekim'de değişti: bu adım artık ilk kademe, ziyaret kilit değil.) | Anlatımı sonuna kadar dinlemek **+ en az 1 mesaj/soru**. (Sesi dinlemeyen/duyamayan için altyazıyı okumak da sayılır.) |
+| K2 | ✅ **KARARLI (Faz 5'te uygulandı):** dinleme + en az 1 soru (rehber kapalıysa soru aranmaz). **Karakterle "konuşulması" neyi kapsar?** (Akış 27 Ekim'de değişti: bu adım artık ilk kademe, ziyaret kilit değil.) | Anlatımı sonuna kadar dinlemek **+ en az 1 mesaj/soru**. (Sesi dinlemeyen/duyamayan için altyazıyı okumak da sayılır.) |
 | K3 | ◐ **VARSAYILAN UYGULANDI (Faz 4): tarayıcı seslendirmesi + altyazı.** **Karakterin sesi.** Önceden kaydedilmiş anlatım mı, canlı TTS mi? | Anlatım **önceden üretilir** (kalite + kontrol + lisans). Sohbet cevapları metin + tarayıcı `speechSynthesis` (opsiyonel dinle). |
 | K4 | ✅ **KARARLI (27 Ekim):** anlatıcı her yerde yerel rehber; tarihî kişi portre kartıyla (`data/real_catalog/people.json`, `GET /monuments/{id}/people`). **Karakter görseli.** Tarihî karakter için hangi eserlerde figür var? | Eser başına `narrator` alanı: tarihî şahsiyet (Yıldırım Bayezid, Osman Gazi, Orhan Gazi, Cem Sultan, II. Murad) **veya** yerel rehber. Çizim/illüstrasyon dili; fotogerçekçi yüz yok. |
 | K5 | ✅ **KARARLI (27 Ekim).** Şimdilik **mevcut görsellerle** devam. Sponsorun kaynağı Bursa'nın 3 ciltlik PDF'i; görselleri ayrı bir süreçte ayıklayıp geçeceğiz. | — (kullanım izni için organizatöre ayrıca sorulacak) |
-| K6 | ✅ **GELDİ (29 Ekim).** **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
+| K6 | ✅ **GELDİ ve yerelde çalışıyor (29 Ekim; yetkili kaynaklar `http://localhost`, `http://localhost:5173`, canlı adres).** **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
 | K7 | ✅ **KARARLI (27 Ekim).** Koordinatlar **onaylıdır**, katalogdakiler kullanılır; kendi eklediğimiz konum verisi yok. Kayıtlar: noktalar `backend/tests/ask_eval/catalog_snapshot.json`, adaylar `data/real_catalog/monument_research.json`, onay kararları sunucuda `review.sqlite3`. | Ziyaret (Faz 5) için eser başına yarıçap yapılandırılabilir olur; yakın eserler (Muradiye'de 4 eser, Osman/Orhan Gazi) çakışmasın diye küçük başlanır. Sahada ince ayar sonra. |
 | K8 | ✅ **KARARLI (Faz 2'de uygulandı).** **Misafir ilerlemesi.** Üye olmadan toplanan rozetler giriş yapınca birleşir mi? | Evet: cihazdaki ilerleme girişte hesaba **birleştirilir**. |
 | K9 | **Yeni dil:** EN metinler nereden? | Ciltli yayınlar iki dilli; onaylı olgulara `text_en` alanı. Çeviri uydurma değil, kaynaktan. |
 
 ## Faz 0 — Zemin (önce)
 - [ ] Bu iki dosyayı ekiple paylaş; eleştiri notu (ekran görüntülü, tek sayfa) hazırla.
-- [ ] Kararları K1–K9 üzerinden kapat (hepsi gerekmez; K1, K2, K5, K6 önce).
+- [~] Kararları K1–K9 üzerinden kapat: K1, K2, K4–K8 ✅; açık: K3 (ses seçilecek), K9 (İngilizce).
 - [x] `frontend/src/design/tokens.css`: renk (**Palet A: gece laciverdi + altın**, CLAUDE.md §5), yazı tipi, boşluk, hareket süreleri, gölge.
-- [ ] Marka SVG'leri (`game/vakifname_brand_assets`) çoğunlukla altın/krem, uyumlu; `uye_olmadan_kesfet.svg` içindeki yeşil (`#28584a`) yeni palete uyarlanır. Web ve mobil aynı token'ları kullanır.
-- [ ] Eski arayüzden **tutulacaklar** (api client, tipler, harita bileşeni) ve **atılacaklar** (Hero, HowItWorks, PlaceCard vb. sayfalar) listesi.
-- [ ] Bilgi mimarisi ve ekran listesi: Açılış · Giriş/Kayıt · Şehir · Rota/Harita · Eserler · Eser · Rozeti Al · Pasaport/Vakfiye · Hesap · (yönetim).
+- [x] Marka SVG'leri: gerek kalmadı; düğmeler ve süsler palet A ile kodla çizildi (yeşil yok). Web ve mobil aynı token'ları kullanır.
+- [x] Eski arayüzden tutulanlar (api istemcisi, katalog/rehber istemcisi, tipler) ayrıldı; kalanı silindi (Faz 7).
+- [x] Bilgi mimarisi ve ekranlar: Açılış · Tanıtım · Giriş/Kayıt · Şehir · Rota/Harita · Eserler · Eser · Rozeti Al · Pasaport/Vakfiye · Hesap · Yönetim (istatistik + içerik).
 
 ## Faz 1 — Tasarım sistemi ve iskelet (web + mobil)
 - [x] Yönlendirme (`react-router-dom`) ve ilk ekran iskeletleri (`/`, `/giris`, `/sehir`, `/bursa` yer tutucu). Mobil alt sekme çubuğu + web üst menü (Keşfet, Eserler, Pasaport, Hesap) ✅; sayfa geçişinde en üste dönüş.
-- [x] **Açılış animasyonu:** "VAKIFNAME" yazısı, ardından Giriş sayfasına geçiş; atlanabilir, `prefers-reduced-motion`'da statik.
+- [x] **Açılış animasyonu:** "VAKIFNAME" yazısı, ardından tanıtım sayfası (29 Ekim; önce doğrudan girişe gidiyordu); atlanabilir, `prefers-reduced-motion`'da statik.
 - [x] **Giriş/Kayıt ekranı** (arayüz; sunucu yok, geçici oturum): Google ile devam, e-posta+parola, "üye olmadan keşfet". Parşömen/yeşil marka SVG'leri yerine düğmeler palet A ile kodla çizildi.
 - [x] **Şehir seçimi:** Türkiye haritası (Natural Earth sınırı, palet A; 3,2 MB'lık parşömen PNG yerine ~7 KB SVG yol) + erişilebilir şehir kartları; Bursa açık, diğerleri "yakında".
-- [~] Ortak bileşenler: düğme, kart, süs (girih), ikonlar ✅. [ ] rozet/mühür, kilit, ilerleme, altyazılı oynatıcı, karakter sahnesi (ilgili fazlarda).
-- [ ] Ekran okuyucu, klavye gezinmesi, kontrast, yazı boyutu: **bileşen seviyesinde** başlangıçtan itibaren.
+- [x] Ortak bileşenler: düğme, kart, süs (girih), ikonlar, mühür, kilit, ilerleme, altyazılı anlatıcı, karakter sahnesi, yapboz, grafikler.
+- [x] Ekran okuyucu, klavye, kontrast, yazı boyutu: bileşen seviyesinde; axe taraması temiz (Faz 7).
 
 ## Faz 2 — Hesap sistemi (backend + frontend) ✅ (27 Ekim, dal `feat/auth`)
 - [x] Kullanıcı tablosu, parola özeti (stdlib scrypt), oturum çerezi `vk_session` (HttpOnly, SameSite=Lax, 30 gün; sunucuda yalnızca özet), oran sınırı (`VAKIFNAME_AUTH_RATE`).
-- [x] **Google ile giriş:** kimlik belirteci **sunucuda doğrulanır** (PyJWT + Google JWKS); arayüzde Google'ın resmî düğmesi (GIS). [ ] **Canlı deneme için `VITE_GOOGLE_CLIENT_ID` + `VAKIFNAME_GOOGLE_CLIENT_ID` gerekli (K6).**
+- [x] **Google ile giriş:** kimlik belirteci **sunucuda doğrulanır** (PyJWT + Google JWKS); arayüzde Google'ın resmî düğmesi (GIS). [x] İstemci kimliği `.env`'lerde; Google düğmesi yerelde hatasız (29 Ekim). [ ] Canlı adreste deneme.
 - [x] Misafir ilerlemesi girişte hesaba taşınır (K8 ✅): mühürde hesabınki kalır; çözülmemiş soruyu misafir çözdüyse o alınır.
 - [x] Hesap kimliğiyle (`u-<uuid>`) tutulan ilerleme yalnızca o hesabın oturumuyla okunur/yazılır.
 - [x] Aydınlatma metni sayfası (`/gizlilik`, sistemin gerçekte sakladığı verilere göre; yayın öncesi kurumun KVKK metniyle değiştirilmeli) ve hesap silme (KVKK: kişisel alanlar boşaltılır, oturum ve ilerleme silinir).
@@ -74,7 +75,7 @@
 - [x] **Rota ekranı** (`/rota/:city`): Kayıp Vakfiye ilerlemesi (10 parça), sıradaki durak, sıralı duraklar ve kilitler, bulunan parçalar, "Konumumu kullan"; koyu tonlu OSM haritası ve rota çizgisi.
 - [x] **Eser sayfası** (`/eser/:id`): görsel, ziyaret uyarısı, kaynaklı bilgiler (kesinlik etiketiyle: belgelenmiş / rivayet / kesin değil; kaynak sayfası) ve galeri (her görselde atıf + lisans).
 - [x] Her görselde atıf/lisans satırı (mevcut görsellerle; PDF'ten ayıklama ayrı süreç, K5).
-- Not (Faz 5): soru-cevap ucu kilide bakmıyor; kilitli eserin soruları API'den cevaplanabiliyor → Faz 5 "kilit atlatma" testinde kapatılacak.
+- Not (kapandı, Faz 5): kilitli eserin soru-cevap ucu artık kilide uyuyor.
 - [x] Ölçek (29 Ekim, dal `feat/multi-city`): eser/kayıt kimliği her şehir koduna açık (`[A-Z]{3}-0000`, backend + istemci doğrulayıcısı); eser ve eserler sayfası kilidi eserin kendi şehrinin rotasından alır; şehir sayfası açık şehirleri ve eser sayısını katalogdan hesaplar.
 
 ## Faz 4 — Eser sayfası: karakter anlatımı ✅ (27 Ekim, dal `feat/narrator`)
@@ -84,7 +85,7 @@
 - [x] İkinci katman: tarihçe, kaynak sayfası, kesinlik etiketi, galeri (Faz 3).
 - [x] Erişilebilirlik: tam metin (transkript), büyük altyazı, sessiz mod; ses otomatik başlamaz.
 - **Karar (K3, varsayılan, 27 Ekim):** seslendirme tarayıcının Türkçe sesiyle (Web Speech API; lisans/anahtar gerektirmez). Türkçe ses yoksa altyazı kendiliğinden ilerler. Önceden üretilmiş stüdyo kaydı sonra eklenebilir.
-- Not (Faz 5): "dinledi" ve "sordu" olayları şimdilik yalnızca arayüzde; Kademe 1 için sunucuya kaydedilecek.
+- Not (kapandı, Faz 5): "dinledi" ve "sordu" olayları sunucuya kaydediliyor (`engagement`).
 
 ## Faz 5 — Gerçek oyun: dinle → soru → ziyaretle altın ✅ (27 Ekim, dal `feat/game-loop`)
 - [x] **Kademe 1 — Dinle ve sor:** anlatımın sonuna kadar dinlenmesi ve rehbere en az 1 soru sunucuya kaydedilir (`engagement`). Rehber kapalıysa (veya yalnızca test kullanıcılarına açıksa) soru şartı aranmaz (K2 ✅).
