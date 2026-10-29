@@ -174,8 +174,8 @@ function Editor({ overview, edit, fact, flash, onSaved }: {
         <GoldRule className="vk-page__rule" />
       </header>
 
-      <div className="vk-fact">
-        <section className="vk-admin__card vk-fact__form" aria-labelledby={`${id}-h`}>
+      <div className="vk-factedit">
+        <section className="vk-admin__card vk-factedit__form" aria-labelledby={`${id}-h`}>
           <h2 id={`${id}-h`}>Kayıt</h2>
           {fact && (
             <dl className="vk-content__dl">
@@ -185,7 +185,7 @@ function Editor({ overview, edit, fact, flash, onSaved }: {
               <dt>Onay</dt><dd>{fact.decision ? `${fact.decision.by} · ${formatWhen(fact.decision.at)}` : 'Henüz onaylanmadı'}</dd>
             </dl>
           )}
-          {(!fact || status !== 'published') && <p className="vk-admin__note vk-fact__draft">{DRAFT_NOTE}</p>}
+          {(!fact || status !== 'published') && <p className="vk-admin__note vk-factedit__draft">{DRAFT_NOTE}</p>}
           {status === 'published' && (
             <p className="vk-admin__note">Yayındaki kayıt taslak olarak kaydedilirse yayından çekilir; "Kaydet ve yayımla" yeniden onaydır.</p>
           )}
@@ -324,27 +324,27 @@ function SourcePageView({ sourceId, sourceTitle, page, quote, onUsePage }: {
   const count = data.data?.page_count
 
   return (
-    <section className="vk-admin__card vk-fact__source" aria-labelledby={`${id}-h`}>
+    <section className="vk-admin__card vk-factedit__source" aria-labelledby={`${id}-h`}>
       <h2 id={`${id}-h`}>Kaynak sayfa</h2>
       {!sourceId ? (
         <p className="vk-admin__note">Kaynak seçilmedi.</p>
       ) : (
         <>
           <p className="vk-content__muted">{sourceTitle} · s. {view}{count ? ` / ${count}` : ''}</p>
-          <div className="vk-fact__pager">
+          <div className="vk-factedit__pager">
             <button type="button" className="vk-chip" disabled={view <= 1} onClick={() => setView((v) => v - 1)}>← Önceki sayfa</button>
             <button type="button" className="vk-chip" disabled={!!count && view >= count} onClick={() => setView((v) => v + 1)}>Sonraki sayfa →</button>
             {view !== page && (
               <button type="button" className="vk-chip" onClick={() => onUsePage(view)}>Bu sayfayı kaynak yap</button>
             )}
           </div>
-          <p className="vk-fact__check" role="status" aria-live="polite">
+          <p className="vk-factedit__check" role="status" aria-live="polite">
             {data.loading ? 'Sayfa yükleniyor…' : data.error ? '' : !quote.trim() ? 'Alıntı yazılmadı.'
               : hit ? 'Alıntı bu sayfada bulundu (vurgulu).' : 'Uyarı: alıntı bu sayfada bulunamadı. Sayfayı veya alıntıyı kontrol edin.'}
           </p>
           {data.error && <p className="vk-cform__error" role="alert">{data.error}</p>}
           {data.data && (
-            <div className="vk-fact__text" tabIndex={0} aria-label={`Kaynak sayfa ${view} metni`}>
+            <div className="vk-factedit__text" tabIndex={0} aria-label={`Kaynak sayfa ${view} metni`}>
               {hit ? (
                 <>
                   {text.slice(0, hit.start)}

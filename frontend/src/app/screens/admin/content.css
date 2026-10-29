@@ -26,7 +26,8 @@
 }
 .vk-content__muted {
   color: var(--vk-ivory-dim);
-  font-size: 0.85rem;
+  font: 400 0.85rem var(--vk-font-ui);
+  letter-spacing: normal;
 }
 .vk-content__tags {
   display: flex;
@@ -259,35 +260,35 @@
 }
 
 /* Kayıt düzenleyici: form + kaynak sayfa yan yana (mobilde alt alta) */
-.vk-fact {
+.vk-factedit {
   display: grid;
   gap: var(--vk-space-5);
   align-items: start;
 }
 @media (min-width: 960px) {
-  .vk-fact {
+  .vk-factedit {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
-  .vk-fact__source {
+  .vk-factedit__source {
     position: sticky;
     top: var(--vk-space-4);
   }
 }
-.vk-fact__draft {
+.vk-factedit__draft {
   padding: var(--vk-space-2) var(--vk-space-3);
   border-left: 3px solid var(--vk-indigo-soft);
   background: rgb(74 91 255 / 0.08);
 }
-.vk-fact__pager {
+.vk-factedit__pager {
   display: flex;
   flex-wrap: wrap;
   gap: var(--vk-space-2);
 }
-.vk-fact__check {
+.vk-factedit__check {
   font-size: 0.9rem;
   color: var(--vk-ivory-dim);
 }
-.vk-fact__text {
+.vk-factedit__text {
   max-height: 60vh;
   overflow-y: auto;
   padding: var(--vk-space-3) var(--vk-space-4);
@@ -298,7 +299,7 @@
   font-size: 0.92rem;
   line-height: 1.6;
 }
-.vk-fact__text mark {
+.vk-factedit__text mark {
   background: rgb(233 200 116 / 0.28);
   color: var(--vk-ivory);
   border-bottom: 2px solid var(--vk-gold-bright);
