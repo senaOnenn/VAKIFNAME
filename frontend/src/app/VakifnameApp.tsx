@@ -7,6 +7,7 @@ import Account from './screens/Account'
 import AdminPage from './screens/AdminPage'
 import Auth from './screens/Auth'
 import City from './screens/City'
+import { ForgotPassword, ResetPassword, VerifyEmail } from './screens/EmailLink'
 import Intro, { INTRO_SEEN_KEY } from './screens/Intro'
 import MonumentPage from './screens/MonumentPage'
 import Monuments from './screens/Monuments'
@@ -50,6 +51,9 @@ export default function VakifnameApp() {
           <Route path="/" element={<Home />} />
           <Route path="/giris" element={<Auth />} />
           <Route path="/gizlilik" element={<Privacy />} />
+          <Route path="/dogrula" element={<VerifyEmail />} />
+          <Route path="/sifre-sifirla" element={<ForgotPassword />} />
+          <Route path="/sifre-yenile" element={<ResetPassword />} />
           <Route element={<AppShell />}>
             <Route path="/sehir" element={<City />} />
             <Route path="/rota/:city" element={<RoutePage />} />

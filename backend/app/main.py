@@ -12,7 +12,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .accounts import AccountStore
+from .accounts import AccountStore, email_token_ttls_from_env
 from .ask.service import AskService
 from .game import GameSettings
 from .game_routes import router as game_router
@@ -22,6 +22,7 @@ from .people_routes import router as people_router
 from .stats import StatsStore
 from .stats_routes import router as stats_router
 from .google_auth import google_verifier_from_env
+from .mailer import mailer_from_env, public_base_url
 from .guide.lexicon import TurkishLexicon
 from .guide.privacy import FaceScreen
 from .guide.registry import DEFAULT_MODELS, build_provider, log_selection
@@ -133,7 +134,14 @@ def create_app(
     app.state.game_rng = random.SystemRandom()
     # Hesaplar ve oturumlar `VAKIFNAME_ACCOUNTS_DB` dosyasında (ilerlemeden ayrı); tanımlı değilse bellek içi (testler).
     accounts_db = accounts_db or (Path(os.environ["VAKIFNAME_ACCOUNTS_DB"]) if os.environ.get("VAKIFNAME_ACCOUNTS_DB") else None)
-    app.state.accounts = AccountStore(accounts_db)
+    app.state.accounts = AccountStore(accounts_db, token_ttls=email_token_ttls_from_env())
+    # Hesap e-postaları (doğrulama, parola yenileme; bkz. app/mailer.py): `VAKIFNAME_MAIL_BACKEND=off|file|smtp`
+    # (varsayılan off). Bağlantılar `VAKIFNAME_PUBLIC_BASE_URL` üzerine kurulur. Geçersiz yapılandırma açılışta hata verir.
+    app.state.mailer = mailer_from_env()
+    app.state.public_base_url = public_base_url()
+    logging.getLogger("vakifname.mail").info("Hesap e-postaları: %s", app.state.mailer.name)
+    # Aynı adrese/hesaba giden e-posta sınırı (istemci sınırına ek): dakikada 1, saatte 5.
+    app.state.mail_limiter = RateLimiter(per_minute=1, per_hour=5, global_per_minute=120)
     # Google ile giriş yalnızca `VAKIFNAME_GOOGLE_CLIENT_ID` verilince açılır; testler sahte doğrulayıcı koyar.
     app.state.google_verifier = google_verifier_from_env()
     # `/auth/*` POST istekleri için `VAKIFNAME_AUTH_RATE=dakika/saat/genel-dakika` (varsayılan 10/60/300), istemci adresine göre.

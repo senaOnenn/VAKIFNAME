@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../api/client'
-import { deleteAccount, endGuest, logout, useAuth } from '../session'
+import { deleteAccount, endGuest, logout, resendVerification, useAuth } from '../session'
 import './city.css'
 import './account.css'
 
@@ -12,6 +12,7 @@ export default function Account() {
   const [confirming, setConfirming] = useState(false)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const [resend, setResend] = useState<{ state: 'idle' | 'busy' | 'sent' | 'error'; message?: string }>({ state: 'idle' })
 
   const leave = () => navigate('/giris', { replace: true })
 
@@ -45,6 +46,16 @@ export default function Account() {
     }
   }
 
+  async function sendAgain() {
+    setResend({ state: 'busy' })
+    try {
+      await resendVerification()
+      setResend({ state: 'sent' })
+    } catch (e) {
+      setResend({ state: 'error', message: e instanceof ApiError ? e.message : 'Bağlantı gönderilemedi.' })
+    }
+  }
+
   return (
     <main className="vk-city">
       <section className="vk-city__intro">
@@ -55,7 +66,32 @@ export default function Account() {
           <dd>{user.email ?? '—'}</dd>
           <dt>Giriş yöntemi</dt>
           <dd>{user.provider === 'google' ? 'Google' : 'E-posta ve parola'}</dd>
+          {user.email_verified !== undefined && (
+            <>
+              <dt>E-posta durumu</dt>
+              <dd>
+                <span className={user.email_verified ? 'vk-account__badge vk-account__badge--ok' : 'vk-account__badge'}>
+                  {user.email_verified ? 'Doğrulandı' : 'Doğrulanmadı'}
+                </span>
+              </dd>
+            </>
+          )}
         </dl>
+        {user.email_verified === false && (
+          <div className="vk-account__verify">
+            <p>
+              Hesabını korumak ve parolanı unutursan yenileyebilmek için e-posta adresini doğrula. Bağlantı 24 saat geçerlidir.
+            </p>
+            <button type="button" className="vk-btn vk-btn--ghost" onClick={() => void sendAgain()}
+              disabled={resend.state === 'busy'} aria-busy={resend.state === 'busy'}>
+              {resend.state === 'busy' ? 'Gönderiliyor…' : 'Bağlantıyı yeniden gönder'}
+            </button>
+            <p aria-live="polite" className={resend.state === 'error' ? 'vk-auth__error' : 'vk-account__hint'}>
+              {resend.state === 'sent' && `Doğrulama bağlantısını ${user.email ?? 'e-posta adresine'} gönderdik.`}
+              {resend.state === 'error' && resend.message}
+            </p>
+          </div>
+        )}
         <div className="vk-account__actions">
           <button type="button" className="vk-btn vk-btn--ghost" onClick={() => void logout().finally(leave)}>
             Çıkış

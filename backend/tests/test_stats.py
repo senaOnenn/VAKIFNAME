@@ -66,7 +66,10 @@ def test_admin_stats_requires_admin_session(c):
     assert c.get("/admin/stats").status_code == 403
     c.post("/auth/logout")
     r = c.post("/auth/register", json={"email": "yonetici@example.com", "password": PASSWORD})
-    assert r.json()["is_admin"] is True and c.get("/auth/me").json()["is_admin"] is True
+    # Listede olmak yetmez: e-posta doğrulanmadan yönetici yetkisi yok (adresi başkası kaydetmiş olabilir).
+    assert r.json()["is_admin"] is False and c.get("/admin/stats").status_code == 403
+    c.app.state.accounts.mark_email_verified(r.json()["user_id"])
+    assert c.get("/auth/me").json()["is_admin"] is True
     c.post("/stats/hit", json={"page": "eser", "monument_id": "BUR-0001"})
     body = c.get("/admin/stats?days=7").json()
     assert len(body["days"]) == 7 and body["monuments"][0]["name"] == "Bursa Ulu Camii"
