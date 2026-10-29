@@ -539,7 +539,7 @@ def test_expired_quiz_is_rejected(c):
     assert datetime.fromisoformat(quiz["expires_at"]) == (now + timedelta(minutes=30)).replace(microsecond=0)
     c.app.state.game_clock = lambda: now + timedelta(minutes=30, seconds=1)
     r = submit(c, user, quiz["quiz_id"], answers_with(c, quiz["quiz_id"], 5))
-    assert r.status_code == 410 and "süresi" in r.json()["detail"]
+    assert r.status_code == 410 and "Süre doldu" in r.json()["detail"]
     assert state(c, user)["knowledge"] is None
     c.app.state.game_clock = lambda: now + timedelta(minutes=29)
     assert submit(c, user, quiz["quiz_id"], answers_with(c, quiz["quiz_id"], 5)).json()["passed"] is True

@@ -84,22 +84,14 @@ def test_monument_without_location_has_null_coordinates(public):
         assert d["location"] is None and d["checkin"] is None and d["illustration"] == "representative_drawing"
 
 
-def test_map_location_without_checkin_point_refuses_checkin(public):
-    with public(catalog(monument(location=LOCATION))) as c:
-        assert c.get("/monuments").json()["monuments"][0]["location"]["latitude"] == 40.18
-        r = c.post("/monuments/BUR-9001/check-in", json={"user_id": "u", "latitude": 40.18, "longitude": 29.06})
-        assert r.status_code == 409
-
-
-def test_real_checkin_uses_separate_passport(public):
+def test_legacy_checkin_endpoint_is_gone(public):
+    # Ziyaret mührü yalnızca oyundaki `/visit` ile (bilgi mühründen sonra) verilir; eski uç kaldırıldı (29 Ekim).
     with public(catalog(monument(location=LOCATION, checkin=CHECKIN))) as c:
         detail = c.get("/monuments/BUR-9001").json()
         assert detail["checkin_available"] is True and "latitude" not in detail["checkin"]
         r = c.post("/monuments/BUR-9001/check-in", json={"user_id": "u", "latitude": 40.1801, "longitude": 29.0601})
-        assert r.json()["status"] == "completed"
-        assert c.get("/users/u/monument-passport").json()["total_stamps"] == 1
-        # Demo pasaportu gerçek eser mühürlerinden etkilenmez.
-        assert c.get("/users/u/passport").json()["total_stamps"] == 0
+        assert r.status_code in (404, 405)
+        assert c.get("/users/u/monument-passport").json()["total_stamps"] == 0
 
 
 def test_demo_endpoints_unchanged(public):

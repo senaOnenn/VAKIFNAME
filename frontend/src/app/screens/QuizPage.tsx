@@ -69,7 +69,7 @@ export default function QuizPage() {
     setAnswers({})
     setIdx(0)
     setError('')
-    startQuiz(id, uid).then(setQuiz, (e) => setError(e instanceof ApiError ? e.message : 'Sınav başlatılamadı.'))
+    startQuiz(id, uid).then(setQuiz, (e) => setError(e instanceof ApiError ? e.message : 'Sorular hazırlanamadı.'))
   }, [id, uid, attempt, auth.status])
 
   async function submit() {

@@ -53,6 +53,7 @@ Envanter projesi: Hatay (117 eser, 2022), Konya (289, 2024), Bursa (385) ve Küt
 - Kitap PDF'leri, ham metin, görsel arşivleri ve `.env` **asla** commit'lenmez/public repoya konmaz. Görsel izni/lisansı her görsel için kayıtlıdır; üçüncü taraf (envanter yayınları dışındaki) lisans sorumluluğu bizdedir. PDF ve arşivlerin repoya girmemesi telif değil boyut ve iç veri nedeniyledir.
 
 ## 5. Manevi değerler ve ton
+- **Terim (29 Ekim):** bu bir **oyundur, sınav değil.** Kullanıcıya görünen metinde (ve sunumda) "sınav" denmez; "Rozeti Al", "sorular", "oyun" denir. (Kodda `quiz` adı kalabilir.)
 - Eserlerin çoğu **ibadet mekânı veya türbe**. Saygılı, sade, sakin bir dil. Şakacı/oyuncak bir üslup yok; oyunlaştırma **vakarlı** kalır.
 - Ses ve müzik **otomatik başlamaz**; kullanıcı başlatır, kapatma her zaman görünür. İbadet mekânı/türbe uyarıları (katalogdaki `site_notice` metni: sessiz olun, sandukalara dokunmayın vb.) ziyaret ve oyun adımından önce görünür tutulur. Namaz vakti hesaplama özelliği **yoktur**.
 - Dinî figür, ayet, hat veya levha **uydurulmaz**; ayet/hadis/kitabe yalnızca onaylı kaynaktan.

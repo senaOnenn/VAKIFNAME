@@ -225,7 +225,7 @@ function Editor({ overview, edit, fact, flash, onSaved }: {
                 checked={f.game_use}
                 onChange={(e) => setF((p) => ({ ...p, game_use: e.target.checked, quest: e.target.checked ? p.quest : null }))}
               />
-              Oyunda kullanılsın (sınav sorularına girebilir)
+              Oyunda kullanılsın ("Rozeti Al" sorularına girebilir)
             </label>
             {f.game_use && <QuestEditor quest={f.quest} onChange={(q) => set('quest', q)} />}
 

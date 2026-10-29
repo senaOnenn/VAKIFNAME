@@ -646,8 +646,6 @@ def test_public_api_serves_only_exported_approved_content(env, tmp_path):
         detail = pub.get("/monuments/BUR-9001").json()
         assert [f["fact_id"] for f in detail["facts"]] == ["BUR-9001-F001"]
         assert pub.get("/monuments/BUR-9002").status_code == 404
-        r = pub.post("/monuments/BUR-9001/check-in", json={"user_id": "u", "latitude": 40.1839, "longitude": 29.0619})
-        assert r.status_code == 409
         blob = "\n".join(pub.get(p).text for p in ("/monuments", "/monuments/BUR-9001", "/openapi.json"))
     assert texts["BUR-9001-F002"] not in blob and texts["BUR-9002-F001"] not in blob
     assert not [q for q in quotes if q in blob] and not [d for d in drafts if d in blob]

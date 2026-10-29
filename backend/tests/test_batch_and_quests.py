@@ -296,9 +296,6 @@ def test_quests_hide_answer_and_knowledge_seal_is_awarded_once(env, tmp_path):
         seals = c.get("/users/u-1/seals").json()
         assert [s["kind"] for s in seals["knowledge_seals"]] == ["knowledge"] and seals["visit_seals"] == []
 
-        # GPS check-in onayı olmayan eserde fiziksel ziyaret mührü kazanılamaz.
-        r = c.post("/monuments/BUR-9001/check-in", json={"user_id": "u-1", "latitude": 40.1841, "longitude": 29.0621})
-        assert r.status_code == 409
         assert c.get("/users/u-1/seals").json()["visit_seals"] == []
         assert c.post("/monuments/BUR-9001/quests/BUR-9001-F999/answer",
                       json={"user_id": "u-1", "choice_index": 0}).status_code == 404

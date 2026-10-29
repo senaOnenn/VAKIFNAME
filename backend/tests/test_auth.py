@@ -480,13 +480,11 @@ def test_account_progress_requires_own_session(c):
         return [client.get(f"/users/{owner}/seals"),
                 client.get(f"/users/{owner}/monument-passport"),
                 client.get(f"/monuments/BUR-0005/quests?user_id={owner}"),
-                client.post(f"/monuments/BUR-0005/quests/{quest_id}/answer", json={"user_id": owner, "choice_index": idx}),
-                client.post("/monuments/BUR-0005/check-in", json={"user_id": owner, "latitude": 40.18, "longitude": 29.06})]
+                client.post(f"/monuments/BUR-0005/quests/{quest_id}/answer", json={"user_id": owner, "choice_index": idx})]
 
-    assert [r.status_code for r in calls(anonymous)] == [401] * 5
-    assert [r.status_code for r in calls(stranger)] == [403] * 5
-    # Sahibi okur ve yazar (check-in bu eserde açık olmadığı için 409).
-    assert [r.status_code for r in calls(c)] == [200, 200, 200, 200, 409]
+    assert [r.status_code for r in calls(anonymous)] == [401] * 4
+    assert [r.status_code for r in calls(stranger)] == [403] * 4
+    assert [r.status_code for r in calls(c)] == [200, 200, 200, 200]
     db = c.app.state.monument_progress._db
     assert db.execute("SELECT attempts FROM quest_answers WHERE user_id=?", (owner,)).fetchone()[0] == 1
 

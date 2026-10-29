@@ -20,7 +20,7 @@
 4. [x] **Sunum içeriği (29 Ekim, onaylandı):** iskelet Faz 10'da. Telif bölümü "kaynak ve lisanslar" olur: envanter yayınları projenin kendi yayını (telif sorunu yok); üçüncü taraf görsellerde atıf, açık kaynak lisansları.
 5. [x] **Demo yedeği (29 Ekim): A — tam yedek** (Faz 7 maddesi ayrıntılandı).
 6. [x] **Canlı yayın + sahada deneme (29 Ekim):** sunucu **89.167.32.115** (Tıkır sunucusu); `calismalar.tikirsoft.com` A kaydı açıldı. Plan Faz 7 "Canlı yayın" maddesinde; sahada deneme HTTPS gerektirdiği için canlıdan sonra.
-7. [ ] **Diğer açık kararlar:** rehberin adı, PDF görselleri, İngilizce, küçük teknik kararlar.
+7. [x] **Diğer açık kararlar (29 Ekim):** rehberin adı şimdilik "Rehber"; kitap fotoğrafları A; İngilizce C (Faz 11); eski check-in ucu kaldırıldı; görsel adı açığı kabul. **Gözden geçirme tamamlandı.**
 
 ## 29 Ekim kararları
 1. **İçerik yönetimi:** tek rol yönetici; hat (kitap PDF + eser → aday kayıtlar → taslak) + elle ekleme/düzenleme; onaysız hiçbir şey görünmez (CLAUDE.md §2.13).
@@ -39,7 +39,7 @@
 14. **Kitap fotoğrafları (gündem 7b): A — içerik yönetimine "kitaptan görsel" adımı** (karar kapandı). Bulgu: kitap PDF'lerindeki fotoğraflar ayrı ayrı çıkarılabiliyor (Cilt I s.19–30: 36 görsel, büyükleri 1300–1800 px); telif sorunu yok. Wikimedia fotoğrafları kalır; kitap fotoğrafları onaylandıkça eklenir. Wikimedia dosyaları: `backend/tests/ask_eval/media/` (repoda yok), eşleşme ve atıf `catalog_snapshot.json`.
 15. **İngilizce (gündem 7c): C — tam İngilizce** (Faz 11): arayüz + içerik (kitabın İngilizce bölümünden, alıntı doğrulamalı, yönetici onaylı) + İngilizce ses. Risk: 3 Kasım dondurmasına sığmayabilir; faz sırası ayrıca konuşulacak.
 16. Tanıtım videosu → Faz 9.
-17. Küçük teknik kararlar: beklemede (gündem 7d).
+17. **Küçük teknik (gündem 7d):** eski `POST /monuments/{id}/check-in` ucu **kaldırıldı** (ziyaret yalnızca `/visit`); "Rozeti Al" görsellerinin dosya adından tahmin edilebilmesi **önemsiz açık, kabul**.
 
 ## Karar bekleyenler (bunlar çözülmeden ilgili iş başlamaz)
 | # | Konu | Öneri |
@@ -107,7 +107,7 @@
 - [x] **Pasaport:** 10 parçalık Kayıp Vakfiye yapbozu (bilgi mührü = parça, ziyaret = altın) ve eser eser mühürler.
 - [x] Testler: backend 93 oyun testi (sınır 4/5–3/5, kilit atlatma, sızıntı, süre, birleştirme/silme); frontend 9 akış testi; tarayıcıda gerçek sunucuyla uçtan uca (misafir → rota → dinle → sor → 5/5 → mühür → sunum modunda altın → pasaport → rota 3/10).
 - Not (29 Ekim: varsayılan 50 m yapıldı): yarıçap bina merkezinden ölçülüyor (doğruluk 13–46 m); büyük yapılarda (Ulu Cami 55×69 m) kapıdaki ziyaretçi dışarıda kalabilir → **sahada ince ayar** gerek.
-- Not: eski `POST /monuments/{id}/check-in` (katalog `checkin` noktası olan eserlerde; şu an hiç yok) bilgi mührü aramıyor → yeni arayüz `/visit` kullanıyor; eski uç kaldırılabilir.
+- Not (kapandı, 29 Ekim): eski `POST /monuments/{id}/check-in` ucu kaldırıldı; katalogdaki onaylı `checkin` noktası ve yarıçapı `/visit`te kullanılmaya devam eder.
 - Not: sınavdaki görsel dosya adları genel katalogdaki görsellerle eşleştirilebilir (katalog açık olduğu sürece kaçınılmaz); gerekirse sınava özel geçici görsel adresleri.
 
 ## Faz 6 — Yönetim, istatistik, ölçek
@@ -150,7 +150,7 @@
 - [ ] Hat: kitabın İngilizce bölümünden aday; İngilizce alıntı aynı sayfada (ya da bitişiğinde) doğrulanır → taslak → yönetici onayı. Mevcut kayıtlar için İngilizce karşılık adayları aynı yolla.
 - [ ] Kural: tarihî içerikte makine çevirisi yok; İngilizcesi onaylanmamış kayıt İngilizce arayüzde "Türkçe" etiketiyle gösterilir.
 - [ ] Anlatım ve rehber: İngilizce anlatım yalnızca onaylı İngilizce kayıtlardan; rehber İngilizce arayüzde İngilizce cevap verir (yine yalnızca onaylı kayıtlardan). İngilizce ses (Google Chirp 3 HD en), ağız senkronu dil bağımsız.
-- [ ] Sınav İngilizce: yalnızca İngilizcesi onaylı kayıtlardan.
+- [ ] "Rozeti Al" soruları İngilizce: yalnızca İngilizcesi onaylı kayıtlardan.
 
 ## Faz 7 — Cila, final hazırlığı
 - [x] **Tanıtım sayfası** (29 Ekim, dal `feat/landing`): açılıştan sonra doğrudan giriş yerine ürünü tanıtan sayfa — sessiz arka plan videosu (`hero.mp4`, yoksa geçişli zemin), üç adım (rehber karakter videosu, bilgi ve altın mühür), Kayıp Vakfiye örneği, katalogdan 3 eser, kaynak/dürüstlük/vakar, iki çağrı. Hareket azaltılmışsa video oynamaz, bölümler hemen görünür. axe: ihlal yok.

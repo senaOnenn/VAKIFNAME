@@ -5,15 +5,14 @@ ve demo pasaportuna karışmaz. Yayımlanmamış ve bilinmeyen eser aynı 404 ya
 sızdırılmaz.
 
 Keşif soruları yalnızca yayın ve oyun onaylı olgulardan gelir; doğru cevap istemciye gönderilmez, sunucuda denetlenir.
-Soru cevaplama, oyundaki sınav gibi rota kilidine uyar: kilitli eserin sorusu cevaplanamaz (403). Bilgi mührü uzaktan
-kazanılır. Asıl oyun döngüsü (dinle → sınav → ziyaret) `game_routes.py`'dedir; buradaki check-in ucu yalnızca GPS check-in
-onaylı eserde, yarıçap içindeki check-in ile ziyaret mührü verir.
+Soru cevaplama, oyundaki "Rozeti Al" soruları gibi rota kilidine uyar: kilitli eserin sorusu cevaplanamaz (403). Bilgi
+mührü uzaktan kazanılır. Asıl oyun döngüsü (dinle → Rozeti Al → ziyaret) `game_routes.py`'dedir; ziyaret mührü yalnızca
+oradaki `/visit` ile verilir (eski `check-in` ucu 29 Ekim'de kaldırıldı).
 
 İlerleme uçları misafir kimliğiyle (`ziyaretci-…`) eskisi gibi çalışır; hesap kimliğiyle (`u-…`) yalnızca o hesabın oturum
 çereziyle okunur ve yazılır (bkz. `auth_routes.require_progress_access`).
 """
 
-from dataclasses import dataclass
 from typing import Annotated, Optional
 
 from fastapi import APIRouter, HTTPException, Path, Request
@@ -23,7 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from . import services
 from .auth_routes import require_progress_access
 from .game_routes import LOCKED, seal_view
-from .models import CheckInRequest, CheckInResponse, Passport, UserId
+from .models import Passport, UserId
 from .progress import MonumentProgressStore
 from .public_catalog import (
     MediaFile, MonumentId, PublicCatalogRepository, monument_detail, monument_summary, quest_view, quests_of,
@@ -33,17 +32,6 @@ from .route_routes import monument_locked
 router = APIRouter(tags=["monuments"])
 
 NOT_FOUND = "Eser bulunamadı veya henüz yayımlanmadı."
-
-
-@dataclass(frozen=True)
-class _CheckInTarget:
-    """`services.check_in` için gerçek eserin onaylı check-in noktası."""
-
-    id: str
-    name: str
-    latitude: float
-    longitude: float
-    check_in_radius_m: float
 
 
 def _catalog(request: Request) -> PublicCatalogRepository:
@@ -78,22 +66,6 @@ def get_monument(request: Request, monument_id: Annotated[MonumentId, Path()]):
     if m is None:
         raise HTTPException(status_code=404, detail=NOT_FOUND)
     return monument_detail(m, repo.archive(monument_id))
-
-
-@router.post("/monuments/{monument_id}/check-in", response_model=CheckInResponse)
-def check_in(request: Request, body: CheckInRequest, monument_id: Annotated[MonumentId, Path()]):
-    """Gerçek eserde konum görevi. Yalnızca `gps_checkin` kararıyla onaylı giriş noktası varsa açılır.
-
-    Harita konumunun doğrulanmış olması check-in izni değildir. Koordinatlar istemciden gelir ve doğrulanmaz.
-    """
-    require_progress_access(request, body.user_id)
-    m = _catalog(request).get(monument_id)
-    if m is None:
-        raise HTTPException(status_code=404, detail=NOT_FOUND)
-    if m.checkin is None:
-        raise HTTPException(status_code=409, detail="Bu eser için konum tabanlı görev açılmadı.")
-    target = _CheckInTarget(m.monument_id, m.name, m.checkin.latitude, m.checkin.longitude, m.checkin.radius_m)
-    return services.check_in(target, body.user_id, body.latitude, body.longitude, request.app.state.monument_progress)
 
 
 class AnswerRequest(BaseModel):
