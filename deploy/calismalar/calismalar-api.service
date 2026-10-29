@@ -1,0 +1,15 @@
+[Unit]
+Description=VAKIFNAME test API (calismalar.tikirsoft.com, 127.0.0.1:8120)
+After=network.target
+
+[Service]
+WorkingDirectory=/root/calismalar/app/backend
+EnvironmentFile=/root/calismalar/api.env
+Environment=HOME=/root LANG=C.UTF-8 PATH=/root/.local/bin:/usr/local/bin:/usr/bin:/bin
+# Gerçek ziyaretçi IP'si nginx'in X-Forwarded-For başlığından (yalnızca 127.0.0.1'e güvenilir): oran sınırı ve istatistik.
+ExecStart=/root/calismalar/app/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8120 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

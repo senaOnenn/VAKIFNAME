@@ -156,11 +156,11 @@
 - [x] **Tanıtım sayfası** (29 Ekim, dal `feat/landing`): açılıştan sonra doğrudan giriş yerine ürünü tanıtan sayfa — sessiz arka plan videosu (`hero.mp4`, yoksa geçişli zemin), üç adım (rehber karakter videosu, bilgi ve altın mühür), Kayıp Vakfiye örneği, katalogdan 3 eser, kaynak/dürüstlük/vakar, iki çağrı. Hareket azaltılmışsa video oynamaz, bölümler hemen görünür. axe: ihlal yok.
 - [ ] Gerçek telefonda ve yavaş ağda tüm akış.
 - [x] axe taraması (29 Ekim; axe-core 4.14, WCAG 2.0/2.1/2.2 A+AA + iyi uygulama; web 1366 ve mobil 390; misafir, oturumlu kullanıcı ve yönetici sayfaları, 16 sayfa): giriş sekmesi rolü, Türkiye haritası rolü, eserler başlık sırası, rozet sayfasında h1, grafik gezgini (kaydırıcı rolü) düzeltildi. Kalan tek bulgu: rota haritasında Muradiye kümesindeki üst üste binen işaretler (hedef boyutu); WCAG 2.5.8 "eşdeğer kontrol" istisnası — aynı sayfadaki sıralı durak listesi aynı işi görür.
-- [ ] **Canlı yayın** (29 Ekim): `https://calismalar.tikirsoft.com` → 89.167.32.115 (Tıkır sunucusu; Tıkır'a dokunulmaz). Sunucuya dokunmadan önce komut listesi + onay.
-  - [ ] Salt okunur keşif: çalışan servisler, 80/443'ü kim kullanıyor, disk, Python/Node sürümleri.
-  - [ ] Arayüz Mac'te derlenir → rsync (sunucuda derleme yok); backend servis (systemd) yalnızca 127.0.0.1'de.
-  - [ ] Ters vekil: aynı adreste site + `/api` (çerez aynı site), HTTPS sertifikası.
-  - [ ] `.env` (Google, yöneticiler, SMTP, içerik dizini, sunum modu açık), sunucuda `claude` girişi, Google ses anahtarı.
+- [x] **Canlı yayın (test) — 29 Ekim:** `https://calismalar.tikirsoft.com` → 89.167.32.115, `/root/calismalar` (ayrıntı ve güncelleme komutları: `docs/CANLI_YAYIN.md`). Çalışan hiçbir servis durdurulmadı; nginx kesintisiz yeniden yüklendi. Duman testi: tanıtım, Google düğmesi, misafir → şehir → rota → eser, rehber cevabı (~10 sn, kaynaklı), pasaport. Alan adı değişebilir (yalnızca test).
+  - [x] Salt okunur keşif: çalışan servisler, 80/443'ü kim kullanıyor, disk, Python/Node sürümleri.
+  - [x] Arayüz Mac'te derlenir → rsync (sunucuda derleme yok); backend servis (systemd) yalnızca 127.0.0.1'de.
+  - [x] Ters vekil: aynı adreste site + `/api` (çerez aynı site), HTTPS sertifikası.
+  - [x] `api.env` (Google, yönetici, içerik dizini, sunum modu açık, güvenli çerez), `claude` (sunucuda zaten açık). [ ] SMTP, Google ses anahtarı (Faz 8), [ ] Google ile girişi canlıda yöneticinin denemesi.
   - [ ] Duman testi; ardından sahada deneme (Bursa: Ulu Cami, Muradiye kümesi, Koza Han; iPhone Safari + Android Chrome; konum, ses, yavaş ağ; yarıçap notları).
 - [x] **Eski arayüz kodu silindi** (29 Ekim, dal `feat/remove-legacy-ui`): eski katalog sayfası, "Esere Sor", kurgusal demo oyunu ve bileşenleri, eski tarayıcı senaryoları (~8000 satır, 147 eski test). Dahili envanter (`?mod=envanter`, yalnızca geliştirme) kaldı. Backend demo uçları (`/places`, eski check-in) karar 17 beklediği için duruyor.
 - [ ] **Demo yedeği (karar A, tam):** salonda internet/sunucu/servis giderse demo sürer.

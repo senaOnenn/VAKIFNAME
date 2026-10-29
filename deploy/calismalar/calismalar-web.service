@@ -1,0 +1,13 @@
+[Unit]
+Description=VAKIFNAME test site (calismalar.tikirsoft.com, 127.0.0.1:4180)
+After=network.target
+
+[Service]
+WorkingDirectory=/root/calismalar/app/backend
+Environment=LANG=C.UTF-8
+ExecStart=/root/calismalar/app/backend/.venv/bin/python -m app.web --dist /root/calismalar/web --api-origin https://calismalar.tikirsoft.com --host 127.0.0.1 --port 4180
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

@@ -25,7 +25,8 @@ def test_serves_build_with_security_headers_and_cache_rules(dist):
         r = c.get("/")
         assert r.status_code == 200 and "VAKIFNAME" in r.text and r.headers["cache-control"] == "no-cache"
         csp = r.headers["content-security-policy"]
-        assert "script-src 'self'" in csp and f"connect-src 'self' {API}" in csp and "frame-ancestors 'none'" in csp
+        assert "script-src 'self' https://accounts.google.com/gsi/client" in csp and "frame-ancestors 'none'" in csp
+        assert f"connect-src 'self' {API} https://accounts.google.com/gsi/" in csp and "frame-src https://accounts.google.com/gsi/" in csp
         # Eser fotoğrafları yalnızca genel API kökeninden yüklenebilir.
         assert f"img-src 'self' data: https://tile.openstreetmap.org {API}" in csp
         assert r.headers["x-content-type-options"] == "nosniff" and r.headers["x-frame-options"] == "DENY"
@@ -58,3 +59,15 @@ def test_rejects_api_origin_with_path_and_missing_build(tmp_path, dist):
     with pytest.raises(FileNotFoundError):
         create_web_app(tmp_path / "yok", API)
     assert "connect-src 'self' http://127.0.0.1:8001" in content_security_policy("http://127.0.0.1:8001")
+
+
+@pytest.mark.parametrize("path", ["/giris", "/sehir", "/rota/bursa", "/eserler", "/eser/BUR-0001", "/eser/BUR-0001/rozet",
+                                  "/pasaport", "/hesap", "/yonetim", "/yonetim/icerik", "/yonetim/icerik/eser/BUR-5001",
+                                  "/yonetim/icerik/eser/yeni", "/yonetim/icerik/eser/BUR-0001/yeni-kayit",
+                                  "/yonetim/icerik/kayit/BUR-0001-F501", "/dogrula", "/sifre-yenile"])
+def test_app_routes_open_directly(dist, path):
+    # Sayfa adres çubuğundan açılınca ya da yenilenince uygulama yüklenir.
+    with TestClient(create_web_app(dist, API)) as c:
+        r = c.get(path)
+        assert r.status_code == 200 and "VAKIFNAME" in r.text and r.headers["cache-control"] == "no-cache"
+        assert "content-security-policy" in r.headers
