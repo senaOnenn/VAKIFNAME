@@ -12,7 +12,7 @@ vi.mock('./components/RouteMap', () => ({ default: () => <div>harita</div> }))
 const ID = 'BUR-1001'
 const game = (over: Partial<GameState> = {}): GameState => ({
   monument_id: ID, locked: false, listened: false, asked: false, guide_required: true, ready_for_quiz: false,
-  quiz_size: 5, pass_mark: 4, knowledge: null, visit: null, visit_radius_m: 35, simulated_visit_allowed: false, site_notice: null,
+  quiz_size: 5, pass_mark: 4, knowledge: null, visit: null, visit_radius_m: 50, simulated_visit_allowed: false, site_notice: null,
   ...over,
 })
 const DETAIL = {
@@ -116,7 +116,7 @@ describe('mühür yolu (eser sayfası)', () => {
     server(game({ knowledge: { earned_at: '2026-10-27T10:00:00Z' }, listened: true, asked: true }), {
       [`/monuments/${ID}/visit`]: (init?: RequestInit) => {
         visitBody = JSON.parse(String(init!.body))
-        return { body: { status: 'gold', distance_m: 12, radius_m: 35, visit_seal: { earned_at: '2026-10-27T11:00:00Z' } } }
+        return { body: { status: 'gold', distance_m: 12, radius_m: 50, visit_seal: { earned_at: '2026-10-27T11:00:00Z' } } }
       },
     })
     vi.stubGlobal('navigator', { ...navigator, geolocation: { getCurrentPosition: (ok: PositionCallback) => ok({ coords: { latitude: 40.1839, longitude: 29.0619 } } as GeolocationPosition) } })
@@ -133,7 +133,7 @@ describe('mühür yolu (eser sayfası)', () => {
     server(game({ knowledge: { earned_at: '2026-10-27T10:00:00Z' }, simulated_visit_allowed: true }), {
       [`/monuments/${ID}/visit`]: (init?: RequestInit) => {
         visitBody = JSON.parse(String(init!.body))
-        return { body: { status: 'gold', distance_m: null, radius_m: 35, visit_seal: { earned_at: '2026-10-27T11:00:00Z' } } }
+        return { body: { status: 'gold', distance_m: null, radius_m: 50, visit_seal: { earned_at: '2026-10-27T11:00:00Z' } } }
       },
     })
     open(`/eser/${ID}`)

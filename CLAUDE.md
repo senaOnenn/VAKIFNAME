@@ -47,7 +47,7 @@ Envanter projesi: Hatay (117 eser, 2022), Konya (289, 2024), Bursa (385) ve Küt
 - Karakterin ağzından çıkan her tarihî cümle onaylı bir `fact_id`'ye bağlanır. Bağlanamayan cümle gösterilmez.
 - **Karakter bir canlandırmadır.** Tarihî kişilerin "sözleri" gerçek alıntı gibi sunulmaz; arayüzde "canlandırma / kurgu" etiketi bulunur. Kurgu ile tarihî iddia karışmaz.
 - Kaynak bulunamıyorsa dürüst cevap: "Bunu kaynaklarımda bulamadım." Uydurma yok.
-- Ziyaret mührü, onaylı katalog koordinatına yarıçap içinde (varsayılan 35 m, `VAKIFNAME_VISIT_RADIUS_M`) bildirilen konumla verilir; konum saklanmaz. Jüri için **sunum modu** (`VAKIFNAME_VISIT_SIMULATION=on`) ziyareti simüle eder ve **ekranda açıkça** "sunum modu / simülasyon" yazar. (Yayın paketinde "demo" kelimesi yasaktır: `frontend/scripts/check-public-build.mjs`.)
+- Ziyaret mührü, onaylı katalog koordinatına yarıçap içinde (varsayılan **50 m**, 29 Ekim kararı; `VAKIFNAME_VISIT_RADIUS_M`; sahada denenince eser bazında ayarlanabilir) bildirilen konumla verilir; konum saklanmaz. Jüri için **sunum modu** (`VAKIFNAME_VISIT_SIMULATION=on`) ziyareti simüle eder ve **ekranda açıkça** "sunum modu / simülasyon" yazar. (Yayın paketinde "demo" kelimesi yasaktır: `frontend/scripts/check-public-build.mjs`.)
 - Quiz cevapları **sunucuda** doğrulanır; doğru şık istemciye gönderilmez.
 - Kitap PDF'leri, ham metin, görsel arşivleri ve `.env` **asla** commit'lenmez/public repoya konmaz. Görsel izni/lisansı her görsel için kayıtlıdır; üçüncü taraf lisans sorumluluğu bizdedir.
 

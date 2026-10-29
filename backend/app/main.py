@@ -126,7 +126,7 @@ def create_app(
     # tanımlı değilse (testler) bellek içi depo kullanılır ve yeniden başlatmada sıfırlanır.
     progress_db = progress_db or (Path(os.environ["VAKIFNAME_PROGRESS_DB"]) if os.environ.get("VAKIFNAME_PROGRESS_DB") else None)
     app.state.monument_progress = MonumentProgressStore(progress_db)
-    # Oyun döngüsü (bkz. app/game_routes.py): ziyaret yarıçapı `VAKIFNAME_VISIT_RADIUS_M` (varsayılan 35 m) ve sunum modu
+    # Oyun döngüsü (bkz. app/game_routes.py): ziyaret yarıçapı `VAKIFNAME_VISIT_RADIUS_M` (varsayılan 50 m) ve sunum modu
     # ziyareti `VAKIFNAME_VISIT_SIMULATION=on|off` (varsayılan off). Geçersiz değer açılışta hata verir. Saat ve
     # rastgelelik testlerde değiştirilebilir.
     app.state.game_settings = GameSettings.from_env()
