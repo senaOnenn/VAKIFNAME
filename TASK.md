@@ -14,7 +14,7 @@
 - ❌ Canlı yayın (`calismalar.tikirsoft.com`): DNS ve sunucu bekleniyor. ❌ Tanıtım videosu, sunum, sahada (telefon + GPS) deneme.
 
 ## Gözden geçirme gündemi (29 Ekim; teker teker karar verilir, karar çıkınca ilgili faz/madde güncellenir)
-1. [ ] **Konuşan karakter:** panel içinde video değil, sayfada beliren karakter; ağız hareketi sesle senkron.
+1. [~] **Konuşan karakter:** panel içinde video değil, sayfada beliren karakter; ağız hareketi sesle senkron. **Karar (29 Ekim): A — katmanlı 2D çizim karakter** (gövde, baş, göz kırpma, ~8 ağız şekli; sesin zaman bilgisine göre anlık ağız senkronu; hazır anlatımda ve sohbet cevabında çalışır). Yapay zekâ "konuşan kafa" videosu ve 3D avatar seçilmedi. Açık: çizimin kaynağı.
 2. [ ] **Ses:** daha gerçekçi Türkçe ses; kendi sesimizle okutma (ses klonlama) seçenekleri.
 3. [ ] **Tanıtım videosu:** HyperFrames denemesi.
 4. [ ] **Sunum içeriği:** jüriye anlatılacaklar ayrıntılı.
