@@ -36,6 +36,7 @@ Envanter projesi: Hatay (117 eser, 2022), Konya (289, 2024), Bursa (385) ve Küt
 - **Zorunlu işlevler (şartname 5.1.1):** birden fazla eser keşfi, tarihçe/görsel/kaynak bilgisi, **içerik ekleme ve düzenleme** (yönetim), yeni eser eklemeye uygun mimari.
 - **Veri doğruluğu (5.1.3):** her tarihî iddiada **kaynak gösterilir**; **doğrulanmamış içerik kesin bilgi gibi sunulmaz**.
 - **Erişilebilirlik (5.1.4):** sesli anlatım, altyazı, alternatif metin, kontrast, yazı boyutu, klavye, ekran okuyucu — **tasarımda değil çalışan üründe**.
+- **Telif (29 Ekim, kullanıcı):** envanter yayınlarını (ciltler, metin ve görseller) dahil olduğumuz Vakıf Eserleri Envanter Projesi hazırlıyor; biz bu kaynakları çevrim içi ortama taşıyoruz. **Kitapların telifi sorun değildir.** Üçüncü taraf görsellerde (ör. Wikimedia Commons) lisans ve atıf kuralı aynen sürer.
 - **Görseller:** sponsorun ilettiği kaynaklar Bursa'nın 3 ciltlik envanter PDF'leridir (`veriler/`); toplantıda bu görsellerin kullanılması vurgulandı. **Karar (27 Ekim):** PDF'lerden görsel ayıklama ayrı bir süreçte yapılır; **şimdilik mevcut görsellerle** (Wikimedia Commons) devam edilir. Her görselde atıf/lisans satırı kalır.
 - **Oyun:** kullanıcıdan fotoğraf çekmesini istemek **istenmedi**. Doğru görseli seçme/eşleştirme istendi. Görsele tıklanınca eser bilgisi açılır.
 - **Fiziksel ziyaret teşviki** yaratıcılığımıza bırakıldı: bu yüzden ziyaret doğrulaması oyunun kilididir.
@@ -49,7 +50,7 @@ Envanter projesi: Hatay (117 eser, 2022), Konya (289, 2024), Bursa (385) ve Küt
 - Kaynak bulunamıyorsa dürüst cevap: "Bunu kaynaklarımda bulamadım." Uydurma yok.
 - Ziyaret mührü, onaylı katalog koordinatına yarıçap içinde (varsayılan **50 m**, 29 Ekim kararı; `VAKIFNAME_VISIT_RADIUS_M`; sahada denenince eser bazında ayarlanabilir) bildirilen konumla verilir; konum saklanmaz. Jüri için **sunum modu** (`VAKIFNAME_VISIT_SIMULATION=on`) ziyareti simüle eder ve **ekranda açıkça** "sunum modu / simülasyon" yazar. (Yayın paketinde "demo" kelimesi yasaktır: `frontend/scripts/check-public-build.mjs`.)
 - Quiz cevapları **sunucuda** doğrulanır; doğru şık istemciye gönderilmez.
-- Kitap PDF'leri, ham metin, görsel arşivleri ve `.env` **asla** commit'lenmez/public repoya konmaz. Görsel izni/lisansı her görsel için kayıtlıdır; üçüncü taraf lisans sorumluluğu bizdedir.
+- Kitap PDF'leri, ham metin, görsel arşivleri ve `.env` **asla** commit'lenmez/public repoya konmaz. Görsel izni/lisansı her görsel için kayıtlıdır; üçüncü taraf (envanter yayınları dışındaki) lisans sorumluluğu bizdedir. PDF ve arşivlerin repoya girmemesi telif değil boyut ve iç veri nedeniyledir.
 
 ## 5. Manevi değerler ve ton
 - Eserlerin çoğu **ibadet mekânı veya türbe**. Saygılı, sade, sakin bir dil. Şakacı/oyuncak bir üslup yok; oyunlaştırma **vakarlı** kalır.

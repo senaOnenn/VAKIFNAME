@@ -17,7 +17,7 @@
 1. [x] **Konuşan karakter:** panel içinde video değil, sayfada beliren karakter; ağız hareketi sesle senkron. **Karar (29 Ekim): A — katmanlı 2D çizim karakter** (gövde, baş, göz kırpma, ~8 ağız şekli; sesin zaman bilgisine göre anlık ağız senkronu; hazır anlatımda ve sohbet cevabında çalışır). Yapay zekâ "konuşan kafa" videosu ve 3D avatar seçilmedi. **Çizim (29 Ekim): C — karakteri Claude sade vektörle (SVG) baştan çizer**; ekibin Çırak Kâşif karakter sayfası (`game/1. level-Çırak kaşif/`) kimlik referansıdır (kıvırcık saç ve kırmızı kurdele, krem gömlek, kırmızı kuşak, deri çanta, pusula). Varsayılan: yelek yeşil yerine palet A laciverdi + altın işleme (CLAUDE.md §5: yeşil yok); görünce değiştirilebilir.
 2. [x] **Ses (29 Ekim): A — Google Cloud "Chirp 3 HD" hazır Türkçe sesi** (VAKIFNAME Google Cloud projesi). Ses sağlayıcısı rehberdeki gibi env ile seçilir; **ileride değiştirilebilir** (ör. ElevenLabs ile ekipten birinin sesi — şu an ücret ödenemiyor; Google ile ses klonlama satış onayı istiyor). Not: karakter genç bir kız; klonlanacak ses buna uygun seçilmeli.
 3. [~] **Tanıtım videosu (29 Ekim): HyperFrames ile Claude üretir** (Faz 9). Web sitesi ekran görüntüsü yok; açılış ekranına gömülecek, harita üzerinde eserden esere yolculuk anlatan çizim üslubunda film (konuşan karakterle aynı vektör üslup, palet A, ~75 sn). Bilgiler yalnızca onaylı kayıtlardan, kaynağı ekranda. **Yerleşim: A** — açılış ekranında filmden 10–15 sn yazısız, sessiz döngü (bugünkü `hero.mp4` yerine) + "Tanıtım filmini izle" düğmesi tam filmi sesli ve altyazılı, ekranı kaplayan oynatıcıda açar; hareket azaltılmışsa oynamaz; mobil için küçük sürüm. **Tarihî kişiler: A** — uygulamadaki gibi portre madalyonuyla belirir, konuşmaz; rehber anlatır (K4 korunur).
-4. [ ] **Sunum içeriği:** jüriye anlatılacaklar ayrıntılı.
+4. [x] **Sunum içeriği (29 Ekim, onaylandı):** iskelet Faz 10'da. Telif bölümü "kaynak ve lisanslar" olur: envanter yayınları projenin kendi yayını (telif sorunu yok); üçüncü taraf görsellerde atıf, açık kaynak lisansları.
 5. [ ] **Demo yedeği:** ne olduğu ve nasıl kurulacağı.
 6. [ ] **Canlı yayın + sahada deneme:** plan ve takvim.
 7. [ ] **Diğer açık kararlar:** rehberin adı, PDF görselleri, İngilizce, küçük teknik kararlar.
@@ -45,7 +45,7 @@
 | K2 | ✅ **KARARLI (Faz 5'te uygulandı):** dinleme + en az 1 soru (rehber kapalıysa soru aranmaz). **Karakterle "konuşulması" neyi kapsar?** (Akış 27 Ekim'de değişti: bu adım artık ilk kademe, ziyaret kilit değil.) | Anlatımı sonuna kadar dinlemek **+ en az 1 mesaj/soru**. (Sesi dinlemeyen/duyamayan için altyazıyı okumak da sayılır.) |
 | K3 | ◐ **VARSAYILAN UYGULANDI (Faz 4): tarayıcı seslendirmesi + altyazı.** **Karakterin sesi.** Önceden kaydedilmiş anlatım mı, canlı TTS mi? | Anlatım **önceden üretilir** (kalite + kontrol + lisans). Sohbet cevapları metin + tarayıcı `speechSynthesis` (opsiyonel dinle). |
 | K4 | ✅ **KARARLI (27 Ekim):** anlatıcı her yerde yerel rehber; tarihî kişi portre kartıyla (`data/real_catalog/people.json`, `GET /monuments/{id}/people`). **Karakter görseli.** Tarihî karakter için hangi eserlerde figür var? | Eser başına `narrator` alanı: tarihî şahsiyet (Yıldırım Bayezid, Osman Gazi, Orhan Gazi, Cem Sultan, II. Murad) **veya** yerel rehber. Çizim/illüstrasyon dili; fotogerçekçi yüz yok. |
-| K5 | ✅ **KARARLI (27 Ekim).** Şimdilik **mevcut görsellerle** devam. Sponsorun kaynağı Bursa'nın 3 ciltlik PDF'i; görselleri ayrı bir süreçte ayıklayıp geçeceğiz. | — (kullanım izni için organizatöre ayrıca sorulacak) |
+| K5 | ✅ **KARARLI (27 Ekim).** Şimdilik **mevcut görsellerle** devam. Sponsorun kaynağı Bursa'nın 3 ciltlik PDF'i; görselleri ayrı bir süreçte ayıklayıp geçeceğiz. | — (29 Ekim: izin gerekmez; yayınlar projenin kendi yayınları, CLAUDE.md §3) (eski not: kullanım izni için organizatöre ayrıca sorulacak) |
 | K6 | ✅ **GELDİ ve yerelde çalışıyor (29 Ekim; yetkili kaynaklar `http://localhost`, `http://localhost:5173`, canlı adres).** **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
 | K7 | ✅ **KARARLI (27 Ekim).** Koordinatlar **onaylıdır**, katalogdakiler kullanılır; kendi eklediğimiz konum verisi yok. Kayıtlar: noktalar `backend/tests/ask_eval/catalog_snapshot.json`, adaylar `data/real_catalog/monument_research.json`, onay kararları sunucuda `review.sqlite3`. | Ziyaret (Faz 5) için eser başına yarıçap yapılandırılabilir olur; yakın eserler (Muradiye'de 4 eser, Osman/Orhan Gazi) çakışmasın diye küçük başlanır. Sahada ince ayar sonra. |
 | K8 | ✅ **KARARLI (Faz 2'de uygulandı).** **Misafir ilerlemesi.** Üye olmadan toplanan rozetler giriş yapınca birleşir mi? | Evet: cihazdaki ilerleme girişte hesaba **birleştirilir**. |
@@ -125,6 +125,20 @@
 - [ ] Anlatım sesi içerik onayında bir kez üretilir ve saklanır (anlatım metni değişince yeniden); rehber cevabı anlık üretilir.
 - [ ] Erişilebilirlik: altyazı ve tam metin kalır; hareket azaltılmışsa karakter durağan, ses yine çalışır; ses otomatik başlamaz.
 - [ ] Sizden: Google Cloud'da Text-to-Speech API'yi açmak ve servis hesabı anahtarı (dosya; repoya girmez).
+
+## Faz 9 — Tanıtım filmi (gündem 3)
+- [ ] Senaryo + sahne listesi + metin (kurgu taslağı: Türkiye haritası → Bursa → Ulu Cami (rehber anlatır, kaynak ekranda, banisi portre madalyonuyla) → soru → bilgi mührü → Koza Han → Osman Gazi Türbesi → altın mühür → Kayıp Vakfiye → şehirlerin ışıkları → kapanış). Müzik ve metin onaya sunulur.
+- [ ] Çizimler: Faz 8 karakteri + eser silüetleri (vektör, palet A); bilgiler yalnızca onaylı kayıtlardan.
+- [ ] HyperFrames ile üretim (Node 22+, FFmpeg); seslendirme Faz 8 Google sesi; Türkçe altyazı (dosya ve gömülü sürüm).
+- [ ] Çıktılar: tam film (16:9, sesli), açılış için 10–15 sn yazısız sessiz döngü (masaüstü + mobil küçük sürüm), kapak karesi.
+- [ ] Tanıtım sayfası: arka plan döngüsü + "Tanıtım filmini izle" (ekranı kaplayan oynatıcı, altyazı, klavye ile kapatma).
+
+## Faz 10 — Sunum (gündem 4; şartname 5.4)
+- [ ] İskelet (onaylandı 29 Ekim): 1 açılış (film kesiti) · 2 problem ve hedef kullanıcı (5.2.1) · 3 çözüm (5.1.1) · 4 canlı demo ~5 dk: ziyaretçi akışı + yönetici kitaptan aday → onay → eser sayfasında canlı (5.4) · 5 veri kullanımı ve doğruluk (5.1.3, 5.2.2) · 6 mimari ve veri modeli (5.1.2) · 7 erişilebilirlik (5.1.4) · 8 güvenlik, test, kişisel veri (5.1.5) · 9 kaynak ve lisanslar · 10 yenilikçilik · 11 ölçek ve yol haritası · 12 takım (5.2.3) · 13 kapanış + soru.
+- [ ] Konuşma metni + konuşmacı notları (4 üye; kim neyi anlatır).
+- [ ] Dakika dakika demo senaryosu + aksilik B planı.
+- [ ] Jüri soru-cevap kartları (~15): yapay zekâ uydurursa, konum taklidi, internet giderse, yeni şehir süresi, maliyet, KVKK …
+- [ ] Slaytlar: organizasyonun şablonu paylaşılınca.
 
 ## Faz 7 — Cila, final hazırlığı
 - [x] **Tanıtım sayfası** (29 Ekim, dal `feat/landing`): açılıştan sonra doğrudan giriş yerine ürünü tanıtan sayfa — sessiz arka plan videosu (`hero.mp4`, yoksa geçişli zemin), üç adım (rehber karakter videosu, bilgi ve altın mühür), Kayıp Vakfiye örneği, katalogdan 3 eser, kaynak/dürüstlük/vakar, iki çağrı. Hareket azaltılmışsa video oynamaz, bölümler hemen görünür. axe: ihlal yok.
