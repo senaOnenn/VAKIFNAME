@@ -13,6 +13,15 @@
 - ✅ İçerik yönetimi (şartname 5.1.1), tanıtım sayfası, çok şehir, erişilebilirlik taraması — hepsi `feat/game`'de.
 - ❌ Canlı yayın (`calismalar.tikirsoft.com`): DNS ve sunucu bekleniyor. ❌ Tanıtım videosu, sunum, sahada (telefon + GPS) deneme.
 
+## Gözden geçirme gündemi (29 Ekim; teker teker karar verilir, karar çıkınca ilgili faz/madde güncellenir)
+1. [ ] **Konuşan karakter:** panel içinde video değil, sayfada beliren karakter; ağız hareketi sesle senkron.
+2. [ ] **Ses:** daha gerçekçi Türkçe ses; kendi sesimizle okutma (ses klonlama) seçenekleri.
+3. [ ] **Tanıtım videosu:** HyperFrames denemesi.
+4. [ ] **Sunum içeriği:** jüriye anlatılacaklar ayrıntılı.
+5. [ ] **Demo yedeği:** ne olduğu ve nasıl kurulacağı.
+6. [ ] **Canlı yayın + sahada deneme:** plan ve takvim.
+7. [ ] **Diğer açık kararlar:** rehberin adı, PDF görselleri, İngilizce, küçük teknik kararlar.
+
 ## 29 Ekim kararları
 1. **İçerik yönetimi:** tek rol yönetici; hat (kitap PDF + eser → aday kayıtlar → taslak) + elle ekleme/düzenleme; onaysız hiçbir şey görünmez (CLAUDE.md §2.13).
 2. **Yöneticiler:** takımın 4 üyesi (`VAKIFNAME_ADMIN_EMAILS`). Biri `mtalhaaygen@gmail.com`; diğer 3 e-posta bekleniyor.
