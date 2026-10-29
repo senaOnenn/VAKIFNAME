@@ -50,8 +50,14 @@ export default function Auth() {
     if (Object.keys(found).length) return
     setBusy(true)
     try {
-      await (register_ ? register(email.trim(), password) : login(email.trim(), password))
-      navigate('/sehir')
+      if (register_) {
+        const user = await register(email.trim(), password)
+        // Şehir ekranında "doğrulama bağlantısı gönderildi" bildirimi çıkar (bkz. AppShell).
+        navigate('/sehir', { replace: true, state: { verifySent: user.email } })
+      } else {
+        await login(email.trim(), password)
+        navigate('/sehir')
+      }
     } catch (e) {
       setFormError(messageOf(e))
     } finally {
@@ -184,6 +190,9 @@ export default function Auth() {
             <button type="submit" className="vk-btn vk-btn--block" disabled={busy} aria-busy={busy}>
               {busy ? 'Gönderiliyor…' : register_ ? 'Hesap oluştur' : 'Giriş yap'}
             </button>
+            {!register_ && (
+              <Link to="/sifre-sifirla" className="vk-auth__forgot">Şifremi unuttum</Link>
+            )}
           </form>
 
           <button type="button" className="vk-btn vk-btn--ghost vk-btn--block vk-auth__guest" onClick={guest}>
