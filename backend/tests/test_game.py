@@ -166,7 +166,7 @@ def test_game_state_shape_for_a_new_visitor(c):
     assert set(s) == STATE_KEYS
     assert s == {"monument_id": OPEN, "locked": False, "listened": False, "asked": False, "guide_required": False,
                  "ready_for_quiz": False, "quiz_size": 5, "pass_mark": 4, "knowledge": None, "visit": None,
-                 "visit_radius_m": 35, "simulated_visit_allowed": False, "site_notice": BY_ID[OPEN].site_notice}
+                 "visit_radius_m": 50, "simulated_visit_allowed": False, "site_notice": BY_ID[OPEN].site_notice}
     assert s["site_notice"]  # türbe uyarısı oyun adımından önce gösterilebilsin
 
 
@@ -611,7 +611,7 @@ def test_account_progress_needs_its_own_session(c):
 def test_visit_needs_the_knowledge_seal_first(c):
     user = visitor()
     r = visit(c, user, at=location(OPEN))
-    assert r == {"status": "needs_knowledge", "distance_m": None, "radius_m": 35, "visit_seal": None}
+    assert r == {"status": "needs_knowledge", "distance_m": None, "radius_m": 50, "visit_seal": None}
     assert c.get(f"/users/{user}/seals").json()["visit_seals"] == []
 
 
@@ -620,8 +620,8 @@ def test_visit_inside_and_outside_the_radius(c):
     earn_knowledge(c, user)
     far = visit(c, user, at=north_of(OPEN, 60))
     assert far["status"] == "out_of_range" and 59 <= far["distance_m"] <= 61 and far["visit_seal"] is None
-    near = visit(c, user, at=north_of(OPEN, 20))
-    assert near["status"] == "gold" and 19 <= near["distance_m"] <= 21 and near["radius_m"] == 35
+    near = visit(c, user, at=north_of(OPEN, 45))  # 50 m varsayılan (29 Ekim): eski 35 m'de bu konum dışarıda kalırdı
+    assert near["status"] == "gold" and 44 <= near["distance_m"] <= 46 and near["radius_m"] == 50
     seal = near["visit_seal"]
     assert seal["kind"] == "visit" and seal["simulated"] is False and seal["new"] is True
     assert visit(c, user, at=north_of(OPEN, 500))["status"] == "already"
@@ -680,7 +680,7 @@ def test_simulated_visit_is_off_by_default_and_labelled_when_on(monkeypatch):
         assert state(c, user)["simulated_visit_allowed"] is False
         earn_knowledge(c, user)
         r = visit(c, user, simulate=True)
-        assert r == {"status": "simulation_disabled", "distance_m": None, "radius_m": 35, "visit_seal": None}
+        assert r == {"status": "simulation_disabled", "distance_m": None, "radius_m": 50, "visit_seal": None}
         assert state(c, user)["visit"] is None
 
     monkeypatch.setenv("VAKIFNAME_VISIT_SIMULATION", "on")

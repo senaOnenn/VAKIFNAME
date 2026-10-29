@@ -36,7 +36,7 @@ from .public_catalog import PublicCatalog, PublicFact, PublicImage, PublicMonume
 QUIZ_SIZE = 5
 PASS_MARK = 4
 QUIZ_TTL = timedelta(minutes=30)
-DEFAULT_VISIT_RADIUS_M = 35
+DEFAULT_VISIT_RADIUS_M = 50  # 29 Ekim kararı (önceki 35 m büyük yapılarda kapıdaki ziyaretçiyi dışarıda bırakıyordu)
 MAX_VISIT_RADIUS_M = 1000
 # Bu mesafedeki eserler aynı yapı topluluğu sayılır (Muradiye'de dört eser 100 m içinde, Osman/Orhan Gazi 28 m).
 SAME_SITE_M = 150
@@ -336,7 +336,7 @@ class GameSettings:
 
     @classmethod
     def from_env(cls) -> "GameSettings":
-        """`VAKIFNAME_VISIT_RADIUS_M` (1–1000 tam sayı, varsayılan 35) ve `VAKIFNAME_VISIT_SIMULATION` (on|off,
+        """`VAKIFNAME_VISIT_RADIUS_M` (1–1000 tam sayı, varsayılan 50) ve `VAKIFNAME_VISIT_SIMULATION` (on|off,
         varsayılan off). Geçersiz değer açılışta hata verir; sessizce varsayılana dönülmez."""
         raw = os.environ.get("VAKIFNAME_VISIT_RADIUS_M", "").strip()
         radius = int(raw) if raw else DEFAULT_VISIT_RADIUS_M

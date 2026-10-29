@@ -23,7 +23,7 @@
 8. Özellik dondurma **3 Kasım** kalır.
 9. **Ses (K3):** bir ses seçilecek; o zamana kadar tarayıcı sesi + altyazı.
 10. **E-posta doğrulama ve parola sıfırlama zorunlu.**
-11. **Ziyaret yarıçapı:** konuşulacak (35 m duruyor).
+11. **Ziyaret yarıçapı: 50 m** (varsayılan; eski 35 m büyük yapılarda kapıdaki ziyaretçiyi dışarıda bırakıyordu). Drive'da önceki sayısal karar yok; ekip planı "gerçek GPS pilot eserlerde test edilir" diyor → sahada denenip gerekirse eser bazında ayar.
 12. **Sunum modu finalde açık**, ekranda açıkça etiketli.
 13. Rehberin adı: açık.
 14–17: beklemede (görsel ayıklama, İngilizce, tanıtım videosu, küçük teknik kararlar).
@@ -93,7 +93,7 @@
 - [x] Mühür animasyonları (basılma, altın parıltı), sonuçta soru soru açıklama + kaynak + kesinlik etiketi, yeniden deneme.
 - [x] **Pasaport:** 10 parçalık Kayıp Vakfiye yapbozu (bilgi mührü = parça, ziyaret = altın) ve eser eser mühürler.
 - [x] Testler: backend 93 oyun testi (sınır 4/5–3/5, kilit atlatma, sızıntı, süre, birleştirme/silme); frontend 9 akış testi; tarayıcıda gerçek sunucuyla uçtan uca (misafir → rota → dinle → sor → 5/5 → mühür → sunum modunda altın → pasaport → rota 3/10).
-- Not: varsayılan 35 m yarıçap bina merkezinden ölçülüyor (doğruluk 13–46 m); büyük yapılarda (Ulu Cami 55×69 m) kapıdaki ziyaretçi dışarıda kalabilir → **sahada ince ayar** gerek.
+- Not (29 Ekim: varsayılan 50 m yapıldı): yarıçap bina merkezinden ölçülüyor (doğruluk 13–46 m); büyük yapılarda (Ulu Cami 55×69 m) kapıdaki ziyaretçi dışarıda kalabilir → **sahada ince ayar** gerek.
 - Not: eski `POST /monuments/{id}/check-in` (katalog `checkin` noktası olan eserlerde; şu an hiç yok) bilgi mührü aramıyor → yeni arayüz `/visit` kullanıyor; eski uç kaldırılabilir.
 - Not: sınavdaki görsel dosya adları genel katalogdaki görsellerle eşleştirilebilir (katalog açık olduğu sürece kaçınılmaz); gerekirse sınava özel geçici görsel adresleri.
 
