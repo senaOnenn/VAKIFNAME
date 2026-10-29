@@ -248,3 +248,5 @@ data/import/
 # Geliştirmede dosyaya yazılan hesap e-postaları (doğrulama/yenileme bağlantısı içerir)
 local-mail/
 local-content/
+*.sqlite3-shm
+*.sqlite3-wal
