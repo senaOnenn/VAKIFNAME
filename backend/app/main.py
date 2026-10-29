@@ -86,10 +86,43 @@ def _json_safe_error(error: dict, echo_input: bool = True) -> dict:
     return error
 
 
+_FIELD_TR = {"title": "Başlık", "text": "Metin", "quote": "Alıntı", "page": "Sayfa", "page_from": "Başlangıç sayfası",
+             "page_to": "Bitiş sayfası", "question": "Soru", "choices": "Seçenekler", "answer_index": "Doğru cevap",
+             "explanation": "Açıklama", "name": "Ad", "alternative_names": "Diğer adlar", "type": "Tür", "city": "Şehir",
+             "district": "İlçe", "address": "Adres", "latitude": "Enlem", "longitude": "Boylam",
+             "site_notice": "Ziyaret uyarısı", "rights_holder": "Hak sahibi", "license": "Lisans",
+             "attribution": "Atıf", "source_url": "Kaynak adresi", "source_id": "Kaynak", "category": "Konu",
+             "certainty": "Kesinlik", "monument_id": "Eser", "upload_id": "Yüklenen dosya"}
+
+
+def _turkish_message(error: dict) -> str:
+    """Yönetim formları için Türkçe doğrulama mesajı (alan adı + kural)."""
+    field = next((_FIELD_TR[p] for p in reversed(error.get("loc", ())) if isinstance(p, str) and p in _FIELD_TR), "Alan")
+    ctx, kind = error.get("ctx") or {}, error.get("type", "")
+    if kind == "missing":
+        return f"{field} zorunlu."
+    if kind in ("string_too_short", "too_short"):
+        n = ctx.get("min_length", 1)
+        return f"{field} boş bırakılamaz." if n <= 1 else f"{field} en az {n} karakter olmalı."
+    if kind in ("string_too_long", "too_long"):
+        return f"{field} en fazla {ctx.get('max_length')} {'karakter' if kind == 'string_too_long' else 'öğe'} olabilir."
+    if kind in ("greater_than_equal", "greater_than"):
+        return f"{field} en az {ctx.get('ge', ctx.get('gt'))} olmalı."
+    if kind in ("less_than_equal", "less_than"):
+        return f"{field} en fazla {ctx.get('le', ctx.get('lt'))} olabilir."
+    if kind == "value_error":
+        return str(ctx.get("error") or error.get("msg", "")).removeprefix("Value error, ")
+    return f"{field} geçersiz."
+
+
 async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
     # Hesap uçlarında girdi (parola, belirteç) hata yanıtında geri yazılmaz.
     echo = not request.url.path.startswith("/auth/")
-    return JSONResponse(status_code=422, content={"detail": [_json_safe_error(e, echo) for e in exc.errors()]})
+    errors = [_json_safe_error(e, echo) for e in exc.errors()]
+    if request.url.path.startswith("/admin/content/"):
+        for raw, e in zip(exc.errors(), errors):
+            e["msg"] = _turkish_message(raw)
+    return JSONResponse(status_code=422, content={"detail": errors})
 
 
 def demo_api_from_env() -> bool:

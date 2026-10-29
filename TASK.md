@@ -98,10 +98,11 @@
 - Not: sınavdaki görsel dosya adları genel katalogdaki görsellerle eşleştirilebilir (katalog açık olduğu sürece kaçınılmaz); gerekirse sınava özel geçici görsel adresleri.
 
 ## Faz 6 — Yönetim, istatistik, ölçek
-- [~] **İçerik ekleme/düzenleme** (şartname 5.1.1; karar 29 Ekim, CLAUDE.md §2.13; tasarım + API: `docs/ICERIK_YONETIMI.md`; dal `feat/content-admin`).
+- [x] **İçerik ekleme/düzenleme** (şartname 5.1.1; karar 29 Ekim, CLAUDE.md §2.13; tasarım + API: `docs/ICERIK_YONETIMI.md`; dal `feat/content-admin`).
   - [x] Backend: içerik deposu (SQLite; kaynak, eser, kayıt, görsel; yalnızca eklenen karar kaydı), PDF sayfa metni (pypdf), elle kayıt, onay/ret/geri çekme, yeni eser (`<ŞEHİR>-5001`…), görsel yükleme (yeniden kodlanır, EXIF atılır), yayın katmanı (`published.json`) → genel katalog yeniden başlatmadan yükler; rehber dizini kendiliğinden yenilenir. 17 test.
   - [x] Hat: kaynak + eser + ≤6 sayfa → model (`claude -p`) adayları → alıntı sayfada yoksa düşer → taslak. Gerçek deneme (29 Ekim, Cilt I s.20–23, Ulu Cami): 11,6 sn, 8 aday, hepsinin alıntısı kitapta doğrulandı; "mimarı kesin bilinmiyor" adayı `uncertain` etiketlendi.
-  - [ ] Yönetim ekranı (`/yonetim/icerik`, dal `feat/content-admin-ui`, yapılıyor).
+  - [x] Yönetim ekranı (`/yonetim/icerik`): taslak kuyruğu, eserler (katalog + yeni; haritada konum), kaynak kitap yükleme (kullanım izni açık seçim), hat paneli (kitapta ara → sayfa aralığı → aday çıkar), kayıt düzenleyici (kaynak sayfa yanında, alıntı vurgulu ve görünür alana kaydırılmış), görseller. Yönetim formlarında doğrulama mesajları Türkçe.
+  - [x] Tarayıcıda uçtan uca (29 Ekim, gerçek Cilt I, 245 sayfa): kitap 8 sn'de yüklendi → Ulu Cami s.20–23 → 8 taslak (15 sn, 0 düşen) → taslak genel uçta yok → onay → eser sayfasında "Kaynak: Bursa Vakıf Eserleri, Cilt I, s. 20" ve anlatım metninde.
   - Not: onaylı katalog (V20) eserlerinin kendisi salt okunur; yönetici bunlara kayıt/görsel ekler. V20 kaydını düzeltmek ekibin dahili aracıyla.
 - [x] **İstatistik** (dal `feat/admin-stats`): çerezsiz/anonim günlük sayaçlar (tekil ziyaretçi, sayfa ve eser görüntüleme; IP/tarayıcı diske yazılmaz, günlük tuz yalnızca bellekte; Do Not Track/GPC'ye uyulur). Yönetici panosu `/yonetim` (yöneticiler `VAKIFNAME_ADMIN_EMAILS`): tarih aralığı, KPI, günlük ziyaretçi grafiği, en çok ilgi gören eserler, sayfalar, oyun hunisi (dinleyen → soran → bilgi mührü → ziyaret; sunum modu ayrı sayılır).
 - [~] Yeni şehir: kimlik şeması, rota ve şehir sayfası genel (29 Ekim). [ ] Yeni şehrin eserleri içerik yönetiminden girer. ⬇ 60–80 eserlik sponsor paketi gelince içe aktarma.

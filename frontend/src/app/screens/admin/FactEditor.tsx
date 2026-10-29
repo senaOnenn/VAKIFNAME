@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
   createFact,
@@ -324,6 +324,13 @@ function SourcePageView({ sourceId, sourceTitle, page, quote, onUsePage }: {
   const text = data.data?.text ?? ''
   const hit = quote.trim() ? locateQuote(text, quote) : null
   const count = data.data?.page_count
+  // Uzun sayfada vurgu görünür alana gelsin: yalnızca metin kutusu kaydırılır (sayfa zıplamaz).
+  const box = useRef<HTMLDivElement>(null)
+  const mark = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const b = box.current, m = mark.current
+    if (b && m) b.scrollTop += m.getBoundingClientRect().top - b.getBoundingClientRect().top - 40
+  }, [hit?.start, hit?.end, text])
 
   return (
     <section className="vk-admin__card vk-factedit__source" aria-labelledby={`${id}-h`}>
@@ -346,11 +353,11 @@ function SourcePageView({ sourceId, sourceTitle, page, quote, onUsePage }: {
           </p>
           {data.error && <p className="vk-cform__error" role="alert">{data.error}</p>}
           {data.data && (
-            <div className="vk-factedit__text" tabIndex={0} aria-label={`Kaynak sayfa ${view} metni`}>
+            <div ref={box} className="vk-factedit__text" tabIndex={0} aria-label={`Kaynak sayfa ${view} metni`}>
               {hit ? (
                 <>
                   {text.slice(0, hit.start)}
-                  <mark>{text.slice(hit.start, hit.end)}</mark>
+                  <mark ref={mark}>{text.slice(hit.start, hit.end)}</mark>
                   {text.slice(hit.end)}
                 </>
               ) : (

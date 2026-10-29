@@ -281,8 +281,12 @@ class ContentStore:
         rows += [{"monument_id": r["monument_id"], "name": json.loads(r["data"])["name"],
                   "city": json.loads(r["data"])["city"], "type": json.loads(r["data"])["type"], "origin": "content",
                   "status": r["status"]} for r in self._all("SELECT * FROM monuments")]
+        base = self._base()
         for row in rows:
-            row["facts"] = counts.get(row["monument_id"], {"draft": 0, "published": 0})
+            c = dict(counts.get(row["monument_id"], {"draft": 0, "published": 0}))
+            if row["monument_id"] in base:  # onaylı katalogdaki kayıtlar da yayındadır
+                c["published"] += len(base[row["monument_id"]].facts)
+            row["facts"] = c
         return sorted(rows, key=lambda r: (r["city"], r["monument_id"]))
 
     @staticmethod

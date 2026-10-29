@@ -422,3 +422,15 @@ def test_invalid_overlay_keeps_last_good_catalog(c, tmp_path):
     overlay.write_text(json.dumps({"schema": "vakifname.content_overlay/1", "monuments": [], "images": [],
                                    "facts": [{"monument_id": "BUR-0001", "fact": {"fact_id": "BUR-0001-F001"}}]}))
     assert "BUR-0001-F501" in public_fact_ids(c)  # bozuk katman reddedildi, son geçerli katalog sunuluyor
+
+
+def test_validation_errors_are_turkish_and_catalog_counts_include_published_facts(c):
+    login_admin(c)
+    sid = add_source(c)
+    r = c.post("/admin/content/facts", json=fact_body(sid, title="ab", text="kısa"))
+    msgs = [e["msg"] for e in r.json()["detail"]]
+    assert r.status_code == 422 and "Başlık en az 3 karakter olmalı." in msgs and "Metin en az 10 karakter olmalı." in msgs
+    r = c.post("/admin/content/extract", json={"source_id": sid, "monument_id": "BUR-0001", "page_from": 1, "page_to": 9})
+    assert r.json()["detail"][0]["msg"].startswith("Sayfa aralığı en fazla 6 sayfa")
+    row = next(m for m in c.get("/admin/content/overview").json()["monuments"] if m["monument_id"] == "BUR-0001")
+    assert row["facts"]["published"] == len(c.get("/monuments/BUR-0001").json()["facts"]) > 0
