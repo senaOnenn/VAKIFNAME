@@ -14,8 +14,8 @@
 - ❌ Canlı yayın (`calismalar.tikirsoft.com`): DNS ve sunucu bekleniyor. ❌ Tanıtım videosu, sunum, sahada (telefon + GPS) deneme.
 
 ## Gözden geçirme gündemi (29 Ekim; teker teker karar verilir, karar çıkınca ilgili faz/madde güncellenir)
-1. [~] **Konuşan karakter:** panel içinde video değil, sayfada beliren karakter; ağız hareketi sesle senkron. **Karar (29 Ekim): A — katmanlı 2D çizim karakter** (gövde, baş, göz kırpma, ~8 ağız şekli; sesin zaman bilgisine göre anlık ağız senkronu; hazır anlatımda ve sohbet cevabında çalışır). Yapay zekâ "konuşan kafa" videosu ve 3D avatar seçilmedi. **Çizim (29 Ekim): C — karakteri Claude sade vektörle (SVG) baştan çizer**; ekibin Çırak Kâşif karakter sayfası (`game/1. level-Çırak kaşif/`) kimlik referansıdır (kıvırcık saç ve kırmızı kurdele, krem gömlek, kırmızı kuşak, deri çanta, pusula). Varsayılan: yelek yeşil yerine palet A laciverdi + altın işleme (CLAUDE.md §5: yeşil yok); görünce değiştirilebilir.
-2. [ ] **Ses:** daha gerçekçi Türkçe ses; kendi sesimizle okutma (ses klonlama) seçenekleri.
+1. [x] **Konuşan karakter:** panel içinde video değil, sayfada beliren karakter; ağız hareketi sesle senkron. **Karar (29 Ekim): A — katmanlı 2D çizim karakter** (gövde, baş, göz kırpma, ~8 ağız şekli; sesin zaman bilgisine göre anlık ağız senkronu; hazır anlatımda ve sohbet cevabında çalışır). Yapay zekâ "konuşan kafa" videosu ve 3D avatar seçilmedi. **Çizim (29 Ekim): C — karakteri Claude sade vektörle (SVG) baştan çizer**; ekibin Çırak Kâşif karakter sayfası (`game/1. level-Çırak kaşif/`) kimlik referansıdır (kıvırcık saç ve kırmızı kurdele, krem gömlek, kırmızı kuşak, deri çanta, pusula). Varsayılan: yelek yeşil yerine palet A laciverdi + altın işleme (CLAUDE.md §5: yeşil yok); görünce değiştirilebilir.
+2. [x] **Ses (29 Ekim): A — Google Cloud "Chirp 3 HD" hazır Türkçe sesi** (VAKIFNAME Google Cloud projesi). Ses sağlayıcısı rehberdeki gibi env ile seçilir; **ileride değiştirilebilir** (ör. ElevenLabs ile ekipten birinin sesi — şu an ücret ödenemiyor; Google ile ses klonlama satış onayı istiyor). Not: karakter genç bir kız; klonlanacak ses buna uygun seçilmeli.
 3. [ ] **Tanıtım videosu:** HyperFrames denemesi.
 4. [ ] **Sunum içeriği:** jüriye anlatılacaklar ayrıntılı.
 5. [ ] **Demo yedeği:** ne olduğu ve nasıl kurulacağı.
@@ -117,6 +117,14 @@
 - [x] **İstatistik** (dal `feat/admin-stats`): çerezsiz/anonim günlük sayaçlar (tekil ziyaretçi, sayfa ve eser görüntüleme; IP/tarayıcı diske yazılmaz, günlük tuz yalnızca bellekte; Do Not Track/GPC'ye uyulur). Yönetici panosu `/yonetim` (yöneticiler `VAKIFNAME_ADMIN_EMAILS`): tarih aralığı, KPI, günlük ziyaretçi grafiği, en çok ilgi gören eserler, sayfalar, oyun hunisi (dinleyen → soran → bilgi mührü → ziyaret; sunum modu ayrı sayılır).
 - [~] Yeni şehir: kimlik şeması, rota ve şehir sayfası genel (29 Ekim). [ ] Yeni şehrin eserleri içerik yönetiminden girer. ⬇ 60–80 eserlik sponsor paketi gelince içe aktarma.
 - [ ] ⬇ İngilizce katmanı (K9).
+
+## Faz 8 — Konuşan rehber (gündem 1–2, 29 Ekim kararları)
+- [ ] Karakter: Çırak Kâşif'in sade vektör (SVG) çizimi — palet A, karakter sayfası kimlik referansı; katmanlar: gövde, baş, gözler (kırpma), 9 ağız şekli (Rhubarb A–H + X), nefes/duruş; sayfaya çerçevesiz girer (eser sayfasında anlatıcının yerine).
+- [ ] Ses sağlayıcısı arayüzü (`VAKIFNAME_TTS_PROVIDER` = `browser` | `google` …, seçenekler `.env.example` yorumunda): Google Chirp 3 HD Türkçe; yoksa tarayıcı sesi + altyazı (bugünkü davranış).
+- [ ] Ağız senkronu: ses dosyasından ağız zaman çizelgesi (Rhubarb Lip Sync, dil bağımsız mod); yoksa ses şiddetine göre basit ağız hareketi.
+- [ ] Anlatım sesi içerik onayında bir kez üretilir ve saklanır (anlatım metni değişince yeniden); rehber cevabı anlık üretilir.
+- [ ] Erişilebilirlik: altyazı ve tam metin kalır; hareket azaltılmışsa karakter durağan, ses yine çalışır; ses otomatik başlamaz.
+- [ ] Sizden: Google Cloud'da Text-to-Speech API'yi açmak ve servis hesabı anahtarı (dosya; repoya girmez).
 
 ## Faz 7 — Cila, final hazırlığı
 - [x] **Tanıtım sayfası** (29 Ekim, dal `feat/landing`): açılıştan sonra doğrudan giriş yerine ürünü tanıtan sayfa — sessiz arka plan videosu (`hero.mp4`, yoksa geçişli zemin), üç adım (rehber karakter videosu, bilgi ve altın mühür), Kayıp Vakfiye örneği, katalogdan 3 eser, kaynak/dürüstlük/vakar, iki çağrı. Hareket azaltılmışsa video oynamaz, bölümler hemen görünür. axe: ihlal yok.
