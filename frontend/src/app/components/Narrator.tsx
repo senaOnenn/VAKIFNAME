@@ -2,7 +2,7 @@ import { useEffect, useId, useMemo, useState, type FormEvent } from 'react'
 import { askGuide, getGuideAvailability, type GuideTurn } from '../../catalog/guideClient'
 import type { GuideResult } from '../../catalog/types'
 import type { MonumentDetail } from '../api'
-import { MS_PER_WEIGHT, mouthFrom, visemes, type Mouth } from '../lipsync'
+import { MS_PER_WEIGHT, mouthAt, mouthFrom, visemes, type Mouth } from '../lipsync'
 import { buildScript, LOCAL_GUIDE } from '../narration'
 import { useNarration } from '../speech'
 import { GuideCharacter } from './GuideCharacter'
@@ -34,13 +34,14 @@ export function Narrator({
 }) {
   const id = useId()
   const lines = useMemo(() => buildScript(monument), [monument])
-  const n = useNarration(lines, { onDone: onListened })
+  const n = useNarration(lines, { onDone: onListened, monumentId: monument.monument_id })
   const [large, setLarge] = useState(false)
   const [mouth, setMouth] = useState<Mouth>('X')
   const line = lines[n.index]
   const speaking = n.state === 'playing'
   const seqs = useMemo(() => lines.map((l) => visemes(l.spoken)), [lines])
   const cue = n.cue
+  const playing = n.audio
 
   // Ağız senkronu: konuşmanın anlık konumundan (kelime sınırı + geçen süre) ağız şekli; hareket azaltılmışsa durağan.
   useEffect(() => {
@@ -50,14 +51,18 @@ export function Narrator({
     }
     let raf = 0
     const tick = () => {
+      const a = playing.current
       const c = cue.current
-      const m = c && seqs[c.i] ? mouthFrom(seqs[c.i], c.char, performance.now() - c.at, MS_PER_WEIGHT / n.rate) : 'X'
+      // Sunucu sesi: oynatma anı / süre; tarayıcı sesi: son kelime sınırı + geçen süre.
+      const m = a && seqs[a.i] && a.el.duration > 0 && !a.el.paused
+        ? mouthAt(seqs[a.i], a.el.currentTime / a.el.duration)
+        : c && seqs[c.i] ? mouthFrom(seqs[c.i], c.char, performance.now() - c.at, MS_PER_WEIGHT / n.rate) : 'X'
       setMouth((prev) => (prev === m ? prev : m))
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [speaking, seqs, cue, n.rate])
+  }, [speaking, seqs, cue, playing, n.rate])
 
   return (
     <section className="vk-narr" aria-labelledby={`${id}-h`}>

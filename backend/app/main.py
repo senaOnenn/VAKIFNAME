@@ -20,6 +20,8 @@ from .ask_routes import RateLimiter, router as ask_router
 from .content.pipeline import Pipeline, content_dir_from_env, content_model
 from .content.store import ContentStore
 from .content_routes import router as content_router
+from .speech_routes import router as speech_router
+from .tts import SpeechService, TtsSettings
 from .auth_routes import router as auth_router
 from .people_routes import router as people_router
 from .stats import StatsStore
@@ -236,6 +238,13 @@ def create_app(
     if content_dir is not None:
         repo = app.state.monuments
         app.state.content = ContentStore(content_dir, lambda: {m.monument_id: m for m in repo.base_catalog.monuments})
+    # Seslendirme (Faz 8, `VAKIFNAME_TTS_PROVIDER`; kapalıysa arayüz tarayıcı sesini kullanır). Önbellek dizini verilmediyse
+    # içerik dizininin altında tutulur.
+    tts_settings = TtsSettings.from_env()
+    if tts_settings.cache_dir is None and content_dir is not None:
+        tts_settings.cache_dir = content_dir / "tts"
+    app.state.speech = SpeechService(tts_settings)
+    app.state.speech_limiter = RateLimiter(per_minute=30, per_hour=600, global_per_minute=120)
     app.state.content_pipeline = Pipeline(app.state.content, provider, content_model(guide_settings.text_model)) \
         if app.state.content is not None else None
 
@@ -266,6 +275,7 @@ def create_app(
     app.include_router(stats_router)
     app.include_router(auth_router)
     app.include_router(content_router)
+    app.include_router(speech_router)
     if app.state.ask.model_dir is not None:
         # Model ve dizin arka planda hazırlanır; o sırada kelime araması çalışır.
         app.state.ask.engine()

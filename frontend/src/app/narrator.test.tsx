@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { stubFetch } from '../test/fixtures'
 import { Narrator } from './components/Narrator'
 import { buildScript } from './narration'
-import { pickTurkishVoice } from './speech'
+import { pickTurkishVoice, resetSpeechStatusForTests } from './speech'
 
 const fact = (id: string, category: string, certainty: string, text: string) => ({
   fact_id: id, title: `Başlık ${id}`, text, category, certainty,
@@ -128,6 +128,52 @@ describe('anlatıcı bileşeni', () => {
     expect(screen.getByRole('heading', { name: 'Rehber' })).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Dinle' }))
     expect(document.querySelector('svg.vk-gchar')!.getAttribute('class')).toContain('is-speaking')
+  })
+
+  it('sunucu seslendirmesi açıksa her cümlenin ses dosyası çalınır; seslendirilen metin anlatımın kendisidir', async () => {
+    resetSpeechStatusForTests()
+    const spoken: string[] = []
+    const played: string[] = []
+    stubFetch({
+      '/guide/status': { body: { enabled: false } },
+      '/speech/status': { body: { enabled: true, provider: 'google', voice: 'tr-TR-Chirp3-HD-Leda' } },
+      '/monuments/BUR-1001/speech': (init?: RequestInit) => {
+        const text = JSON.parse(String(init?.body)).text as string
+        spoken.push(text)
+        return { body: { url: `/speech/audio/${String(spoken.length).padStart(64, '0')}.mp3` } }
+      },
+    })
+    class FakeAudio {
+      src: string
+      playbackRate = 1
+      currentTime = 0
+      duration = 1
+      paused = true
+      onended: (() => void) | null = null
+      onerror: (() => void) | null = null
+      constructor(src: string) {
+        this.src = src
+      }
+      play() {
+        played.push(this.src)
+        this.paused = false
+        setTimeout(() => this.onended?.(), 5)
+        return Promise.resolve()
+      }
+      pause() {
+        this.paused = true
+      }
+    }
+    vi.stubGlobal('Audio', FakeAudio)
+    const onListened = vi.fn()
+    render(<Narrator monument={MON} onListened={onListened} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Dinle' }))
+    await vi.waitFor(() => expect(onListened).toHaveBeenCalled(), { timeout: 3000 })
+    const lines = buildScript(MON)
+    expect(played).toHaveLength(lines.length)
+    expect(played[0]).toMatch(/\/speech\/audio\/0+1\.mp3$/)
+    expect(new Set(spoken)).toEqual(new Set(lines.map((l) => l.spoken)))
+    resetSpeechStatusForTests()
   })
 
   it('büyük altyazı seçeneği altyazıyı büyütür', async () => {

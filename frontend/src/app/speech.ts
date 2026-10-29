@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { API_BASE_URL, apiGet, apiPost } from '../api/client'
 
 /**
- * Satır satır seslendirme (Web Speech API, tr-TR). Ses yalnızca kullanıcı başlatınca çalışır. Türkçe ses yoksa veya
- * kullanıcı sessiz modu seçtiyse altyazı, metnin uzunluğuna göre zamanlanarak kendiliğinden ilerler (okuma modu).
+ * Satır satır seslendirme. Ses yalnızca kullanıcı başlatınca çalışır.
+ * - Sunucu seslendirmesi açıksa (`/speech/status`, Faz 8: Google Chirp 3 HD) her cümlenin ses dosyası çalınır; bir sonraki
+ *   cümle önceden istenir. Hata olursa o cümle tarayıcı sesiyle okunur.
+ * - Değilse tarayıcının Türkçe sesi (Web Speech API, tr-TR).
+ * - Türkçe ses yoksa veya kullanıcı sessiz modu seçtiyse altyazı, metnin uzunluğuna göre zamanlanarak ilerler (okuma modu).
  */
 export type PlayState = 'idle' | 'playing' | 'paused' | 'done'
 
@@ -16,7 +20,20 @@ export function pickTurkishVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesi
 /** Okuma modunda bir satırın ekranda kalma süresi (ms): yaklaşık dakikada 170 sözcük, en az 2,5 sn. */
 export const readingMs = (text: string, rate = 1) => Math.max(2500, (text.split(/\s+/).length / 170) * 60_000) / rate
 
-export function useNarration(lines: { spoken: string; text: string }[], opts: { onDone?: () => void } = {}) {
+let speechStatus: Promise<boolean> | null = null
+/** Sunucu seslendirmesi açık mı (oturum başına bir kez sorulur; hata = kapalı). */
+export function serverSpeechEnabled(): Promise<boolean> {
+  speechStatus ??= (apiGet('/speech/status') as Promise<{ enabled?: boolean }>).then((s) => !!s?.enabled, () => false)
+  return speechStatus
+}
+export const resetSpeechStatusForTests = () => {
+  speechStatus = null
+}
+
+export function useNarration(
+  lines: { spoken: string; text: string }[],
+  opts: { onDone?: () => void; monumentId?: string } = {},
+) {
   const [state, setState] = useState<PlayState>('idle')
   const [index, setIndex] = useState(0)
   const [rate, setRate] = useState(1)
@@ -26,6 +43,35 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
   const run = useRef(0) // her başlatmada artar; eski geri çağrılar yok sayılır
   // Ağız senkronu için konuşmanın anlık konumu: satır, son kelimenin karakter konumu ve o anın zamanı (Faz 8).
   const cue = useRef<{ i: number; char: number; at: number } | null>(null)
+  // Sunucu sesiyle oynatılan cümle (ağız senkronu oynatma anından hesaplanır).
+  const audio = useRef<{ i: number; el: HTMLAudioElement } | null>(null)
+  const [serverVoice, setServerVoice] = useState(false)
+  const urls = useRef(new Map<string, Promise<string>>())
+  const monumentId = opts.monumentId
+
+  useEffect(() => {
+    if (!monumentId) return
+    let alive = true
+    serverSpeechEnabled().then((on) => alive && setServerVoice(on))
+    return () => {
+      alive = false
+    }
+  }, [monumentId])
+
+  const audioUrl = useCallback(
+    (text: string) => {
+      let p = urls.current.get(text)
+      if (!p) {
+        p = (apiPost(`/monuments/${encodeURIComponent(monumentId!)}/speech`, { text }) as Promise<{ url: string }>).then(
+          (r) => `${API_BASE_URL}${r.url}`,
+        )
+        p.catch(() => urls.current.delete(text))
+        urls.current.set(text, p)
+      }
+      return p
+    },
+    [monumentId],
+  )
   const onDone = useRef(opts.onDone)
   onDone.current = opts.onDone
 
@@ -42,6 +88,12 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
     if (timer.current !== null) window.clearTimeout(timer.current)
     timer.current = null
     cue.current = null
+    if (audio.current) {
+      audio.current.el.onended = null
+      audio.current.el.onerror = null
+      audio.current.el.pause()
+      audio.current = null
+    }
     synth()?.cancel()
   }
   const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now())
@@ -59,7 +111,12 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
       setState('playing')
       const next = () => run.current === myRun && playFrom(i + 1)
       const s = synth()
-      if (!muted && s && voice) {
+      const browserVoice = () => {
+        if (!s || !voice) {
+          cue.current = { i, char: 0, at: now() }
+          timer.current = window.setTimeout(next, readingMs(lines[i].text, rate))
+          return
+        }
         const u = new SpeechSynthesisUtterance(lines[i].spoken)
         u.voice = voice
         u.lang = voice.lang || 'tr-TR'
@@ -75,19 +132,50 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
           next()
         }
         u.onerror = (e) => {
-          // İptal (kullanıcı durdurdu / satır atladı) hata sayılmaz; diğer hatalarda okuma moduna düşülür.
           if (run.current === myRun && e.error !== 'interrupted' && e.error !== 'canceled') {
             timer.current = window.setTimeout(next, readingMs(lines[i].text, rate))
           }
         }
         s.speak(u)
+      }
+      if (!muted && serverVoice && monumentId && typeof Audio !== 'undefined') {
+        audioUrl(lines[i].spoken).then(
+          (url) => {
+            if (run.current !== myRun) return
+            const el = new Audio(url)
+            el.playbackRate = rate
+            el.onended = () => {
+              if (run.current === myRun) audio.current = null
+              next()
+            }
+            el.onerror = () => {
+              if (run.current === myRun) {
+                audio.current = null
+                browserVoice()
+              }
+            }
+            audio.current = { i, el }
+            el.play().catch(() => {
+              if (run.current === myRun) {
+                audio.current = null
+                browserVoice()
+              }
+            })
+            if (i + 1 < lines.length) audioUrl(lines[i + 1].spoken).catch(() => undefined) // sonraki cümle hazır olsun
+          },
+          () => run.current === myRun && browserVoice(),
+        )
+        return
+      }
+      if (!muted) {
+        browserVoice()
       } else {
         cue.current = { i, char: 0, at: now() }
         timer.current = window.setTimeout(next, readingMs(lines[i].text, rate))
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [lines, muted, voice, rate],
+    [lines, muted, voice, rate, serverVoice, monumentId, audioUrl],
   )
 
   const pause = useCallback(() => {
@@ -107,8 +195,10 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
     index,
     rate,
     muted,
-    hasVoice: !!voice,
+    hasVoice: !!voice || serverVoice,
+    serverVoice,
     cue,
+    audio,
     play: () => playFrom(state === 'done' ? 0 : index),
     pause,
     goTo: (i: number) => (state === 'playing' ? playFrom(i) : setIndex(Math.max(0, Math.min(lines.length - 1, i)))),
