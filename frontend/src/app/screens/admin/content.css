@@ -312,3 +312,9 @@
 .vk-content .vk-content__table .num {
   text-align: right;
 }
+/* Dar ekranda tablo yana kaymasın: şehir ve tür sütunları gizlenir (eser sayfasında yazılıdır). */
+@media (max-width: 640px) {
+  .vk-content .vk-content__wide {
+    display: none;
+  }
+}

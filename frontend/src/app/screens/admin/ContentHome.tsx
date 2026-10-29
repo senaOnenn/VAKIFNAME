@@ -111,8 +111,8 @@ function Body({ overview, drafts, draftsError, onSourceAdded }: {
             <thead>
               <tr>
                 <th scope="col">Eser</th>
-                <th scope="col">Şehir</th>
-                <th scope="col">Tür</th>
+                <th scope="col" className="vk-content__wide">Şehir</th>
+                <th scope="col" className="vk-content__wide">Tür</th>
                 <th scope="col">Kaynağı</th>
                 <th scope="col">Durum</th>
                 <th scope="col" className="num">Yayında kayıt</th>
@@ -123,8 +123,8 @@ function Body({ overview, drafts, draftsError, onSourceAdded }: {
               {overview.monuments.map((m) => (
                 <tr key={m.monument_id}>
                   <th scope="row"><Link to={`/yonetim/icerik/eser/${m.monument_id}`}>{m.name}</Link></th>
-                  <td>{m.city}</td>
-                  <td>{typeLabel(m.type)}</td>
+                  <td className="vk-content__wide">{m.city}</td>
+                  <td className="vk-content__wide">{typeLabel(m.type)}</td>
                   <td><OriginTag origin={m.origin} /></td>
                   <td><StatusTag status={m.status} /></td>
                   <td className="num">{m.facts.published}</td>

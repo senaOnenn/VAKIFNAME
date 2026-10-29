@@ -102,13 +102,15 @@ function Editor({ overview, edit, fact, flash, onSaved }: {
   const pageNum = Number(f.page)
 
   function validate(): string | null {
-    if (!f.title.trim() || !f.text.trim()) return 'Başlık ve metin zorunludur.'
+    // Sunucudaki sınırlarla aynı (backend/app/content_routes.py): Türkçe ve anlaşılır uyarı için burada da denetlenir.
+    if (f.title.trim().length < 3) return 'Başlık en az 3 karakter olmalı.'
+    if (f.text.trim().length < 10) return 'Metin en az 10 karakter olmalı.'
     if (!source) return 'Kaynak kitap seçin.'
     if (!Number.isInteger(pageNum) || pageNum < 1 || pageNum > source.page_count) return `Sayfa 1 ile ${source.page_count} arasında olmalı.`
     if (f.game_use && f.quest) {
       const q = f.quest
-      if (!q.question.trim() || !q.explanation.trim() || q.choices.some((c) => !c.trim())) {
-        return 'Keşif sorusunda soru, bütün seçenekler ve açıklama dolu olmalı.'
+      if (q.question.trim().length < 5 || q.explanation.trim().length < 5 || q.choices.some((c) => !c.trim())) {
+        return 'Keşif sorusunda soru ve açıklama en az 5 karakter, bütün seçenekler dolu olmalı.'
       }
     }
     return null
