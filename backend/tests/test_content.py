@@ -528,7 +528,7 @@ def test_monument_english_name(c):
     m = next(x for x in c.get("/monuments").json()["monuments"] if x["monument_id"] == "BUR-0001")
     assert m["name_en"] == "Grand Mosque of Bursa" and m["name"] == "Bursa Ulu Camii"
     edit = c.get("/admin/content/monuments/BUR-0001").json()
-    assert edit["monument_en"]["name_en"] == "Grand Mosque of Bursa" and len(edit["tr_facts"]) == 8
+    assert edit["monument_en"]["name_en"] == "Grand Mosque of Bursa" and len(edit["tr_facts"]) == 10
     assert c.put("/admin/content/monuments/BUR-9999/en", json={"name_en": "X y", "publish": True}).status_code == 404
 
 
