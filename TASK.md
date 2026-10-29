@@ -110,7 +110,7 @@
 ## Faz 7 — Cila, final hazırlığı
 - [ ] Gerçek telefonda ve yavaş ağda tüm akış. Lighthouse/axe taraması.
 - [ ] **Canlı yayın** (29 Ekim kararı): `https://calismalar.tikirsoft.com` sunucusunda; sunucuda `claude` girişi, SMTP, `.env`. Sunucuya dokunmadan önce plan + onay.
-- [ ] **Eski arayüz kodunu sil** (29 Ekim kararı): yönlendirilmeyen eski katalog sayfası, "Esere Sor" bileşenleri.
+- [x] **Eski arayüz kodu silindi** (29 Ekim, dal `feat/remove-legacy-ui`): eski katalog sayfası, "Esere Sor", kurgusal demo oyunu ve bileşenleri, eski tarayıcı senaryoları (~8000 satır, 147 eski test). Dahili envanter (`?mod=envanter`, yalnızca geliştirme) kaldı. Backend demo uçları (`/places`, eski check-in) karar 17 beklediği için duruyor.
 - [ ] Demo yedeği: internet yoksa yerel çalışsın. Tek komutla kurulum (README).
 - [ ] **Tanıtım videosu** (ürünün çalışma mantığı). Not: **HyperFrames** aracı videoyu kodla üretmek için araştırılabilir (şimdilik yalnızca not, araştırılmadı).
 - [ ] Sunum: problem, hedef kullanıcı, mimari ve veri modeli, veri kullanımı, yenilik, ölçeklenebilirlik. Jüri soruları: veri doğruluğu, telif, kişisel veri.
