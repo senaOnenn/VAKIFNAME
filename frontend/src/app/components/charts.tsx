@@ -59,7 +59,7 @@ export function LineChart({ points, label }: { points: { day: string; value: num
   const h = hover !== null ? points[hover] : null
   return (
     <div className="vk-chart">
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${id}-d`}>
+      <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-labelledby={`${id}-d`}>
         <desc id={`${id}-d`}>{`${label}: ${points.length} gün, en yüksek ${Math.max(0, ...points.map((p) => p.value))}`}</desc>
         {ticks.map((t) => (
           <g key={t}>
@@ -87,8 +87,10 @@ export function LineChart({ points, label }: { points: { day: string; value: num
           </g>
         )}
         <rect
-          x={L} y={T} width={W - L - R} height={H - T - B} fill="transparent" tabIndex={0}
+          x={L} y={T} width={W - L - R} height={H - T - B} fill="transparent" tabIndex={0} role="slider"
           aria-label={`${label}. Günleri gezmek için sol ve sağ ok tuşları.`}
+          aria-valuemin={1} aria-valuemax={Math.max(1, points.length)} aria-valuenow={(hover ?? last) + 1}
+          aria-valuetext={points[hover ?? last] ? `${shortDate(points[hover ?? last].day)}: ${points[hover ?? last].value.toLocaleString('tr-TR')}` : ''}
           onPointerMove={pick} onPointerLeave={() => setHover(null)} onFocus={() => setHover(last)} onBlur={() => setHover(null)} onKeyDown={key}
         />
       </svg>
@@ -119,13 +121,13 @@ export function BarChart({ rows, label }: { rows: { name: string; value: number 
   }
   return (
     <div className="vk-chart">
-      <svg viewBox={`0 0 ${W} ${Math.max(H, 1)}`} role="img" aria-label={label}>
+      <svg viewBox={`0 0 ${W} ${Math.max(H, 1)}`} role="group" aria-label={label}>
         <line x1={NAME} x2={NAME} y1="0" y2={H} stroke={GRID} strokeWidth="1" />
         {rows.map((r, i) => {
           const y0 = i * ROW + (ROW - BAR) / 2
           const w = Math.max(2, len(r.value))
           return (
-            <g key={r.name} onPointerEnter={() => setHover(i)} onPointerLeave={() => setHover(null)} onFocus={() => setHover(i)} onBlur={() => setHover(null)} tabIndex={0} aria-label={`${r.name}: ${r.value}`}>
+            <g key={r.name} onPointerEnter={() => setHover(i)} onPointerLeave={() => setHover(null)} onFocus={() => setHover(i)} onBlur={() => setHover(null)} tabIndex={0} role="img" aria-label={`${r.name}: ${r.value}`}>
               <rect x="0" y={i * ROW} width={W} height={ROW} fill="transparent" />
               <text x={NAME - 10} y={y0 + BAR / 2 + 5} textAnchor="end" className="vk-chart__name">{r.name}</text>
               <path d={bar(NAME, y0, w)} fill={MARK} opacity={hover === null || hover === i ? 1 : 0.55} />

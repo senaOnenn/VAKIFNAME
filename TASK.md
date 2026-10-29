@@ -109,7 +109,8 @@
 - [ ] ⬇ İngilizce katmanı (K9).
 
 ## Faz 7 — Cila, final hazırlığı
-- [ ] Gerçek telefonda ve yavaş ağda tüm akış. Lighthouse/axe taraması.
+- [ ] Gerçek telefonda ve yavaş ağda tüm akış.
+- [x] axe taraması (29 Ekim; axe-core 4.14, WCAG 2.0/2.1/2.2 A+AA + iyi uygulama; web 1366 ve mobil 390; misafir, oturumlu kullanıcı ve yönetici sayfaları, 16 sayfa): giriş sekmesi rolü, Türkiye haritası rolü, eserler başlık sırası, rozet sayfasında h1, grafik gezgini (kaydırıcı rolü) düzeltildi. Kalan tek bulgu: rota haritasında Muradiye kümesindeki üst üste binen işaretler (hedef boyutu); WCAG 2.5.8 "eşdeğer kontrol" istisnası — aynı sayfadaki sıralı durak listesi aynı işi görür.
 - [ ] **Canlı yayın** (29 Ekim kararı): `https://calismalar.tikirsoft.com` sunucusunda; sunucuda `claude` girişi, SMTP, `.env`. Sunucuya dokunmadan önce plan + onay.
 - [x] **Eski arayüz kodu silindi** (29 Ekim, dal `feat/remove-legacy-ui`): eski katalog sayfası, "Esere Sor", kurgusal demo oyunu ve bileşenleri, eski tarayıcı senaryoları (~8000 satır, 147 eski test). Dahili envanter (`?mod=envanter`, yalnızca geliştirme) kaldı. Backend demo uçları (`/places`, eski check-in) karar 17 beklediği için duruyor.
 - [ ] Demo yedeği: internet yoksa yerel çalışsın. Tek komutla kurulum (README).

@@ -72,6 +72,7 @@ export default function Monuments() {
       )}
       {catalog.data && (
         <>
+          <h2 className="vk-sr-only">Eser listesi</h2>
           <p className="vk-page__count" aria-live="polite">{shown.length} eser</p>
           {view === 'liste' ? (
             <div className="vk-grid">

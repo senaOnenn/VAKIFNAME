@@ -90,6 +90,7 @@ export default function QuizPage() {
   if (error)
     return (
       <main className="vk-page vk-quiz">
+        <h1 className="vk-quiz__title">Rozeti al · {name}</h1>
         <p className="vk-page__state vk-page__state--error" role="alert">{error}</p>
         {back}
       </main>
@@ -142,7 +143,13 @@ export default function QuizPage() {
     )
   }
 
-  if (!quiz) return <main className="vk-page vk-quiz"><p className="vk-page__state" role="status">Sorular hazırlanıyor…</p></main>
+  if (!quiz)
+    return (
+      <main className="vk-page vk-quiz">
+        <h1 className="vk-sr-only">Rozeti al · {name}</h1>
+        <p className="vk-page__state" role="status">Sorular hazırlanıyor…</p>
+      </main>
+    )
 
   const q = quiz.questions[idx]
   const last = idx === quiz.questions.length - 1

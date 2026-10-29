@@ -140,7 +140,8 @@ export default function Auth() {
             ))}
           </div>
 
-          <form id={fieldId('form')} role="tabpanel" aria-labelledby={fieldId(`tab-${tab}`)} onSubmit={submit} noValidate className="vk-auth__form">
+          <div id={fieldId('form')} role="tabpanel" aria-labelledby={fieldId(`tab-${tab}`)}>
+          <form onSubmit={submit} noValidate className="vk-auth__form">
             <label htmlFor={fieldId('email')}>E-posta</label>
             <input
               id={fieldId('email')}
@@ -194,6 +195,7 @@ export default function Auth() {
               <Link to="/sifre-sifirla" className="vk-auth__forgot">Şifremi unuttum</Link>
             )}
           </form>
+          </div>
 
           <button type="button" className="vk-btn vk-btn--ghost vk-btn--block vk-auth__guest" onClick={guest}>
             Üye olmadan keşfet
