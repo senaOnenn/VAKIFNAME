@@ -200,3 +200,33 @@
 .vk-auth__legal {
   text-align: center;
 }
+
+/* E-posta bağlantısı ekranları (doğrulama, parola yenileme): tek kart, ortada */
+.vk-auth__message {
+  color: var(--vk-ivory);
+  line-height: 1.6;
+}
+.vk-auth__forgot {
+  justify-self: end;
+  margin-top: var(--vk-space-2);
+  font-size: 0.85rem;
+}
+.vk-auth__back {
+  justify-self: center;
+  font-size: 0.9rem;
+}
+.vk-auth--single .vk-auth__eyebrow,
+.vk-auth--single .vk-auth__heading {
+  text-align: center;
+}
+.vk-auth--single .vk-auth__rule {
+  justify-self: center;
+}
+@media (min-width: 960px) {
+  .vk-auth.vk-auth--single {
+    grid-template-columns: 1fr;
+  }
+  .vk-auth--single .vk-auth__panel {
+    background: none;
+  }
+}
