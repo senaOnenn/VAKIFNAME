@@ -2,7 +2,7 @@
  * Genel platformun ziyaretçi kimliği (gerçek eser pasaportu için).
  *
  * Hesap veya kimlik doğrulama DEĞİLDİR: bu tarayıcıya özel, rastgele ve kişisel bilgi içermeyen bir etikettir;
- * `localStorage`'da tutulur. Demo oyuncu kimliğinden (`demoUser.ts`) ayrıdır; demo mühürleri bu pasaportta görünmez.
+ * `localStorage`'da tutulur.
  */
 export const VISITOR_STORAGE_KEY = 'vakifname.visitorId'
 

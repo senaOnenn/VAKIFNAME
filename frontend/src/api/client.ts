@@ -1,4 +1,4 @@
-import type { CheckInResponse, CheckInStatus, Passport, Place, Stamp } from './types'
+import type { Passport, Stamp } from './types'
 
 // localhost (127.0.0.1 değil): oturum çerezi SameSite=Lax; arayüz localhost:5173'teyken aynı site sayılır.
 const DEFAULT_API_BASE_URL = 'http://localhost:8000'
@@ -95,48 +95,6 @@ export function apiPost(path: string, json: unknown, signal?: AbortSignal, optio
   return request(path, signal, json, options)
 }
 
-const isFiniteNumber = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
-const isOptionalString = (v: unknown) => v === null || v === undefined || typeof v === 'string'
-
-/** Backend `Place` sözleşmesi: koordinatlar WGS84 aralığında, görev yarıçapı pozitif ve sonlu olmalı. */
-function isPlace(value: unknown): value is Place {
-  if (!value || typeof value !== 'object') return false
-  const p = value as Record<string, unknown>
-  return (
-    typeof p.id === 'string' &&
-    typeof p.name === 'string' &&
-    typeof p.city === 'string' &&
-    typeof p.description === 'string' &&
-    isFiniteNumber(p.latitude) &&
-    p.latitude >= -90 &&
-    p.latitude <= 90 &&
-    isFiniteNumber(p.longitude) &&
-    p.longitude >= -180 &&
-    p.longitude <= 180 &&
-    isFiniteNumber(p.check_in_radius_m) &&
-    p.check_in_radius_m > 0 &&
-    isOptionalString(p.source_title) &&
-    isOptionalString(p.source_url) &&
-    typeof p.is_demo === 'boolean'
-  )
-}
-
-function invalid(): ApiError {
-  return new ApiError('invalid-response', 'Sunucudan beklenmeyen bir yanıt geldi.')
-}
-
-export async function getPlaces(signal?: AbortSignal): Promise<Place[]> {
-  const body = await request('/places', signal)
-  if (!Array.isArray(body) || !body.every(isPlace)) throw invalid()
-  return body
-}
-
-export async function getPlace(placeId: string, signal?: AbortSignal): Promise<Place> {
-  const body = await request(`/places/${encodeURIComponent(placeId)}`, signal)
-  if (!isPlace(body)) throw invalid()
-  return body
-}
-
 function isStamp(value: unknown): value is Stamp {
   if (!value || typeof value !== 'object') return false
   const s = value as Record<string, unknown>
@@ -148,27 +106,7 @@ function isStamp(value: unknown): value is Stamp {
   )
 }
 
-const CHECK_IN_STATUSES: readonly CheckInStatus[] = ['completed', 'already_completed', 'out_of_range']
-
-/** Yanıtın biçimini ve kendi içindeki tutarlılığını doğrular: mühür yalnızca başarılı durumlarda ve aynı esere ait olmalı. */
-function isCheckInResponse(value: unknown, placeId: string): value is CheckInResponse {
-  if (!value || typeof value !== 'object') return false
-  const r = value as Record<string, unknown>
-  if (
-    typeof r.success !== 'boolean' ||
-    !CHECK_IN_STATUSES.includes(r.status as CheckInStatus) ||
-    typeof r.message !== 'string' ||
-    r.place_id !== placeId ||
-    typeof r.distance_m !== 'number' ||
-    typeof r.allowed_radius_m !== 'number'
-  ) {
-    return false
-  }
-  const stamp = r.stamp ?? null
-  if (r.status === 'out_of_range') return r.success === false && stamp === null
-  return r.success === true && isStamp(stamp) && stamp.place_id === placeId
-}
-
+/** Pasaport yanıtı: yalnızca istenen kullanıcıya ait ve toplam ile liste tutarlı olmalı. */
 export function isPassport(value: unknown, userId: string): value is Passport {
   if (!value || typeof value !== 'object') return false
   const p = value as Record<string, unknown>
@@ -179,30 +117,4 @@ export function isPassport(value: unknown, userId: string): value is Passport {
     typeof p.total_stamps === 'number' &&
     p.total_stamps === p.stamps.length
   )
-}
-
-/**
- * `POST /quests/{place_id}/check-in`. Koordinatlar istemcinin bildirdiği değerlerdir; backend bunları doğrulamaz.
- * `out_of_range` hata değil, normal bir yanıttır.
- */
-export async function checkIn(
-  placeId: string,
-  userId: string,
-  latitude: number,
-  longitude: number,
-  signal?: AbortSignal,
-): Promise<CheckInResponse> {
-  const body = await request(`/quests/${encodeURIComponent(placeId)}/check-in`, signal, {
-    user_id: userId,
-    latitude,
-    longitude,
-  })
-  if (!isCheckInResponse(body, placeId)) throw invalid()
-  return { ...body, stamp: body.stamp ?? null }
-}
-
-export async function getPassport(userId: string, signal?: AbortSignal): Promise<Passport> {
-  const body = await request(`/users/${encodeURIComponent(userId)}/passport`, signal)
-  if (!isPassport(body, userId)) throw invalid()
-  return body
 }

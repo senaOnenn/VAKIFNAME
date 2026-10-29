@@ -1,8 +1,7 @@
-import { DEMO_AVAILABLE, MODE_PARAM, type AppMode } from '../mode'
+import { MODE_PARAM, type AppMode } from '../mode'
 
 const MODES: { mode: AppMode; href: string; label: string; note: string; available: boolean }[] = [
-  { mode: 'katalog', href: '?', label: 'Gerçek Bursa Eserleri', note: 'Yayın onaylı kayıtlar', available: true },
-  { mode: 'demo', href: `?${MODE_PARAM}=demo`, label: 'Demo Keşif Oyunu', note: 'Kurgusal test mekânları', available: DEMO_AVAILABLE },
+  { mode: 'katalog', href: '?', label: 'Genel platform', note: 'Yayın onaylı kayıtlar', available: true },
   // Koşul burada doğrudan yazılır: üretim derlemesinde dal ve etiket metni pakete hiç girmez (scripts/check-public-build.mjs).
   ...(import.meta.env.DEV
     ? [{ mode: 'envanter' as const, href: `?${MODE_PARAM}=envanter`, label: 'Gerçek Bursa Envanteri',
@@ -11,7 +10,7 @@ const MODES: { mode: AppMode; href: string; label: string; note: string; availab
 ]
 
 /**
- * Geliştirme ortamı çubuğu: genel platform, dahili envanter ve Demo Keşif Oyunu arasında geçiş. Yalnızca geliştirme
+ * Geliştirme ortamı çubuğu: genel platform ile dahili envanter arasında geçiş. Yalnızca geliştirme
  * araçları (`dev/DevModes.tsx`) kullanır; genel kullanıcı arayüzünde ve üretim derlemesinde yoktur.
  */
 export function ModeSwitch({ mode }: { mode: AppMode }) {

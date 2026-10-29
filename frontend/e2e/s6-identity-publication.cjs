@@ -1,6 +1,5 @@
 // S6: KURGUSAL veri + geçici DB ile uçtan uca temel kimlik yayını.
 //   onayla : dahili ekranda kişisel test hesabıyla yapılandırılmış kimlik formu (BUR-9001), başka hiçbir karar yok.
-//   genel  : dışa aktarıcı çalıştıktan sonra production önizlemesinde eser yeniden başlatma olmadan görünür.
 const fs = require('fs')
 const { scenario } = require('./lib.cjs')
 const [phase, BASE, out, workdir] = process.argv.slice(2)
@@ -45,26 +44,5 @@ if (phase === 'onayla') {
     check('Yayın önizlemesi: 1 eser, 0 olgu, 0 görsel', preview.monuments_publishable === 1 &&
           preview.facts_publishable === 0 && preview.images_publishable === 0)
     await page.screenshot({ path: `${out}/s6-onay.png` })
-  })
-} else {
-  scenario('S6-genel', async ({ browser, check }) => {
-    const page = await (await browser.newContext({ viewport: { width: 1366, height: 900 } })).newPage()
-    await page.goto(BASE + '/')
-    const list = page.getByRole('list', { name: 'Gerçek eser listesi' })
-    await list.waitFor({ timeout: 10000 })
-    check('8-9. Public API güncellendi; onaylı eser ana sayfada (yeniden başlatma yok)',
-          (await list.getByRole('article').count()) === 1 && await list.getByText('Test Eseri BUR-9001').isVisible())
-    check('Konumsuz eser haritaya konmadı; açıklayıcı boş durum', await page.getByText('Haritada henüz onaylı konum yok').isVisible()
-          && (await page.locator('.leaflet-marker-icon').count()) === 0)
-    await page.getByRole('button', { name: 'Ayrıntıları gör: Test Eseri BUR-9001' }).click()
-    const panel = page.getByRole('complementary', { name: 'Eser ayrıntıları' })
-    await panel.getByText('Test Mahallesi, Test Caddesi').waitFor()
-    const text = await panel.innerText()
-    check('Ayrıntıda onaysız olgu yok', !text.includes('KURGUSAL OLGU'))
-    check('Check-in kapalı', text.includes('konum tabanlı görev açılmadı'))
-    const html = await page.content()
-    check('Araştırma notu, gerekçe ve incelemeci adı sızmıyor',
-          !html.includes('Test notu.') && !html.includes('KURGUSAL TEST') && !html.includes('Tarayıcı Testi Editörü'))
-    await page.screenshot({ path: `${out}/s6-genel.png`, fullPage: true })
   })
 }

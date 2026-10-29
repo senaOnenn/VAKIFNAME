@@ -59,24 +59,21 @@ tutulur. `.env` dosyaları Git'e girmez.
 - Dahili V20 verisi, inceleme veritabanı, kitap görselleri ve 121 fotoğraflık ZIP arşivinin görselleri depoda yoktur;
   bunlara bağlı testler kendiliğinden atlanır.
 
-### Oyun bölümünün klasör yapısı
+### Klasör yapısı
 
 ```text
 frontend/src/
-  demo/DemoGame.tsx                      Demo Keşif Oyunu (?mod=demo; üretim derlemesine girmez)
-  components/Quest*.tsx                  Görev paneli, görev durumu rozeti, görev bölümü
-  components/PassportSection.tsx, Seal.tsx   Dijital pasaport ve mühürler
-  components/Place*.tsx, MapSection.tsx  Mekân listesi, kartı, ayrıntısı ve harita (Leaflet)
-  hooks/useCheckIn.ts, useSelectedPlace.ts, useApi.ts
-  api/client.ts, api/types.ts            Backend istemcisi ve tipler
-  demoUser.ts, visitor.ts                Demo kullanıcı ve ziyaretçi kimliği (kişisel veri yok)
-  QuestPassport.test.tsx                 Görev + pasaport akış testleri
+  app/VakifnameApp.tsx                   Yönlendirme: açılış, giriş, şehir, rota, eserler, eser, rozet, pasaport, hesap, yönetim
+  app/screens/, app/components/          Ekranlar ve bileşenler (palet: design/tokens.css)
+  app/api.ts, app/session.ts             Oyun/rota API'si ve sunucu oturumu
+  catalog/catalogClient.ts, guideClient.ts   Onaylı katalog ve rehber istemcisi
+  internal/                              Dahili envanter (yalnızca geliştirme sunucusu, ?mod=envanter)
 backend/app/
-  routes.py, services.py, models.py      Demo mekân, check-in, görev ve pasaport uçları
-  monument_routes.py, progress.py        Gerçek eser görevleri, check-in, mühür ve pasaport
-  geo.py                                 Mesafe/yarıçap doğrulaması
-backend/tests/test_api.py, test_batch_and_quests.py, test_hardening.py
-data/places.json                         Kurgusal demo mekânları
+  public_catalog.py, monument_routes.py  Onaylı katalog uçları
+  route_engine.py, game.py, progress.py  Rota, oyun kademeleri, mühürler
+  accounts.py, auth_routes.py            Hesaplar (e-posta+parola, Google)
+  guide/                                 Rehber (sağlayıcı seçimi: VAKIFNAME_GUIDE_PROVIDER)
+  stats.py, admin.py                     Anonim istatistik ve yönetici panosu
 ```
 
 ### Test komutları

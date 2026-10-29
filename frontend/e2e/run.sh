@@ -73,28 +73,24 @@ for port in "$PUBLIC_PORT" "$DEMO_API_PORT" "$PREVIEW_PORT" "$DEV_PORT" "$FIC_DE
 
 STATUS=0
 API_CHECKS=("$PY" "$ROOT/backend/scripts/e2e_api_checks.py" --internal "$INTERNAL_PORT" --public "$PUBLIC_PORT" --workdir "$WORK/env")
-node e2e/s1-public-preview.cjs "$(U "$PREVIEW_PORT")" "$OUT" || STATUS=1
-node e2e/s1b-demo-dev.cjs "$(U "$DEV_PORT")" "$OUT" || STATUS=1
 node e2e/s2-internal-review.cjs "$(U "$DEV_PORT")" "$OUT" "$WORK/env" || STATUS=1
-node e2e/s5-video-hero.cjs "$(U "$PREVIEW_PORT")" "$(U "$DEV_PORT")" "$OUT" || STATUS=1
 node e2e/s4-research-map.cjs "$(U "$DEV_PORT")" "$OUT" "$WORK/env" || STATUS=1
 "${API_CHECKS[@]}" || STATUS=1
 
-# S6: kurgusal eser için kimlik onayı (form) → dışa aktarıcı → genel API kendiliğinden yenilenir → ana sayfa.
+# S6: kurgusal eser için kimlik onayı (form) → dışa aktarıcı → genel API kendiliğinden yenilenir (API denetimi).
 node e2e/s6-identity-publication.cjs onayla "$(U "$FIC_DEV_PORT")" "$OUT" "$WORK/fic" || STATUS=1
 cd "$ROOT/backend"
 VAKIFNAME_INTERNAL_DATA_DIR="$WORK/fic" VAKIFNAME_RESEARCH_FILE="$WORK/fic/research.json" \
   "$PY" -m app.internal.publish --out "$WORK/public/catalog.json" --actor e2e >"$WORK/publish.log" 2>&1 || STATUS=1
 cd "$ROOT/frontend"
-node e2e/s6-identity-publication.cjs genel "$(U "$PREVIEW_PORT")" "$OUT" || STATUS=1
 "${API_CHECKS[@]}" --fictional --expect 1 || STATUS=1
 
 # S3: tam kurgusal karar zinciri (olgu + doğrulanmış konum) aynı dosyaya atomik olarak yazılır; API yeniden başlatılmaz.
+# (Eski genel arayüzün tarayıcı senaryoları S1/S1b/S3/S5/S6-genel arayüzle birlikte kaldırıldı, 29 Ekim.)
 cd "$ROOT/backend"
 "$PY" scripts/e2e_fictional_catalog.py "$WORK/fictional" >"$WORK/fictional.log"
 mv "$WORK/fictional/public/catalog.json" "$WORK/public/catalog.json"
 cd "$ROOT/frontend"
-node e2e/s3-fictional-catalog.cjs "$(U "$PREVIEW_PORT")" "$OUT" || STATUS=1
 "${API_CHECKS[@]}" --fictional || STATUS=1
 
 echo "Ekran görüntüleri: $OUT"
