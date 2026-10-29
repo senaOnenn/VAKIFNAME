@@ -66,6 +66,8 @@ class EngagementRequest(_Strict):
 
 class QuizRequest(_Strict):
     user_id: UserId
+    # en: yalnızca İngilizcesi onaylı kayıtlardan; yetmezse Türkçe sorular verilir ve yanıttaki `lang` bunu söyler.
+    lang: Literal["tr", "en"] = "tr"
 
 
 class QuizAnswer(_Strict):
@@ -190,9 +192,10 @@ def start_quiz(request: Request, response: Response, body: QuizRequest, monument
         raise HTTPException(status_code=409, detail=NEEDS_LISTEN_AND_ASK if state["guide_required"] else NEEDS_LISTEN)
     catalog = request.app.state.monuments.catalog
     rng = request.app.state.game_rng
+    lang = "en" if body.lang == "en" and game.english_ready(catalog, m) else "tr"
 
     def compose(previous: list[dict]) -> list[dict]:
-        items = game.compose_quiz(catalog, m, rng, previous)
+        items = game.compose_quiz(catalog, m, rng, previous, lang)
         if len(items) < game.QUIZ_SIZE:
             raise _NotEnoughQuestions()
         return items
@@ -204,7 +207,8 @@ def start_quiz(request: Request, response: Response, body: QuizRequest, monument
     except _NotEnoughQuestions:
         raise HTTPException(status_code=409, detail=NOT_ENOUGH) from None
     response.headers["Cache-Control"] = "no-store"
-    return {"quiz_id": quiz_id, "expires_at": expires_at, "questions": [game.public_question(i) for i in items]}
+    return {"quiz_id": quiz_id, "expires_at": expires_at, "lang": lang,
+            "questions": [game.public_question(i) for i in items]}
 
 
 @router.post("/quiz/{quiz_id}/submit")

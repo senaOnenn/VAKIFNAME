@@ -28,6 +28,11 @@ GOOGLE_URL = "https://texttospeech.googleapis.com/v1"
 INTRO = "Hoş geldin! Ben buranın rehberiyim. Sana {name} hakkında kaynakların anlattıklarını aktaracağım."
 OUTRO = "Merak ettiğin bir şey olursa bana yazabilirsin. Bilgilerimin kaynaklarını aşağıda görebilirsin."
 PREFIX = {"reported": "Aktarılan bir rivayete göre: ", "uncertain": "Bu bilgi kesin değil: "}
+# İngilizce anlatım (Faz 11): yalnızca onaylı İngilizce kayıtlar (`text_en`); kalıplar narration.ts ile aynı.
+INTRO_EN = "Welcome! I am your guide here. Let me share what the sources tell us about {name}."
+OUTRO_EN = "If you are curious about anything, write to me. You can see the sources of what I told you below."
+PREFIX_EN = {"reported": "According to a reported tradition: ", "uncertain": "This is not certain: "}
+LANGUAGES = {"tr": "tr-TR", "en": "en-US"}
 MAX_TEXT = 1500
 
 
@@ -90,6 +95,7 @@ class GoogleTts:
 class TtsSettings:
     provider: str = "off"
     voice: str = "auto"
+    voice_en: str = "auto"
     language: str = "tr-TR"
     rate: float = 1.0
     cache_dir: Optional[Path] = None
@@ -104,6 +110,7 @@ class TtsSettings:
         cache = e("VAKIFNAME_TTS_CACHE_DIR", "").strip()
         key = e("VAKIFNAME_TTS_GOOGLE_KEY_FILE", "").strip()
         return cls(provider=provider, voice=e("VAKIFNAME_TTS_VOICE", "auto").strip() or "auto",
+                   voice_en=e("VAKIFNAME_TTS_VOICE_EN", "auto").strip() or "auto",
                    rate=float(e("VAKIFNAME_TTS_RATE", "1.0")), cache_dir=Path(cache) if cache else None,
                    key_file=Path(key) if key else None)
 
@@ -114,8 +121,11 @@ def pick_voice(names: list[str], language: str = "tr-TR") -> Optional[str]:
     return chirp[0] if chirp else (sorted(names)[0] if names else None)
 
 
-def narration_texts(monument) -> set[str]:
+def narration_texts(monument, lang: str = "tr") -> set[str]:
     """Eserin onaylı anlatımında geçebilecek seslendirme metinleri (narration.ts `spoken` alanı)."""
+    if lang == "en":
+        out = {INTRO_EN.format(name=monument.name_en or monument.name), OUTRO_EN}
+        return out | {PREFIX_EN.get(f.certainty, "") + f.text_en for f in monument.facts if f.text_en}
     out = {INTRO.format(name=monument.name), OUTRO}
     for f in monument.facts:
         out.add(PREFIX.get(f.certainty, "") + f.text)
@@ -126,7 +136,11 @@ class SpeechService:
     def __init__(self, settings: TtsSettings, provider: Optional[TtsProvider] = None):
         self.settings = settings
         self.provider = provider
-        self._voice: Optional[str] = None if settings.voice == "auto" else settings.voice
+        # Dil başına ses: Türkçe `VAKIFNAME_TTS_VOICE`, İngilizce `VAKIFNAME_TTS_VOICE_EN` (auto = o dilin ilk Chirp 3 HD sesi).
+        self._voices: dict[str, Optional[str]] = {
+            "tr": None if settings.voice == "auto" else settings.voice,
+            "en": None if settings.voice_en == "auto" else settings.voice_en,
+        }
         self._lock = threading.Lock()
         self._inflight: dict[str, threading.Lock] = {}
         if settings.provider != "off" and provider is None:
@@ -141,21 +155,22 @@ class SpeechService:
     def enabled(self) -> bool:
         return self.settings.provider != "off" and self.provider is not None and self.settings.cache_dir is not None
 
-    def voice(self) -> Optional[str]:
-        if self._voice is None and self.provider is not None:
+    def voice(self, lang: str = "tr") -> Optional[str]:
+        code = LANGUAGES[lang]
+        if self._voices.get(lang) is None and self.provider is not None:
             try:
-                self._voice = pick_voice(self.provider.voices(self.settings.language), self.settings.language)
+                self._voices[lang] = pick_voice(self.provider.voices(code), code)
             except TtsError as e:
-                logger.warning("Seslendirme: ses listesi alınamadı (%s).", e.kind)
-        return self._voice
+                logger.warning("Seslendirme: %s ses listesi alınamadı (%s).", code, e.kind)
+        return self._voices.get(lang)
 
     def status(self) -> dict:
         return {"enabled": self.enabled, "provider": self.settings.provider if self.enabled else "browser",
-                "voice": self._voice if self.enabled else None}
+                "voice": self._voices["tr"] if self.enabled else None}
 
-    def file_for(self, text: str) -> str:
-        voice = self.voice() or ""
-        key = f"{self.settings.provider}|{voice}|{self.settings.rate}|{text}".encode("utf-8")
+    def file_for(self, text: str, lang: str = "tr") -> str:
+        voice = self.voice(lang) or ""
+        key = f"{self.settings.provider}|{lang}|{voice}|{self.settings.rate}|{text}".encode("utf-8")
         return hashlib.sha256(key).hexdigest() + ".mp3"
 
     def path(self, file: str) -> Optional[Path]:
@@ -164,14 +179,14 @@ class SpeechService:
         p = self.settings.cache_dir / file
         return p if p.is_file() else None
 
-    def ensure(self, text: str) -> tuple[str, bool]:
+    def ensure(self, text: str, lang: str = "tr") -> tuple[str, bool]:
         """Cümlenin ses dosyası (yoksa üretir). (dosya adı, yeni mi) döner; hata `TtsError`."""
         if not self.enabled:
             raise TtsError("off")
-        voice = self.voice()
+        voice = self.voice(lang)
         if not voice:
             raise TtsError("no_voice")
-        file = self.file_for(text)
+        file = self.file_for(text, lang)
         target = self.settings.cache_dir / file
         if target.is_file():
             return file, False
@@ -180,7 +195,7 @@ class SpeechService:
         with lock:
             if target.is_file():
                 return file, False
-            audio = self.provider.synthesize(text, voice, self.settings.language, self.settings.rate)
+            audio = self.provider.synthesize(text, voice, LANGUAGES[lang], self.settings.rate)
             tmp = target.with_suffix(".tmp")
             tmp.write_bytes(audio)
             os.replace(tmp, target)

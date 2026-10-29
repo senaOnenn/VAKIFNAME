@@ -35,14 +35,29 @@ const PREFIX: Record<string, string> = {
   reported: 'Aktarılan bir rivayete göre: ',
   uncertain: 'Bu bilgi kesin değil: ',
 }
+// İngilizce (Faz 11): yalnızca onaylı İngilizce kayıtlar; kalıplar sunucudaki tts.py ile birebir aynı (test denetler).
+const PREFIX_EN: Record<string, string> = {
+  reported: 'According to a reported tradition: ',
+  uncertain: 'This is not certain: ',
+}
+const INTRO_EN = (name: string) => `Welcome! I am your guide here. Let me share what the sources tell us about ${name}.`
+const OUTRO_EN = 'If you are curious about anything, write to me. You can see the sources of what I told you below.'
 
 const rank = (f: MonumentFact) => {
   const i = CATEGORY_ORDER.indexOf(f.category)
   return i === -1 ? CATEGORY_ORDER.length : i
 }
 
-/** Anlatımda en fazla `maxFacts` bilgi (yaklaşık 1–2 dakika). Belgelenmiş bilgiler önce gelir. */
-export function buildScript(m: Pick<MonumentDetail, 'name' | 'facts'>, maxFacts = 6): Line[] {
+/**
+ * Anlatımda en fazla `maxFacts` bilgi (yaklaşık 1–2 dakika). Belgelenmiş bilgiler önce gelir. İngilizcede yalnızca
+ * İngilizcesi onaylı kayıtlar anlatılır (makine çevirisi yok).
+ */
+export function buildScript(
+  m: Pick<MonumentDetail, 'name' | 'facts'> & { name_en?: string | null },
+  maxFacts = 6,
+  lang: 'tr' | 'en' = 'tr',
+): Line[] {
+  if (lang === 'en') return buildScriptEn(m, maxFacts)
   const picked = [...m.facts]
     .sort((a, b) => Number(a.certainty !== 'documented') - Number(b.certainty !== 'documented') || rank(a) - rank(b))
     .slice(0, maxFacts)
@@ -60,5 +75,26 @@ export function buildScript(m: Pick<MonumentDetail, 'name' | 'facts'>, maxFacts 
       certainty: f.certainty,
     })),
     { kind: 'outro', text: outro, spoken: outro },
+  ]
+}
+
+function buildScriptEn(m: Pick<MonumentDetail, 'name' | 'facts'> & { name_en?: string | null }, maxFacts: number): Line[] {
+  const picked = m.facts
+    .filter((f) => f.text_en)
+    .sort((a, b) => Number(a.certainty !== 'documented') - Number(b.certainty !== 'documented') || rank(a) - rank(b))
+    .slice(0, maxFacts)
+    .sort((a, b) => rank(a) - rank(b))
+  const intro = INTRO_EN(m.name_en || m.name)
+  return [
+    { kind: 'intro', text: intro, spoken: intro },
+    ...picked.map<Line>((f) => ({
+      kind: 'fact',
+      text: f.text_en!,
+      spoken: (PREFIX_EN[f.certainty] ?? '') + f.text_en!,
+      factId: f.fact_id,
+      source: `${f.source.title}, p. ${f.en_page ?? f.source.pdf_physical_page}`,
+      certainty: f.certainty,
+    })),
+    { kind: 'outro', text: OUTRO_EN, spoken: OUTRO_EN },
   ]
 }

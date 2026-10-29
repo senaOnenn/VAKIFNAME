@@ -108,10 +108,21 @@ def _normalized(text: str) -> str:
 
 # --- Soru havuzları -------------------------------------------------------------------------------------------------
 
-def _fact_view(f: PublicFact) -> dict:
+def _fact_view(f: PublicFact, lang: str = "tr") -> dict:
     # Sözleşme (frontend/src/app/api.ts QuizResult): kaynak tek satırlık metindir.
+    if lang == "en" and f.text_en:
+        return {"title": f.title_en, "text": f.text_en, "source": f"{f.source.title}, p. {f.en_page or f.source.pdf_physical_page}",
+                "certainty": f.certainty}
     return {"title": f.title, "text": f.text, "source": f"{f.source.title}, s. {f.source.pdf_physical_page}",
             "certainty": f.certainty}
+
+
+def _en_ok(f: PublicFact, catalog: PublicCatalog) -> bool:
+    """İngilizce ifade de eser adı içermemeli (Türkçe ya da İngilizce adı): cevap ifadenin içinden okunmasın."""
+    if not f.text_en:
+        return False
+    text = fold(f.text_en)
+    return not any(n and fold(n) in text for o in catalog.monuments for n in (o.name, o.name_en))
 
 
 def _image_attribution(img: PublicImage) -> str:
@@ -180,9 +191,16 @@ def _prefer(cands: Sequence, key, avoid: frozenset[str], rng: random.Random):
 
 
 class _Builder:
-    def __init__(self, catalog: PublicCatalog, m: PublicMonument, rng: random.Random, avoid: frozenset[str]):
-        self.m, self.rng, self.avoid = m, rng, avoid
+    def __init__(self, catalog: PublicCatalog, m: PublicMonument, rng: random.Random, avoid: frozenset[str],
+                 lang: str = "tr"):
+        self.m, self.rng, self.avoid, self.lang = m, rng, avoid, lang
         self.p = _pools(catalog, m)
+        if lang == "en":
+            # Yalnızca İngilizcesi onaylı kayıtlar ve sorular (Faz 11); tarihî içerikte makine çevirisi yok.
+            ok = lambda f: _en_ok(f, catalog)  # noqa: E731
+            self.p = _Pools(choice=tuple(f for f in self.p.choice if f.quest.question_en), images=self.p.images,
+                            far=self.p.far, near=self.p.near, tf_true=tuple(f for f in self.p.tf_true if ok(f)),
+                            tf_false=tuple((f, o) for f, o in self.p.tf_false if ok(f)))
         self.items: list[dict] = []
         self.used_facts: set[str] = set()  # bu sınavda soru ya da ifade olarak kullanılan bilgiler (cevap sızmasın)
         self.used_images: set[str] = set()
@@ -216,25 +234,33 @@ class _Builder:
         f = _prefer(self._choice(), lambda f: "f:" + f.fact_id, self.avoid, self.rng)
         self.used_facts.add(f.fact_id)
         q = f.quest
-        order = list(range(len(q.choices)))
+        en = self.lang == "en"
+        choices = q.choices_en if en else q.choices
+        order = list(range(len(choices)))
         self.rng.shuffle(order)
-        self.items.append({"kind": "choice", "key": "c:" + f.fact_id, "prompt": q.question,
-                           "choices": [q.choices[i] for i in order], "answer": order.index(q.answer_index),
-                           "explanation": q.explanation, "fact": _fact_view(f)})
+        self.items.append({"kind": "choice", "key": "c:" + f.fact_id, "prompt": q.question_en if en else q.question,
+                           "choices": [choices[i] for i in order], "answer": order.index(q.answer_index),
+                           "explanation": q.explanation_en if en else q.explanation, "fact": _fact_view(f, self.lang)})
 
     def _take_true_false(self):
         directions = [d for d, ok in ((TRUE, self._tf_true()), (FALSE, self._tf_false())) if ok]
         direction = self.rng.choice(directions)
-        name = self.m.name
+        en = self.lang == "en"
+        name = (self.m.name_en or self.m.name) if en else self.m.name
         if direction == TRUE:
             f = _prefer(self._tf_true(), lambda f: "f:" + f.fact_id, self.avoid, self.rng)
-            explanation = f"Bu bilgi onaylı katalogda {name} kaydında yer alır."
+            explanation = (f"This record belongs to {name} in the approved catalogue." if en
+                           else f"Bu bilgi onaylı katalogda {name} kaydında yer alır.")
         else:
             f, owner = _prefer(self._tf_false(), lambda fo: "f:" + fo[0].fact_id, self.avoid, self.rng)
-            explanation = f"Bu bilgi {name} ile değil, {owner.name} ile ilgilidir; onaylı katalogda o eserin kaydındadır."
+            other = (owner.name_en or owner.name) if en else owner.name
+            explanation = (f"This record is about {other}, not {name}; it belongs to that monument in the approved catalogue."
+                           if en else f"Bu bilgi {name} ile değil, {other} ile ilgilidir; onaylı katalogda o eserin kaydındadır.")
         self.used_facts.add(f.fact_id)
-        self.items.append({"kind": "true_false", "key": "t:" + f.fact_id, "prompt": f"Bu bilgi {name} ile mi ilgili?",
-                           "statement": f.text, "answer": direction, "explanation": explanation, "fact": _fact_view(f)})
+        self.items.append({"kind": "true_false", "key": "t:" + f.fact_id,
+                           "prompt": f"Is this about {name}?" if en else f"Bu bilgi {name} ile mi ilgili?",
+                           "statement": f.text_en if en else f.text, "answer": direction, "explanation": explanation,
+                           "fact": _fact_view(f, self.lang)})
 
     def _take_image_pick(self):
         target = _prefer(self._targets(), lambda i: "i:" + i.image_id, self.avoid, self.rng)
@@ -249,10 +275,14 @@ class _Builder:
         self.used_distractor_monuments.update(o.monument_id for o, _ in distractors)
         self.rng.shuffle(options)
         answer = next(i for i, (o, _) in enumerate(options) if o.monument_id == self.m.monument_id)
-        listing = ", ".join(o.name for o, _ in options)
-        self.items.append({"kind": "image_pick", "key": "i:" + target.image_id, "prompt": f"Hangisi {self.m.name}?",
+        en = self.lang == "en"
+        label = (lambda o: o.name_en or o.name) if en else (lambda o: o.name)
+        listing = ", ".join(label(o) for o, _ in options)
+        self.items.append({"kind": "image_pick", "key": "i:" + target.image_id,
+                           "prompt": f"Which one is {label(self.m)}?" if en else f"Hangisi {self.m.name}?",
                            "images": [_image_option(img) for _, img in options], "answer": answer,
-                           "explanation": f"Doğru cevap {answer + 1}. görsel. Görseller sırasıyla: {listing}.",
+                           "explanation": (f"The correct answer is image {answer + 1}. In order: {listing}." if en
+                                           else f"Doğru cevap {answer + 1}. görsel. Görseller sırasıyla: {listing}."),
                            "fact": None})
 
     def build(self) -> list[dict]:
@@ -277,12 +307,12 @@ class _Builder:
 
 
 def compose_quiz(catalog: PublicCatalog, m: PublicMonument, rng: random.Random,
-                 previous: Iterable[dict] = ()) -> list[dict]:
+                 previous: Iterable[dict] = (), lang: str = "tr") -> list[dict]:
     """Eserin sınav soruları (sunucu görünümü, doğru cevaplarla). `previous`: aynı kullanıcının önceki sınavının
     soruları; onlarda kullanılan kayıtlar (bilgi, soru ya da ifade olarak; görsel) bu sınavda ancak başka seçenek kalmazsa
     yeniden kullanılır. Veri yetmezse `QUIZ_SIZE`'dan az soru döner (çağıran sınavı açmaz)."""
     avoid = frozenset(_record_key(item.get("key", "")) for item in previous)
-    return _Builder(catalog, m, rng, avoid).build()
+    return _Builder(catalog, m, rng, avoid, lang).build()
 
 
 def _record_key(key: str) -> str:
@@ -290,9 +320,18 @@ def _record_key(key: str) -> str:
     return "f:" + key[2:] if key[:2] in ("c:", "t:") else key
 
 
-def quiz_capacity(catalog: PublicCatalog, m: PublicMonument) -> int:
+def quiz_capacity(catalog: PublicCatalog, m: PublicMonument, lang: str = "tr") -> int:
     """Eserden kurulabilecek soru sayısı (en fazla `QUIZ_SIZE`)."""
-    return len(compose_quiz(catalog, m, random.Random(0)))
+    return len(compose_quiz(catalog, m, random.Random(0), lang=lang))
+
+
+MIN_EN_TEXT_QUESTIONS = 2
+
+
+def english_ready(catalog: PublicCatalog, m: PublicMonument) -> bool:
+    """İngilizce tur kurulabilir mi: 5 soru ve en az 2'si metin (yalnız görsel sorusundan oluşan tur tekdüze olur)."""
+    items = compose_quiz(catalog, m, random.Random(0), lang="en")
+    return len(items) >= QUIZ_SIZE and sum(i["kind"] != "image_pick" for i in items) >= MIN_EN_TEXT_QUESTIONS
 
 
 def public_question(item: dict) -> dict:

@@ -5,7 +5,7 @@
 - `GET /speech/audio/{file}`: önbellekteki ses dosyası.
 """
 
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, HTTPException, Path, Request
 from fastapi.responses import FileResponse
@@ -20,6 +20,7 @@ router = APIRouter(tags=["speech"])
 class SpeechRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     text: Annotated[str, StringConstraints(min_length=1, max_length=MAX_TEXT)]
+    lang: Literal["tr", "en"] = "tr"
 
 
 def _speech(request: Request):
@@ -39,16 +40,16 @@ def speak(request: Request, body: SpeechRequest, monument_id: Annotated[Monument
     m = request.app.state.monuments.get(monument_id)
     if m is None:
         raise HTTPException(status_code=404, detail="Eser bulunamadı veya henüz yayımlanmadı.")
-    if body.text not in narration_texts(m):
+    if body.text not in narration_texts(m, body.lang):
         raise HTTPException(status_code=422, detail="Yalnızca eserin onaylı anlatımı seslendirilir.")
-    if service.path(service.file_for(body.text)) is None:
+    if service.path(service.file_for(body.text, body.lang)) is None:
         # Yalnızca yeni üretim sınırlanır; önbellekteki ses serbest.
         client = request.client.host if request.client else "unknown"
         retry = request.app.state.speech_limiter.check(client)
         if retry is not None:
             raise HTTPException(status_code=429, detail="Çok sık istek; biraz sonra deneyin.", headers={"Retry-After": str(retry)})
     try:
-        file, _ = service.ensure(body.text)
+        file, _ = service.ensure(body.text, body.lang)
     except TtsError as e:
         raise HTTPException(status_code=503, detail=f"Seslendirme şu anda yapılamıyor ({e.kind}).") from e
     return {"url": f"/speech/audio/{file}"}
