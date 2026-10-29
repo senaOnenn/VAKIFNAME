@@ -25,6 +25,11 @@ Envanter projesi: Hatay (117 eser, 2022), Konya (289, 2024), Bursa (385) ve Küt
 10. **İki tasarım:** web (responsive) ve mobil. Aynı bileşenler ve veri; farklı yerleşim.
 11. **İstatistik:** ziyaretçi sayısı, eser görüntülenme, en çok ilgi gören eserler (sponsor istedi). Kişisel veri tutmadan.
 12. **Dil:** Türkçe ve İngilizce (sponsor yayınları iki dilli).
+13. **İçerik yönetimi (29 Ekim kararı).** Tek rol vardır: **yönetici** (ayrı bir editör yok; onayı yönetici verir). İçerik iki yoldan girer:
+   (a) **Hat (pipeline):** yönetici kitabı (PDF) ve eseri ekler → hat sayfa metnini çıkarır, eser için kayıt adayları üretir (her aday kitaptaki alıntısı ve sayfasıyla; alıntı o sayfada yoksa aday düşer) → adaylar **taslak** olur.
+   (b) **Elle:** yönetici eser ve kayıt ekler/düzenler; kaynak (kitap + sayfa) zorunludur.
+   Her iki yolda da taslak, yönetici kaynak sayfayla yan yana görüp **onaylayana kadar** hiçbir yerde (eser sayfası, anlatım, rehber, sınav) görünmez. Düzenlenen kayıt yeniden onaylanır; kimin ne zaman onayladığı kayıtlıdır.
+   Yöneticiler `VAKIFNAME_ADMIN_EMAILS` listesindeki **doğrulanmış** e-postalardır (takımın 4 üyesi).
 
 ## 3. Sponsor ve jüri beklentileri (şartname + 23 Ekim toplantısı)
 - **Çalışan MVP şart.** Statik tasarım, mock-up, ekran görüntüsü ana ürün sayılmaz; temel akışlar final sırasında **uçtan uca canlı** gösterilir.
@@ -59,6 +64,8 @@ Envanter projesi: Hatay (117 eser, 2022), Konya (289, 2024), Bursa (385) ve Küt
 - **Rehber sağlayıcısı** tek yerden seçilir: `VAKIFNAME_GUIDE_PROVIDER` (`openrouter` | `claude-cli`), bkz. `backend/.env.example`. Giriş/anahtar yoksa **sessiz geçiş yok**; rehber kapanır, kaynaklı arama sürer. Hesap açılış logunda yazar.
 - **Tasarım kodla yapılır.** Figma yalnızca renk/yazı tipi karar belgesi ve sunum içindir. Tasarım token'ları tek dosyada: `frontend/src/design/tokens.css` (oluşturulacak).
 - Yeni env eklenince `backend/.env.example`'a **seçenekleriyle birlikte yorum satırı** yazılır.
+- **Canlı ortam (29 Ekim kararı):** final demosu sunucuda canlı çalışır: `https://calismalar.tikirsoft.com`. Yerel kurulum internet kesintisine karşı yedektir. Google girişi bu adres için tanımlı OAuth istemcisiyle çalışır (kimlik `.env` dosyalarında, repoda değil).
+- **Hesap güvenliği (29 Ekim kararı):** e-posta doğrulaması ve parola sıfırlama zorunludur. Doğrulanmamış e-posta yönetici yetkisi almaz.
 
 ### Çalıştırma
 ```bash
@@ -76,10 +83,10 @@ Medya (görsel) ve giriş videosu repoda yoktur: görseller `backend/tests/ask_e
 - **Önce anla, sonra yaz.** Büyük değişiklikte plan → onay → uygulama. Ekip kodu sorgulamadan ilerlemişti; biz **gerekçeli** ilerleriz.
 - **İnce çalışırız, sıkıştırmayız.** Takvim baskısı kalite ve doğruluk kuralını (§4) gevşetmez. Kapsamı kısarız, kaliteyi değil.
 - Değişiklik küçük ve test edilebilir olur. Commit öncesi: backend + frontend testleri ve `npx tsc -b` geçer.
-- **Commit ve push yalnızca kullanıcı isteyince.** Commit mesajına **Claude ortak yazar (Co-Authored-By) satırı eklenmez**. **Ana dal `feat/game`** (`main` değil; `main` geride kaldı). Yeni işler `feat/game`'den dal alır, bittiğinde `feat/game`'e birleşir. `feat/game`'e birleştirme/push yalnızca kullanıcı isteyince.
+- Commit mesajına **Claude ortak yazar (Co-Authored-By) satırı eklenmez**. **Ana dal `feat/game`** (`main` değil; `main` geride kaldı). Yeni işler `feat/game`'den dal alır; dal commit + push'lanır. **Karar (29 Ekim):** backend + frontend testleri, `tsc` ve derleme geçen dalı Claude `feat/game`'e birleştirip push'lar (PR açılmaz).
 - Kullanıcı arayüz metinleri Türkçe; ayrıca İngilizce katmanı. Kod/komut olduğu gibi kalır; commit mesajları İngilizce.
 - Kullanıcının makinesine zarar verebilecek işlem (sudo, silme, başka hesaba harcama) önce sorulur.
-- LLM çağrıları API'den değil, **abonelik oturumu** (`claude -p`) üzerinden; hesap seçimi `CLAUDE_CONFIG_DIR` ile.
+- LLM çağrıları API'den değil, **abonelik oturumu** (`claude -p`) üzerinden. **Karar (29 Ekim):** bu Mac'te `claude` oturumu `talha.aygen@konzek.com` hesabıdır (tüm bilgisayar geçti). Canlı sunucuda ayrıca `claude` girişi gerekir.
 
 ## 8. Kaynaklar (proje sahibinin Mac'inde)
 - `~/hackathon-drive/` — şartname, bilgi notu, toplantı notları, oyun senaryosu, marka varlıkları (`game/vakifname_brand_assets`), giriş videoları, ciltli yayın PDF'leri (`veriler/`), eser görselleri (`images/`, `Eserler_ve_görseller_ayrıştırılmış/`).

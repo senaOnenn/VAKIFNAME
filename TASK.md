@@ -1,15 +1,32 @@
 # VAKIFNAME — Görev listesi
 
 > Kurallar ve kararlar: `CLAUDE.md`. Bu dosya **yaşayan listedir**: bitenleri işaretle, yeni bulguyu ekle.
-> Güncelleme: 27 Ekim 2026. Takvim: özellik dondurma **3 Kasım** (ekip kararı), geliştirme biter **7 Kasım**, final **7–8 Kasım**. 28 Ekim yarım gün, 29 Ekim tatil.
+> Güncelleme: 29 Ekim 2026. Takvim: özellik dondurma **3 Kasım** (ekip kararı), geliştirme biter **7 Kasım**, final **7–8 Kasım**. 28 Ekim yarım gün, 29 Ekim tatil.
 > İlke: kapsamı kısarız, **kaliteyi ve veri doğruluğunu kısmayız**. Sıkışırsak önce "güzel olsun" maddeleri düşer (⬇ ile işaretli).
 
 ## Durum özeti
 - ✅ Backend sağlam: onaylı katalog (10 eser), kaynaklı olgular, sunucuda doğrulanan sorular, SQLite ilerleme, test süiti.
 - ✅ Rehber hattı: sağlayıcı seçimi (`claude-cli` / `openrouter`), gerçek giriş kontrolü. **`feat/game`'e birleşti (2c16b4f).** Ana dal: `feat/game`.
-- ❌ Arayüz: tek uzun sayfa, funnel yok, oyun yok, eser sayfası kitabi, giriş yok. **Baştan yapılacak.**
-- ✅ Konum koordinatları onaylı (katalog). ❌ Check-in: yarıçap ve `gps_checkin` kararı yok (`checkin_available: false`); Faz 5'te.
-- ❌ Hesap sistemi yok (tarayıcıda üretilen takma kimlik var).
+- ✅ Yeni arayüz (Faz 1–5) ve istatistik (Faz 6) **`feat/game`'e birleşti (29 Ekim, f7f4f6f).**
+- ✅ Konum koordinatları onaylı (katalog). ✅ Ziyaret mührü (yarıçap, sunum modu).
+- ✅ Hesap sistemi (e-posta+parola, Google). ❌ E-posta doğrulama, parola sıfırlama (29 Ekim kararı: zorunlu).
+- ❌ İçerik yönetimi (şartname 5.1.1): karar verildi (29 Ekim, CLAUDE.md §2.13), yapılacak.
+
+## 29 Ekim kararları
+1. **İçerik yönetimi:** tek rol yönetici; hat (kitap PDF + eser → aday kayıtlar → taslak) + elle ekleme/düzenleme; onaysız hiçbir şey görünmez (CLAUDE.md §2.13).
+2. **Yöneticiler:** takımın 4 üyesi (`VAKIFNAME_ADMIN_EMAILS`). Biri `mtalhaaygen@gmail.com`; diğer 3 e-posta bekleniyor.
+3. **Rehber hesabı:** `talha.aygen@konzek.com` (tüm Mac geçti; Pro plan).
+4. **Google girişi (K6):** OAuth istemcisi oluşturuldu; yetkili adres `https://calismalar.tikirsoft.com`. Kimlik yalnızca `.env` dosyalarında.
+5. **Birleştirme:** Claude test geçen dalı `feat/game`'e birleştirip push'lar.
+6. **Eski arayüz kodu silinir.**
+7. **Final demosu sunucuda canlı** (`calismalar.tikirsoft.com`); yerel kurulum yedek.
+8. Özellik dondurma **3 Kasım** kalır.
+9. **Ses (K3):** bir ses seçilecek; o zamana kadar tarayıcı sesi + altyazı.
+10. **E-posta doğrulama ve parola sıfırlama zorunlu.**
+11. **Ziyaret yarıçapı:** konuşulacak (35 m duruyor).
+12. **Sunum modu finalde açık**, ekranda açıkça etiketli.
+13. Rehberin adı: açık.
+14–17: beklemede (görsel ayıklama, İngilizce, tanıtım videosu, küçük teknik kararlar).
 
 ## Karar bekleyenler (bunlar çözülmeden ilgili iş başlamaz)
 | # | Konu | Öneri |
@@ -19,7 +36,7 @@
 | K3 | ◐ **VARSAYILAN UYGULANDI (Faz 4): tarayıcı seslendirmesi + altyazı.** **Karakterin sesi.** Önceden kaydedilmiş anlatım mı, canlı TTS mi? | Anlatım **önceden üretilir** (kalite + kontrol + lisans). Sohbet cevapları metin + tarayıcı `speechSynthesis` (opsiyonel dinle). |
 | K4 | ✅ **KARARLI (27 Ekim):** anlatıcı her yerde yerel rehber; tarihî kişi portre kartıyla (`data/real_catalog/people.json`, `GET /monuments/{id}/people`). **Karakter görseli.** Tarihî karakter için hangi eserlerde figür var? | Eser başına `narrator` alanı: tarihî şahsiyet (Yıldırım Bayezid, Osman Gazi, Orhan Gazi, Cem Sultan, II. Murad) **veya** yerel rehber. Çizim/illüstrasyon dili; fotogerçekçi yüz yok. |
 | K5 | ✅ **KARARLI (27 Ekim).** Şimdilik **mevcut görsellerle** devam. Sponsorun kaynağı Bursa'nın 3 ciltlik PDF'i; görselleri ayrı bir süreçte ayıklayıp geçeceğiz. | — (kullanım izni için organizatöre ayrıca sorulacak) |
-| K6 | **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
+| K6 | ✅ **GELDİ (29 Ekim).** **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
 | K7 | ✅ **KARARLI (27 Ekim).** Koordinatlar **onaylıdır**, katalogdakiler kullanılır; kendi eklediğimiz konum verisi yok. Kayıtlar: noktalar `backend/tests/ask_eval/catalog_snapshot.json`, adaylar `data/real_catalog/monument_research.json`, onay kararları sunucuda `review.sqlite3`. | Ziyaret (Faz 5) için eser başına yarıçap yapılandırılabilir olur; yakın eserler (Muradiye'de 4 eser, Osman/Orhan Gazi) çakışmasın diye küçük başlanır. Sahada ince ayar sonra. |
 | K8 | ✅ **KARARLI (Faz 2'de uygulandı).** **Misafir ilerlemesi.** Üye olmadan toplanan rozetler giriş yapınca birleşir mi? | Evet: cihazdaki ilerleme girişte hesaba **birleştirilir**. |
 | K9 | **Yeni dil:** EN metinler nereden? | Ciltli yayınlar iki dilli; onaylı olgulara `text_en` alanı. Çeviri uydurma değil, kaynaktan. |
@@ -48,7 +65,8 @@
 - [x] Aydınlatma metni sayfası (`/gizlilik`, sistemin gerçekte sakladığı verilere göre; yayın öncesi kurumun KVKK metniyle değiştirilmeli) ve hesap silme (KVKK: kişisel alanlar boşaltılır, oturum ve ilerleme silinir).
 - [x] **Karar (27 Ekim, varsayılan):** parolalı kayıtta e-posta doğrulaması yok; bu yüzden Google aynı e-postalı hesaba bağlanınca doğrulanmamış parola silinir ve açık oturumlar kapatılır (önceden hesap ele geçirme önlemi).
 - [x] Testler: backend 56 auth testi (toplam 530), frontend sahte auth sunucusuyla 17 akış testi; gerçek sunucuyla tarayıcıda uçtan uca (kayıt → yenileme → çıkış → yanlış parola → giriş → hesap silme) denendi.
-- Not: arayüz API'ye **`localhost:8000`** ile gitmeli (127.0.0.1 farklı site sayılır, çerez gitmez). Kapsam dışı: parola sıfırlama, e-posta doğrulama, profil düzenleme.
+- Not: arayüz API'ye **`localhost:8000`** ile gitmeli (127.0.0.1 farklı site sayılır, çerez gitmez). Kapsam dışı: profil düzenleme.
+- [ ] **E-posta doğrulama + parola sıfırlama (29 Ekim kararı, zorunlu).** Tek kullanımlık, süreli bağlantılar (sunucuda yalnızca özet); parola sıfırlanınca bütün oturumlar kapanır; "bu e-posta kayıtlı mı" sızdırılmaz. Doğrulanmamış e-posta yönetici olamaz. Doğrulanmış parolalı hesaba Google bağlanınca parola artık silinmez. Gönderim: geliştirmede dosyaya, canlıda SMTP (sunucu bilgisi gerekecek).
 
 ## Faz 3 — Eserler ve keşif ✅ (27 Ekim, dal `feat/discover`)
 - [x] **Eserler sayfası** (`/eserler`): kart ızgarası (kapak + atıf satırı), şehir ve tür filtresi, liste/harita görünümü, oyun durumu rozetleri (kilitli, açık, bilgi mührü, altın mühür).
@@ -80,13 +98,19 @@
 - Not: sınavdaki görsel dosya adları genel katalogdaki görsellerle eşleştirilebilir (katalog açık olduğu sürece kaçınılmaz); gerekirse sınava özel geçici görsel adresleri.
 
 ## Faz 6 — Yönetim, istatistik, ölçek
-- [ ] **İçerik ekleme/düzenleme** (şartname 5.1.1) — **karar bekliyor (taslak + onay mı, doğrudan yayın mı?)**. Bulgu: ekibin dahili aracı yalnızca mevcut taslakları onaylayıp yayımlıyor; yeni eser ekleme/düzenleme ucu yok. yeni eser eklenince harita, rota ve karakter hattına düşer. Mevcut dahili inceleme araçları (`internal/`) tekrar kullanılır.
+- [ ] **İçerik ekleme/düzenleme** (şartname 5.1.1) — **karar verildi (29 Ekim, CLAUDE.md §2.13).** Bulgu: ekibin dahili aracı yalnızca mevcut taslakları onaylayıp yayımlıyor; yeni eser ekleme/düzenleme ucu yok. Yapılacaklar:
+  - [ ] İçerik deposu (SQLite): kaynak kitap, eser, kayıt (alıntı + sayfa + kesinlik), sınav sorusu; durum taslak/yayında; onay kaydı (kim, ne zaman). Mevcut onaylı katalog (V20) salt okunur temel olarak kalır; yayımlanan içerik onun üstüne eklenir.
+  - [ ] Hat: PDF yükle → sayfa metni → eser + sayfa aralığı seç → rehber modeli (`claude -p`) aday kayıt önerir → alıntı sayfada birebir yoksa aday düşer → taslak.
+  - [ ] Yönetim ekranı: kitaplar, eserler (haritada konum seçimi), taslak kuyruğu (kaynak sayfa metniyle yan yana), elle ekle/düzenle, onayla/yayımla, geri çek.
+  - [ ] Yayımlanan içerik eser sayfası, anlatım, rota, sınav ve rehbere düşer.
 - [x] **İstatistik** (dal `feat/admin-stats`): çerezsiz/anonim günlük sayaçlar (tekil ziyaretçi, sayfa ve eser görüntüleme; IP/tarayıcı diske yazılmaz, günlük tuz yalnızca bellekte; Do Not Track/GPC'ye uyulur). Yönetici panosu `/yonetim` (yöneticiler `VAKIFNAME_ADMIN_EMAILS`): tarih aralığı, KPI, günlük ziyaretçi grafiği, en çok ilgi gören eserler, sayfalar, oyun hunisi (dinleyen → soran → bilgi mührü → ziyaret; sunum modu ayrı sayılır).
 - [ ] Yeni şehir ekleme şeması (il alanı, eser, narrator). ⬇ 60–80 eserlik sponsor paketi gelince içe aktarma.
 - [ ] ⬇ İngilizce katmanı (K9).
 
 ## Faz 7 — Cila, final hazırlığı
 - [ ] Gerçek telefonda ve yavaş ağda tüm akış. Lighthouse/axe taraması.
+- [ ] **Canlı yayın** (29 Ekim kararı): `https://calismalar.tikirsoft.com` sunucusunda; sunucuda `claude` girişi, SMTP, `.env`. Sunucuya dokunmadan önce plan + onay.
+- [ ] **Eski arayüz kodunu sil** (29 Ekim kararı): yönlendirilmeyen eski katalog sayfası, "Esere Sor" bileşenleri.
 - [ ] Demo yedeği: internet yoksa yerel çalışsın. Tek komutla kurulum (README).
 - [ ] **Tanıtım videosu** (ürünün çalışma mantığı). Not: **HyperFrames** aracı videoyu kodla üretmek için araştırılabilir (şimdilik yalnızca not, araştırılmadı).
 - [ ] Sunum: problem, hedef kullanıcı, mimari ve veri modeli, veri kullanımı, yenilik, ölçeklenebilirlik. Jüri soruları: veri doğruluğu, telif, kişisel veri.
