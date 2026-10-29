@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import '../design/tokens.css'
 import '../design/base.css'
@@ -17,6 +17,12 @@ import QuizPage from './screens/QuizPage'
 import RoutePage from './screens/RoutePage'
 import { useAuth } from './session'
 import { trackPage } from './stats'
+
+// İçerik yönetimi yalnızca yöneticinin açtığı ekranlardır: ayrı parçada yüklenir, ziyaretçinin paketine girmez.
+const ContentHome = lazy(() => import('./screens/admin/ContentHome'))
+const ContentMonument = lazy(() => import('./screens/admin/ContentMonument'))
+const FactEditor = lazy(() => import('./screens/admin/FactEditor'))
+const later = (el: ReactNode) => <Suspense fallback={<p className="vk-page__state" role="status">Yükleniyor…</p>}>{el}</Suspense>
 
 /** Açılış yalnızca oturum başına bir kez gösterilir; oturumu olan kullanıcı doğrudan şehir seçimine geçer. */
 function Home() {
@@ -64,6 +70,10 @@ export default function VakifnameApp() {
             <Route path="/pasaport" element={<Passport />} />
             <Route path="/hesap" element={<Account />} />
             <Route path="/yonetim" element={<AdminPage />} />
+            <Route path="/yonetim/icerik" element={later(<ContentHome />)} />
+            <Route path="/yonetim/icerik/eser/:id" element={later(<ContentMonument />)} />
+            <Route path="/yonetim/icerik/eser/:id/yeni-kayit" element={later(<FactEditor />)} />
+            <Route path="/yonetim/icerik/kayit/:factId" element={later(<FactEditor />)} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

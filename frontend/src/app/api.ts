@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { apiGet, apiPost } from '../api/client'
+import { API_BASE_URL, apiGet, apiPost, apiUpload } from '../api/client'
 import { getVisitorId } from '../visitor'
 import type { AuthState } from './session'
 
@@ -223,3 +223,166 @@ export interface AdminStats {
 }
 export const getAdminStats = (days: number, signal?: AbortSignal) =>
   apiGet(`/admin/stats?days=${days}`, signal, WITH_COOKIE) as Promise<AdminStats>
+
+// --- Yönetim: içerik (docs/ICERIK_YONETIMI.md; backend/app/content) ------------------------------------------------
+export type ContentStatus = 'draft' | 'published' | 'rejected' | 'withdrawn'
+export type Decision = { decision_id: string; by: string; at: string } | null
+export interface ContentSource {
+  source_id: string
+  title: string
+  page_count: number
+  rights_confirmed: boolean
+  uploaded_at: string
+  uploaded_by: string
+}
+export interface Quest {
+  question: string
+  choices: string[]
+  answer_index: number
+  explanation: string
+}
+export interface ContentFact {
+  fact_id: string
+  monument_id: string
+  title: string
+  text: string
+  category: string
+  certainty: string
+  source_id: string
+  page: number
+  quote: string
+  game_use: boolean
+  quest: Quest | null
+  origin: 'pipeline' | 'manual'
+  status: ContentStatus
+  quote_check: 'found' | 'not_found' | 'no_quote'
+  updated_at: string
+  decision: Decision
+}
+export interface MonumentFields {
+  name: string
+  alternative_names: string[]
+  type: string
+  city: string
+  district: string
+  address: string
+  latitude: number | null
+  longitude: number | null
+  site_notice: string | null
+}
+export interface ContentMonument extends MonumentFields {
+  monument_id: string
+  origin: 'catalog' | 'content'
+  status: ContentStatus
+  decision: Decision
+}
+export interface MonumentRow {
+  monument_id: string
+  name: string
+  city: string
+  type: string
+  origin: 'catalog' | 'content'
+  status: ContentStatus
+  facts: { draft: number; published: number }
+}
+export interface ContentImage {
+  image_id: string
+  url: string
+  rights_holder: string
+  license: string
+  attribution: string | null
+  title: string | null
+  source_url: string | null
+  status: ContentStatus
+  decision: Decision
+}
+export interface ExtractJob {
+  job_id: string
+  source_id: string
+  monument_id: string
+  page_from: number
+  page_to: number
+  status: 'queued' | 'running' | 'done' | 'failed'
+  created_at: string
+  finished_at: string | null
+  candidates: number
+  dropped: number
+  error: string | null
+}
+export interface ContentOverview {
+  enabled: boolean
+  sources: ContentSource[]
+  monuments: MonumentRow[]
+  drafts: number
+  vocab: { certainty: string[]; category: string[]; type: string[]; cities: { slug: string; name: string }[] }
+}
+export interface MonumentEdit {
+  monument: ContentMonument
+  facts: ContentFact[]
+  images: ContentImage[]
+}
+export type FactInput = Pick<
+  ContentFact,
+  'title' | 'text' | 'category' | 'certainty' | 'source_id' | 'page' | 'quote' | 'game_use' | 'quest'
+> & { publish: boolean }
+export type ImageInput = {
+  upload_id: string
+  rights_holder: string
+  license: string
+  attribution: string | null
+  title: string | null
+  source_url: string | null
+  publish: boolean
+}
+/** Pipeline'ın tek seferde okuyabileceği en fazla sayfa (sunucuyla aynı sınır). */
+export const EXTRACT_MAX_PAGES = 6
+
+const C = '/admin/content'
+const UPLOAD_TIMEOUT_MS = 5 * 60_000
+export const getContentOverview = (signal?: AbortSignal) => apiGet(`${C}/overview`, signal, WITH_COOKIE) as Promise<ContentOverview>
+export const uploadContentFile = (file: File) =>
+  apiUpload(`${C}/uploads`, file, file.type || 'application/octet-stream', { ...WITH_COOKIE, timeoutMs: UPLOAD_TIMEOUT_MS }) as Promise<{
+    upload_id: string
+    kind: 'pdf' | 'image'
+    size: number
+  }>
+export const createSource = (body: { upload_id: string; title: string; rights_confirmed: boolean }) =>
+  apiPost(`${C}/sources`, body, undefined, { ...WITH_COOKIE, timeoutMs: UPLOAD_TIMEOUT_MS }) as Promise<ContentSource>
+export const getSourcePage = (sourceId: string, page: number, signal?: AbortSignal) =>
+  apiGet(`${C}/sources/${enc(sourceId)}/pages/${page}`, signal, WITH_COOKIE) as Promise<{
+    source_id: string
+    page: number
+    page_count: number
+    text: string
+  }>
+export const searchSource = (sourceId: string, q: string, signal?: AbortSignal) =>
+  apiGet(`${C}/sources/${enc(sourceId)}/search?q=${enc(q)}`, signal, WITH_COOKIE) as Promise<{ hits: { page: number; snippet: string }[] }>
+export const createMonument = (body: MonumentFields & { publish: boolean }) =>
+  apiPost(`${C}/monuments`, body, undefined, WITH_COOKIE) as Promise<ContentMonument>
+export const getContentMonument = (id: string, signal?: AbortSignal) =>
+  apiGet(`${C}/monuments/${enc(id)}`, signal, WITH_COOKIE) as Promise<MonumentEdit>
+export const updateMonument = (id: string, body: MonumentFields & { publish: boolean }) =>
+  apiPost(`${C}/monuments/${enc(id)}`, body, undefined, { ...WITH_COOKIE, method: 'PUT' }) as Promise<ContentMonument>
+export const withdrawMonument = (id: string) =>
+  apiPost(`${C}/monuments/${enc(id)}/withdraw`, {}, undefined, WITH_COOKIE) as Promise<ContentMonument>
+export const listFacts = (filter: { status?: ContentStatus; monument_id?: string }, signal?: AbortSignal) => {
+  const q = new URLSearchParams(Object.entries(filter).filter(([, v]) => !!v) as [string, string][])
+  return apiGet(`${C}/facts${q.toString() ? `?${q}` : ''}`, signal, WITH_COOKIE) as Promise<{ facts: ContentFact[] }>
+}
+export const createFact = (body: FactInput & { monument_id: string }) =>
+  apiPost(`${C}/facts`, body, undefined, WITH_COOKIE) as Promise<ContentFact>
+export const updateFact = (id: string, body: FactInput) =>
+  apiPost(`${C}/facts/${enc(id)}`, body, undefined, { ...WITH_COOKIE, method: 'PUT' }) as Promise<ContentFact>
+export const factAction = (id: string, action: 'publish' | 'reject' | 'withdraw') =>
+  apiPost(`${C}/facts/${enc(id)}/${action}`, {}, undefined, WITH_COOKIE) as Promise<ContentFact>
+export const startExtract = (body: { source_id: string; monument_id: string; page_from: number; page_to: number }) =>
+  apiPost(`${C}/extract`, body, undefined, WITH_COOKIE) as Promise<ExtractJob>
+export const getJob = (id: string, signal?: AbortSignal) => apiGet(`${C}/jobs/${enc(id)}`, signal, WITH_COOKIE) as Promise<ExtractJob>
+export const addImage = (monumentId: string, body: ImageInput) =>
+  apiPost(`${C}/monuments/${enc(monumentId)}/images`, body, undefined, WITH_COOKIE) as Promise<ContentImage>
+export const imageAction = (id: string, action: 'publish' | 'withdraw') =>
+  apiPost(`${C}/images/${enc(id)}/${action}`, {}, undefined, WITH_COOKIE) as Promise<ContentImage>
+/** Yönetici önizlemesi: sunucu göreli yol (`/admin/content/media/...`) verirse API adresine bağlanır. */
+export const adminMediaUrl = (url: string) => (url.startsWith('/') ? `${API_BASE_URL}${url}` : url)
+/** Kayıt kimliğinden eser kimliği: `BUR-5001-F001` → `BUR-5001`. */
+export const monumentOfFact = (factId: string) => factId.replace(/-F\d+$/, '')

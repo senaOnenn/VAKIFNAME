@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getAdminStats, useLoad, type AdminStats } from '../api'
 import { BarChart, LineChart, StatTile } from '../components/charts'
 import { GoldRule } from '../components/Ornament'
+import { AdminNav } from './admin/AdminNav'
 import './discover.css'
 import './admin.css'
 
@@ -32,6 +33,7 @@ export default function AdminPage() {
 
   return (
     <main className="vk-page vk-admin">
+      <AdminNav />
       <header className="vk-page__head">
         <p className="vk-page__eyebrow">Yönetim</p>
         <h1>Ziyaret istatistikleri</h1>
