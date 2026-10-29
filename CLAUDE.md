@@ -24,7 +24,7 @@ Envanter projesi: Hatay (117 eser, 2022), Konya (289, 2024), Bursa (385) ve Küt
 9. **Login:** kendi mekanizmamız (e-posta+parola) **ve Google ile giriş**. Üye olmadan keşfetmek de mümkün (misafir).
 10. **İki tasarım:** web (responsive) ve mobil. Aynı bileşenler ve veri; farklı yerleşim.
 11. **İstatistik:** ziyaretçi sayısı, eser görüntülenme, en çok ilgi gören eserler (sponsor istedi). Kişisel veri tutmadan.
-12. **Dil:** Türkçe ve İngilizce (sponsor yayınları iki dilli).
+12. **Dil:** Türkçe ve İngilizce (sponsor yayınları iki dilli). **Karar (29 Ekim): tam İngilizce** — arayüz, içerik (kitabın İngilizce bölümünden, alıntı doğrulamalı ve yönetici onaylı) ve ses. Tarihî içerikte makine çevirisi kullanılmaz.
 13. **İçerik yönetimi (29 Ekim kararı).** Tek rol vardır: **yönetici** (ayrı bir editör yok; onayı yönetici verir). İçerik iki yoldan girer:
    (a) **Hat (pipeline):** yönetici kitabı (PDF) ve eseri ekler → hat sayfa metnini çıkarır, eser için kayıt adayları üretir (her aday kitaptaki alıntısı ve sayfasıyla; alıntı o sayfada yoksa aday düşer) → adaylar **taslak** olur.
    (b) **Elle:** yönetici eser ve kayıt ekler/düzenler; kaynak (kitap + sayfa) zorunludur.

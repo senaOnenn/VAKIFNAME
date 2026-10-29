@@ -36,8 +36,10 @@
 11. **Ziyaret yarıçapı: 50 m** (varsayılan; eski 35 m büyük yapılarda kapıdaki ziyaretçiyi dışarıda bırakıyordu). Drive'da önceki sayısal karar yok; ekip planı "gerçek GPS pilot eserlerde test edilir" diyor → sahada denenip gerekirse eser bazında ayar.
 12. **Sunum modu finalde açık**, ekranda açıkça etiketli.
 13. Rehberin adı: şimdilik **"Rehber"** kalır (29 Ekim, gündem 7a); isim sonra verilebilir.
-14. **Kitap fotoğrafları (gündem 7b): açık; şimdilik C — Wikimedia fotoğraflarıyla devam.** Bulgu: kitap PDF'lerindeki fotoğraflar ayrı ayrı çıkarılabiliyor (Cilt I s.19–30: 36 görsel, büyükleri 1300–1800 px); telif sorunu yok. Seçenekler: A içerik yönetimine "kitaptan görsel" adımı, B bir seferlik toplu çıkarma. Wikimedia dosyaları: `backend/tests/ask_eval/media/` (repoda yok), eşleşme ve atıf `catalog_snapshot.json`.
-15–17: beklemede (İngilizce, tanıtım videosu → Faz 9, küçük teknik kararlar).
+14. **Kitap fotoğrafları (gündem 7b): A — içerik yönetimine "kitaptan görsel" adımı** (karar kapandı). Bulgu: kitap PDF'lerindeki fotoğraflar ayrı ayrı çıkarılabiliyor (Cilt I s.19–30: 36 görsel, büyükleri 1300–1800 px); telif sorunu yok. Wikimedia fotoğrafları kalır; kitap fotoğrafları onaylandıkça eklenir. Wikimedia dosyaları: `backend/tests/ask_eval/media/` (repoda yok), eşleşme ve atıf `catalog_snapshot.json`.
+15. **İngilizce (gündem 7c): C — tam İngilizce** (Faz 11): arayüz + içerik (kitabın İngilizce bölümünden, alıntı doğrulamalı, yönetici onaylı) + İngilizce ses. Risk: 3 Kasım dondurmasına sığmayabilir; faz sırası ayrıca konuşulacak.
+16. Tanıtım videosu → Faz 9.
+17. Küçük teknik kararlar: beklemede (gündem 7d).
 
 ## Karar bekleyenler (bunlar çözülmeden ilgili iş başlamaz)
 | # | Konu | Öneri |
@@ -50,7 +52,7 @@
 | K6 | ✅ **GELDİ ve yerelde çalışıyor (29 Ekim; yetkili kaynaklar `http://localhost`, `http://localhost:5173`, canlı adres).** **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
 | K7 | ✅ **KARARLI (27 Ekim).** Koordinatlar **onaylıdır**, katalogdakiler kullanılır; kendi eklediğimiz konum verisi yok. Kayıtlar: noktalar `backend/tests/ask_eval/catalog_snapshot.json`, adaylar `data/real_catalog/monument_research.json`, onay kararları sunucuda `review.sqlite3`. | Ziyaret (Faz 5) için eser başına yarıçap yapılandırılabilir olur; yakın eserler (Muradiye'de 4 eser, Osman/Orhan Gazi) çakışmasın diye küçük başlanır. Sahada ince ayar sonra. |
 | K8 | ✅ **KARARLI (Faz 2'de uygulandı).** **Misafir ilerlemesi.** Üye olmadan toplanan rozetler giriş yapınca birleşir mi? | Evet: cihazdaki ilerleme girişte hesaba **birleştirilir**. |
-| K9 | **Yeni dil:** EN metinler nereden? | Ciltli yayınlar iki dilli; onaylı olgulara `text_en` alanı. Çeviri uydurma değil, kaynaktan. |
+| K9 | ✅ **KARARLI (29 Ekim): tam İngilizce, Faz 11.** **Yeni dil:** EN metinler nereden? | Ciltli yayınlar iki dilli; onaylı olgulara `text_en` alanı. Çeviri uydurma değil, kaynaktan. |
 
 ## Faz 0 — Zemin (önce)
 - [ ] Bu iki dosyayı ekiple paylaş; eleştiri notu (ekran görüntülü, tek sayfa) hazırla.
@@ -116,8 +118,9 @@
   - [x] Tarayıcıda uçtan uca (29 Ekim, gerçek Cilt I, 245 sayfa): kitap 8 sn'de yüklendi → Ulu Cami s.20–23 → 8 taslak (15 sn, 0 düşen) → taslak genel uçta yok → onay → eser sayfasında "Kaynak: Bursa Vakıf Eserleri, Cilt I, s. 20" ve anlatım metninde.
   - Not: onaylı katalog (V20) eserlerinin kendisi salt okunur; yönetici bunlara kayıt/görsel ekler. V20 kaydını düzeltmek ekibin dahili aracıyla.
 - [x] **İstatistik** (dal `feat/admin-stats`): çerezsiz/anonim günlük sayaçlar (tekil ziyaretçi, sayfa ve eser görüntüleme; IP/tarayıcı diske yazılmaz, günlük tuz yalnızca bellekte; Do Not Track/GPC'ye uyulur). Yönetici panosu `/yonetim` (yöneticiler `VAKIFNAME_ADMIN_EMAILS`): tarih aralığı, KPI, günlük ziyaretçi grafiği, en çok ilgi gören eserler, sayfalar, oyun hunisi (dinleyen → soran → bilgi mührü → ziyaret; sunum modu ayrı sayılır).
+- [ ] **Kitaptan görsel** (karar 14 = A): kaynak sayfadaki gömülü fotoğraflar önizlemeyle listelenir (küçük süs görselleri elenir) → yönetici esere ekler → atıf kendiliğinden "Vakıf Eserleri Envanteri, Cilt N, s. X" → taslak → onay → yayın. İlk seçimi Claude 10 eser için taslak olarak hazırlar.
 - [~] Yeni şehir: kimlik şeması, rota ve şehir sayfası genel (29 Ekim). [ ] Yeni şehrin eserleri içerik yönetiminden girer. ⬇ 60–80 eserlik sponsor paketi gelince içe aktarma.
-- [ ] ⬇ İngilizce katmanı (K9).
+- [ ] İngilizce → Faz 11 (karar 15 = C).
 
 ## Faz 8 — Konuşan rehber (gündem 1–2, 29 Ekim kararları)
 - [ ] Karakter: Çırak Kâşif'in sade vektör (SVG) çizimi — palet A, karakter sayfası kimlik referansı; katmanlar: gövde, baş, gözler (kırpma), 9 ağız şekli (Rhubarb A–H + X), nefes/duruş; sayfaya çerçevesiz girer (eser sayfasında anlatıcının yerine).
@@ -140,6 +143,14 @@
 - [ ] Dakika dakika demo senaryosu + aksilik B planı.
 - [ ] Jüri soru-cevap kartları (~15): yapay zekâ uydurursa, konum taklidi, internet giderse, yeni şehir süresi, maliyet, KVKK …
 - [ ] Slaytlar: organizasyonun şablonu paylaşılınca.
+
+## Faz 11 — İngilizce (karar 15 = C, tam)
+- [ ] Arayüz: dil seçici (TR/EN, tarayıcı diline göre ilk seçim, kalıcı), tüm arayüz metinleri sözlükten; tarih/sayı biçimi dile göre.
+- [ ] İçerik modeli: kayıt, soru ve eser adı için isteğe bağlı İngilizce alanlar (`title_en`, `text_en`, soru/şık/açıklama EN, eser adı EN).
+- [ ] Hat: kitabın İngilizce bölümünden aday; İngilizce alıntı aynı sayfada (ya da bitişiğinde) doğrulanır → taslak → yönetici onayı. Mevcut kayıtlar için İngilizce karşılık adayları aynı yolla.
+- [ ] Kural: tarihî içerikte makine çevirisi yok; İngilizcesi onaylanmamış kayıt İngilizce arayüzde "Türkçe" etiketiyle gösterilir.
+- [ ] Anlatım ve rehber: İngilizce anlatım yalnızca onaylı İngilizce kayıtlardan; rehber İngilizce arayüzde İngilizce cevap verir (yine yalnızca onaylı kayıtlardan). İngilizce ses (Google Chirp 3 HD en), ağız senkronu dil bağımsız.
+- [ ] Sınav İngilizce: yalnızca İngilizcesi onaylı kayıtlardan.
 
 ## Faz 7 — Cila, final hazırlığı
 - [x] **Tanıtım sayfası** (29 Ekim, dal `feat/landing`): açılıştan sonra doğrudan giriş yerine ürünü tanıtan sayfa — sessiz arka plan videosu (`hero.mp4`, yoksa geçişli zemin), üç adım (rehber karakter videosu, bilgi ve altın mühür), Kayıp Vakfiye örneği, katalogdan 3 eser, kaynak/dürüstlük/vakar, iki çağrı. Hareket azaltılmışsa video oynamaz, bölümler hemen görünür. axe: ihlal yok.
