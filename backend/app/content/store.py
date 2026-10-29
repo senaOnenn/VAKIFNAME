@@ -12,6 +12,7 @@ Kurallar (CLAUDE.md §2.13, docs/ICERIK_YONETIMI.md):
 
 import hashlib
 import json
+import logging
 import os
 import secrets
 import sqlite3
@@ -23,6 +24,7 @@ from typing import Callable, Optional
 from ..public_catalog import PublicFact, PublicImage, PublicMonument
 from . import pdftext
 
+logger = logging.getLogger("vakifname.content")
 OVERLAY_SCHEMA = "vakifname.content_overlay/1"
 OVERLAY_FILE = "published.json"
 CERTAINTY = ("documented", "reported", "uncertain")
@@ -36,6 +38,11 @@ CITY_NAMES = {"bursa": "Bursa", "kutahya": "Kütahya", "konya": "Konya", "hatay"
 NEW_MONUMENT_FROM = 5001  # yönetici eserleri; V20 kimlikleriyle çakışmaz
 CATALOG_FACT_FROM = 501   # katalog eserine eklenen kayıtlar; V20 kayıt numaralarıyla çakışmaz
 MAP_PICK_ACCURACY_M = 25.0
+# Kitaptan görsel: envanter yayınları projenin kendi yayınıdır (telif sorunu yok, CLAUDE.md §3); atıf sayfa ile yazılır.
+MIN_BOOK_IMAGE_SIDE = 250
+BOOK_RIGHTS_HOLDER = "Vakıf Eserleri Envanter Projesi"
+BOOK_LICENSE = "Envanter yayını"
+BOOK_SOURCE_LABEL = "Vakıf Eserleri Envanteri"
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS uploads (
@@ -526,6 +533,77 @@ class ContentStore:
         self.write_overlay()
         return self._image_view(self._one("SELECT * FROM images WHERE image_id=?", (image_id,)))
 
+    # --- Kitaptan görsel (karar 14 = A) -----------------------------------------------------------------------------
+
+    def _page_pil_images(self, source_id: str, page: int) -> list:
+        """Sayfadaki gömülü görseller (PIL), küçük süs görselleri elenmiş. Sıra PDF'teki sıradır."""
+        src = self.source(source_id)
+        if not 1 <= page <= src["page_count"]:
+            raise ContentError(f"Sayfa 1–{src['page_count']} aralığında olmalı.", 404)
+        from pypdf import PdfReader
+
+        try:
+            reader = PdfReader(str(self.root / "sources" / f"{source_id}.pdf"))
+            images = list(reader.pages[page - 1].images)
+        except Exception as e:  # noqa: BLE001 — bozuk görsel akışı sayfayı düşürmez
+            logger.warning("Kaynak %s s.%d görselleri okunamadı: %s", source_id, page, type(e).__name__)
+            return []
+        out = []
+        for im in images:
+            try:
+                pil = im.image
+            except Exception:  # noqa: BLE001
+                continue
+            w, h = pil.size
+            if min(w, h) >= MIN_BOOK_IMAGE_SIDE and max(w, h) >= 2 * MIN_BOOK_IMAGE_SIDE:
+                out.append(pil)
+        return out
+
+    def page_images(self, source_id: str, page: int) -> list[dict]:
+        return [{"index": i, "width": im.size[0], "height": im.size[1],
+                 "url": f"/admin/content/sources/{source_id}/pages/{page}/images/{i}"}
+                for i, im in enumerate(self._page_pil_images(source_id, page))]
+
+    def page_image_preview(self, source_id: str, page: int, index: int) -> bytes:
+        images = self._page_pil_images(source_id, page)
+        if not 0 <= index < len(images):
+            raise ContentError("Görsel bulunamadı.", 404)
+        from io import BytesIO
+
+        im = images[index].convert("RGB")
+        im.thumbnail((640, 640))
+        buf = BytesIO()
+        im.save(buf, "JPEG", quality=80)
+        return buf.getvalue()
+
+    def add_image_from_source(self, monument_id: str, source_id: str, page: int, index: int, title: Optional[str],
+                              publish: bool, actor: str) -> dict:
+        if not self.monument_exists(monument_id):
+            raise ContentError("Eser bulunamadı.", 404)
+        src = self.source(source_id)
+        images = self._page_pil_images(source_id, page)
+        if not 0 <= index < len(images):
+            raise ContentError("Görsel bulunamadı.", 404)
+        from io import BytesIO
+
+        buf = BytesIO()
+        images[index].convert("RGB").save(buf, "JPEG", quality=95)
+        file, card, (w, h) = _store_image(buf.getvalue(), self.media_dir)
+        meta = {"rights_holder": BOOK_RIGHTS_HOLDER, "license": BOOK_LICENSE,
+                "attribution": f"Görsel: {src['title']}, s. {page}", "title": title or None, "source_url": None,
+                "origin": "source", "source_id": source_id, "page": page}
+        with self._tx():
+            n = len(self._all("SELECT 1 FROM images WHERE monument_id=?", (monument_id,))) + 1
+            image_id = f"{monument_id}-G{n:03d}"
+            now = self._clock()
+            decision = self._decide("image", image_id, "publish", actor, {**meta, "file": file}) if publish else None
+            self._db.execute("INSERT INTO images VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                             (image_id, monument_id, file, card, w, h, json.dumps(meta, ensure_ascii=False),
+                              "published" if publish else "draft", actor, now, now, decision and decision["decision_id"]))
+        if publish:
+            self.write_overlay()
+        return self._image_view(self._one("SELECT * FROM images WHERE image_id=?", (image_id,)))
+
     def media_file(self, file: str) -> Optional[Path]:
         if not self._one("SELECT 1 FROM images WHERE file=? OR card_file=?", (file, file)):
             return None
@@ -576,7 +654,8 @@ class ContentStore:
                "height": r["height"], "rights_holder": data["rights_holder"], "license": data["license"],
                "attribution": data.get("attribution") or None, "title": data.get("title") or None,
                "source_url": data.get("source_url") or None, "rights_decision_id": r["decision_id"],
-               "publication_decision_id": r["decision_id"], "game_use": False, "source_label": "Yönetici yüklemesi"}
+               "publication_decision_id": r["decision_id"], "game_use": False,
+               "source_label": BOOK_SOURCE_LABEL if data.get("origin") == "source" else "Yönetici yüklemesi"}
         return PublicImage.model_validate(img).model_dump(mode="json")
 
     def build_overlay(self) -> dict:

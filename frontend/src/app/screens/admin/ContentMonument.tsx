@@ -22,6 +22,7 @@ import { CITIES } from '../../cities'
 import { GoldRule } from '../../components/Ornament'
 import { AdminNav } from './AdminNav'
 import { CERTAINTY_LABEL, DRAFT_NOTE, ORIGIN_LABEL, formatWhen, label } from './labels'
+import { BookImagePicker } from './BookImagePicker'
 import { PipelinePanel } from './PipelinePanel'
 import { OriginTag, StatusTag } from './StatusTag'
 import '../discover.css'
@@ -113,7 +114,7 @@ function Loaded({ overview, edit, reload, flash }: { overview: ContentOverview; 
       </section>
 
       <PipelinePanel overview={overview} monument={m} onDone={reload} />
-      <ImagesSection monument={m} images={edit.images} onChange={reload} />
+      <ImagesSection monument={m} images={edit.images} onChange={reload} overview={overview} />
     </>
   )
 }
@@ -285,7 +286,9 @@ function MonumentForm({ overview, initial, onSaved }: { overview: ContentOvervie
 const LICENSES = ['CC-BY-4.0', 'CC-BY-SA-4.0', 'CC0-1.0', 'Kamu malı', 'Kurum izniyle']
 
 /** Eser görselleri: yükleme (hak sahibi, lisans, atıf zorunlu bilgi), önizleme, yayımlama ve geri çekme. */
-function ImagesSection({ monument, images, onChange }: { monument: Monument; images: ContentImage[]; onChange: () => void }) {
+function ImagesSection({ monument, images, onChange, overview }: {
+  monument: Monument; images: ContentImage[]; onChange: () => void; overview: ContentOverview
+}) {
   const id = useId()
   const fileRef = useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<File | null>(null)
@@ -370,8 +373,9 @@ function ImagesSection({ monument, images, onChange }: { monument: Monument; ima
           ))}
         </ul>
       )}
+      <BookImagePicker overview={overview} monumentId={monument.monument_id} monumentName={monument.name} onAdded={onChange} />
       <form className="vk-cform vk-cform--grid" onSubmit={(e) => { e.preventDefault(); void upload(false) }} noValidate>
-        <h3>Görsel ekle</h3>
+        <h3>Dosyadan görsel ekle</h3>
         <label htmlFor={`${id}-file`}>Görsel (JPEG veya PNG)</label>
         <input ref={fileRef} id={`${id}-file`} type="file" accept="image/jpeg,image/png" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
         <label htmlFor={`${id}-holder`}>Hak sahibi</label>

@@ -380,6 +380,19 @@ export const startExtract = (body: { source_id: string; monument_id: string; pag
 export const getJob = (id: string, signal?: AbortSignal) => apiGet(`${C}/jobs/${enc(id)}`, signal, WITH_COOKIE) as Promise<ExtractJob>
 export const addImage = (monumentId: string, body: ImageInput) =>
   apiPost(`${C}/monuments/${enc(monumentId)}/images`, body, undefined, WITH_COOKIE) as Promise<ContentImage>
+/** Kitap sayfasındaki fotoğraf (karar 14 = A); `url` yönetici önizlemesidir. */
+export interface BookImage {
+  index: number
+  width: number
+  height: number
+  url: string
+}
+export const getPageImages = (sourceId: string, page: number, signal?: AbortSignal) =>
+  apiGet(`${C}/sources/${enc(sourceId)}/pages/${page}/images`, signal, WITH_COOKIE) as Promise<{ images: BookImage[] }>
+export const addImageFromSource = (
+  monumentId: string,
+  body: { source_id: string; page: number; index: number; title: string | null; publish: boolean },
+) => apiPost(`${C}/monuments/${enc(monumentId)}/images/from-source`, body, undefined, WITH_COOKIE) as Promise<ContentImage>
 export const imageAction = (id: string, action: 'publish' | 'withdraw') =>
   apiPost(`${C}/images/${enc(id)}/${action}`, {}, undefined, WITH_COOKIE) as Promise<ContentImage>
 /** Yönetici önizlemesi: sunucu göreli yol (`/admin/content/media/...`) verirse API adresine bağlanır. */

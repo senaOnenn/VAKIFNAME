@@ -281,6 +281,36 @@ def image_action(request: Request, response: Response,
     return _call(_store(request).set_image_status, image_id, action, actor)
 
 
+class SourceImageBody(_Body):
+    source_id: SourceId
+    page: int = Field(ge=1, le=10000)
+    index: int = Field(ge=0, le=200)
+    title: Optional[Annotated[str, StringConstraints(strip_whitespace=True, max_length=200)]] = None
+    publish: bool = False
+
+
+@router.get("/sources/{source_id}/pages/{page}/images")
+def page_images(request: Request, response: Response, source_id: Annotated[str, Path(pattern=r"^SRC-\d{4}$")],
+                page: Annotated[int, Path(ge=1)]):
+    _admin(request, response)
+    return {"images": _call(_store(request).page_images, source_id, page)}
+
+
+@router.get("/sources/{source_id}/pages/{page}/images/{index}")
+def page_image(request: Request, source_id: Annotated[str, Path(pattern=r"^SRC-\d{4}$")],
+               page: Annotated[int, Path(ge=1)], index: Annotated[int, Path(ge=0, le=200)]):
+    _admin(request)
+    data = _call(_store(request).page_image_preview, source_id, page, index)
+    return Response(data, media_type="image/jpeg", headers={"Cache-Control": "private, max-age=3600"})
+
+
+@router.post("/monuments/{monument_id}/images/from-source", status_code=201)
+def add_image_from_source(body: SourceImageBody, request: Request, response: Response, monument_id: MonumentId):
+    actor = _admin(request, response)
+    return _call(_store(request).add_image_from_source, monument_id, body.source_id, body.page, body.index, body.title,
+                 body.publish, actor)
+
+
 @router.get("/media/{file}")
 def media(request: Request, file: Annotated[str, Path(pattern=r"^[0-9a-f]{64}\.jpg$")]):
     _admin(request)

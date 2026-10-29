@@ -434,3 +434,47 @@ def test_validation_errors_are_turkish_and_catalog_counts_include_published_fact
     assert r.json()["detail"][0]["msg"].startswith("Sayfa aralığı en fazla 6 sayfa")
     row = next(m for m in c.get("/admin/content/overview").json()["monuments"] if m["monument_id"] == "BUR-0001")
     assert row["facts"]["published"] == len(c.get("/monuments/BUR-0001").json()["facts"]) > 0
+
+
+def pdf_with_images() -> bytes:
+    """Metinli 3 sayfa + büyük fotoğraflı 1 sayfa + küçük süs görselli 1 sayfa."""
+    from PIL import Image
+    from pypdf import PdfReader, PdfWriter
+
+    writer = PdfWriter()
+    for part in (make_pdf(PAGES),):
+        for p in PdfReader(BytesIO(part)).pages:
+            writer.add_page(p)
+    for size, color in (((900, 600), (60, 90, 160)), ((90, 60), (200, 50, 50))):
+        buf = BytesIO()
+        Image.new("RGB", size, color).save(buf, "PDF")
+        writer.add_page(PdfReader(BytesIO(buf.getvalue())).pages[0])
+    out = BytesIO()
+    writer.write(out)
+    return out.getvalue()
+
+
+def test_book_image_listed_previewed_and_added_with_page_attribution(c):
+    login_admin(c)
+    r = c.post("/admin/content/sources", json={"upload_id": upload(c, pdf_with_images(), "application/pdf"),
+                                               "title": "Envanter Cilt I", "rights_confirmed": True})
+    sid = r.json()["source_id"]
+    assert c.get(f"/admin/content/sources/{sid}/pages/5/images").json()["images"] == []  # küçük süs görseli elenir
+    imgs = c.get(f"/admin/content/sources/{sid}/pages/4/images").json()["images"]
+    assert len(imgs) == 1 and imgs[0]["width"] == 900 and imgs[0]["index"] == 0
+    prev = c.get(imgs[0]["url"])
+    assert prev.status_code == 200 and prev.headers["content-type"] == "image/jpeg"
+    assert c.get(f"/admin/content/sources/{sid}/pages/4/images/3").status_code == 404
+    assert c.get(f"/admin/content/sources/{sid}/pages/99/images").status_code == 404
+
+    img = c.post("/admin/content/monuments/BUR-0001/images/from-source",
+                 json={"source_id": sid, "page": 4, "index": 0, "title": "Kubbeler", "publish": False}).json()
+    assert img["status"] == "draft" and img["attribution"] == "Görsel: Envanter Cilt I, s. 4"
+    assert img["rights_holder"] == "Vakıf Eserleri Envanter Projesi"
+    assert c.get(f"/monuments/media/{img['file']}").status_code == 404  # taslak genelde yok
+    c.post(f"/admin/content/images/{img['image_id']}/publish")
+    pub = next(i for i in c.get("/monuments/BUR-0001").json()["images"] if i["file"] == img["file"])
+    assert pub["attribution"] == "Görsel: Envanter Cilt I, s. 4" and pub["title"] == "Kubbeler"
+    assert c.get(f"/monuments/media/{img['file']}").status_code == 200
+    c.post("/auth/logout")
+    assert c.get(imgs[0]["url"]).status_code == 401

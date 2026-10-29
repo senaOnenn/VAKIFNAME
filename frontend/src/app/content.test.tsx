@@ -246,6 +246,35 @@ describe('eser ve hat', () => {
     await waitFor(() => expect(calls(f, '/admin/content/monuments/BUR-5001').length).toBeGreaterThan(1))
   }, 10_000)
 
+  it('kitaptan görsel: sayfanın fotoğrafları önizlenir, seçilen fotoğraf başlığıyla taslak olarak eklenir', async () => {
+    const f = server({
+      '/admin/content/sources/SRC-0001/pages/12/images': { body: { images: [
+        { index: 0, width: 1200, height: 800, url: '/admin/content/sources/SRC-0001/pages/12/images/0' },
+        { index: 1, width: 700, height: 520, url: '/admin/content/sources/SRC-0001/pages/12/images/1' },
+      ] } },
+      '/admin/content/monuments/BUR-5001/images/from-source': { status: 201, body: { image_id: 'BUR-5001-G001', monument_id: 'BUR-5001',
+        file: 'a'.repeat(64) + '.jpg', url: '/admin/content/media/' + 'a'.repeat(64) + '.jpg', rights_holder: 'Vakıf Eserleri Envanter Projesi',
+        license: 'Envanter yayını', attribution: 'Görsel: Kurgusal Envanter, Cilt I, s. 12', title: 'Avlu', source_url: null,
+        status: 'draft', decision: null } },
+    })
+    open('/yonetim/icerik/eser/BUR-5001')
+    const page = await screen.findByLabelText('Sayfa numarası')
+    await userEvent.type(page, '12')
+    await userEvent.click(screen.getByRole('button', { name: 'Sayfanın görsellerini göster' }))
+    const grid = await screen.findByRole('list', { name: 's. 12 fotoğrafları' })
+    const imgs = within(grid).getAllByRole('img')
+    expect(imgs).toHaveLength(2)
+    expect(imgs[0]).toHaveAttribute('src', expect.stringMatching(/\/admin\/content\/sources\/SRC-0001\/pages\/12\/images\/0$/))
+    await userEvent.click(within(grid).getAllByRole('button')[1])
+    expect(screen.getByText('Atıf kendiliğinden yazılır: "Görsel: Kurgusal Envanter, Cilt I, s. 12".')).toBeInTheDocument()
+    await userEvent.type(screen.getByLabelText('Kitap görselinin başlığı (alternatif metin)'), 'Avlu')
+    const picker = screen.getByRole('group', { name: 'Kitaptan ekle' })
+    await userEvent.click(within(picker).getByRole('button', { name: 'Taslak olarak ekle' }))
+    expect(await within(picker).findByText('Kitap görseli taslak olarak eklendi.')).toBeInTheDocument()
+    expect(body(calls(f, '/admin/content/monuments/BUR-5001/images/from-source')[0].init))
+      .toEqual({ source_id: 'SRC-0001', page: 12, index: 1, title: 'Avlu', publish: false })
+  })
+
   it('katalog eseri salt okunur; yeni eser formu yayımlayıp eserin sayfasına geçer', async () => {
     const created = { ...MONUMENT.monument, monument_id: 'BUR-5002', name: 'Yeni Türbe', type: 'türbe', status: 'published' as const,
       latitude: 40.1901, longitude: 29.0612 }
