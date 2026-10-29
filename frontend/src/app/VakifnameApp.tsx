@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, type ReactNode } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import '../design/tokens.css'
 import '../design/base.css'
@@ -9,6 +9,7 @@ import Auth from './screens/Auth'
 import City from './screens/City'
 import { ForgotPassword, ResetPassword, VerifyEmail } from './screens/EmailLink'
 import Intro, { INTRO_SEEN_KEY } from './screens/Intro'
+import Landing from './screens/Landing'
 import MonumentPage from './screens/MonumentPage'
 import Monuments from './screens/Monuments'
 import Passport from './screens/Passport'
@@ -24,17 +25,24 @@ const ContentMonument = lazy(() => import('./screens/admin/ContentMonument'))
 const FactEditor = lazy(() => import('./screens/admin/FactEditor'))
 const later = (el: ReactNode) => <Suspense fallback={<p className="vk-page__state" role="status">Yükleniyor…</p>}>{el}</Suspense>
 
-/** Açılış yalnızca oturum başına bir kez gösterilir; oturumu olan kullanıcı doğrudan şehir seçimine geçer. */
+function introSeen(): boolean {
+  try {
+    return window.sessionStorage.getItem(INTRO_SEEN_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Ana sayfa: açılış animasyonu (oturum başına bir kez) → tanıtım (ürün ne, nasıl oynanır, giriş çağrısı).
+ * Oturumu olan kullanıcı doğrudan şehir seçimine geçer.
+ */
 function Home() {
   const auth = useAuth()
-  let seen = false
-  try {
-    seen = window.sessionStorage.getItem(INTRO_SEEN_KEY) === '1'
-  } catch {
-    /* yoksay */
-  }
+  const [seen, setSeen] = useState(introSeen)
+  const done = useCallback(() => setSeen(true), [])
   if (auth.status === 'user' || auth.status === 'guest') return <Navigate to="/sehir" replace />
-  return seen ? <Navigate to="/giris" replace /> : <Intro />
+  return seen ? <Landing /> : <Intro onDone={done} />
 }
 
 /** Sayfa değişince en üste dön ve sayfayı anonim olarak say (bkz. stats.ts). */

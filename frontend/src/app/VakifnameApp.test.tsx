@@ -60,6 +60,7 @@ function open(path: string) {
 
 const AUTH_HEADING = { name: 'Maceraya katıl' }
 const CITY_HEADING = { name: 'Nereyi keşfetmek istersin?' }
+const LANDING_HEADING = { level: 1, name: 'Vakıf eserlerini yerinde keşfet' }
 
 beforeEach(() => {
   resetAuthForTests()
@@ -72,7 +73,7 @@ afterEach(() => {
 })
 
 describe('açılış', () => {
-  it('VAKIFNAME yazısını gösterir ve süre dolunca giriş sayfasına geçer', async () => {
+  it('VAKIFNAME yazısını gösterir ve süre dolunca tanıtım sayfasına geçer', async () => {
     fakeAuthServer()
     vi.useFakeTimers()
     open('/')
@@ -80,7 +81,7 @@ describe('açılış', () => {
     await act(async () => {
       vi.advanceTimersByTime(5300)
     })
-    expect(screen.getByRole('heading', AUTH_HEADING)).toBeInTheDocument()
+    expect(screen.getByRole('heading', LANDING_HEADING)).toBeInTheDocument()
     expect(window.sessionStorage.getItem(INTRO_SEEN_KEY)).toBe('1')
   })
 
@@ -88,7 +89,29 @@ describe('açılış', () => {
     fakeAuthServer()
     open('/')
     await userEvent.click(screen.getByRole('button', { name: 'Geç' }))
+    expect(await screen.findByRole('heading', LANDING_HEADING)).toBeInTheDocument()
+    expect(window.sessionStorage.getItem(INTRO_SEEN_KEY)).toBe('1')
+  })
+
+  it('tanıtım ürünü üç adımda anlatır; "Keşfe başla" girişe, "Üye olmadan göz at" şehir seçimine götürür', async () => {
+    fakeAuthServer()
+    window.sessionStorage.setItem(INTRO_SEEN_KEY, '1')
+    open('/')
+    expect(await screen.findByRole('heading', LANDING_HEADING)).toBeInTheDocument()
+    for (const step of ['Dinle ve sor', 'Bilgini sına', 'Eseri ziyaret et']) {
+      expect(screen.getByRole('heading', { level: 3, name: step })).toBeInTheDocument()
+    }
+    expect(screen.getByRole('img', { name: 'Altın mühür' })).toBeInTheDocument()
+    await userEvent.click(screen.getAllByRole('link', { name: 'Keşfe başla' })[0])
     expect(await screen.findByRole('heading', AUTH_HEADING)).toBeInTheDocument()
+  })
+
+  it('tanıtımdan üye olmadan göz atılabilir', async () => {
+    fakeAuthServer()
+    window.sessionStorage.setItem(INTRO_SEEN_KEY, '1')
+    open('/')
+    await userEvent.click((await screen.findAllByRole('button', { name: 'Üye olmadan göz at' }))[0])
+    expect(await screen.findByRole('heading', CITY_HEADING)).toBeInTheDocument()
   })
 
   it('oturumu olan kullanıcı açılışı görmeden şehir seçimine geçer', async () => {

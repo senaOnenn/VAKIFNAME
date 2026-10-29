@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { GoldRule, Ornament } from '../components/Ornament'
 import './intro.css'
 
@@ -8,9 +7,8 @@ export const INTRO_SEEN_KEY = 'vakifname.introSeen'
 const DURATION_MS = 5200
 const REDUCED_DURATION_MS = 1800
 
-/** Açılış: VAKIFNAME yazısı belirir, ardından otomatik olarak giriş sayfasına geçilir. Her zaman atlanabilir. */
-export default function Intro() {
-  const navigate = useNavigate()
+/** Açılış: VAKIFNAME yazısı belirir, ardından tanıtım sayfası açılır (`onDone`). Her zaman atlanabilir. */
+export default function Intro({ onDone }: { onDone: () => void }) {
 
   useEffect(() => {
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
@@ -20,7 +18,7 @@ export default function Intro() {
       } catch {
         /* yoksay */
       }
-      navigate('/giris', { replace: true })
+      onDone()
     }
     const t = window.setTimeout(go, reduced ? REDUCED_DURATION_MS : DURATION_MS)
     const onKey = (e: KeyboardEvent) => {
@@ -31,7 +29,7 @@ export default function Intro() {
       window.clearTimeout(t)
       window.removeEventListener('keydown', onKey)
     }
-  }, [navigate])
+  }, [onDone])
 
   return (
     <main className="vk-intro" aria-label="VAKIFNAME açılış">
@@ -51,7 +49,14 @@ export default function Intro() {
       <button
         type="button"
         className="vk-link-btn vk-intro__skip"
-        onClick={() => navigate('/giris', { replace: true })}
+        onClick={() => {
+          try {
+            window.sessionStorage.setItem(INTRO_SEEN_KEY, '1')
+          } catch {
+            /* yoksay */
+          }
+          onDone()
+        }}
       >
         Geç
       </button>

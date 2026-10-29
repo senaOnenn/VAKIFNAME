@@ -109,6 +109,7 @@
 - [ ] ⬇ İngilizce katmanı (K9).
 
 ## Faz 7 — Cila, final hazırlığı
+- [x] **Tanıtım sayfası** (29 Ekim, dal `feat/landing`): açılıştan sonra doğrudan giriş yerine ürünü tanıtan sayfa — sessiz arka plan videosu (`hero.mp4`, yoksa geçişli zemin), üç adım (rehber karakter videosu, bilgi ve altın mühür), Kayıp Vakfiye örneği, katalogdan 3 eser, kaynak/dürüstlük/vakar, iki çağrı. Hareket azaltılmışsa video oynamaz, bölümler hemen görünür. axe: ihlal yok.
 - [ ] Gerçek telefonda ve yavaş ağda tüm akış.
 - [x] axe taraması (29 Ekim; axe-core 4.14, WCAG 2.0/2.1/2.2 A+AA + iyi uygulama; web 1366 ve mobil 390; misafir, oturumlu kullanıcı ve yönetici sayfaları, 16 sayfa): giriş sekmesi rolü, Türkiye haritası rolü, eserler başlık sırası, rozet sayfasında h1, grafik gezgini (kaydırıcı rolü) düzeltildi. Kalan tek bulgu: rota haritasında Muradiye kümesindeki üst üste binen işaretler (hedef boyutu); WCAG 2.5.8 "eşdeğer kontrol" istisnası — aynı sayfadaki sıralı durak listesi aynı işi görür.
 - [ ] **Canlı yayın** (29 Ekim kararı): `https://calismalar.tikirsoft.com` sunucusunda; sunucuda `claude` girişi, SMTP, `.env`. Sunucuya dokunmadan önce plan + onay.
