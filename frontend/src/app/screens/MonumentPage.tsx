@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { getGame, getMonument, getPeople, getRoute, mediaUrl, progressId, sendEngagement, statusMap, typeLabel, useLoad, type MonumentFact } from '../api'
+import { citySlug, getGame, getMonument, getPeople, getRoute, mediaUrl, progressId, sendEngagement, statusMap, typeLabel, useLoad, type MonumentFact } from '../api'
 import { GamePanel } from '../components/GamePanel'
 import { PeopleCards } from '../components/PeopleCards'
 import { Narrator } from '../components/Narrator'
@@ -46,7 +46,8 @@ export default function MonumentPage() {
   const auth = useAuth()
   const uid = progressId(auth)
   const m = useLoad((s) => getMonument(id, s), [id])
-  const route = useLoad((s) => getRoute('bursa', uid, null, s).catch(() => null), [uid])
+  const city = m.data ? citySlug(m.data.city) : ''
+  const route = useLoad((s) => (city ? getRoute(city, uid, null, s).catch(() => null) : Promise.resolve(null)), [city, uid])
   const status = statusMap(route.data)[id]
   // Oyun durumu (Faz 5). Uç yoksa veya hata verirse panel gösterilmez; eser bilgisi yine okunur.
   const game = useLoad((s) => getGame(id, uid, s), [id, uid])
@@ -85,7 +86,7 @@ export default function MonumentPage() {
 
         <Narrator monument={d} onListened={() => engage('listened')} onAsked={() => engage('asked')} />
 
-        {game.data && <GamePanel id={id} uid={uid} game={game.data} onChange={() => { game.reload(); route.reload() }} />}
+        {game.data && <GamePanel id={id} uid={uid} city={city} game={game.data} onChange={() => { game.reload(); route.reload() }} />}
 
         {d.site_notice && (
           <aside className="vk-notice" aria-label="Ziyaret uyarısı">

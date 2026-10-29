@@ -227,7 +227,7 @@ describe('kabuk, hesap ve şehir seçimi', () => {
     const cards = screen.getByRole('list', { name: 'Şehirler' })
     expect(within(cards).getByRole('link', { name: /Bursa/ })).toHaveAttribute('href', '/rota/bursa')
     expect(cards.querySelectorAll('a')).toHaveLength(1)
-    expect(screen.getByRole('link', { name: 'Bursa: Pilot şehir · 10 eser' })).toHaveAttribute('href', '/rota/bursa')
+    expect(screen.getByRole('link', { name: 'Bursa: Pilot şehir' })).toHaveAttribute('href', '/rota/bursa')
     expect(screen.getAllByText('Yakında').length).toBeGreaterThanOrEqual(5)
   })
 

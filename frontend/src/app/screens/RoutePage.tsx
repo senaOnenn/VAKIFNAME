@@ -13,7 +13,7 @@ const START_LABEL = { user: 'Konumun', last_completed: 'Son tamamladığın eser
 
 /** Şehir rotası: en yakın rozetsiz eser önerilir; 3 eser açık, her bilgi mührü bir kilit açar. Kayıp Vakfiye ilerlemesi. */
 export default function RoutePage() {
-  const { city = 'bursa' } = useParams()
+  const { city = '' } = useParams()
   const auth = useAuth()
   const navigate = useNavigate()
   const uid = progressId(auth)

@@ -18,7 +18,7 @@ export function TurkeyMap({ cities }: { cities: City[] }) {
   return (
     <figure className="vk-tmap">
       <svg viewBox={TURKEY_VIEWBOX} role="img" aria-labelledby={`${id}-t`}>
-        <title id={`${id}-t`}>Türkiye haritası: Bursa açık, diğer şehirler yakında</title>
+        <title id={`${id}-t`}>{`Türkiye haritası: ${cities.filter((c) => c.open).map((c) => c.name).join(', ') || 'henüz açık şehir yok'} açık, diğer şehirler yakında`}</title>
         <defs>
           <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#232b66" />

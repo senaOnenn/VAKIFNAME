@@ -35,7 +35,7 @@ function isSummary(v: unknown): v is MonumentSummary {
   return (
     isObject(v) &&
     isString(v.monument_id) &&
-    /^BUR-\d{4}$/.test(v.monument_id) &&
+    /^[A-Z]{3}-\d{4}$/.test(v.monument_id) &&
     isString(v.name) &&
     isString(v.type) &&
     isString(v.city) &&
@@ -137,7 +137,7 @@ function isAskFact(v: unknown): v is AskFact {
   return (
     isObject(v) &&
     isString(v.fact_id) &&
-    /^BUR-\d{4}-F\d{3}$/.test(v.fact_id) &&
+    /^[A-Z]{3}-\d{4}-F\d{3}$/.test(v.fact_id) &&
     isString(v.text) &&
     isString(v.title) &&
     isString(v.monument_name) &&
@@ -152,7 +152,7 @@ export const isAskSuggestion = (v: unknown): v is AskSuggestion =>
   isObject(v) &&
   isString(v.question) &&
   isString(v.fact_id) &&
-  /^BUR-\d{4}-F\d{3}$/.test(v.fact_id) &&
+  /^[A-Z]{3}-\d{4}-F\d{3}$/.test(v.fact_id) &&
   isString(v.title) &&
   isString(v.monument_id) &&
   isString(v.monument_name)

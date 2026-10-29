@@ -1,4 +1,4 @@
-"""Gerçek Bursa eserlerinin genel kataloğu (yalnızca okuma).
+"""Gerçek vakıf eserlerinin genel kataloğu (yalnızca okuma).
 
 Genel uygulama V20 bilgi tabanını, inceleme veritabanını veya dahili paketi (`app.internal`) **okumaz**. Yayın onayından
 geçmiş kayıtlar dahili dışa aktarıcıyla (`python -m app.internal.publish`) bir anlık görüntü dosyasına yazılır; bu modül
@@ -30,7 +30,8 @@ logger = logging.getLogger("vakifname.public_catalog")
 # /2: bağımsız kaynak bağlantıları, yayın dayanağı, keşif soruları ve görsel atıfları. /1 dosyaları da okunur.
 PUBLIC_CATALOG_SCHEMA = "vakifname.public_catalog/2"
 
-MonumentId = Annotated[str, StringConstraints(pattern=r"^BUR-\d{4}$")]
+# Eser kimliği: 3 harfli şehir kodu + 4 hane (Bursa = BUR; yeni şehir kendi koduyla eklenir, ör. KUT-0001).
+MonumentId = Annotated[str, StringConstraints(pattern=r"^[A-Z]{3}-\d{4}$")]
 DecisionId = Annotated[str, StringConstraints(pattern=r"^DEC-[0-9a-f]{16}$")]
 Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 MediaFile = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}\.jpe?g$")]
@@ -72,7 +73,7 @@ class PublicQuest(_Public):
 
 
 class PublicFact(_Public):
-    fact_id: Annotated[str, StringConstraints(pattern=r"^BUR-\d{4}-F\d{3}$")]
+    fact_id: Annotated[str, StringConstraints(pattern=r"^[A-Z]{3}-\d{4}-F\d{3}$")]
     title: Text
     text: Text
     category: Text

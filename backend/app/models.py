@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from enum import Enum
 from typing import Annotated, Literal, Optional
@@ -10,9 +11,10 @@ PlaceId = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, 
 
 
 def _not_real_monument_id(value: str) -> str:
-    # Gerçek eser kimlikleri (BUR-xxxx) yalnızca dahili katalogda kullanılır; demo kaydı bu önekle başlayamaz.
-    if value.upper().startswith("BUR-"):
-        raise ValueError("BUR- öneki gerçek eserlere ayrılmıştır; demo mekânı bu kimliği kullanamaz.")
+    # Gerçek eser kimlikleri (şehir kodu + 4 hane, ör. BUR-0001) yalnızca katalogda kullanılır; şehir kodu öneki
+    # (3 harf + tire) bütünüyle gerçek eserlere ayrılmıştır, demo kaydı bu önekle başlayamaz.
+    if re.match(r"^[A-Z]{3}-", value.upper()):
+        raise ValueError("Şehir kodu öneki (ör. BUR-) gerçek eserlere ayrılmıştır; demo mekânı bu kimliği kullanamaz.")
     return value
 
 

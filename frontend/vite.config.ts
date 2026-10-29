@@ -57,5 +57,7 @@ export default defineConfig({
     restoreMocks: true,
     unstubGlobals: true,
     unstubEnvs: true,
+    // Testler geliştiricinin yerel .env dosyasından bağımsızdır (ör. Google istemci kimliği tanımlı olsa da).
+    env: { VITE_GOOGLE_CLIENT_ID: '' },
   },
 })

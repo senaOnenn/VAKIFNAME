@@ -113,6 +113,26 @@ describe('Eserler sayfası', () => {
     expect(await screen.findByRole('heading', { name: 'Koza Han' })).toBeInTheDocument()
     expect(screen.queryByText('Kilitli')).not.toBeInTheDocument()
   })
+  it('birden çok şehirde her şehrin kilidi kendi rotasından gelir', async () => {
+    const kut = { ...summary('KUT-1001', 'Kurşunlu Camii', 'cami', 39.42, 29.98), city: 'Kütahya' }
+    const fetchMock = routes({ '/monuments': { body: { ...CATALOG, published_count: 4, monuments: [...CATALOG.monuments, kut] } } })
+    open('/eserler')
+    expect(await screen.findByRole('heading', { name: 'Kurşunlu Camii' })).toBeInTheDocument()
+    await screen.findByText('Kilitli')
+    const cities = fetchMock.mock.calls.map(([u]) => new URL(String(u)).searchParams.get('city')).filter(Boolean)
+    expect(new Set(cities)).toEqual(new Set(['bursa', 'kutahya']))
+  })
+})
+
+describe('Şehir seçimi', () => {
+  it('katalogda eseri olan şehir açılır ve eser sayısını gösterir', async () => {
+    const kut = { ...summary('KUT-1001', 'Kurşunlu Camii', 'cami', 39.42, 29.98), city: 'Kütahya' }
+    routes({ '/monuments': { body: { ...CATALOG, published_count: 4, monuments: [...CATALOG.monuments, kut] } } })
+    open('/sehir')
+    expect(await screen.findByRole('link', { name: 'Kütahya: 1 eser' })).toHaveAttribute('href', '/rota/kutahya')
+    expect(screen.getByRole('link', { name: 'Bursa: 3 eser' })).toHaveAttribute('href', '/rota/bursa')
+    expect(within(screen.getByRole('list', { name: 'Şehirler' })).getAllByRole('link')).toHaveLength(2)
+  })
 })
 
 describe('Rota sayfası', () => {

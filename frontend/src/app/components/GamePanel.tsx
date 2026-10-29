@@ -17,7 +17,9 @@ const VISIT_TEXT: Record<VisitResult['status'], string> = {
  * Eserin üç kademesi (CLAUDE.md §2.6): I dinle ve sor → II "Rozeti Al" (5 soru, en az 4 doğru) → III ziyaretle altın
  * mühür. Kilit ve tüm kurallar sunucudadır; bu panel yalnızca durumu gösterir ve isteği iletir.
  */
-export function GamePanel({ id, uid, game, onChange }: { id: string; uid: string; game: GameState; onChange: () => void }) {
+export function GamePanel({ id, uid, city, game, onChange }: {
+  id: string; uid: string; city: string; game: GameState; onChange: () => void
+}) {
   const [visit, setVisit] = useState<{ text: string; ok: boolean } | null>(null)
   const [busy, setBusy] = useState(false)
   const tier1 = game.listened && (game.asked || !game.guide_required)
@@ -55,7 +57,7 @@ export function GamePanel({ id, uid, game, onChange }: { id: string; uid: string
       <section className="vk-game vk-game--locked" aria-labelledby="muhur-yolu">
         <h2 id="muhur-yolu">Mühür yolu</h2>
         <p>Bu eser henüz kilitli. Rotandaki açık eserlerden birinin mührünü aldıkça yeni eserlerin kilidi açılır.</p>
-        <Link to="/rota/bursa" className="vk-btn vk-btn--ghost">Rotaya dön</Link>
+        <Link to={`/rota/${city}`} className="vk-btn vk-btn--ghost">Rotaya dön</Link>
       </section>
     )
   }

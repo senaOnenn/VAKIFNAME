@@ -449,7 +449,7 @@ class GuideService:
                 "account": (self.provider.describe() if hasattr(self.provider, "describe") else {}) if self.provider else {}}
 
 
-NOT_MATCHED = "Bu görsel kayıtlı Bursa eserleriyle güvenilir şekilde eşleştirilemedi."
+NOT_MATCHED = "Bu görsel kayıtlı eserlerle güvenilir şekilde eşleştirilemedi."
 # Ziyaretçiye teknik ayrıntı (HTTP durumu, hata kodu, sağlayıcı adı) gösterilmez.
 PHOTO_FAILED_REASON = {
     "timeout": "Yapay zekâ fotoğrafı zamanında inceleyemedi.",

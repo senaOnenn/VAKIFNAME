@@ -1,4 +1,4 @@
-"""Gerçek Bursa eserleri için genel API. Yalnızca yayın onaylı anlık görüntüyü sunar (bkz. `public_catalog.py`).
+"""Gerçek vakıf eserleri için genel API. Yalnızca yayın onaylı anlık görüntüyü sunar (bkz. `public_catalog.py`).
 
 Demo oyununun `/places`, check-in ve pasaport uçlarından ayrıdır: gerçek eser mühürleri ayrı bir ilerleme deposunda tutulur
 ve demo pasaportuna karışmaz. Yayımlanmamış ve bilinmeyen eser aynı 404 yanıtını alır; yayın dışı kayıtların varlığı
@@ -125,7 +125,7 @@ def get_quests(request: Request, monument_id: Annotated[MonumentId, Path()], use
 
 @router.post("/monuments/{monument_id}/quests/{quest_id}/answer")
 def answer_quest(request: Request, body: AnswerRequest, monument_id: Annotated[MonumentId, Path()],
-                 quest_id: Annotated[str, Path(pattern=r"^BUR-\d{4}-F\d{3}$")]):
+                 quest_id: Annotated[str, Path(pattern=r"^[A-Z]{3}-\d{4}-F\d{3}$")]):
     require_progress_access(request, body.user_id)
     m = _catalog(request).get(monument_id)
     if m is None:

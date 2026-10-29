@@ -14,14 +14,18 @@ export default function Monuments() {
   const navigate = useNavigate()
   const catalog = useLoad((s) => getMonuments(s), [])
   const uid = progressId(auth)
-  // Kilit durumları Bursa rotasından gelir; rota yüklenemezse eserler yine listelenir.
-  const route = useLoad((s) => getRoute('bursa', uid, null, s).catch(() => null), [uid])
-  const status = statusMap(route.data)
   const [type, setType] = useState('')
   const [city, setCity] = useState('')
   const [view, setView] = useState<'liste' | 'harita'>('liste')
 
   const all = catalog.data?.monuments ?? []
+  // Kilit durumları her şehrin kendi rotasından gelir; bir rota yüklenemezse o şehrin eserleri yine listelenir.
+  const slugs = [...new Set(all.map((m) => citySlug(m.city)))].sort().join(',')
+  const routes = useLoad(
+    (s) => Promise.all((slugs ? slugs.split(',') : []).map((c) => getRoute(c, uid, null, s).catch(() => null))),
+    [uid, slugs],
+  )
+  const status = Object.assign({}, ...(routes.data ?? []).map(statusMap)) as ReturnType<typeof statusMap>
   const types = useMemo(() => [...new Set(all.map((m) => m.type))].sort((a, b) => a.localeCompare(b, 'tr')), [all])
   const cities = useMemo(() => [...new Set(all.map((m) => m.city))], [all])
   const shown = all.filter((m) => (!type || m.type === type) && (!city || citySlug(m.city) === city))

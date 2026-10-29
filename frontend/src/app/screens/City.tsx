@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
-import { CITIES } from '../cities'
+import { citySlug, getMonuments, useLoad } from '../api'
+import { CITIES, withCatalog } from '../cities'
 import { GoldRule } from '../components/Ornament'
 import { TurkeyMap } from '../components/TurkeyMap'
 import './city.css'
 
-/** Şehir seçimi: Türkiye haritası + erişilebilir şehir listesi. Bursa açık, diğerleri "yakında". */
+/** Şehir seçimi: Türkiye haritası + erişilebilir şehir listesi. Katalogda eseri olan şehir açık, diğerleri "yakında". */
 export default function City() {
+  const catalog = useLoad((s) => getMonuments(s), [])
+  const cities = withCatalog(CITIES, catalog.data ? catalog.data.monuments.map((m) => m.city) : null, citySlug)
   return (
     <main className="vk-city">
       <section className="vk-city__intro">
@@ -14,10 +17,10 @@ export default function City() {
         <p>Her şehir, Vakıf Eserleri Envanter Projesi’nde belgelenmiş eserleriyle açılır.</p>
       </section>
 
-      <TurkeyMap cities={CITIES} />
+      <TurkeyMap cities={cities} />
 
       <ul className="vk-city__grid" aria-label="Şehirler">
-        {CITIES.map((c) => (
+        {cities.map((c) => (
           <li key={c.slug}>
             {c.open ? (
               <Link to={`/rota/${c.slug}`} className="vk-city__card vk-city__card--open">

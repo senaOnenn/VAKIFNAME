@@ -75,7 +75,7 @@
 - [x] **Eser sayfası** (`/eser/:id`): görsel, ziyaret uyarısı, kaynaklı bilgiler (kesinlik etiketiyle: belgelenmiş / rivayet / kesin değil; kaynak sayfası) ve galeri (her görselde atıf + lisans).
 - [x] Her görselde atıf/lisans satırı (mevcut görsellerle; PDF'ten ayıklama ayrı süreç, K5).
 - Not (Faz 5): soru-cevap ucu kilide bakmıyor; kilitli eserin soruları API'den cevaplanabiliyor → Faz 5 "kilit atlatma" testinde kapatılacak.
-- Not (ölçek): eski istemci doğrulayıcısı eser kimliğini `BUR-0000` biçimine kilitliyor (`catalog/catalogClient.ts`); yeni şehir eklenirken genelleştirilmeli. Bursa'ya özel başka sabitler: `getRoute('bursa', …)` çağrıları (eser ve eserler sayfası).
+- [x] Ölçek (29 Ekim, dal `feat/multi-city`): eser/kayıt kimliği her şehir koduna açık (`[A-Z]{3}-0000`, backend + istemci doğrulayıcısı); eser ve eserler sayfası kilidi eserin kendi şehrinin rotasından alır; şehir sayfası açık şehirleri ve eser sayısını katalogdan hesaplar.
 
 ## Faz 4 — Eser sayfası: karakter anlatımı ✅ (27 Ekim, dal `feat/narrator`)
 - [x] Anlatıcı: **her eserde yerel rehber** = ekibin "Çırak Kâşif" karakter videosu (sessiz döngü, konuşurken oynar; `~/vakifname-video-assets/narrator-guide.mp4`, repoya girmez, Vite eklentisiyle sunulur). [x] Tarihî kişiler **portre kartıyla** (K4): 9 eserde kart (Muradiye Medresesi'nde ilgili kayıt yok); her kart yayımlanmış bir kayda bağlı, eşleşmeyen kart gösterilmez.
@@ -104,7 +104,7 @@
   - [ ] Yönetim ekranı: kitaplar, eserler (haritada konum seçimi), taslak kuyruğu (kaynak sayfa metniyle yan yana), elle ekle/düzenle, onayla/yayımla, geri çek.
   - [ ] Yayımlanan içerik eser sayfası, anlatım, rota, sınav ve rehbere düşer.
 - [x] **İstatistik** (dal `feat/admin-stats`): çerezsiz/anonim günlük sayaçlar (tekil ziyaretçi, sayfa ve eser görüntüleme; IP/tarayıcı diske yazılmaz, günlük tuz yalnızca bellekte; Do Not Track/GPC'ye uyulur). Yönetici panosu `/yonetim` (yöneticiler `VAKIFNAME_ADMIN_EMAILS`): tarih aralığı, KPI, günlük ziyaretçi grafiği, en çok ilgi gören eserler, sayfalar, oyun hunisi (dinleyen → soran → bilgi mührü → ziyaret; sunum modu ayrı sayılır).
-- [ ] Yeni şehir ekleme şeması (il alanı, eser, narrator). ⬇ 60–80 eserlik sponsor paketi gelince içe aktarma.
+- [~] Yeni şehir: kimlik şeması, rota ve şehir sayfası genel (29 Ekim). [ ] Yeni şehrin eserleri içerik yönetiminden girer. ⬇ 60–80 eserlik sponsor paketi gelince içe aktarma.
 - [ ] ⬇ İngilizce katmanı (K9).
 
 ## Faz 7 — Cila, final hazırlığı

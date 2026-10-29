@@ -735,7 +735,7 @@ def _vlm(obs, calls=None):
 
 def _assert_not_matched(r, named=()):
     assert r["status"] == "photo_not_matched" and r["mode"] == "generative"
-    assert r["message"] == "Bu görsel kayıtlı Bursa eserleriyle güvenilir şekilde eşleştirilemedi."
+    assert r["message"] == "Bu görsel kayıtlı eserlerle güvenilir şekilde eşleştirilemedi."
     assert [o["monument_id"] for o in r["options"]] == list(named)  # en yakın eser önerilmez
     assert [o["monument_id"] for o in r["manual_options"]] == CATALOG_ORDER  # tarafsız, katalog sırası
     assert r["actions"] == ["explain_architecture", "upload_another", "choose_manually"]

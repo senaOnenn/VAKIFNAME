@@ -6,7 +6,7 @@ from .claims import PHOTO_ID
 
 CERTAINTY_TR = {"documented": "belgelenmiş", "reported": "kaynaklarda aktarılan, kesinleşmemiş", "uncertain": "kesin değil / tartışmalı"}
 
-ANSWER_SYSTEM = f"""Sen VAKIFNAME'nin Bursa vakıf eserleri için tarih rehberisin. Ziyaretçinin sorusunu doğal, sade ve doğru
+ANSWER_SYSTEM = f"""Sen VAKIFNAME'nin vakıf eserleri için tarih rehberisin. Ziyaretçinin sorusunu doğal, sade ve doğru
 Türkçeyle cevaplarsın.
 
 KESİN KURALLAR
@@ -114,7 +114,7 @@ def vision_messages(question: str, image_url: str, monuments) -> list[dict]:
     # Görsel önce gelir; katalog yalnızca Aşama 2 için, sonda ve açıkça "eşleşme yoksa boş bırak" uyarısıyla verilir.
     first = (f"Önce fotoğrafı katalogdan bağımsız incele (Aşama 1).\n"
              f"Ziyaretçinin fotoğrafla ilgili sorusu (bağlam için; cevaplama, yalnızca gözlem yap):\n<<<{question}>>>")
-    second = (f"Aşama 2 için VAKIFNAME kataloğu (Bursa'daki {len(list(monuments))} kayıtlı eser; fotoğraf bunlardan biri "
+    second = (f"Aşama 2 için VAKIFNAME kataloğu (katalogdaki {len(list(monuments))} kayıtlı eser; fotoğraf bunlardan biri "
               f"olmak zorunda değildir, açık uyum yoksa \"catalog_match\" boş kalır):\n{catalog}")
     return [{"role": "system", "content": VISION_SYSTEM},
             {"role": "user", "content": [{"type": "text", "text": first}, {"type": "image_url", "image_url": {"url": image_url}},
