@@ -36,7 +36,8 @@
 11. **Ziyaret yarıçapı: 50 m** (varsayılan; eski 35 m büyük yapılarda kapıdaki ziyaretçiyi dışarıda bırakıyordu). Drive'da önceki sayısal karar yok; ekip planı "gerçek GPS pilot eserlerde test edilir" diyor → sahada denenip gerekirse eser bazında ayar.
 12. **Sunum modu finalde açık**, ekranda açıkça etiketli.
 13. Rehberin adı: şimdilik **"Rehber"** kalır (29 Ekim, gündem 7a); isim sonra verilebilir.
-14–17: beklemede (görsel ayıklama, İngilizce, tanıtım videosu, küçük teknik kararlar).
+14. **Kitap fotoğrafları (gündem 7b): açık; şimdilik C — Wikimedia fotoğraflarıyla devam.** Bulgu: kitap PDF'lerindeki fotoğraflar ayrı ayrı çıkarılabiliyor (Cilt I s.19–30: 36 görsel, büyükleri 1300–1800 px); telif sorunu yok. Seçenekler: A içerik yönetimine "kitaptan görsel" adımı, B bir seferlik toplu çıkarma. Wikimedia dosyaları: `backend/tests/ask_eval/media/` (repoda yok), eşleşme ve atıf `catalog_snapshot.json`.
+15–17: beklemede (İngilizce, tanıtım videosu → Faz 9, küçük teknik kararlar).
 
 ## Karar bekleyenler (bunlar çözülmeden ilgili iş başlamaz)
 | # | Konu | Öneri |
