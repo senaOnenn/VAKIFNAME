@@ -203,7 +203,7 @@ def get_monument(request: Request, response: Response, monument_id: MonumentId):
     store = _store(request)
     return {"monument": _call(store.monument, monument_id), "facts": store.facts(monument_id=monument_id),
             "images": store.images(monument_id), "translations": store.translations(monument_id=monument_id),
-            "monument_en": store.monument_en(monument_id)}
+            "monument_en": store.monument_en(monument_id), "tr_facts": store.published_tr_facts(monument_id)}
 
 
 @router.put("/monuments/{monument_id}")

@@ -73,3 +73,24 @@ type Job = { job_id: string; source_id: string; monument_id: string; page_from: 
 Hatalar: `{ detail: string }` (Türkçe). 400 geçersiz, 401/403 yetki, 404 yok, 409 kural (ör. kaynak izni yok, alıntı
 sayfada yok, katalog eseri düzenlenemez), 413 dosya büyük, 415 dosya türü, 503 içerik deposu kapalı
 (`VAKIFNAME_CONTENT_DIR` tanımsız; `overview.enabled=false`).
+
+## İngilizce (Faz 11, karar 15 = C)
+Tarihî içerikte makine çevirisi yoktur: İngilizce metin kitabın İngilizce bölümünden gelir, İngilizce alıntı sayfada
+birebir doğrulanır ve yönetici onaylar. Çeviri bir Türkçe kayda (katalog ya da depo) bağlıdır; Türkçe kayıt yayında
+değilse çeviri görünmez.
+```ts
+type Translation = { fact_id: string; monument_id: string; fact_title: string; fact_text: string
+  title_en: string; text_en: string; quote_en: string; source_id: string; page: number
+  origin: 'pipeline' | 'manual'; status: Status; quote_check: 'found' | 'not_found' | 'no_quote'; updated_at: string; decision: Decision }
+```
+| Yöntem | Yol | Gövde | Yanıt |
+|---|---|---|---|
+| GET | `/admin/content/translations?status=&monument_id=` | — | `{ translations: Translation[] }` |
+| PUT | `/admin/content/facts/{fact_id}/en` | `{ title_en, text_en, quote_en, source_id, page, publish }` | `Translation` (katalog kaydı da olabilir) |
+| POST | `/admin/content/facts/{fact_id}/en/publish` · `/reject` · `/withdraw` | — | `Translation` |
+| PUT | `/admin/content/monuments/{monument_id}/en` | `{ name_en, site_notice_en, publish }` | `{ monument_id, name_en, site_notice_en, status, decision }` |
+| POST | `/admin/content/extract` | `{ ..., lang: 'tr' \| 'en' }` | `Job` (`kind: 'tr' \| 'en'`; en: yayındaki Türkçe kayıtların İngilizce karşılıkları) |
+
+`GET /admin/content/monuments/{id}` ayrıca `translations`, `monument_en` ve `tr_facts: {fact_id, title, text}[]` (yayındaki
+Türkçe kayıtlar, katalog dahil) döner; `overview` `translation_drafts` sayısını verir. Genel katalogda kayıtlar
+`title_en`, `text_en`, `en_page`; eserler `name_en`, `site_notice_en` (özet: `name_en`, `lead_en`) taşır.
