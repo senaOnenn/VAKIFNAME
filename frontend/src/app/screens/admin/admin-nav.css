@@ -1,0 +1,23 @@
+/* Yönetim bölümleri sekmesi */
+.vk-adminnav {
+  display: flex;
+  justify-content: center;
+  gap: var(--vk-space-2);
+}
+.vk-adminnav__link {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vk-space-4);
+  border-radius: 999px;
+  border: 1px solid rgb(201 162 75 / 0.45);
+  color: var(--vk-ivory-dim) !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.vk-adminnav__link[aria-current='page'] {
+  background: var(--vk-gold-gradient);
+  color: var(--vk-night) !important;
+  border-color: transparent;
+}

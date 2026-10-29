@@ -38,10 +38,23 @@ export interface RequestOptions {
   headers?: Record<string, string>
   /** Yalnızca rehber test oturumu çerezi için `include`; diğer uçlar çerez göndermez. */
   credentials?: RequestCredentials
-  method?: 'DELETE'
+  /** Gövdesiz istekte `DELETE`, JSON gövdeli istekte `PUT` (varsayılanlar GET ve POST). */
+  method?: 'DELETE' | 'PUT'
 }
 
-async function request(path: string, signal?: AbortSignal, json?: unknown, options: RequestOptions = {}): Promise<unknown> {
+/** Ham dosya gövdesi (yönetimde PDF/görsel yükleme): JSON yerine dosyanın kendi türüyle gönderilir. */
+interface RawBody {
+  body: Blob
+  type: string
+}
+
+async function request(
+  path: string,
+  signal?: AbortSignal,
+  json?: unknown,
+  options: RequestOptions = {},
+  raw?: RawBody,
+): Promise<unknown> {
   const controller = new AbortController()
   let timedOut = false
   const timer = setTimeout(() => {
@@ -56,13 +69,15 @@ async function request(path: string, signal?: AbortSignal, json?: unknown, optio
     let response: Response
     try {
       response = await fetch(`${API_BASE_URL}${path}`, {
-        ...(json === undefined
-          ? { method: options.method ?? 'GET', headers: { Accept: 'application/json', ...options.headers } }
-          : {
-              method: 'POST',
-              headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...options.headers },
-              body: JSON.stringify(json),
-            }),
+        ...(raw
+          ? { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': raw.type, ...options.headers }, body: raw.body }
+          : json === undefined
+            ? { method: options.method ?? 'GET', headers: { Accept: 'application/json', ...options.headers } }
+            : {
+                method: options.method ?? 'POST',
+                headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...options.headers },
+                body: JSON.stringify(json),
+              }),
         signal: controller.signal,
         ...(options.credentials ? { credentials: options.credentials } : {}),
       })
@@ -93,6 +108,11 @@ export function apiGet(path: string, signal?: AbortSignal, options?: RequestOpti
 /** Genel API'ye JSON gövdeli POST isteği (keşif sorusu cevabı gibi). */
 export function apiPost(path: string, json: unknown, signal?: AbortSignal, options?: RequestOptions): Promise<unknown> {
   return request(path, signal, json, options)
+}
+
+/** Ham dosya yükleme (POST): gövde dosyanın kendisidir, `Content-Type` dosyanın türüdür. */
+export function apiUpload(path: string, file: Blob, type: string, options?: RequestOptions): Promise<unknown> {
+  return request(path, undefined, undefined, options, { body: file, type })
 }
 
 function isStamp(value: unknown): value is Stamp {
