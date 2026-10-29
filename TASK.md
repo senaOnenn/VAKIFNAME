@@ -19,7 +19,7 @@
 3. [~] **Tanıtım videosu (29 Ekim): HyperFrames ile Claude üretir** (Faz 9). Web sitesi ekran görüntüsü yok; açılış ekranına gömülecek, harita üzerinde eserden esere yolculuk anlatan çizim üslubunda film (konuşan karakterle aynı vektör üslup, palet A, ~75 sn). Bilgiler yalnızca onaylı kayıtlardan, kaynağı ekranda. **Yerleşim: A** — açılış ekranında filmden 10–15 sn yazısız, sessiz döngü (bugünkü `hero.mp4` yerine) + "Tanıtım filmini izle" düğmesi tam filmi sesli ve altyazılı, ekranı kaplayan oynatıcıda açar; hareket azaltılmışsa oynamaz; mobil için küçük sürüm. **Tarihî kişiler: A** — uygulamadaki gibi portre madalyonuyla belirir, konuşmaz; rehber anlatır (K4 korunur).
 4. [x] **Sunum içeriği (29 Ekim, onaylandı):** iskelet Faz 10'da. Telif bölümü "kaynak ve lisanslar" olur: envanter yayınları projenin kendi yayını (telif sorunu yok); üçüncü taraf görsellerde atıf, açık kaynak lisansları.
 5. [x] **Demo yedeği (29 Ekim): A — tam yedek** (Faz 7 maddesi ayrıntılandı).
-6. [ ] **Canlı yayın + sahada deneme:** plan ve takvim.
+6. [x] **Canlı yayın + sahada deneme (29 Ekim):** sunucu **89.167.32.115** (Tıkır sunucusu); `calismalar.tikirsoft.com` A kaydı açıldı. Plan Faz 7 "Canlı yayın" maddesinde; sahada deneme HTTPS gerektirdiği için canlıdan sonra.
 7. [ ] **Diğer açık kararlar:** rehberin adı, PDF görselleri, İngilizce, küçük teknik kararlar.
 
 ## 29 Ekim kararları
@@ -144,7 +144,12 @@
 - [x] **Tanıtım sayfası** (29 Ekim, dal `feat/landing`): açılıştan sonra doğrudan giriş yerine ürünü tanıtan sayfa — sessiz arka plan videosu (`hero.mp4`, yoksa geçişli zemin), üç adım (rehber karakter videosu, bilgi ve altın mühür), Kayıp Vakfiye örneği, katalogdan 3 eser, kaynak/dürüstlük/vakar, iki çağrı. Hareket azaltılmışsa video oynamaz, bölümler hemen görünür. axe: ihlal yok.
 - [ ] Gerçek telefonda ve yavaş ağda tüm akış.
 - [x] axe taraması (29 Ekim; axe-core 4.14, WCAG 2.0/2.1/2.2 A+AA + iyi uygulama; web 1366 ve mobil 390; misafir, oturumlu kullanıcı ve yönetici sayfaları, 16 sayfa): giriş sekmesi rolü, Türkiye haritası rolü, eserler başlık sırası, rozet sayfasında h1, grafik gezgini (kaydırıcı rolü) düzeltildi. Kalan tek bulgu: rota haritasında Muradiye kümesindeki üst üste binen işaretler (hedef boyutu); WCAG 2.5.8 "eşdeğer kontrol" istisnası — aynı sayfadaki sıralı durak listesi aynı işi görür.
-- [ ] **Canlı yayın** (29 Ekim kararı): `https://calismalar.tikirsoft.com` sunucusunda; sunucuda `claude` girişi, SMTP, `.env`. Sunucuya dokunmadan önce plan + onay.
+- [ ] **Canlı yayın** (29 Ekim): `https://calismalar.tikirsoft.com` → 89.167.32.115 (Tıkır sunucusu; Tıkır'a dokunulmaz). Sunucuya dokunmadan önce komut listesi + onay.
+  - [ ] Salt okunur keşif: çalışan servisler, 80/443'ü kim kullanıyor, disk, Python/Node sürümleri.
+  - [ ] Arayüz Mac'te derlenir → rsync (sunucuda derleme yok); backend servis (systemd) yalnızca 127.0.0.1'de.
+  - [ ] Ters vekil: aynı adreste site + `/api` (çerez aynı site), HTTPS sertifikası.
+  - [ ] `.env` (Google, yöneticiler, SMTP, içerik dizini, sunum modu açık), sunucuda `claude` girişi, Google ses anahtarı.
+  - [ ] Duman testi; ardından sahada deneme (Bursa: Ulu Cami, Muradiye kümesi, Koza Han; iPhone Safari + Android Chrome; konum, ses, yavaş ağ; yarıçap notları).
 - [x] **Eski arayüz kodu silindi** (29 Ekim, dal `feat/remove-legacy-ui`): eski katalog sayfası, "Esere Sor", kurgusal demo oyunu ve bileşenleri, eski tarayıcı senaryoları (~8000 satır, 147 eski test). Dahili envanter (`?mod=envanter`, yalnızca geliştirme) kaldı. Backend demo uçları (`/places`, eski check-in) karar 17 beklediği için duruyor.
 - [ ] **Demo yedeği (karar A, tam):** salonda internet/sunucu/servis giderse demo sürer.
   - [ ] Dizüstünde canlıyla aynı sürüm, tek komutla açılır (README).
