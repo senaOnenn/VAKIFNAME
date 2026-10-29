@@ -247,3 +247,4 @@ data/import/
 
 # Geliştirmede dosyaya yazılan hesap e-postaları (doğrulama/yenileme bağlantısı içerir)
 local-mail/
+local-content/
