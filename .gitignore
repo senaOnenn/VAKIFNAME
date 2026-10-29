@@ -244,3 +244,7 @@ data/import/
 
 # Uçtan uca betiklerin yanlış dizine (ör. tanımsız yol) yazdığı ekran görüntüleri.
 /frontend/undefined/
+
+# Geliştirmede dosyaya yazılan hesap e-postaları (doğrulama/yenileme bağlantısı içerir)
+local-mail/
+local-content/

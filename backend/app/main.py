@@ -12,16 +12,20 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .accounts import AccountStore
+from .accounts import AccountStore, email_token_ttls_from_env
 from .ask.service import AskService
 from .game import GameSettings
 from .game_routes import router as game_router
 from .ask_routes import RateLimiter, router as ask_router
+from .content.pipeline import Pipeline, content_dir_from_env, content_model
+from .content.store import ContentStore
+from .content_routes import router as content_router
 from .auth_routes import router as auth_router
 from .people_routes import router as people_router
 from .stats import StatsStore
 from .stats_routes import router as stats_router
 from .google_auth import google_verifier_from_env
+from .mailer import mailer_from_env, public_base_url
 from .guide.lexicon import TurkishLexicon
 from .guide.privacy import FaceScreen
 from .guide.registry import DEFAULT_MODELS, build_provider, log_selection
@@ -107,6 +111,7 @@ def create_app(
     ask_index_dir: Optional[Path] = None,
     ask_encoder=None,
     ask_background: bool = True,
+    content_dir: Optional[Path] = None,
 ) -> FastAPI:
     demo_api = demo_api_from_env() if demo_api is None else demo_api
     places_file = places_file or Path(os.environ.get("VAKIFNAME_PLACES_FILE", DEFAULT_PLACES_FILE))
@@ -119,8 +124,12 @@ def create_app(
     if demo_api:
         app.state.places = PlaceRepository(places_file)
         app.state.progress = ProgressStore()
-    # Gerçek eser kataloğu ve mühürleri demo oyunundan ayrı tutulur.
-    app.state.monuments = PublicCatalogRepository(public_catalog_file)
+    # Gerçek eser kataloğu ve mühürleri demo oyunundan ayrı tutulur. İçerik yönetimi (`VAKIFNAME_CONTENT_DIR`, bkz.
+    # docs/ICERIK_YONETIMI.md) açıksa yöneticinin yayımladığı katman (`published.json`) anlık görüntünün üstüne eklenir.
+    content_dir = content_dir or (Path(d) if (d := content_dir_from_env()) else None)
+    app.state.monuments = PublicCatalogRepository(
+        public_catalog_file, overlay_path=content_dir / "published.json" if content_dir else None,
+        overlay_media_dir=content_dir / "media" if content_dir else None)
     # Ziyaretçi ilerlemesi `VAKIFNAME_PROGRESS_DB` dosyasında kalıcıdır (ör. data/public_catalog/progress/progress.sqlite3);
     # tanımlı değilse (testler) bellek içi depo kullanılır ve yeniden başlatmada sıfırlanır.
     progress_db = progress_db or (Path(os.environ["VAKIFNAME_PROGRESS_DB"]) if os.environ.get("VAKIFNAME_PROGRESS_DB") else None)
@@ -133,7 +142,14 @@ def create_app(
     app.state.game_rng = random.SystemRandom()
     # Hesaplar ve oturumlar `VAKIFNAME_ACCOUNTS_DB` dosyasında (ilerlemeden ayrı); tanımlı değilse bellek içi (testler).
     accounts_db = accounts_db or (Path(os.environ["VAKIFNAME_ACCOUNTS_DB"]) if os.environ.get("VAKIFNAME_ACCOUNTS_DB") else None)
-    app.state.accounts = AccountStore(accounts_db)
+    app.state.accounts = AccountStore(accounts_db, token_ttls=email_token_ttls_from_env())
+    # Hesap e-postaları (doğrulama, parola yenileme; bkz. app/mailer.py): `VAKIFNAME_MAIL_BACKEND=off|file|smtp`
+    # (varsayılan off). Bağlantılar `VAKIFNAME_PUBLIC_BASE_URL` üzerine kurulur. Geçersiz yapılandırma açılışta hata verir.
+    app.state.mailer = mailer_from_env()
+    app.state.public_base_url = public_base_url()
+    logging.getLogger("vakifname.mail").info("Hesap e-postaları: %s", app.state.mailer.name)
+    # Aynı adrese/hesaba giden e-posta sınırı (istemci sınırına ek): dakikada 1, saatte 5.
+    app.state.mail_limiter = RateLimiter(per_minute=1, per_hour=5, global_per_minute=120)
     # Google ile giriş yalnızca `VAKIFNAME_GOOGLE_CLIENT_ID` verilince açılır; testler sahte doğrulayıcı koyar.
     app.state.google_verifier = google_verifier_from_env()
     # `/auth/*` POST istekleri için `VAKIFNAME_AUTH_RATE=dakika/saat/genel-dakika` (varsayılan 10/60/300), istemci adresine göre.
@@ -182,13 +198,20 @@ def create_app(
     app.state.guide_sessions = TesterSessions()
     app.state.guide_inflight = InFlight()
     app.state.guide_login_limiter = RateLimiter(per_minute=5, per_hour=20, global_per_minute=30)
+    # İçerik deposu ve hat: hat rehberin sağlayıcısını kullanır (model `VAKIFNAME_CONTENT_MODEL`, yoksa rehberinki).
+    app.state.content = None
+    if content_dir is not None:
+        repo = app.state.monuments
+        app.state.content = ContentStore(content_dir, lambda: {m.monument_id: m for m in repo.base_catalog.monuments})
+    app.state.content_pipeline = Pipeline(app.state.content, provider, content_model(guide_settings.text_model)) \
+        if app.state.content is not None else None
 
     # CORS yalnızca tarayıcıların hangi sitelerden çağrı yapabileceğini belirler; erişim kontrolü değildir. Kimlik bilgisi
     # (çerez: rehber test oturumu ve hesap oturumu) yalnızca açıkça listelenen origin'lerle kullanılır ('*' reddedilir).
     app.add_middleware(
         CORSMiddleware,
         allow_origins=cors_origins,
-        allow_methods=["GET", "POST", "DELETE"],
+        allow_methods=["GET", "POST", "PUT", "DELETE"],
         allow_headers=["Content-Type", "X-Vakifname-Guide"],
         allow_credentials=True,
     )
@@ -209,6 +232,7 @@ def create_app(
     app.include_router(people_router)
     app.include_router(stats_router)
     app.include_router(auth_router)
+    app.include_router(content_router)
     if app.state.ask.model_dir is not None:
         # Model ve dizin arka planda hazırlanır; o sırada kelime araması çalışır.
         app.state.ask.engine()

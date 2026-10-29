@@ -11,7 +11,9 @@ export interface AuthUser {
   email: string | null
   display_name: string | null
   provider: 'password' | 'google'
-  /** Yönetici paneli (`/yonetim`) için; sunucu `VAKIFNAME_ADMIN_EMAILS` listesine göre belirler. */
+  /** E-posta bağlantıyla (veya Google ile) doğrulandı mı. Yönetici yetkisi doğrulanmış e-posta ister. */
+  email_verified?: boolean
+  /** Yönetici paneli (`/yonetim`) için; sunucu `VAKIFNAME_ADMIN_EMAILS` listesine ve doğrulamaya göre belirler. */
   is_admin?: boolean
 }
 export type AuthState =
@@ -79,6 +81,47 @@ export const login = (email: string, password: string) =>
 export const googleSignIn = (idToken: string) =>
   apiPost('/auth/google', { id_token: idToken, ...visitor() }, undefined, AUTH).then(signedIn)
 
+/** Doğrulama bağlantısını yeniden gönderir (oturum gerekir; aynı hesaba dakikada bir). */
+export async function resendVerification(): Promise<void> {
+  await apiPost('/auth/verify-email/resend', {}, undefined, AUTH)
+}
+
+// Aynı bağlantı aynı sayfada iki kez gönderilmesin (StrictMode efektleri iki kez çalıştırır; belirteç tek kullanımlık).
+const verifying = new Map<string, Promise<void>>()
+
+/** E-postadaki doğrulama bağlantısının belirtecini sunucuya gönderir. Oturum açmaz; açıksa rozeti tazeler. */
+export function verifyEmail(token: string): Promise<void> {
+  let p = verifying.get(token)
+  if (!p) {
+    p = apiPost('/auth/verify-email', { token }, undefined, AUTH).then(() => refreshAuth())
+    verifying.set(token, p)
+  }
+  return p
+}
+
+/** Parola yenileme bağlantısı ister. Sunucu hesap olsa da olmasa da aynı cevabı verir. */
+export async function requestPasswordReset(email: string): Promise<void> {
+  await apiPost('/auth/password-reset/request', { email }, undefined, AUTH)
+}
+
+/** Bağlantıdaki belirteçle yeni parolayı kaydeder; sunucu eski oturumları kapatır ve bu cihazda oturum açar. */
+export const resetPassword = (token: string, password: string) =>
+  apiPost('/auth/password-reset/confirm', { token, password, ...visitor() }, undefined, AUTH).then(signedIn)
+
+const LINK_TOKEN = /(?:^#|&)t=([A-Za-z0-9_-]{20,128})(?:&|$)/
+
+/** E-posta bağlantısının belirteci adresin parçasındadır (`#t=…`): sunucuya ve `Referer`'a gitmez. Yalnızca okur. */
+export function readLinkToken(): string | null {
+  return LINK_TOKEN.exec(window.location.hash)?.[1] ?? null
+}
+
+/** Belirteci adres çubuğundan ve tarayıcı geçmişinden siler. */
+export function clearLinkToken(): void {
+  if (window.location.hash) {
+    window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search)
+  }
+}
+
 export async function logout(): Promise<void> {
   try {
     await apiPost('/auth/logout', {}, undefined, AUTH)
@@ -126,6 +169,7 @@ export function useAuth(): AuthState {
 /** Yalnızca testler: depoyu başlangıç durumuna döndürür. */
 export function resetAuthForTests(): void {
   started = false
+  verifying.clear()
   guestFlag(false)
   state = { status: 'loading' }
 }

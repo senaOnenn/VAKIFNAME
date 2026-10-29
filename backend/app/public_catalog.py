@@ -10,6 +10,10 @@ arşivinin eser sayfalarında ayrı koleksiyon olarak gösterilen fotoğrafları
 sınıflandırmasıyla sunulur; doğrulanmış eser kimliği, lisans veya hak sahibi bilgisi taşımaz. Kimliği belgeli biçimde
 çelişen fotoğrafta açıklama zorunludur. Koleksiyon tarihî bilgi motoruna ve görsel tanıma indeksine girmez.
 
+İçerik katmanı (`published.json`, isteğe bağlı; `app.content`): yöneticinin onaylayıp yayımladığı eserler ile onaylı
+katalog eserlerine eklenen kayıt ve görseller. Anlık görüntünün üstüne eklenir (`apply_overlay`); kimlik çakışması veya
+şema hatası olan katman reddedilir ve son geçerli katalog sunulur.
+
 Şemanın kendisi yayın kurallarını taşır: her olgu, görsel, harita konumu ve check-in noktası onu açan kararın kimliğini
 içermek zorundadır; check-in noktası doğrulanmış konum olmadan, oyun kullanımı yayın onayı olmadan yazılamaz. Koordinatı
 olmayan eserde `location` `null`'dır; asla 0,0 veya tahmini değer yazılmaz.
@@ -197,6 +201,37 @@ class PublicCatalog(_Public):
 
 
 EMPTY_CATALOG = PublicCatalog(schema=PUBLIC_CATALOG_SCHEMA)
+OVERLAY_SCHEMA = "vakifname.content_overlay/1"
+
+
+def apply_overlay(base: PublicCatalog, overlay: dict) -> PublicCatalog:
+    """Yayın katmanını anlık görüntünün üstüne ekler. Katman eseri katalog eseriyle, eklenen kayıt/görsel mevcut olanla
+    aynı kimliği taşıyamaz; aksi halde `ValueError`. Sonuç baştan doğrulanır."""
+    if overlay.get("schema") != OVERLAY_SCHEMA:
+        raise ValueError("Bilinmeyen içerik katmanı şeması.")
+    data = base.model_dump(mode="json", by_alias=True)
+    by_id = {m["monument_id"]: m for m in data["monuments"]}
+    for item in overlay.get("facts", ()):
+        m = by_id.get(item["monument_id"])
+        if m is None:
+            raise ValueError(f"{item['monument_id']}: katalogda olmayan esere kayıt eklenemez.")
+        if any(f["fact_id"] == item["fact"]["fact_id"] for f in m["facts"]):
+            raise ValueError(f"{item['fact']['fact_id']}: kayıt kimliği katalogda var.")
+        m["facts"].append(item["fact"])
+    for item in overlay.get("images", ()):
+        m = by_id.get(item["monument_id"])
+        if m is None:
+            raise ValueError(f"{item['monument_id']}: katalogda olmayan esere görsel eklenemez.")
+        m["images"].append(item["image"])
+    data["monuments"].extend(overlay.get("monuments", ()))
+    return PublicCatalog.model_validate(data)
+
+
+def overlay_media_files(overlay: Optional[dict]) -> set[str]:
+    if not overlay:
+        return set()
+    images = [i["image"] for i in overlay.get("images", ())] + [i for m in overlay.get("monuments", ()) for i in m["images"]]
+    return {f for img in images for f in (img.get("file"), img.get("card_file")) if f}
 
 ARCHIVE_COLLECTION_SCHEMA = "vakifname.archive_collection/1"
 ARCHIVE_COLLECTION_FILE = "archive_collection.json"
@@ -313,14 +348,19 @@ class PublicCatalogRepository:
       katalogda yayımlanmış eserlere bağlanır.
     """
 
-    def __init__(self, path: Optional[Path], media_dir: Optional[Path] = None):
+    def __init__(self, path: Optional[Path], media_dir: Optional[Path] = None, overlay_path: Optional[Path] = None,
+                 overlay_media_dir: Optional[Path] = None):
         self.path = Path(path) if path else None
         self._media_dir_override = Path(media_dir) if media_dir else None
         self.archive_path = self.path.parent / ARCHIVE_COLLECTION_FILE if self.path else None
+        self.overlay_path = Path(overlay_path) if overlay_path else None
+        self.overlay_media_dir = Path(overlay_media_dir) if overlay_media_dir else None
+        self._base: PublicCatalog = EMPTY_CATALOG
+        self._overlay_files: set[str] = set()
         self._lock = threading.Lock()
         self._stamp = self._stamps()
         self._rejected_stamp = None
-        self._set(*(self._load() if self._stamp[0] else (EMPTY_CATALOG, None)))
+        self._set(*self._load())
 
     @staticmethod
     def _file_stamp(path: Optional[Path]):
@@ -333,13 +373,19 @@ class PublicCatalogRepository:
         return (st.st_mtime_ns, st.st_size, st.st_ino) if stat.S_ISREG(st.st_mode) else None
 
     def _stamps(self):
-        return self._file_stamp(self.path), self._file_stamp(self.archive_path)
+        return self._file_stamp(self.path), self._file_stamp(self.archive_path), self._file_stamp(self.overlay_path)
 
     def _load(self) -> tuple[PublicCatalog, Optional[ArchiveCollection]]:
-        catalog = PublicCatalog.model_validate(json.loads(self.path.read_text(encoding="utf-8")))
+        base = (PublicCatalog.model_validate(json.loads(self.path.read_text(encoding="utf-8")))
+                if self._file_stamp(self.path) else EMPTY_CATALOG)
         archive = None
         if self._file_stamp(self.archive_path):
             archive = ArchiveCollection.model_validate(json.loads(self.archive_path.read_text(encoding="utf-8")))
+        overlay = None
+        if self._file_stamp(self.overlay_path):
+            overlay = json.loads(self.overlay_path.read_text(encoding="utf-8"))
+        catalog = apply_overlay(base, overlay) if overlay else base
+        self._base, self._overlay_files = base, overlay_media_files(overlay)
         return catalog, archive
 
     def _set(self, catalog: PublicCatalog, archive: Optional[ArchiveCollection]):
@@ -360,14 +406,15 @@ class PublicCatalogRepository:
         with self._lock:
             if stamp == self._stamp:
                 return
-            if stamp[0] is None:
+            if stamp[0] is None and stamp[2] is None:
+                self._base, self._overlay_files = EMPTY_CATALOG, set()
                 self._set(EMPTY_CATALOG, None)
                 self._stamp = stamp
                 logger.warning("Genel katalog dosyası kaldırıldı; katalog boş.")
                 return
             try:
                 catalog, archive = self._load()
-            except (OSError, ValueError) as e:
+            except (OSError, ValueError, KeyError, TypeError) as e:
                 self._rejected_stamp = stamp
                 logger.error("Yeni genel katalog veya arşiv koleksiyonu dosyası geçersiz, son geçerli sürüm sunuluyor: %s", e)
                 return
@@ -385,6 +432,12 @@ class PublicCatalogRepository:
     def media_dir(self) -> Optional[Path]:
         return self._state[3]
 
+    @property
+    def base_catalog(self) -> PublicCatalog:
+        """Yayın katmanı eklenmemiş onaylı anlık görüntü (içerik yönetimi bunu salt okunur temel olarak kullanır)."""
+        self._refresh()
+        return self._base
+
     def archive(self, monument_id: str) -> Optional[dict]:
         """Eserin arşiv koleksiyonu görünümü (yoksa `None`)."""
         self._refresh()
@@ -401,7 +454,10 @@ class PublicCatalogRepository:
     def media_path(self, file: str) -> Optional[Path]:
         self._refresh()
         _, _, files, media_dir, _, _ = self._state
-        if file not in files or media_dir is None:
+        if file not in files:
             return None
-        path = media_dir / file
+        folder = self.overlay_media_dir if file in self._overlay_files else media_dir
+        if folder is None:
+            return None
+        path = folder / file
         return path if path.is_file() else None

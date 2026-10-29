@@ -110,3 +110,22 @@
   place-items: center;
   color: var(--vk-ivory-dim);
 }
+
+/* E-posta doğrulama hatırlatması: ince, kapatılabilir, palet A */
+.vk-verify-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vk-space-3);
+  margin: var(--vk-space-3) auto 0;
+  width: min(100% - 2 * var(--vk-space-4), 60rem);
+  padding: var(--vk-space-2) var(--vk-space-4);
+  border-radius: var(--vk-radius);
+  border: 1px solid rgb(201 162 75 / 0.45);
+  background: rgb(26 32 80 / 0.8);
+  color: var(--vk-ivory);
+  font-size: 0.9rem;
+}
+.vk-verify-notice p {
+  margin: 0;
+}
