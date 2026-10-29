@@ -98,11 +98,11 @@
 - Not: sınavdaki görsel dosya adları genel katalogdaki görsellerle eşleştirilebilir (katalog açık olduğu sürece kaçınılmaz); gerekirse sınava özel geçici görsel adresleri.
 
 ## Faz 6 — Yönetim, istatistik, ölçek
-- [ ] **İçerik ekleme/düzenleme** (şartname 5.1.1) — **karar verildi (29 Ekim, CLAUDE.md §2.13).** Bulgu: ekibin dahili aracı yalnızca mevcut taslakları onaylayıp yayımlıyor; yeni eser ekleme/düzenleme ucu yok. Yapılacaklar:
-  - [ ] İçerik deposu (SQLite): kaynak kitap, eser, kayıt (alıntı + sayfa + kesinlik), sınav sorusu; durum taslak/yayında; onay kaydı (kim, ne zaman). Mevcut onaylı katalog (V20) salt okunur temel olarak kalır; yayımlanan içerik onun üstüne eklenir.
-  - [ ] Hat: PDF yükle → sayfa metni → eser + sayfa aralığı seç → rehber modeli (`claude -p`) aday kayıt önerir → alıntı sayfada birebir yoksa aday düşer → taslak.
-  - [ ] Yönetim ekranı: kitaplar, eserler (haritada konum seçimi), taslak kuyruğu (kaynak sayfa metniyle yan yana), elle ekle/düzenle, onayla/yayımla, geri çek.
-  - [ ] Yayımlanan içerik eser sayfası, anlatım, rota, sınav ve rehbere düşer.
+- [~] **İçerik ekleme/düzenleme** (şartname 5.1.1; karar 29 Ekim, CLAUDE.md §2.13; tasarım + API: `docs/ICERIK_YONETIMI.md`; dal `feat/content-admin`).
+  - [x] Backend: içerik deposu (SQLite; kaynak, eser, kayıt, görsel; yalnızca eklenen karar kaydı), PDF sayfa metni (pypdf), elle kayıt, onay/ret/geri çekme, yeni eser (`<ŞEHİR>-5001`…), görsel yükleme (yeniden kodlanır, EXIF atılır), yayın katmanı (`published.json`) → genel katalog yeniden başlatmadan yükler; rehber dizini kendiliğinden yenilenir. 17 test.
+  - [x] Hat: kaynak + eser + ≤6 sayfa → model (`claude -p`) adayları → alıntı sayfada yoksa düşer → taslak. Gerçek deneme (29 Ekim, Cilt I s.20–23, Ulu Cami): 11,6 sn, 8 aday, hepsinin alıntısı kitapta doğrulandı; "mimarı kesin bilinmiyor" adayı `uncertain` etiketlendi.
+  - [ ] Yönetim ekranı (`/yonetim/icerik`, dal `feat/content-admin-ui`, yapılıyor).
+  - Not: onaylı katalog (V20) eserlerinin kendisi salt okunur; yönetici bunlara kayıt/görsel ekler. V20 kaydını düzeltmek ekibin dahili aracıyla.
 - [x] **İstatistik** (dal `feat/admin-stats`): çerezsiz/anonim günlük sayaçlar (tekil ziyaretçi, sayfa ve eser görüntüleme; IP/tarayıcı diske yazılmaz, günlük tuz yalnızca bellekte; Do Not Track/GPC'ye uyulur). Yönetici panosu `/yonetim` (yöneticiler `VAKIFNAME_ADMIN_EMAILS`): tarih aralığı, KPI, günlük ziyaretçi grafiği, en çok ilgi gören eserler, sayfalar, oyun hunisi (dinleyen → soran → bilgi mührü → ziyaret; sunum modu ayrı sayılır).
 - [~] Yeni şehir: kimlik şeması, rota ve şehir sayfası genel (29 Ekim). [ ] Yeni şehrin eserleri içerik yönetiminden girer. ⬇ 60–80 eserlik sponsor paketi gelince içe aktarma.
 - [ ] ⬇ İngilizce katmanı (K9).
