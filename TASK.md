@@ -123,11 +123,12 @@
 - [ ] İngilizce → Faz 11 (karar 15 = C).
 
 ## Faz 8 — Konuşan rehber (gündem 1–2, 29 Ekim kararları)
-- [ ] Karakter: Çırak Kâşif'in sade vektör (SVG) çizimi — palet A, karakter sayfası kimlik referansı; katmanlar: gövde, baş, gözler (kırpma), 9 ağız şekli (Rhubarb A–H + X), nefes/duruş; sayfaya çerçevesiz girer (eser sayfasında anlatıcının yerine).
+- [x] Yerleşim: dikdörtgen video paneli kalktı; karakter kartın üst kenarından taşarak sayfada belirir (masaüstünde balonun solunda, mobilde ortada), altyazı ona bakan konuşma balonu; konuşurken baş hafifçe sallanır, arkasında altın ışık; göz kırpar, nefes alır.
+- [x] Karakter (29 Ekim, `GuideCharacter.tsx`): Çırak Kâşif'in sade vektör (SVG) çizimi — palet A, karakter sayfası kimlik referansı; katmanlar: gövde, baş, gözler (kırpma), 9 ağız şekli (Rhubarb A–H + X), nefes/duruş; sayfaya çerçevesiz girer (eser sayfasında anlatıcının yerine).
 - [ ] Ses sağlayıcısı arayüzü (`VAKIFNAME_TTS_PROVIDER` = `browser` | `google` …, seçenekler `.env.example` yorumunda): Google Chirp 3 HD Türkçe; yoksa tarayıcı sesi + altyazı (bugünkü davranış).
-- [ ] Ağız senkronu: ses dosyasından ağız zaman çizelgesi (Rhubarb Lip Sync, dil bağımsız mod); yoksa ses şiddetine göre basit ağız hareketi.
+- [x] Ağız senkronu (29 Ekim teknik karar; `lipsync.ts`, tarayıcı sesiyle çalışıyor): **Türkçe yazıldığı gibi okunduğu için ağız şekilleri metinden** çıkarılır (harf → ağız şekli); zamanlama sesin ilerleyişinden (ses dosyasında oynatma anı + ses şiddeti, tarayıcı sesinde kelime sınırı olayları). Ek araç (Rhubarb) gerekmez; tarayıcı sesiyle de, Google sesiyle de, internetsiz de çalışır.
 - [ ] Anlatım sesi içerik onayında bir kez üretilir ve saklanır (anlatım metni değişince yeniden); rehber cevabı anlık üretilir.
-- [ ] Erişilebilirlik: altyazı ve tam metin kalır; hareket azaltılmışsa karakter durağan, ses yine çalışır; ses otomatik başlamaz.
+- [x] Erişilebilirlik (axe temiz): altyazı ve tam metin kalır; hareket azaltılmışsa karakter durağan, ses yine çalışır; ses otomatik başlamaz.
 - [ ] Sizden: Google Cloud'da Text-to-Speech API'yi açmak ve servis hesabı anahtarı (dosya; repoya girmez).
 
 ## Faz 9 — Tanıtım filmi (gündem 3)

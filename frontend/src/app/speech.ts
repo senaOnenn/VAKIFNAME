@@ -24,6 +24,8 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
   const timer = useRef<number | null>(null)
   const run = useRef(0) // her başlatmada artar; eski geri çağrılar yok sayılır
+  // Ağız senkronu için konuşmanın anlık konumu: satır, son kelimenin karakter konumu ve o anın zamanı (Faz 8).
+  const cue = useRef<{ i: number; char: number; at: number } | null>(null)
   const onDone = useRef(opts.onDone)
   onDone.current = opts.onDone
 
@@ -39,8 +41,10 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
   const clear = () => {
     if (timer.current !== null) window.clearTimeout(timer.current)
     timer.current = null
+    cue.current = null
     synth()?.cancel()
   }
+  const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now())
 
   const playFrom = useCallback(
     (i: number) => {
@@ -60,7 +64,16 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
         u.voice = voice
         u.lang = voice.lang || 'tr-TR'
         u.rate = rate
-        u.onend = next
+        u.onstart = () => {
+          if (run.current === myRun) cue.current = { i, char: 0, at: now() }
+        }
+        u.onboundary = (e) => {
+          if (run.current === myRun && e.charIndex >= 0) cue.current = { i, char: e.charIndex, at: now() }
+        }
+        u.onend = () => {
+          if (run.current === myRun) cue.current = null
+          next()
+        }
         u.onerror = (e) => {
           // İptal (kullanıcı durdurdu / satır atladı) hata sayılmaz; diğer hatalarda okuma moduna düşülür.
           if (run.current === myRun && e.error !== 'interrupted' && e.error !== 'canceled') {
@@ -69,6 +82,7 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
         }
         s.speak(u)
       } else {
+        cue.current = { i, char: 0, at: now() }
         timer.current = window.setTimeout(next, readingMs(lines[i].text, rate))
       }
     },
@@ -94,6 +108,7 @@ export function useNarration(lines: { spoken: string; text: string }[], opts: { 
     rate,
     muted,
     hasVoice: !!voice,
+    cue,
     play: () => playFrom(state === 'done' ? 0 : index),
     pause,
     goTo: (i: number) => (state === 'playing' ? playFrom(i) : setIndex(Math.max(0, Math.min(lines.length - 1, i)))),

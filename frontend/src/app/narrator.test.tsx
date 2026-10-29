@@ -119,6 +119,17 @@ describe('anlatıcı bileşeni', () => {
     delete window.speechSynthesis
   })
 
+  it('rehber çerçevesiz bir karakter olarak görünür (video paneli yok); konuşurken "konuşuyor" durumuna geçer', async () => {
+    render(<Narrator monument={MON} />)
+    const char = document.querySelector('svg.vk-gchar')!
+    expect(char).toBeInTheDocument()
+    expect(char.getAttribute('aria-hidden')).toBe('true')
+    expect(document.querySelector('video')).toBeNull()
+    expect(screen.getByRole('heading', { name: 'Rehber' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Dinle' }))
+    expect(document.querySelector('svg.vk-gchar')!.getAttribute('class')).toContain('is-speaking')
+  })
+
   it('büyük altyazı seçeneği altyazıyı büyütür', async () => {
     render(<Narrator monument={MON} />)
     await userEvent.click(screen.getByRole('checkbox', { name: 'Büyük altyazı' }))

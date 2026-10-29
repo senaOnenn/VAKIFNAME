@@ -6,55 +6,46 @@
   background: radial-gradient(110% 120% at 50% 0%, rgb(74 91 255 / 0.2), transparent 60%), var(--vk-surface);
   box-shadow: var(--vk-shadow-gold);
 }
-.vk-narr__stage {
+/* Sahne: karakter çerçevesiz, kartın üst kenarından taşarak sayfada belirir; altyazı ona bakan bir konuşma balonudur. */
+.vk-narr__scene {
+  display: grid;
+  grid-template-columns: minmax(104px, 32%) 1fr;
+  align-items: end;
+  gap: var(--vk-space-3);
+}
+.vk-narr__char {
   position: relative;
-  aspect-ratio: 16 / 9;
-  border-radius: var(--vk-radius);
-  overflow: hidden;
-  background: var(--vk-night-deep);
+  align-self: end;
+  margin-top: -56px;
+  animation: vk-narr-char-in 700ms var(--vk-ease) both;
 }
-.vk-narr__video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  filter: saturate(0.92);
-  transition: filter var(--vk-dur) var(--vk-ease);
-}
-.vk-narr__stage:not(.is-speaking) .vk-narr__video {
-  filter: saturate(0.7) brightness(0.8);
-}
-.vk-narr__stage::after {
+.vk-narr__char::before {
+  /* Konuşurken arkada yumuşak bir altın ışık. */
   content: '';
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.35), inset 0 -80px 80px -40px rgb(9 12 34 / 0.85);
-  border-radius: inherit;
+  inset: 12% 6% 0;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(233 200 116 / 0.28), transparent);
+  opacity: 0;
+  transition: opacity var(--vk-dur) var(--vk-ease);
 }
-.vk-narr__stage.is-speaking::after {
-  box-shadow: inset 0 0 0 2px rgb(233 200 116 / 0.6), inset 0 -80px 80px -40px rgb(9 12 34 / 0.85);
+.vk-narr__char.is-speaking::before {
+  opacity: 1;
 }
-.vk-narr__medallion {
+.vk-narr__talk {
   display: grid;
-  place-items: center;
-  height: 100%;
-}
-.vk-narr__orn {
-  width: 60%;
-  opacity: 0.5;
-}
-.is-speaking .vk-narr__orn {
-  animation: vk-narr-breathe 1.6s ease-in-out infinite alternate;
+  gap: var(--vk-space-2);
+  align-self: center;
 }
 .vk-narr__who {
-  position: absolute;
-  left: var(--vk-space-4);
-  bottom: var(--vk-space-3);
-  z-index: 1;
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--vk-space-2);
 }
 .vk-narr__who h2 {
+  margin: 0;
   font-size: 1.5rem;
   color: var(--vk-gold-bright);
 }
@@ -62,7 +53,33 @@
   color: var(--vk-ivory-dim);
   font-size: 0.8rem;
 }
+@keyframes vk-narr-char-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+@media (max-width: 640px) {
+  .vk-narr__scene {
+    grid-template-columns: 1fr;
+    gap: var(--vk-space-2);
+  }
+  .vk-narr__char {
+    justify-self: center;
+    width: min(190px, 52vw);
+    margin-top: -64px;
+  }
+  .vk-narr__who {
+    justify-content: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vk-narr__char {
+    animation: none;
+  }
+}
 .vk-narr__sub {
+  position: relative;
   min-height: 7.5rem;
   display: grid;
   align-content: center;
@@ -71,6 +88,26 @@
   padding: var(--vk-space-3) var(--vk-space-4);
   border-radius: var(--vk-radius);
   background: rgb(9 12 34 / 0.55);
+}
+.vk-narr__sub::before {
+  content: '';
+  position: absolute;
+  left: -9px;
+  bottom: 28px;
+  border: 9px solid transparent;
+  border-left: 0;
+  border-right-color: rgb(9 12 34 / 0.55);
+}
+@media (max-width: 640px) {
+  .vk-narr__sub::before {
+    left: 50%;
+    top: -9px;
+    bottom: auto;
+    translate: -50% 0;
+    border: 9px solid transparent;
+    border-top: 0;
+    border-bottom-color: rgb(9 12 34 / 0.55);
+  }
 }
 .vk-narr__line {
   font: 500 clamp(1.1rem, 2.6vw, 1.35rem) / 1.5 var(--vk-font-ui);
@@ -215,17 +252,6 @@
   background: rgb(9 12 34 / 0.6);
   color: var(--vk-ivory);
   font: 1rem var(--vk-font-ui);
-}
-@keyframes vk-narr-breathe {
-  to {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .is-speaking .vk-narr__orn {
-    animation: none;
-  }
 }
 .vk-narr__sub--large .vk-narr__line {
   font-size: clamp(1.4rem, 3.6vw, 1.9rem);

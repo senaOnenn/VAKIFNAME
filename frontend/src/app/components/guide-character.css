@@ -1,0 +1,49 @@
+/* Rehber karakteri: çerçevesiz; nefes alır, konuşurken başı hafifçe sallanır. Hareket azaltılmışsa durağan. */
+.vk-gchar {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.vk-gchar__body {
+  transform-origin: 150px 380px;
+  animation: vk-gchar-breathe 4.2s ease-in-out infinite;
+}
+.vk-gchar__head {
+  transform-origin: 150px 250px;
+  transition: transform var(--vk-dur) var(--vk-ease);
+}
+.vk-gchar.is-speaking .vk-gchar__head {
+  animation: vk-gchar-talk 2.6s ease-in-out infinite;
+}
+.vk-gchar.is-speaking .vk-gchar__brow {
+  transform: translateY(-1.5px);
+}
+.vk-gchar__brow {
+  transition: transform var(--vk-dur-fast) var(--vk-ease);
+}
+
+@keyframes vk-gchar-breathe {
+  50% {
+    transform: scaleY(1.012);
+  }
+}
+@keyframes vk-gchar-talk {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-1.6deg) translateY(-1px);
+  }
+  70% {
+    transform: rotate(1.2deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vk-gchar__body,
+  .vk-gchar.is-speaking .vk-gchar__head {
+    animation: none;
+  }
+}

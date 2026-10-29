@@ -1,13 +1,13 @@
-import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useId, useMemo, useState, type FormEvent } from 'react'
 import { askGuide, getGuideAvailability, type GuideTurn } from '../../catalog/guideClient'
 import type { GuideResult } from '../../catalog/types'
 import type { MonumentDetail } from '../api'
+import { MS_PER_WEIGHT, mouthFrom, visemes, type Mouth } from '../lipsync'
 import { buildScript, LOCAL_GUIDE } from '../narration'
 import { useNarration } from '../speech'
-import { Ornament } from './Ornament'
+import { GuideCharacter } from './GuideCharacter'
 import './narrator.css'
 
-const VIDEO_SRC = `${import.meta.env.BASE_URL}media/narrator-guide.mp4`
 const RATES = [0.85, 1, 1.15]
 
 interface Turn {
@@ -16,9 +16,12 @@ interface Turn {
   error?: string
 }
 
+const reducedMotion = () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
 /**
- * Eserin karakter anlatımı (Faz 4). Rehber sesli (tarayıcı seslendirmesi) ve altyazılı anlatır; ses otomatik başlamaz.
- * Kullanıcı rehbere yazabilir ("Esere Sor" yerine). Her tarihî cümle onaylı kayda bağlıdır; anlatım bir canlandırmadır.
+ * Eserin karakter anlatımı (Faz 4, Faz 8). Rehber karakteri çerçevesiz olarak sayfada belirir; sesli (tarayıcı
+ * seslendirmesi) ve altyazılı anlatır, ağzı konuşmayla senkron oynar (`lipsync.ts`); ses otomatik başlamaz. Kullanıcı
+ * rehbere yazabilir. Her tarihî cümle onaylı kayda bağlıdır; anlatım bir canlandırmadır.
  */
 export function Narrator({
   monument,
@@ -32,49 +35,41 @@ export function Narrator({
   const id = useId()
   const lines = useMemo(() => buildScript(monument), [monument])
   const n = useNarration(lines, { onDone: onListened })
-  const video = useRef<HTMLVideoElement>(null)
-  const [videoOk, setVideoOk] = useState(true)
   const [large, setLarge] = useState(false)
+  const [mouth, setMouth] = useState<Mouth>('X')
   const line = lines[n.index]
   const speaking = n.state === 'playing'
+  const seqs = useMemo(() => lines.map((l) => visemes(l.spoken)), [lines])
+  const cue = n.cue
 
+  // Ağız senkronu: konuşmanın anlık konumundan (kelime sınırı + geçen süre) ağız şekli; hareket azaltılmışsa durağan.
   useEffect(() => {
-    const v = video.current
-    if (!v) return
-    try {
-      if (speaking) void v.play()?.catch(() => undefined)
-      else v.pause()
-    } catch {
-      /* jsdom / otomatik oynatma engeli: görüntü sabit kalır */
+    if (!speaking || reducedMotion() || typeof requestAnimationFrame === 'undefined') {
+      setMouth('X')
+      return
     }
-  }, [speaking])
+    let raf = 0
+    const tick = () => {
+      const c = cue.current
+      const m = c && seqs[c.i] ? mouthFrom(seqs[c.i], c.char, performance.now() - c.at, MS_PER_WEIGHT / n.rate) : 'X'
+      setMouth((prev) => (prev === m ? prev : m))
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [speaking, seqs, cue, n.rate])
 
   return (
     <section className="vk-narr" aria-labelledby={`${id}-h`}>
-      <div className={`vk-narr__stage${speaking ? ' is-speaking' : ''}`}>
-        {videoOk ? (
-          <video
-            ref={video}
-            className="vk-narr__video"
-            src={VIDEO_SRC}
-            muted
-            loop
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-            onError={() => setVideoOk(false)}
-          />
-        ) : (
-          <div className="vk-narr__medallion" aria-hidden="true">
-            <Ornament className="vk-narr__orn" />
-          </div>
-        )}
-        <div className="vk-narr__who">
-          <h2 id={`${id}-h`}>{LOCAL_GUIDE.name}</h2>
-          <span>{LOCAL_GUIDE.role}</span>
+      <div className="vk-narr__scene">
+        <div className={`vk-narr__char${speaking ? ' is-speaking' : ''}`}>
+          <GuideCharacter mouth={mouth} speaking={speaking} />
         </div>
-      </div>
-
+        <div className="vk-narr__talk">
+          <div className="vk-narr__who">
+            <h2 id={`${id}-h`}>{LOCAL_GUIDE.name}</h2>
+            <span>{LOCAL_GUIDE.role}</span>
+          </div>
       <div className={`vk-narr__sub${large ? ' vk-narr__sub--large' : ''}`} aria-live={speaking ? 'off' : 'polite'}>
         <p className="vk-narr__line">{line.text}</p>
         {line.source && (
@@ -86,6 +81,8 @@ export function Narrator({
           </p>
         )}
         <p className="vk-narr__pos" aria-hidden="true">{n.index + 1} / {lines.length}</p>
+      </div>
+        </div>
       </div>
 
       <div className="vk-narr__controls" role="group" aria-label="Anlatım denetimleri">
