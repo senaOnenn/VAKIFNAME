@@ -35,7 +35,7 @@
 10. **E-posta doğrulama ve parola sıfırlama zorunlu.**
 11. **Ziyaret yarıçapı: 50 m** (varsayılan; eski 35 m büyük yapılarda kapıdaki ziyaretçiyi dışarıda bırakıyordu). Drive'da önceki sayısal karar yok; ekip planı "gerçek GPS pilot eserlerde test edilir" diyor → sahada denenip gerekirse eser bazında ayar.
 12. **Sunum modu finalde açık**, ekranda açıkça etiketli.
-13. Rehberin adı: açık.
+13. Rehberin adı: şimdilik **"Rehber"** kalır (29 Ekim, gündem 7a); isim sonra verilebilir.
 14–17: beklemede (görsel ayıklama, İngilizce, tanıtım videosu, küçük teknik kararlar).
 
 ## Karar bekleyenler (bunlar çözülmeden ilgili iş başlamaz)
