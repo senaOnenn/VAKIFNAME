@@ -3,8 +3,8 @@ import { useLang } from '../i18n'
 import './film-dialog.css'
 
 const BASE = import.meta.env.BASE_URL
-export const FILM_URL = `${BASE}media/tanitim.mp4`
-const VTT = { tr: `${BASE}media/tanitim-tr.vtt`, en: `${BASE}media/tanitim-en.vtt` }
+export const FILM_URL = `${BASE}media/tanitim.mp4?v=${__MEDIA_VERSION__}`
+const VTT = { tr: `${BASE}media/tanitim-tr.vtt?v=${__MEDIA_VERSION__}`, en: `${BASE}media/tanitim-en.vtt?v=${__MEDIA_VERSION__}` }
 
 /**
  * Tanıtım filmi (Faz 9): ekranı kaplayan pencere. Ses kullanıcı açınca başlar; altyazı varsayılan olarak açıktır (arayüz

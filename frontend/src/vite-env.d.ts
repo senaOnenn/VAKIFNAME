@@ -1,5 +1,8 @@
 /// <reference types="vite/client" />
 
+/** Medya dosyalarının içerik sürümü (vite.config.ts `define`); adreslere `?v=` olarak eklenir, önbellek tazelenir. */
+declare const __MEDIA_VERSION__: string
+
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL?: string
   /** Giriş videosunun adresi (ör. CDN). Verilmezse derlemeye kopyalanan `/media/hero.mp4` kullanılır. */

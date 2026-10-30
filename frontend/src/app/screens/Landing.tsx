@@ -14,8 +14,8 @@ import './discover.css'
 import './landing.css'
 
 const BASE = import.meta.env.BASE_URL
-const HERO_VIDEO = `${BASE}media/hero.mp4`
-const HERO_VIDEO_MOBILE = `${BASE}media/hero-mobil.mp4`
+const HERO_VIDEO = `${BASE}media/hero.mp4?v=${__MEDIA_VERSION__}`
+const HERO_VIDEO_MOBILE = `${BASE}media/hero-mobil.mp4?v=${__MEDIA_VERSION__}`
 // Tanıtımdaki örnek yapboz: birkaç parça bulunmuş, biri ziyaretle altın.
 const SAMPLE: PieceState[] = ['found', 'gold', 'missing', 'found', 'missing', 'missing', 'found', 'missing', 'missing', 'missing']
 

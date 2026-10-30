@@ -33,7 +33,7 @@ describe('tanıtım filmi', () => {
     await userEvent.click(await screen.findByRole('button', { name: /Tanıtım filmini izle/ }))
     const video = document.querySelector('video.vk-film__video') as HTMLVideoElement
     expect(video).toBeTruthy()
-    expect(video.getAttribute('src')).toBe('/media/tanitim.mp4')
+    expect(video.getAttribute('src')).toMatch(/^\/media\/tanitim\.mp4\?v=\w+$/)
     expect(video.hasAttribute('controls')).toBe(true)
     const tracks = [...video.querySelectorAll('track')]
     expect(tracks.map((tr) => [tr.getAttribute('srclang'), tr.hasAttribute('default')])).toEqual([['tr', true], ['en', false]])

@@ -1,4 +1,5 @@
-import { closeSync, createReadStream, openSync, readFileSync, readSync, statSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { closeSync, createReadStream, existsSync, openSync, readFileSync, readSync, statSync } from 'node:fs'
 import type { ServerResponse } from 'node:http'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -184,4 +185,14 @@ export function filmAssets(dir = process.env.VAKIFNAME_FILM_DIR ?? DEFAULT_FILM_
       for (const a of FILM_ASSETS) this.emitFile({ type: 'asset', fileName: a.file, source: readFileSync(resolve(dir, a.name)) })
     },
   }
+}
+
+/**
+ * Medya sürümü: tanıtım videoları ve filmin içeriğinden kısa özet. Adreslere `?v=` olarak eklenir; dosya adları sabit
+ * olduğu için önbellek (Cloudflare, 1 gün) yeni dosyayı ancak adres değişince alır. İçerik aynıysa sürüm de aynı kalır.
+ */
+export function mediaVersion(paths: string[]): string {
+  const h = createHash('sha1')
+  for (const p of paths) if (existsSync(p) && statSync(p).isFile()) h.update(readFileSync(p))
+  return h.digest('hex').slice(0, 10)
 }

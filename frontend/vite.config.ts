@@ -1,7 +1,8 @@
 /// <reference types="vitest/config" />
 import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
-import { DEFAULT_HERO_MOBILE_VIDEO, HERO_MOBILE_VIDEO_FILE, filmAssets, heroVideoAsset } from './heroVideo.ts'
+import { resolve } from 'node:path'
+import { DEFAULT_FILM_DIR, DEFAULT_HERO_MOBILE_VIDEO, DEFAULT_HERO_VIDEO, FILM_ASSETS, HERO_MOBILE_VIDEO_FILE, filmAssets, heroVideoAsset, mediaVersion } from './heroVideo.ts'
 
 const LOOPBACK = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1'])
 
@@ -36,7 +37,15 @@ function internalLoopbackOnly(): Plugin {
   }
 }
 
+const FILM_DIR = process.env.VAKIFNAME_FILM_DIR ?? DEFAULT_FILM_DIR
+const MEDIA_VERSION = mediaVersion([
+  process.env.VAKIFNAME_HERO_VIDEO ?? DEFAULT_HERO_VIDEO,
+  process.env.VAKIFNAME_HERO_MOBILE_VIDEO ?? DEFAULT_HERO_MOBILE_VIDEO,
+  ...FILM_ASSETS.map((a) => resolve(FILM_DIR, a.name)),
+])
+
 export default defineConfig({
+  define: { __MEDIA_VERSION__: JSON.stringify(MEDIA_VERSION) },
   plugins: [
     react(),
     internalLoopbackOnly(),
