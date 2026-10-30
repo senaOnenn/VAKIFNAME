@@ -1,0 +1,11 @@
+{
+  "name": "vakifname-film",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "dev": "npx --yes hyperframes@0.8.221 preview",
+    "check": "npx --yes hyperframes@0.8.221 check",
+    "render": "tools/render.sh"
+  }
+}

@@ -1,0 +1,10 @@
+node_modules/
+renders/
+out/
+.debug/
+# Ses (ekip üyesinin sesinden üretilmiş) ve kopyalanan yazı tipi repoya girmez.
+assets/audio/
+assets/fonts/
+.hyperframes/
+# Derleme çıktısı (node tools/build.mjs <sürüm>)
+index.html
