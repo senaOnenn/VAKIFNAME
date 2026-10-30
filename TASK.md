@@ -132,10 +132,11 @@
 - [~] **Karar (30 Ekim): rehber sesi ekipten gerçek bir insan sesinin klonu, tamamen ücretsiz.** Araç Chatterbox Multilingual (MIT, Türkçe + İngilizce, bu Mac'te; `~/vakifname-voice/`, repo dışı). Deneme (Mac'in Yelda sesiyle): Türkçe telaffuz iyi ("Ulu" → "Olu" gibi), İngilizcede sona uydurma ek → her cümle Whisper ile yazıya dökülüp denetlenir, tutmazsa yeniden üretilir; cümle başına ~1 dk (M1). Google anahtarı gerekmez; Google sağlayıcısı yedek olarak kalır.
   - [x] Kayıt rehberi: `docs/SES_KAYDI.md` (model kaydın ilk 10 sn'sini kullanır → 2–3 dk kayıt, en iyi 10 sn seçilir; izin cümlesi; WhatsApp yok).
   - [ ] Sizden: Talha'nın ve arkadaşının kaydı (Drive, `ses-<isim>.m4a`).
-  - [ ] Aday klipler → kör dinleme → seçim; sunucuda yalnızca önceden üretilmiş sesleri çalan sağlayıcı (`files`); toplu üretim + Whisper denetimi; sunucuya yükleme.
+  - [x] Altyapı (30 Ekim, `feat/game`'de): `files` sağlayıcısı (sunucu üretmez, yalnızca çalar; sesi olmayan cümle 404 → tarayıcı sesi), cümle listesi `python -m app.tts_export` (sunucunun kataloğundan, 86 cümle), üretim `scripts/voice/generate.py` (rakam/kısaltma okunuşu, cümle cümle üretim, Whisper denetimi, yeniden deneme, sondaki uydurmayı kesme, MP3), aday seçimi `scripts/voice/candidates.py` (10 sn adaylar, izin cümlesini atar, anlaşılırlık + ses benzerliği puanı, harfleri karışık kör dinleme), tek komut `deploy/ses/uret-yukle.sh`. Denendi: Mac sesleriyle sahte 2,5 dk kayıt → 7 aday; 3 gerçek kayıt cümlesi üretildi ve uygulamada çaldı (benzerlik 0,95–0,99).
+  - [ ] Kayıtlar gelince: adaylar → kör dinleme → seçim → 86 cümle (~3 saat) → canlıda `files` açma.
 
 ## Faz 9 — Tanıtım filmi (gündem 3)
-- [ ] Senaryo + sahne listesi + metin (kurgu taslağı: Türkiye haritası → Bursa → Ulu Cami (rehber anlatır, kaynak ekranda, banisi portre madalyonuyla) → soru → bilgi mührü → Koza Han → Osman Gazi Türbesi → altın mühür → Kayıp Vakfiye → şehirlerin ışıkları → kapanış). Müzik ve metin onaya sunulur.
+- [~] Senaryo + sahne listesi + metin — onaya sunulan taslak `docs/TANITIM_FILMI.md` (30 Ekim; 9 sahne, ~75 sn, tarihî cümleler onaylı kayıtlardan aynen). (kurgu taslağı: Türkiye haritası → Bursa → Ulu Cami (rehber anlatır, kaynak ekranda, banisi portre madalyonuyla) → soru → bilgi mührü → Koza Han → Osman Gazi Türbesi → altın mühür → Kayıp Vakfiye → şehirlerin ışıkları → kapanış). Müzik ve metin onaya sunulur.
 - [ ] Çizimler: Faz 8 karakteri + eser silüetleri (vektör, palet A); bilgiler yalnızca onaylı kayıtlardan.
 - [ ] HyperFrames ile üretim (Node 22+, FFmpeg); seslendirme Faz 8 Google sesi; Türkçe altyazı (dosya ve gömülü sürüm).
 - [ ] Çıktılar: tam film (16:9, sesli), açılış için 10–15 sn yazısız sessiz döngü (masaüstü + mobil küçük sürüm), kapak karesi.
