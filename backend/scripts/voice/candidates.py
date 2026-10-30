@@ -33,13 +33,16 @@ TESTS = {
 }
 
 
-def load_clean(src: Path, out: Path) -> None:
-    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(src), "-af", "highpass=f=70,loudnorm=I=-20:TP=-2",
+def load_clean(src: Path, out: Path, denoise: bool = False) -> None:
+    """24 kHz tek kanal; 70 Hz altı uğultu kesilir, seviye eşitlenir. `denoise`: hafif FFT gürültü azaltma (oda uğultusu)."""
+    chain = "highpass=f=70," + ("afftdn=nr=10:nf=-45:tn=1," if denoise else "") + "loudnorm=I=-20:TP=-2"
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(src), "-af", chain,
                     "-ac", "1", "-ar", str(SR), str(out)], check=True)
 
 
 def pauses(wav, min_pause: float = 0.3):
-    """Sessiz aralıklar [(başlangıç sn, bitiş sn)]: kare enerjisi konuşma seviyesinin çok altındaysa sessiz."""
+    """Sessiz aralıklar [(başlangıç sn, bitiş sn)]. Eşik kaydın kendi gürültü zeminine göre: zemin ile konuşma
+    seviyesi arasındaki farkın alt dörtte biri (en az 6 dB) sessiz sayılır; ev kaydında uğultu olsa da duraksama bulunur."""
     import torch
 
     x = wav.squeeze(0)
@@ -47,7 +50,9 @@ def pauses(wav, min_pause: float = 0.3):
     frames = x[: len(x) // n * n].reshape(-1, n)
     db = 20 * torch.log10(frames.pow(2).mean(dim=1).sqrt().clamp(min=1e-6))
     speech = torch.quantile(db, 0.9)
-    silent = (db < speech - 30).tolist()
+    floor = torch.quantile(db, 0.05)
+    threshold = floor + max(6.0, 0.25 * float(speech - floor))
+    silent = (db < threshold).tolist()
     out, start = [], None
     for i, s in enumerate(silent + [False]):
         if s and start is None:
@@ -56,7 +61,7 @@ def pauses(wav, min_pause: float = 0.3):
             if (i - start) * FRAME >= min_pause:
                 out.append((start * FRAME, i * FRAME))
             start = None
-    return out, float(speech), float(torch.quantile(db, 0.05))
+    return out, float(speech), float(floor)
 
 
 def windows(gaps, total: float, lo: float = 7.0, hi: float = 10.5):
@@ -80,6 +85,8 @@ def main(argv=None) -> int:
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--max", type=int, default=8, help="dil başına en fazla aday")
     ap.add_argument("--device", default="mps")
+    ap.add_argument("--lang", choices=sorted(TESTS), help="kaydın dili (ayrı dosyalarda); yoksa her adayda kendiliğinden bulunur")
+    ap.add_argument("--denoise", action="store_true", help="hafif gürültü azaltma (ev kaydında uğultu varsa karşılaştırmak için)")
     a = ap.parse_args(argv)
     import numpy as np
     import torch
@@ -87,12 +94,12 @@ def main(argv=None) -> int:
 
     a.out.mkdir(parents=True, exist_ok=True)
     clean = a.out / "kayit-temiz.wav"
-    load_clean(a.recording, clean)
+    load_clean(a.recording, clean, a.denoise)
     wav, sr = ta.load(str(clean))
     total = wav.shape[-1] / sr
     gaps, speech_db, floor_db = pauses(wav)
     print(f"Kayıt {total:.0f} sn · konuşma {speech_db:.0f} dB · zemin gürültüsü {floor_db:.0f} dB "
-          f"(fark {speech_db - floor_db:.0f} dB; 45+ iyi) · {len(gaps)} duraksama", flush=True)
+          f"(fark {speech_db - floor_db:.0f} dB; 40+ iyi, 25 altı gürültülü) · {len(gaps)} duraksama", flush=True)
 
     found = {"tr": [], "en": []}
     for i, (s, e) in enumerate(windows(gaps, total), 1):
@@ -101,8 +108,8 @@ def main(argv=None) -> int:
         ta.save(str(path), clip, sr)
         import mlx_whisper
 
-        r = mlx_whisper.transcribe(str(path), path_or_hf_repo="mlx-community/whisper-large-v3-turbo")
-        lang, text = r.get("language"), r["text"].strip()
+        r = mlx_whisper.transcribe(str(path), path_or_hf_repo="mlx-community/whisper-large-v3-turbo", language=a.lang)
+        lang, text = a.lang or r.get("language"), r["text"].strip()
         peak = float(clip.abs().max())
         if "izin veriyorum" in text.lower() or lang not in found:
             path.unlink()
