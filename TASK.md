@@ -129,7 +129,10 @@
 - [x] Ağız senkronu (29 Ekim teknik karar; `lipsync.ts`, tarayıcı sesiyle çalışıyor): **Türkçe yazıldığı gibi okunduğu için ağız şekilleri metinden** çıkarılır (harf → ağız şekli); zamanlama sesin ilerleyişinden (ses dosyasında oynatma anı + ses şiddeti, tarayıcı sesinde kelime sınırı olayları). Ek araç (Rhubarb) gerekmez; tarayıcı sesiyle de, Google sesiyle de, internetsiz de çalışır.
 - [~] Anlatım sesi ilk dinlemede bir kez üretilir ve saklanır (metin değişince adı değişir, yeniden üretilir); bir sonraki cümle önceden istenir; ağız, sesin oynatma anından senkron. [ ] Rehber sohbet cevabının sesi (sonra). [ ] Anahtar gelince: sesi kulakla seçme, canlıda açma.
 - [x] Erişilebilirlik (axe temiz): altyazı ve tam metin kalır; hareket azaltılmışsa karakter durağan, ses yine çalışır; ses otomatik başlamaz.
-- [ ] Sizden: Google Cloud'da Text-to-Speech API'yi açmak ve servis hesabı anahtarı (dosya; repoya girmez).
+- [~] **Karar (30 Ekim): rehber sesi ekipten gerçek bir insan sesinin klonu, tamamen ücretsiz.** Araç Chatterbox Multilingual (MIT, Türkçe + İngilizce, bu Mac'te; `~/vakifname-voice/`, repo dışı). Deneme (Mac'in Yelda sesiyle): Türkçe telaffuz iyi ("Ulu" → "Olu" gibi), İngilizcede sona uydurma ek → her cümle Whisper ile yazıya dökülüp denetlenir, tutmazsa yeniden üretilir; cümle başına ~1 dk (M1). Google anahtarı gerekmez; Google sağlayıcısı yedek olarak kalır.
+  - [x] Kayıt rehberi: `docs/SES_KAYDI.md` (model kaydın ilk 10 sn'sini kullanır → 2–3 dk kayıt, en iyi 10 sn seçilir; izin cümlesi; WhatsApp yok).
+  - [ ] Sizden: Talha'nın ve arkadaşının kaydı (Drive, `ses-<isim>.m4a`).
+  - [ ] Aday klipler → kör dinleme → seçim; sunucuda yalnızca önceden üretilmiş sesleri çalan sağlayıcı (`files`); toplu üretim + Whisper denetimi; sunucuya yükleme.
 
 ## Faz 9 — Tanıtım filmi (gündem 3)
 - [ ] Senaryo + sahne listesi + metin (kurgu taslağı: Türkiye haritası → Bursa → Ulu Cami (rehber anlatır, kaynak ekranda, banisi portre madalyonuyla) → soru → bilgi mührü → Koza Han → Osman Gazi Türbesi → altın mühür → Kayıp Vakfiye → şehirlerin ışıkları → kapanış). Müzik ve metin onaya sunulur.
