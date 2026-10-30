@@ -52,7 +52,7 @@
 | K6 | ✅ **GELDİ ve yerelde çalışıyor (29 Ekim; yetkili kaynaklar `http://localhost`, `http://localhost:5173`, canlı adres).** **Google ile giriş** için Google Cloud OAuth istemci kimliği. | Takım hesabından **bir OAuth Client ID** (Web) oluştur; `http://localhost:5173` ve canlı adres yetkili kaynak olarak eklenir. Anahtar repoya girmez. |
 | K7 | ✅ **KARARLI (27 Ekim).** Koordinatlar **onaylıdır**, katalogdakiler kullanılır; kendi eklediğimiz konum verisi yok. Kayıtlar: noktalar `backend/tests/ask_eval/catalog_snapshot.json`, adaylar `data/real_catalog/monument_research.json`, onay kararları sunucuda `review.sqlite3`. | Ziyaret (Faz 5) için eser başına yarıçap yapılandırılabilir olur; yakın eserler (Muradiye'de 4 eser, Osman/Orhan Gazi) çakışmasın diye küçük başlanır. Sahada ince ayar sonra. |
 | K8 | ✅ **KARARLI (Faz 2'de uygulandı).** **Misafir ilerlemesi.** Üye olmadan toplanan rozetler giriş yapınca birleşir mi? | Evet: cihazdaki ilerleme girişte hesaba **birleştirilir**. |
-| K9 | ✅ **KARARLI (29 Ekim): tam İngilizce, Faz 11.** **Yeni dil:** EN metinler nereden? | Ciltli yayınlar iki dilli; onaylı olgulara `text_en` alanı. Çeviri uydurma değil, kaynaktan. |
+| K9 | ✅ **KARARLI (29 Ekim): tam İngilizce, Faz 11 (altyapı 30 Ekim'de bitti).** **Yeni dil:** EN metinler nereden? | Ciltli yayınlar iki dilli; onaylı olgulara `text_en` alanı. Çeviri uydurma değil, kaynaktan. |
 
 ## Faz 0 — Zemin (önce)
 - [ ] Bu iki dosyayı ekiple paylaş; eleştiri notu (ekran görüntülü, tek sayfa) hazırla.
@@ -147,12 +147,13 @@
 
 ## Faz 11 — İngilizce (karar 15 = C, tam)
 - [x] Backend (30 Ekim, dal `feat/english-content`): kayıt/soru/eser için İngilizce alanlar ve yayın katmanı; çeviri kayıtları (kitabın İngilizce bölümünden alıntı doğrulamalı, onaylı); hattın İngilizce kipi; İngilizce "Rozeti Al" turu (yalnızca İngilizcesi onaylı kayıtlar, en az 2 metin sorusu; yetmezse Türkçeye düşer ve söyler); iki dilli seslendirme (İngilizce kalıplar + `VAKIFNAME_TTS_VOICE_EN`); İngilizce rehber (yalnızca onaylı İngilizce kayıtlar, her cümle kayıt kimliğiyle, kayıtta olmayan sayı atılır).
-- [ ] Arayüz: dil seçici (TR/EN, tarayıcı diline göre ilk seçim, kalıcı), tüm arayüz metinleri sözlükten; tarih/sayı biçimi dile göre.
-- [ ] İçerik modeli: kayıt, soru ve eser adı için isteğe bağlı İngilizce alanlar (`title_en`, `text_en`, soru/şık/açıklama EN, eser adı EN).
-- [ ] Hat: kitabın İngilizce bölümünden aday; İngilizce alıntı aynı sayfada (ya da bitişiğinde) doğrulanır → taslak → yönetici onayı. Mevcut kayıtlar için İngilizce karşılık adayları aynı yolla.
-- [ ] Kural: tarihî içerikte makine çevirisi yok; İngilizcesi onaylanmamış kayıt İngilizce arayüzde "Türkçe" etiketiyle gösterilir.
-- [ ] Anlatım ve rehber: İngilizce anlatım yalnızca onaylı İngilizce kayıtlardan; rehber İngilizce arayüzde İngilizce cevap verir (yine yalnızca onaylı kayıtlardan). İngilizce ses (Google Chirp 3 HD en), ağız senkronu dil bağımsız.
-- [ ] "Rozeti Al" soruları İngilizce: yalnızca İngilizcesi onaylı kayıtlardan.
+- [x] Arayüz (30 Ekim, `feat/english`): dil seçici (TR/EN, tarayıcı diline göre ilk seçim, kalıcı; erişilebilir ad görünen kısaltmayı içerir), ziyaretçi ekranlarının tüm metinleri sözlükten (~300 kayıt); tarih/sayı biçimi dile göre. Yönetim ekranları Türkçe kalır.
+- [x] İçerik modeli: kayıt, soru ve eser için isteğe bağlı İngilizce alanlar (`title_en`, `text_en`, `en_page`, soru EN, `name_en`, `site_notice_en`, `lead_en`); rota ucunda `name_en`.
+- [x] Hat ve yönetim: kitabın İngilizce bölümünden aday (alıntı doğrulamalı) → taslak → yönetici onayı; çeviri düzenleyicisi `/yonetim/icerik/ceviri/:factId` (İngilizce alıntı kaynak sayfada vurgulu), eser kartında İngilizce ad/uyarı, ana sayfada çeviri kuyruğu.
+- [x] Kural: tarihî içerikte makine çevirisi yok; İngilizcesi onaylanmamış kayıt İngilizce arayüzde Türkçe metniyle ve "onaylı İngilizcesi henüz yok" notuyla (`lang="tr"`) gösterilir. Görsel atfında yalnızca etiketler çevrilir ("Photo:", "p.").
+- [x] Anlatım ve rehber: İngilizce anlatım yalnızca onaylı İngilizce kayıtlardan; eserde hiç yoksa Türkçe anlatım çalar ve bu söylenir. Tarayıcıda İngilizce ses (en-US/en-GB), sunucu sesinde `lang`. Rehber İngilizce sorulur (`lang: en`).
+- [x] "Rozeti Al" İngilizce istenir; yeterli onaylı İngilizce kayıt yoksa sorular Türkçe gelir ve ekranda söylenir.
+- [ ] Gerçek içerik: kitapların İngilizce bölümlerinden 10 eser için çeviri adayları (kitaplar canlıya yüklenince; dondurmadan sonra içerik işi).
 
 ## Faz 7 — Cila, final hazırlığı
 - [x] **Tanıtım sayfası** (29 Ekim, dal `feat/landing`): açılıştan sonra doğrudan giriş yerine ürünü tanıtan sayfa — sessiz arka plan videosu (`hero.mp4`, yoksa geçişli zemin), üç adım (rehber karakter videosu, bilgi ve altın mühür), Kayıp Vakfiye örneği, katalogdan 3 eser, kaynak/dürüstlük/vakar, iki çağrı. Hareket azaltılmışsa video oynamaz, bölümler hemen görünür. axe: ihlal yok.
