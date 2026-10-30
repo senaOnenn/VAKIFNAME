@@ -460,6 +460,13 @@ function loop(portrait) {
 }
 
 // --- Çalıştır -------------------------------------------------------------------------------------------------------
+// `ses-isleri <dosya>`: filmin ses satırları, backend/scripts/voice/generate.py iş listesi biçiminde (sahne-N.mp3).
+if (process.argv[2] === 'ses-isleri') {
+  const jobs = SCENES.map((s) => ({ file: `sahne-${s.id}.mp3`, lang: 'tr', text: s.voice, monument_id: `film-${s.id}`, ready: false }))
+  writeFileSync(process.argv[3], JSON.stringify({ voice: { tr: 'zulal-1' }, jobs }, null, 1))
+  console.log(`${jobs.length} ses satırı → ${process.argv[3]}`)
+  process.exit(0)
+}
 const { art, seq } = await loadArt()
 const t = timing()
 mkdirSync(join(FILM, 'assets', 'fonts'), { recursive: true })

@@ -137,10 +137,10 @@
 
 ## Faz 9 — Tanıtım filmi (gündem 3)
 - [x] Senaryo + sahne listesi + metin — **onaylandı (Talha, 30 Ekim)**: `docs/TANITIM_FILMI.md` (9 sahne, ~75 sn, tarihî cümleler onaylı kayıtlardan aynen). (kurgu taslağı: Türkiye haritası → Bursa → Ulu Cami (rehber anlatır, kaynak ekranda, banisi portre madalyonuyla) → soru → bilgi mührü → Koza Han → Osman Gazi Türbesi → altın mühür → Kayıp Vakfiye → şehirlerin ışıkları → kapanış). Müzik ve metin onaya sunulur.
-- [ ] Çizimler: Faz 8 karakteri + eser silüetleri (vektör, palet A); bilgiler yalnızca onaylı kayıtlardan.
-- [ ] HyperFrames ile üretim (Node 22+, FFmpeg); seslendirme Faz 8 Google sesi; Türkçe altyazı (dosya ve gömülü sürüm).
+- [x] Çizimler (30 Ekim): ürünün bileşenleri SSR ile (karakter + 9 ağız, mühürler, vakfiye, girih, harita) + üç eser silüeti (temsilî; alem haç gibi okunmayacak biçimde düzeltildi) + Bursa yolları (OSM).
+- [~] HyperFrames ile üretim (`film/`, `docs/TANITIM_FILMI.md` Üretim): 9 sahne, ağız senkronu, TR/EN altyazı (VTT + gömülü sürüm), döngüler render edildi (hero 345 KB, mobil 189 KB, dikişsiz). [ ] Ses satırları (Zülal klonu) ana üretimden sonra → tam film render.
 - [ ] Çıktılar: tam film (16:9, sesli), açılış için 10–15 sn yazısız sessiz döngü (masaüstü + mobil küçük sürüm), kapak karesi.
-- [ ] Tanıtım sayfası: arka plan döngüsü + "Tanıtım filmini izle" (ekranı kaplayan oynatıcı, altyazı, klavye ile kapatma).
+- [~] Tanıtım sayfası: "Tanıtım filmini izle" düğmesi + pencere (altyazı varsayılan açık, Esc, odak geri döner; film yoksa düğme yok) yazıldı ve test edildi. [ ] Döngü + film canlıya.
 
 ## Faz 10 — Sunum (gündem 4; şartname 5.4)
 - [ ] İskelet (onaylandı 29 Ekim): 1 açılış (film kesiti) · 2 problem ve hedef kullanıcı (5.2.1) · 3 çözüm (5.1.1) · 4 canlı demo ~5 dk: ziyaretçi akışı + yönetici kitaptan aday → onay → eser sayfasında canlı (5.4) · 5 veri kullanımı ve doğruluk (5.1.3, 5.2.2) · 6 mimari ve veri modeli (5.1.2) · 7 erişilebilirlik (5.1.4) · 8 güvenlik, test, kişisel veri (5.1.5) · 9 kaynak ve lisanslar · 10 yenilikçilik · 11 ölçek ve yol haritası · 12 takım (5.2.3) · 13 kapanış + soru.
