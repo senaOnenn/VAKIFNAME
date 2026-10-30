@@ -183,7 +183,7 @@
 
 ## Sorgulanacak (sonraya bırakılan)
 - [ ] Katalogun kaynağı: yayın verisi `backend/tests/ask_eval/catalog_snapshot.json` (test dizini) — canlı katalog yolu ve editör onay zinciri doğrulanacak.
-- [ ] Sunucudaki `catalog.json` (daha yeni) ile snapshot farkı.
+- [x] Sunucudaki `catalog.json` ile snapshot farkı (30 Ekim): aynı veri sürümü (V20:92dc…), 10 eser ve tüm kayıt metinleri birebir aynı; tek fark Yıldırım Bayezid Bedesteni'nin ilk görseli (canlıda başka bir Commons görseli). Yedek dizüstü canlıdan eşitlendiği için canlıyla aynıdır; yerel geliştirme snapshot'la kalabilir.
 - [ ] RAG doğruluk/atıf testleri ve "kaynak yok" davranışı.
 - [ ] Fotoğraflı rehber (yüz tarama bileşeni kurulu değil) — yeni tasarımda gerekiyor mu?
 - [ ] Codex (ChatGPT hesabı) ve Anthropic API sağlayıcıları: `registry.py`'de planlı, yazılmadı.
