@@ -5,7 +5,7 @@ import { API_BASE_URL, apiGet, apiPost } from '../api/client'
  * Satır satır seslendirme. Ses yalnızca kullanıcı başlatınca çalışır.
  * - Sunucu seslendirmesi açıksa (`/speech/status`, Faz 8: Google Chirp 3 HD) her cümlenin ses dosyası çalınır; bir sonraki
  *   cümle önceden istenir. Hata olursa o cümle tarayıcı sesiyle okunur.
- * - Değilse tarayıcının Türkçe sesi (Web Speech API, tr-TR).
+ * - Değilse tarayıcının o dildeki sesi (Web Speech API; tr-TR, İngilizce anlatımda en-*).
  * - Türkçe ses yoksa veya kullanıcı sessiz modu seçtiyse altyazı, metnin uzunluğuna göre zamanlanarak ilerler (okuma modu).
  */
 export type PlayState = 'idle' | 'playing' | 'paused' | 'done'
@@ -15,6 +15,13 @@ const synth = (): SpeechSynthesis | null => (typeof window !== 'undefined' && 's
 export function pickTurkishVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
   const tr = voices.filter((v) => v.lang?.toLowerCase().startsWith('tr'))
   return tr.find((v) => /yelda|emel|filiz|female|kadın/i.test(v.name)) ?? tr[0] ?? null
+}
+
+/** İngilizce anlatım için tarayıcı sesi (Faz 11): önce en-US/en-GB, sonra herhangi bir İngilizce ses. */
+export function pickVoice(voices: SpeechSynthesisVoice[], lang: 'tr' | 'en'): SpeechSynthesisVoice | null {
+  if (lang === 'tr') return pickTurkishVoice(voices)
+  const en = voices.filter((v) => v.lang?.toLowerCase().startsWith('en'))
+  return en.find((v) => /^en[-_](us|gb)$/i.test(v.lang)) ?? en[0] ?? null
 }
 
 /** Okuma modunda bir satırın ekranda kalma süresi (ms): yaklaşık dakikada 170 sözcük, en az 2,5 sn. */
@@ -32,7 +39,7 @@ export const resetSpeechStatusForTests = () => {
 
 export function useNarration(
   lines: { spoken: string; text: string }[],
-  opts: { onDone?: () => void; monumentId?: string } = {},
+  opts: { onDone?: () => void; monumentId?: string; lang?: 'tr' | 'en' } = {},
 ) {
   const [state, setState] = useState<PlayState>('idle')
   const [index, setIndex] = useState(0)
@@ -48,6 +55,7 @@ export function useNarration(
   const [serverVoice, setServerVoice] = useState(false)
   const urls = useRef(new Map<string, Promise<string>>())
   const monumentId = opts.monumentId
+  const lang = opts.lang ?? 'tr'
 
   useEffect(() => {
     if (!monumentId) return
@@ -60,17 +68,18 @@ export function useNarration(
 
   const audioUrl = useCallback(
     (text: string) => {
-      let p = urls.current.get(text)
+      const key = `${lang}|${text}`
+      let p = urls.current.get(key)
       if (!p) {
-        p = (apiPost(`/monuments/${encodeURIComponent(monumentId!)}/speech`, { text }) as Promise<{ url: string }>).then(
+        p = (apiPost(`/monuments/${encodeURIComponent(monumentId!)}/speech`, { text, lang }) as Promise<{ url: string }>).then(
           (r) => `${API_BASE_URL}${r.url}`,
         )
-        p.catch(() => urls.current.delete(text))
-        urls.current.set(text, p)
+        p.catch(() => urls.current.delete(key))
+        urls.current.set(key, p)
       }
       return p
     },
-    [monumentId],
+    [monumentId, lang],
   )
   const onDone = useRef(opts.onDone)
   onDone.current = opts.onDone
@@ -78,11 +87,11 @@ export function useNarration(
   useEffect(() => {
     const s = synth()
     if (!s) return
-    const load = () => setVoice(pickTurkishVoice(s.getVoices()))
+    const load = () => setVoice(pickVoice(s.getVoices(), lang))
     load()
     s.addEventListener?.('voiceschanged', load)
     return () => s.removeEventListener?.('voiceschanged', load)
-  }, [])
+  }, [lang])
 
   const clear = () => {
     if (timer.current !== null) window.clearTimeout(timer.current)
@@ -119,7 +128,7 @@ export function useNarration(
         }
         const u = new SpeechSynthesisUtterance(lines[i].spoken)
         u.voice = voice
-        u.lang = voice.lang || 'tr-TR'
+        u.lang = voice.lang || (lang === 'en' ? 'en-US' : 'tr-TR')
         u.rate = rate
         u.onstart = () => {
           if (run.current === myRun) cue.current = { i, char: 0, at: now() }
@@ -175,7 +184,7 @@ export function useNarration(
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [lines, muted, voice, rate, serverVoice, monumentId, audioUrl],
+    [lines, muted, voice, rate, serverVoice, monumentId, audioUrl, lang],
   )
 
   const pause = useCallback(() => {

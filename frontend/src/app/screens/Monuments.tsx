@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getMonuments, getRoute, progressId, statusMap, typeLabel, useLoad, citySlug } from '../api'
 import { MonumentCard } from '../components/MonumentCard'
 import { GoldRule } from '../components/Ornament'
+import { nameOf } from '../contentLang'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -13,7 +14,7 @@ const RouteMap = lazy(() => import('../components/RouteMap'))
 export default function Monuments() {
   const auth = useAuth()
   const navigate = useNavigate()
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const catalog = useLoad((s) => getMonuments(s), [])
   const uid = progressId(auth)
   const [type, setType] = useState('')
@@ -86,7 +87,7 @@ export default function Monuments() {
             <Suspense fallback={<p className="vk-page__state" role="status">{t('Harita yükleniyor…')}</p>}>
               <RouteMap
                 points={shown.filter((m) => m.location).map((m) => ({
-                  id: m.monument_id, name: m.name, lat: m.location!.latitude, lng: m.location!.longitude, status: status[m.monument_id],
+                  id: m.monument_id, name: nameOf(m, lang), lat: m.location!.latitude, lng: m.location!.longitude, status: status[m.monument_id],
                 }))}
                 onSelect={(id) => navigate(`/eser/${encodeURIComponent(id)}`)}
               />

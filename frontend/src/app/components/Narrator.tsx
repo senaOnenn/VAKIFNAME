@@ -29,15 +29,17 @@ export function Narrator({
   onListened,
   onAsked,
 }: {
-  monument: Pick<MonumentDetail, 'monument_id' | 'name' | 'facts'>
+  monument: Pick<MonumentDetail, 'monument_id' | 'name' | 'name_en' | 'facts'>
   onListened?: () => void
   onAsked?: () => void
 }) {
   const id = useId()
-  const lines = useMemo(() => buildScript(monument), [monument])
-  const n = useNarration(lines, { onDone: onListened, monumentId: monument.monument_id })
+  const { t, locale, lang } = useLang()
+  // İngilizce anlatım yalnızca onaylı İngilizce kayıtlardan; eserde hiç yoksa Türkçe anlatım çalar ve bu söylenir.
+  const scriptLang = lang === 'en' && monument.facts.some((f) => f.text_en) ? 'en' : 'tr'
+  const lines = useMemo(() => buildScript(monument, 6, scriptLang), [monument, scriptLang])
+  const n = useNarration(lines, { onDone: onListened, monumentId: monument.monument_id, lang: scriptLang })
   const [large, setLarge] = useState(false)
-  const { t, locale } = useLang()
   const [mouth, setMouth] = useState<Mouth>('X')
   const line = lines[n.index]
   const speaking = n.state === 'playing'
@@ -78,7 +80,7 @@ export function Narrator({
             <span>{t(LOCAL_GUIDE.role)}</span>
           </div>
       <div className={`vk-narr__sub${large ? ' vk-narr__sub--large' : ''}`} aria-live={speaking ? 'off' : 'polite'}>
-        <p className="vk-narr__line">{line.text}</p>
+        <p className="vk-narr__line" lang={scriptLang !== lang ? scriptLang : undefined}>{line.text}</p>
         {line.source && (
           <p className="vk-narr__src">
             {line.certainty && line.certainty !== 'documented' && (
@@ -117,8 +119,15 @@ export function Narrator({
           <input type="checkbox" checked={large} onChange={(e) => setLarge(e.target.checked)} /> {t('Büyük altyazı')}
         </label>
       </div>
+      {scriptLang !== lang && (
+        <p className="vk-narr__note">{t('Bu eserin İngilizce anlatımı henüz onaylanmadı; anlatım Türkçe.')}</p>
+      )}
       {!n.hasVoice && !n.muted && (
-        <p className="vk-narr__note">{t('Tarayıcında Türkçe ses bulunamadı; anlatım altyazıyla ilerler.')}</p>
+        <p className="vk-narr__note">
+          {scriptLang === 'en'
+            ? t('Tarayıcında İngilizce ses bulunamadı; anlatım altyazıyla ilerler.')
+            : t('Tarayıcında Türkçe ses bulunamadı; anlatım altyazıyla ilerler.')}
+        </p>
       )}
       {n.state === 'done' && <p className="vk-narr__done" role="status">{t('Anlatımı dinledin. ✓')}</p>}
 
@@ -126,7 +135,7 @@ export function Narrator({
         <summary>{t('Anlatımın tam metni')}</summary>
         <ol>
           {lines.map((l, i) => (
-            <li key={i}>
+            <li key={i} lang={scriptLang !== lang ? scriptLang : undefined}>
               {l.text}
               {l.source && <small> — {l.source}</small>}
             </li>
@@ -141,7 +150,7 @@ export function Narrator({
 
 function GuideChat({ monumentId, onAsked }: { monumentId: string; onAsked?: () => void }) {
   const id = useId()
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const [enabled, setEnabled] = useState<boolean | null>(null)
   const [q, setQ] = useState('')
   const [turns, setTurns] = useState<Turn[]>([])
@@ -168,7 +177,7 @@ function GuideChat({ monumentId, onAsked }: { monumentId: string; onAsked?: () =
       .map((t) => ({ question: t.question, answer: t.result!.sentences.map((s) => s.text).join(' ') || t.result!.message }))
     setTurns((ts) => [...ts, { question }])
     try {
-      const result = await askGuide(question, monumentId, history, null)
+      const result = await askGuide(question, monumentId, history, null, undefined, lang)
       setTurns((ts) => ts.map((t, i) => (i === ts.length - 1 ? { ...t, result } : t)))
       onAsked?.()
     } catch (err) {

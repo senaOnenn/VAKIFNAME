@@ -19,6 +19,8 @@ export type StopState = 'unlocked' | 'locked'
 export interface RouteStop {
   monument_id: string
   name: string
+  /** Onaylı İngilizce ad (yoksa null). */
+  name_en?: string | null
   type: string
   latitude: number
   longitude: number
@@ -29,6 +31,7 @@ export interface RouteStop {
 export interface CompletedStop {
   monument_id: string
   name: string
+  name_en?: string | null
   earned_at: string
   /** Ziyaret mührü de varsa mühür altındır. */
   visit: boolean
@@ -151,6 +154,8 @@ export type QuizQuestion =
 export interface Quiz {
   quiz_id: string
   expires_at: string
+  /** Soruların dili: İngilizce istenip onaylı İngilizce kayıt yetmezse 'tr' (Faz 11). */
+  lang?: 'tr' | 'en'
   questions: QuizQuestion[]
 }
 export interface QuizResult {
@@ -179,8 +184,8 @@ export const getGame = (id: string, userId: string, signal?: AbortSignal) =>
   apiGet(`/monuments/${enc(id)}/game?user_id=${enc(userId)}`, signal, WITH_COOKIE) as Promise<GameState>
 export const sendEngagement = (id: string, userId: string, event: 'listened' | 'asked') =>
   apiPost(`/monuments/${enc(id)}/engagement`, { user_id: userId, event }, undefined, WITH_COOKIE) as Promise<GameState>
-export const startQuiz = (id: string, userId: string) =>
-  apiPost(`/monuments/${enc(id)}/quiz`, { user_id: userId }, undefined, WITH_COOKIE) as Promise<Quiz>
+export const startQuiz = (id: string, userId: string, lang: 'tr' | 'en' = 'tr') =>
+  apiPost(`/monuments/${enc(id)}/quiz`, lang === 'en' ? { user_id: userId, lang } : { user_id: userId }, undefined, WITH_COOKIE) as Promise<Quiz>
 export const submitQuiz = (quizId: string, userId: string, answers: { qid: string; choice: number }[]) =>
   apiPost(`/quiz/${enc(quizId)}/submit`, { user_id: userId, answers }, undefined, WITH_COOKIE) as Promise<QuizResult>
 export const sendVisit = (id: string, userId: string, body: { latitude?: number; longitude?: number; simulate?: boolean }) =>

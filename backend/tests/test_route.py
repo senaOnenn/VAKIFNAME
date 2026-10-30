@@ -199,7 +199,7 @@ def test_first_call_unlocks_the_three_nearest_to_the_city_center(c):
     assert [s["order"] for s in body["stops"]] == list(range(1, 11))
     assert body["next"] == body["stops"][0]["monument_id"] == "BUR-0019"
     s = body["stops"][0]
-    assert set(s) == {"monument_id", "name", "type", "latitude", "longitude", "state", "distance_m", "order"}
+    assert set(s) == {"monument_id", "name", "name_en", "type", "latitude", "longitude", "state", "distance_m", "order"}
     assert (s["name"], s["type"], (s["latitude"], s["longitude"])) == ("Osman Gazi Türbesi", "türbe", COORDS["BUR-0019"])
     for s in body["stops"]:
         assert s["distance_m"] == round(dist(center, s["monument_id"]))

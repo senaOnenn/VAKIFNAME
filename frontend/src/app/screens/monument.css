@@ -121,6 +121,12 @@
   font-size: 1.3rem;
   color: var(--vk-gold-bright);
 }
+.vk-fact__tr {
+  margin-top: calc(-1 * var(--vk-space-2));
+  color: var(--vk-ivory-dim);
+  font-size: 0.8rem;
+  font-style: italic;
+}
 .vk-fact__meta {
   display: flex;
   flex-wrap: wrap;

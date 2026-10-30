@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { getMonument, mediaUrl, progressId, startQuiz, submitQuiz, useLoad, type Quiz, type QuizQuestion, type QuizResult } from '../api'
 import { Seal } from '../components/Seal'
+import { nameOf } from '../contentLang'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -51,7 +52,7 @@ function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: number |
 /** "Rozeti Al": 5 kısa soru, en az 4 doğru → bilgi mührü. Cevaplar sunucuda değerlendirilir. */
 export default function QuizPage() {
   const { id = '' } = useParams()
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const auth = useAuth()
   const uid = progressId(auth)
   const monument = useLoad((s) => getMonument(id, s), [id])
@@ -72,8 +73,8 @@ export default function QuizPage() {
     setAnswers({})
     setIdx(0)
     setError('')
-    startQuiz(id, uid).then(setQuiz, (e) => setError(e instanceof ApiError ? e.message : t('Sorular hazırlanamadı.')))
-  }, [id, uid, attempt, auth.status])
+    startQuiz(id, uid, lang).then(setQuiz, (e) => setError(e instanceof ApiError ? e.message : t('Sorular hazırlanamadı.')))
+  }, [id, uid, attempt, auth.status]) // dil değişince açık oyun yeniden başlamaz; yeni denemede yeni dil kullanılır
 
   async function submit() {
     if (!quiz) return
@@ -87,7 +88,8 @@ export default function QuizPage() {
     }
   }
 
-  const name = monument.data?.name ?? t('Eser')
+  const name = monument.data ? nameOf(monument.data, lang) : t('Eser')
+  const turkishOnly = lang === 'en' && quiz?.lang === 'tr'
   const back = <Link to={`/eser/${encodeURIComponent(id)}`} className="vk-btn vk-btn--ghost">← {t('Esere dön')}</Link>
 
   if (error)
@@ -167,7 +169,10 @@ export default function QuizPage() {
           ))}
         </div>
         <p className="vk-quiz__count">{t('Soru {n} / {total}', { n: idx + 1, total: quiz.questions.length })}</p>
-        <h1 className="vk-quiz__prompt">{q.prompt}</h1>
+        <h1 className="vk-quiz__prompt" lang={turkishOnly ? 'tr' : undefined}>{q.prompt}</h1>
+        {turkishOnly && (
+          <p className="vk-quiz__note">{t('Bu eser için yeterli onaylı İngilizce kayıt yok; sorular Türkçe.')}</p>
+        )}
       </header>
       <QuestionView q={q} value={answers[q.qid]} onChange={(v) => setAnswers((a) => ({ ...a, [q.qid]: v }))} />
       <div className="vk-quiz__nav">

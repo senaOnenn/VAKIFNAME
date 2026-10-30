@@ -3,6 +3,7 @@ import { getMonuments, getSealBook, progressId, useLoad } from '../api'
 import { GoldRule } from '../components/Ornament'
 import { Seal } from '../components/Seal'
 import { VakfiyePuzzle, type PieceState } from '../components/VakfiyePuzzle'
+import { nameOf } from '../contentLang'
 import { getLang, useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -14,7 +15,7 @@ const date = (iso: string) =>
 /** Pasaport: Kayıp Vakfiye yapbozu (bilgi mührü = parça, ziyaret = altın) ve eser eser mühürler. */
 export default function Passport() {
   const auth = useAuth()
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const uid = progressId(auth)
   const catalog = useLoad((s) => getMonuments(s), [])
   const book = useLoad((s) => getSealBook(uid, s), [uid])
@@ -52,7 +53,7 @@ export default function Passport() {
         </p>
       </header>
 
-      <VakfiyePuzzle pieces={pieces} labels={monuments.map((m) => m.name)} />
+      <VakfiyePuzzle pieces={pieces} labels={monuments.map((m) => nameOf(m, lang))} />
 
       <section aria-labelledby="muhurler">
         <h2 id="muhurler" className="vk-passport__h">{t('Mühürler')}</h2>
@@ -65,7 +66,7 @@ export default function Passport() {
               <li key={m.monument_id}>
                 <Link to={`/eser/${encodeURIComponent(m.monument_id)}`}>
                   <Seal kind={kind} label={t(kind === 'gold' ? 'Altın mühür' : kind === 'knowledge' ? 'Bilgi mührü' : 'Mühür yok')} size={64} />
-                  <span className="vk-passport__name">{m.name}</span>
+                  <span className="vk-passport__name">{nameOf(m, lang)}</span>
                   <span className="vk-passport__meta">
                     {v
                       ? t('Altın · ziyaret {date}', { date: date(v.earned_at) }) + (v.simulated ? ' ' + t('(simülasyon)') : '')

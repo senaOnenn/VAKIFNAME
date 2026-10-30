@@ -86,6 +86,8 @@ def get_route(request: Request, response: Response, city: Annotated[str, Query(m
     store: MonumentProgressStore = request.app.state.monument_progress
     plan = store.plan_unlocks(user_id, planner)
     response.headers["Cache-Control"] = "no-store"
+    # Onaylı İngilizce ad (Faz 11); yoksa None, arayüz Türkçe adı gösterir.
+    name_en = {m.monument_id: m.name_en for m in request.app.state.monuments.catalog.monuments if m.name_en}
     return {
         "city": slug,
         "total": len(points),
@@ -93,10 +95,12 @@ def get_route(request: Request, response: Response, city: Annotated[str, Query(m
         "start": {"source": plan.start.source, "latitude": round(plan.start.latitude, 6),
                   "longitude": round(plan.start.longitude, 6)},
         "next": plan.next,
-        "stops": [{"monument_id": s.point.monument_id, "name": s.point.name, "type": s.point.type,
+        "stops": [{"monument_id": s.point.monument_id, "name": s.point.name,
+                   "name_en": name_en.get(s.point.monument_id), "type": s.point.type,
                    "latitude": s.point.latitude, "longitude": s.point.longitude,
                    "state": "unlocked" if s.unlocked else "locked", "distance_m": round(s.distance_m), "order": s.order}
                   for s in plan.stops],
-        "completed": [{"monument_id": p.monument_id, "name": p.name, "earned_at": c.earned_at, "visit": c.visit}
+        "completed": [{"monument_id": p.monument_id, "name": p.name,
+                       "name_en": name_en.get(p.monument_id), "earned_at": c.earned_at, "visit": c.visit}
                       for p, c in plan.completed],
     }

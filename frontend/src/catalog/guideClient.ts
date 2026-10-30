@@ -58,9 +58,12 @@ export async function askGuide(
   history: GuideTurn[],
   image: ConsentedImage | null,
   signal?: AbortSignal,
+  lang: 'tr' | 'en' = 'tr',
 ): Promise<GuideResult> {
   const payload: Record<string, unknown> = { question, history }
   if (monumentId) payload.monument_id = monumentId
+  // İngilizce: rehber yalnızca eserin onaylı İngilizce kayıtlarından cevaplar (Faz 11).
+  if (lang === 'en') payload.lang = 'en'
   if (image) payload.image = image
   const body = await apiPost('/guide/ask', payload, signal, { ...GUIDE_OPTIONS, timeoutMs: GUIDE_TIMEOUT_MS })
   if (!isObject(body) || typeof body.status !== 'string' || typeof body.message !== 'string') throw invalid()

@@ -4,6 +4,7 @@ import { formatDistance, getRoute, progressId, typeLabel, useLoad } from '../api
 import { CITIES } from '../cities'
 import { GoldRule } from '../components/Ornament'
 import { StatusBadge } from '../components/StatusBadge'
+import { nameOf } from '../contentLang'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -23,7 +24,7 @@ export default function RoutePage() {
   const { city = '' } = useParams()
   const auth = useAuth()
   const navigate = useNavigate()
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const uid = progressId(auth)
   const [pos, setPos] = useState<{ latitude: number; longitude: number } | null>(null)
   const [geoNote, setGeoNote] = useState('')
@@ -75,7 +76,7 @@ export default function RoutePage() {
           {next ? (
             <section className="vk-next" aria-labelledby="siradaki">
               <p id="siradaki" className="vk-next__label">{t('Sıradaki durak')}</p>
-              <h2>{next.name}</h2>
+              <h2>{nameOf(next, lang)}</h2>
               <p className="vk-next__meta">{typeLabel(next.type)} · {t(START_FROM[r.start.source], { d: formatDistance(next.distance_m) })}</p>
               <Link to={`/eser/${encodeURIComponent(next.monument_id)}`} className="vk-btn">{t('Eseri aç')}</Link>
             </section>
@@ -93,7 +94,7 @@ export default function RoutePage() {
               <Suspense fallback={<p className="vk-page__state" role="status">{t('Harita yükleniyor…')}</p>}>
                 <RouteMap
                   points={[
-                    ...r.stops.map((s) => ({ id: s.monument_id, name: s.name, lat: s.latitude, lng: s.longitude, status: s.state, order: s.order, next: s.monument_id === r.next })),
+                    ...r.stops.map((s) => ({ id: s.monument_id, name: nameOf(s, lang), lat: s.latitude, lng: s.longitude, status: s.state, order: s.order, next: s.monument_id === r.next })),
                   ]}
                   path={[[r.start.latitude, r.start.longitude], ...r.stops.map((s) => [s.latitude, s.longitude] as [number, number])]}
                   start={{ lat: r.start.latitude, lng: r.start.longitude, label: t(START_LABEL[r.start.source]) }}
@@ -111,7 +112,7 @@ export default function RoutePage() {
                 <li key={s.monument_id} className={`vk-stop vk-stop--${s.state}${s.monument_id === r.next ? ' vk-stop--next' : ''}`}>
                   <span className="vk-stop__order" aria-hidden="true">{s.order}</span>
                   <Link to={`/eser/${encodeURIComponent(s.monument_id)}`} className="vk-stop__link">
-                    <span className="vk-stop__name">{s.name}</span>
+                    <span className="vk-stop__name">{nameOf(s, lang)}</span>
                     <span className="vk-stop__meta">{typeLabel(s.type)} · {formatDistance(s.distance_m)}</span>
                   </Link>
                   <StatusBadge status={s.state} />
@@ -126,7 +127,7 @@ export default function RoutePage() {
               <ul>
                 {r.completed.map((c) => (
                   <li key={c.monument_id}>
-                    <Link to={`/eser/${encodeURIComponent(c.monument_id)}`}>{c.name}</Link>
+                    <Link to={`/eser/${encodeURIComponent(c.monument_id)}`}>{nameOf(c, lang)}</Link>
                     <StatusBadge status={c.visit ? 'gold' : 'completed'} />
                   </li>
                 ))}

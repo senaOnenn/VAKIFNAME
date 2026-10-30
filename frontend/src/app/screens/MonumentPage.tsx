@@ -5,6 +5,7 @@ import { PeopleCards } from '../components/PeopleCards'
 import { Narrator } from '../components/Narrator'
 import { GoldRule } from '../components/Ornament'
 import { StatusBadge } from '../components/StatusBadge'
+import { factIn, nameOf, textIn } from '../contentLang'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -18,15 +19,17 @@ const CERTAINTY: Record<string, string> = {
 }
 
 function FactItem({ f }: { f: MonumentFact }) {
-  const { t } = useLang()
+  const { t, lang } = useLang()
+  const c = factIn(f, lang)
   return (
     <li className="vk-fact">
-      <h3>{f.title}</h3>
-      <p>{f.text}</p>
+      <h3 lang={c.turkishOnly ? 'tr' : undefined}>{c.title}</h3>
+      <p lang={c.turkishOnly ? 'tr' : undefined}>{c.text}</p>
+      {c.turkishOnly && <p className="vk-fact__tr">{t('Bu bilginin onaylı İngilizcesi henüz yok; kaynaktaki Türkçesi gösteriliyor.')}</p>}
       <p className="vk-fact__meta">
         <span className={`vk-cert vk-cert--${f.certainty}`}>{CERTAINTY[f.certainty] ? t(CERTAINTY[f.certainty]) : f.certainty}</span>
         <span>
-          {t('Kaynak: {title}, s. {page}', { title: f.source.title, page: f.source.pdf_physical_page })}
+          {t('Kaynak: {title}, s. {page}', { title: f.source.title, page: c.page })}
           {f.sources?.map((s) => (
             <span key={s.url}>
               {' · '}
@@ -47,7 +50,7 @@ export default function MonumentPage() {
   const { id = '' } = useParams()
   const auth = useAuth()
   const uid = progressId(auth)
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const m = useLoad((s) => getMonument(id, s), [id])
   const city = m.data ? citySlug(m.data.city) : ''
   const route = useLoad((s) => (city ? getRoute(city, uid, null, s).catch(() => null) : Promise.resolve(null)), [city, uid])
@@ -71,30 +74,35 @@ export default function MonumentPage() {
 
   const d = m.data
   const cover = d.images[0]
+  const name = nameOf(d, lang)
+  const notice = textIn(d.site_notice, d.site_notice_en, lang)
+  // Tarihî kişi kartının metni bağlı olduğu kaydın metnidir; İngilizcesi onaylıysa o gösterilir.
+  const enText = new Map(d.facts.filter((f) => f.text_en).map((f) => [f.fact_id, f.text_en!]))
+  const peopleIn = (people.data ?? []).map((p) => (lang === 'en' && enText.has(p.fact_id) ? { ...p, text: enText.get(p.fact_id)! } : p))
   return (
     <main className="vk-mon">
       <header className="vk-mon__hero">
-        {cover && <img className="vk-mon__img" src={mediaUrl(cover.card_file || cover.file)} alt={t('{name} görünümü', { name: d.name })} />}
+        {cover && <img className="vk-mon__img" src={mediaUrl(cover.card_file || cover.file)} alt={t('{name} görünümü', { name })} />}
         <div className="vk-mon__shade" aria-hidden="true" />
         <div className="vk-mon__title">
           <p className="vk-page__eyebrow">{typeLabel(d.type)} · {d.district}, {d.city}</p>
-          <h1>{d.name}</h1>
+          <h1>{name}</h1>
           <StatusBadge status={status} />
         </div>
         {cover?.attribution && <p className="vk-mon__credit">{cover.attribution}</p>}
       </header>
 
       <div className="vk-mon__body">
-        <PeopleCards people={people.data ?? []} />
+        <PeopleCards people={peopleIn} />
 
-        <Narrator monument={d} onListened={() => engage('listened')} onAsked={() => engage('asked')} />
+        <Narrator key={lang} monument={d} onListened={() => engage('listened')} onAsked={() => engage('asked')} />
 
         {game.data && <GamePanel id={id} uid={uid} city={city} game={game.data} onChange={() => { game.reload(); route.reload() }} />}
 
         {d.site_notice && (
           <aside className="vk-notice" aria-label={t('Ziyaret uyarısı')}>
             <strong>{t('Ziyaret ederken')}</strong>
-            <p>{d.site_notice}</p>
+            <p lang={notice.turkishOnly ? 'tr' : undefined}>{notice.text}</p>
           </aside>
         )}
 
@@ -116,7 +124,7 @@ export default function MonumentPage() {
               {d.images.map((img, i) => (
                 <li key={img.image_id}>
                   <figure>
-                    <img src={mediaUrl(img.card_file || img.file)} alt={t('{name}, görsel {n}', { name: d.name, n: i + 1 })} loading="lazy" />
+                    <img src={mediaUrl(img.card_file || img.file)} alt={t('{name}, görsel {n}', { name, n: i + 1 })} loading="lazy" />
                     <figcaption>
                       {img.attribution ?? img.rights_holder}
                       {img.license_url && (

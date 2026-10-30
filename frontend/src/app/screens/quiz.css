@@ -21,6 +21,11 @@
 .vk-quiz__count {
   color: var(--vk-ivory-dim) !important;
 }
+.vk-quiz__note {
+  color: var(--vk-ivory-dim);
+  font-size: 0.85rem;
+  font-style: italic;
+}
 .vk-quiz__prompt {
   font-size: clamp(1.5rem, 4.6vw, 2.2rem) !important;
   max-width: 40rem;
