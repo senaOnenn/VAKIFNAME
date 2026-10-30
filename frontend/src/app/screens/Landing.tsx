@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { citySlug, getMonuments, useLoad } from '../api'
 import { CITIES, withCatalog } from '../cities'
+import { FILM_URL, FilmDialog } from '../components/FilmDialog'
 import { GuideCharacter } from '../components/GuideCharacter'
 import { MonumentCard } from '../components/MonumentCard'
 import { GoldRule, Ornament } from '../components/Ornament'
@@ -60,6 +61,19 @@ export default function Landing() {
   const SAMPLE_LABELS = SAMPLE.map((_, i) => t('Örnek parça {n}', { n: i + 1 }))
   const reduced = prefersReducedMotion()
   const [hero, setHero] = useState(heroSource)
+  // Tanıtım filmi derlemeye girdiyse düğme görünür (dosya yoksa sorulur, 404 → düğme yok).
+  const [hasFilm, setHasFilm] = useState(false)
+  const [filmOpen, setFilmOpen] = useState(false)
+  useEffect(() => {
+    let alive = true
+    fetch(new URL(FILM_URL, window.location.href).href, { method: 'HEAD' }).then(
+      (r) => alive && setHasFilm(r.ok),
+      () => undefined,
+    )
+    return () => {
+      alive = false
+    }
+  }, [])
   const catalog = useLoad((s) => getMonuments(s), [])
   const all = catalog.data?.monuments ?? []
   const featured = all.filter((m) => m.cover).slice(0, 3)
@@ -81,6 +95,7 @@ export default function Landing() {
 
   return (
     <div className="vk-land" ref={root}>
+      <FilmDialog open={filmOpen} onClose={() => setFilmOpen(false)} />
       <header className="vk-land__bar">
         <span className="vk-land__mark">VAKIFNAME</span>
         <div className="vk-land__barend">
@@ -115,6 +130,11 @@ export default function Landing() {
               {t('Rehberin eserin hikâyesini anlatır; sen dinler, sorar, bilgini sınarsın. Eserin önüne gittiğinde mührün altına döner.')}
             </p>
             {ctas}
+            {hasFilm && (
+              <button type="button" className="vk-land__film" onClick={() => setFilmOpen(true)}>
+                <span aria-hidden="true">▶</span> {t('Tanıtım filmini izle')}
+              </button>
+            )}
             <p className="vk-land__fine">{t('Ücretsiz · Her bilgi kaynağıyla')}</p>
           </div>
           <a href="#nasil" className="vk-land__scroll" aria-label={t('Nasıl çalıştığını gör')}>

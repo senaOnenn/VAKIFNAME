@@ -14,7 +14,10 @@ for v in ${@:-film altyazili dongu dongu-mobil}; do
   case $v in
     film|altyazili)
       # Web için: H.264 + AAC, hızlı başlangıç.
-      ffmpeg -loglevel error -y -i "$OUT/$v-ham.mp4" -c:v libx264 -crf 22 -preset slow -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart "$OUT/tanitim-$v.mp4" ;;
+      ffmpeg -loglevel error -y -i "$OUT/$v-ham.mp4" -c:v libx264 -crf 22 -preset slow -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart "$OUT/tanitim-$v.mp4"
+      # Site için 720p (tanıtım sayfasındaki oynatıcı; altyazı ayrı VTT).
+      [ "$v" = film ] && ffmpeg -loglevel error -y -i "$OUT/$v-ham.mp4" -vf scale=1280:-2 -c:v libx264 -crf 25 -preset slow -pix_fmt yuv420p -c:a aac -b:a 96k -movflags +faststart "$OUT/tanitim-web.mp4"
+      ;;
     dongu)
       ffmpeg -loglevel error -y -i "$OUT/$v-ham.mp4" -vf scale=1280:-2 -c:v libx264 -crf 28 -preset slow -pix_fmt yuv420p -an -movflags +faststart "$OUT/hero.mp4" ;;
     dongu-mobil)

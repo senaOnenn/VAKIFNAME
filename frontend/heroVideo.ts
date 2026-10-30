@@ -22,11 +22,20 @@ export const HERO_VIDEO_FILE = 'media/hero.mp4'
 export const DEFAULT_HERO_MOBILE_VIDEO = resolve(here, '..', '..', 'vakifname-video-assets', 'hero-mobil.mp4')
 export const HERO_MOBILE_VIDEO_FILE = 'media/hero-mobil.mp4'
 const MAX_BYTES = 25 * 1024 * 1024
+/** Tanıtım filmi (Faz 9, `film/tools/render.sh` çıktısı): web sürümü ve iki altyazı. Varsayılan klasör depo kardeşi. */
+export const DEFAULT_FILM_DIR = resolve(here, '..', '..', 'vakifname-video-assets', 'film')
+export const FILM_ASSETS = [
+  { name: 'tanitim-web.mp4', file: 'media/tanitim.mp4', type: 'video/mp4' },
+  { name: 'tanitim-tr.vtt', file: 'media/tanitim-tr.vtt', type: 'text/vtt; charset=utf-8' },
+  { name: 'tanitim-en.vtt', file: 'media/tanitim-en.vtt', type: 'text/vtt; charset=utf-8' },
+] as const
+const MAX_FILM_BYTES = 80 * 1024 * 1024
+const MAX_VTT_BYTES = 64 * 1024
 
 export type VideoCheck = { ok: true; size: number } | { ok: false; reason: string }
 
 /** Dosyanın gerçekten küçük bir MP4 olduğunu denetler (ISO BMFF `ftyp` kutusu). */
-export function inspectHeroVideo(path: string): VideoCheck {
+export function inspectHeroVideo(path: string, maxBytes = MAX_BYTES): VideoCheck {
   let size: number
   try {
     const st = statSync(path)
@@ -35,7 +44,7 @@ export function inspectHeroVideo(path: string): VideoCheck {
   } catch {
     return { ok: false, reason: 'bulunamadı' }
   }
-  if (size < 12 || size > MAX_BYTES) return { ok: false, reason: `boyut uygun değil (${size} bayt)` }
+  if (size < 12 || size > maxBytes) return { ok: false, reason: `boyut uygun değil (${size} bayt)` }
   const head = Buffer.alloc(12)
   const fd = openSync(path, 'r')
   try {
@@ -45,6 +54,19 @@ export function inspectHeroVideo(path: string): VideoCheck {
   }
   if (head.toString('latin1', 4, 8) !== 'ftyp') return { ok: false, reason: 'MP4 değil' }
   return { ok: true, size }
+}
+
+/** Altyazı dosyası: küçük ve "WEBVTT" ile başlayan metin. */
+export function inspectVtt(path: string): VideoCheck {
+  try {
+    const st = statSync(path)
+    if (!st.isFile()) return { ok: false, reason: 'dosya değil' }
+    if (st.size > MAX_VTT_BYTES) return { ok: false, reason: `boyut uygun değil (${st.size} bayt)` }
+    if (!readFileSync(path, 'utf8').startsWith('WEBVTT')) return { ok: false, reason: 'WebVTT değil' }
+    return { ok: true, size: st.size }
+  } catch {
+    return { ok: false, reason: 'bulunamadı' }
+  }
 }
 
 /** `Range: bytes=a-b` başlığı. Geçersiz veya çoklu aralıkta `invalid`, başlık yoksa `null`. */
@@ -65,8 +87,8 @@ export function parseRange(header: string | undefined, size: number): { start: n
   return { start, end }
 }
 
-function send(path: string, size: number, rangeHeader: string | undefined, method: string, res: ServerResponse) {
-  res.setHeader('Content-Type', 'video/mp4')
+function send(path: string, size: number, rangeHeader: string | undefined, method: string, res: ServerResponse, type = 'video/mp4') {
+  res.setHeader('Content-Type', type)
   res.setHeader('Accept-Ranges', 'bytes')
   res.setHeader('Cache-Control', 'no-cache')
   res.setHeader('X-Content-Type-Options', 'nosniff')
@@ -122,6 +144,44 @@ export function heroVideoAsset(
         return
       }
       this.emitFile({ type: 'asset', fileName: file, source: readFileSync(source) })
+    },
+  }
+}
+
+/**
+ * Tanıtım filmi: üç dosya birlikte (film + TR/EN altyazı). Biri eksik ya da geçersizse hiçbiri derlemeye girmez ve
+ * tanıtım sayfasındaki "Tanıtım filmini izle" düğmesi görünmez (sayfa dosyanın varlığını sorar).
+ */
+export function filmAssets(dir = process.env.VAKIFNAME_FILM_DIR ?? DEFAULT_FILM_DIR): Plugin {
+  let base = '/'
+  const check = (a: (typeof FILM_ASSETS)[number]) =>
+    a.type === 'video/mp4' ? inspectHeroVideo(resolve(dir, a.name), MAX_FILM_BYTES) : inspectVtt(resolve(dir, a.name))
+  return {
+    name: 'vakifname-film',
+    configResolved(config) {
+      base = config.base
+    },
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const path = (req.url ?? '').split('?')[0]
+        const asset = FILM_ASSETS.find((a) => path === `${base.replace(/\/$/, '')}/${a.file}`)
+        if (!asset || (req.method !== 'GET' && req.method !== 'HEAD')) return next()
+        const c = check(asset)
+        if (!c.ok) {
+          res.statusCode = 404
+          res.end()
+          return
+        }
+        send(resolve(dir, asset.name), c.size, req.headers.range, req.method, res, asset.type)
+      })
+    },
+    generateBundle() {
+      const bad = FILM_ASSETS.map((a) => [a, check(a)] as const).filter(([, c]) => !c.ok)
+      if (bad.length) {
+        this.warn(`Tanıtım filmi derlemeye eklenmedi (${bad.map(([a, c]) => `${a.name}: ${(c as { reason: string }).reason}`).join(', ')}): ${dir}`)
+        return
+      }
+      for (const a of FILM_ASSETS) this.emitFile({ type: 'asset', fileName: a.file, source: readFileSync(resolve(dir, a.name)) })
     },
   }
 }

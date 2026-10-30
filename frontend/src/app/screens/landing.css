@@ -347,3 +347,36 @@
   align-items: center;
   gap: var(--vk-space-3);
 }
+
+/* Tanıtım filmi düğmesi (Faz 9). */
+.vk-land__film {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  margin-top: var(--vk-space-3);
+  padding: 0 var(--vk-space-4);
+  border: 0;
+  background: transparent;
+  color: var(--vk-gold-bright);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  cursor: pointer;
+}
+.vk-land__film span {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--vk-gold);
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+.vk-land__film:focus-visible {
+  outline: 3px solid var(--vk-gold-bright);
+  outline-offset: 3px;
+  border-radius: 999px;
+}

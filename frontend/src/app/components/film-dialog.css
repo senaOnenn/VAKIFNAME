@@ -1,0 +1,53 @@
+/* Tanıtım filmi penceresi: koyu perde, ortada video. */
+.vk-film {
+  width: min(1120px, 94vw);
+  max-height: 94vh;
+  margin: auto;
+  padding: var(--vk-space-4);
+  border: 1px solid rgb(201 162 75 / 0.45);
+  border-radius: var(--vk-radius-lg);
+  background: var(--vk-night-2, #1a2050);
+  color: var(--vk-ivory);
+  box-shadow: 0 30px 90px rgb(0 0 0 / 0.6);
+}
+.vk-film::backdrop {
+  background: rgb(8 10 28 / 0.86);
+}
+.vk-film__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vk-space-3);
+  margin-bottom: var(--vk-space-3);
+}
+.vk-film__bar h2 {
+  font-family: var(--vk-font-display);
+  font-size: 1.5rem;
+  color: var(--vk-gold-bright);
+}
+.vk-film__close {
+  min-height: 44px;
+  padding: 0 var(--vk-space-4);
+  border-radius: 999px;
+  border: 1px solid var(--vk-gold);
+  background: transparent;
+  color: var(--vk-ivory);
+  font: inherit;
+  cursor: pointer;
+}
+.vk-film__close:focus-visible {
+  outline: 3px solid var(--vk-gold-bright);
+  outline-offset: 2px;
+}
+.vk-film__video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--vk-radius-md, 12px);
+  background: #000;
+}
+.vk-film__note {
+  margin-top: var(--vk-space-3);
+  font-size: 0.85rem;
+  color: var(--vk-ivory-dim);
+}

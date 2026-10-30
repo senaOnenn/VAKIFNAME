@@ -3,7 +3,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { inspectHeroVideo, parseRange } from './heroVideo.ts'
+import { inspectHeroVideo, inspectVtt, parseRange } from './heroVideo.ts'
 
 describe('giriş videosu dağıtımı', () => {
   it('yalnızca gerçek MP4 dosyasını kabul eder', () => {
@@ -27,5 +27,16 @@ describe('giriş videosu dağıtımı', () => {
     expect(parseRange('bytes=100-', 100)).toBe('invalid')
     expect(parseRange('bytes=0-1,5-6', 100)).toBe('invalid')
     expect(parseRange('items=0-1', 100)).toBe('invalid')
+  })
+
+  it('tanıtım filmi altyazısı yalnızca küçük bir WebVTT dosyası olabilir', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'vtt-'))
+    const ok = join(dir, 'a.vtt')
+    writeFileSync(ok, 'WEBVTT\n\n1\n00:00:00.000 --> 00:00:01.000\nMerhaba\n')
+    const bad = join(dir, 'b.vtt')
+    writeFileSync(bad, '<script>alert(1)</script>')
+    expect(inspectVtt(ok).ok).toBe(true)
+    expect(inspectVtt(bad)).toEqual({ ok: false, reason: 'WebVTT değil' })
+    expect(inspectVtt(join(dir, 'yok.vtt'))).toEqual({ ok: false, reason: 'bulunamadı' })
   })
 })

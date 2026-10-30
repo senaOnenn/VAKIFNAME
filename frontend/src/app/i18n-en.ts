@@ -419,4 +419,7 @@ export const EN: Record<string, string> = {
   'Bağlantı kısa süre önce gönderildi; lütfen biraz sonra tekrar deneyin.': 'A link was sent a moment ago; please try again a little later.',
   'Google ile giriş şu anda doğrulanamıyor; lütfen biraz sonra tekrar deneyin.': 'Sign-in with Google cannot be verified right now; please try again a little later.',
   'Bağlantı yok: harita yerine ana yollar gösteriliyor.': 'No connection: showing main roads instead of the map.',
+  'Tanıtım filmini izle': 'Watch the intro film',
+  'Tanıtım filmi': 'Intro film',
+  'Seslendirme, ekip üyemizin sesinden izniyle yapay zekâ ile üretildi. Rehber bir canlandırmadır.': 'The narration was generated with AI from a team member\'s voice, with their permission. The guide is a dramatisation.',
 }
