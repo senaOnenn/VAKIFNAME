@@ -425,7 +425,7 @@ function mainFilm(t, art, seq, subtitles) {
   const total = t[t.length - 1].start + t[t.length - 1].dur
   const audio = t
     .filter((s) => s.file)
-    .map((s) => `<audio class="clip" data-start="${f(s.voiceAt)}" data-duration="${f(s.voiceDur)}" data-track-index="5" data-volume="1" src="assets/audio/${s.file.split('/').pop()}"></audio>`)
+    .map((s) => `<audio id="ses-${s.id}" class="clip" data-start="${f(s.voiceAt)}" data-duration="${f(s.voiceDur)}" data-track-index="5" data-volume="1" src="assets/audio/${s.file.split('/').pop()}"></audio>`)
     .join('\n')
   const g = t.find((s) => s.guide)
   const guide = `<div class="clip guide-wrap" data-start="${f(g.start)}" data-duration="${f(g.dur)}" data-track-index="2">${guideSvg(art)}<p class="role">Rehber · canlandırma</p></div>`
