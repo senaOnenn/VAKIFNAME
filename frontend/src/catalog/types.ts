@@ -19,6 +19,8 @@ export interface MonumentCover {
 export interface MonumentSummary {
   monument_id: string
   name: string
+  name_en?: string | null
+  lead_en?: string | null
   alternative_names?: string[]
   type: string
   city: string
@@ -53,6 +55,10 @@ export interface MonumentFact {
   basis?: 'licensed_source' | 'independent_corroboration'
   sources?: { title: string; publisher: string; url: string }[]
   has_quest?: boolean
+  /** İngilizce (Faz 11): kitabın İngilizce bölümünden, yönetici onaylı; yoksa null. */
+  title_en?: string | null
+  text_en?: string | null
+  en_page?: number | null
 }
 
 export interface MonumentImage {
@@ -134,6 +140,8 @@ export interface SealBook {
 export interface MonumentDetail {
   monument_id: string
   name: string
+  name_en?: string | null
+  site_notice_en?: string | null
   alternative_names: string[]
   type: string
   city: string

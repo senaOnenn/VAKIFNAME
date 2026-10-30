@@ -9,7 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import create_app
-from app.tts import INTRO, OUTRO, PREFIX, GoogleTts, SpeechService, TtsError, TtsSettings, pick_voice
+from app.tts import INTRO, INTRO_EN, OUTRO, OUTRO_EN, PREFIX, PREFIX_EN, GoogleTts, SpeechService, TtsError, TtsSettings, pick_voice
 
 SNAPSHOT = Path(__file__).parent / "ask_eval" / "catalog_snapshot.json"
 NARRATION_TS = Path(__file__).resolve().parents[2] / "frontend" / "src" / "app" / "narration.ts"
@@ -98,6 +98,9 @@ def test_templates_match_frontend_narration():
     assert INTRO.replace("{name}", "${m.name}") in ts and OUTRO in ts
     for cert, prefix in PREFIX.items():
         assert f"{cert}: '{prefix}'" in ts
+    assert INTRO_EN.replace("{name}", "${name}") in ts and OUTRO_EN in ts
+    for cert, prefix in PREFIX_EN.items():
+        assert f"{cert}: '{prefix}'" in ts
 
 
 def test_google_request_shape_and_errors():
@@ -126,3 +129,20 @@ def test_invalid_provider_env_fails_at_startup(monkeypatch):
     monkeypatch.setenv("VAKIFNAME_TTS_PROVIDER", "elevenlabs")
     with pytest.raises(ValueError):
         TtsSettings.from_env()
+
+
+def test_english_narration_uses_english_voice_and_approved_english_only(tmp_path):
+    fake = FakeTts()
+    fake.voices = lambda language: [f"{language}-Chirp3-HD-Kore", f"{language}-Standard-A"]
+    with client(tmp_path, fake) as c:
+        m = c.app.state.monuments.get("BUR-0001")
+        f = m.facts[0].model_copy(update={"title_en": "Built", "text_en": "Sultan Bayezid commissioned it.",
+                                          "en_decision_id": "DEC-" + "a" * 16})
+        c.app.state.monuments._state[1]["BUR-0001"] = m.model_copy(update={"facts": (f,) + m.facts[1:], "name_en": "Grand Mosque"})
+        intro = INTRO_EN.format(name="Grand Mosque")
+        assert c.post("/monuments/BUR-0001/speech", json={"text": intro, "lang": "en"}).status_code == 200
+        assert fake.calls[-1][1:3] == ("en-US-Chirp3-HD-Kore", "en-US")
+        assert c.post("/monuments/BUR-0001/speech", json={"text": "Sultan Bayezid commissioned it.", "lang": "en"}).status_code == 200
+        # Türkçe metin İngilizce olarak, İngilizce metin Türkçe olarak seslendirilmez.
+        assert c.post("/monuments/BUR-0001/speech", json={"text": intro, "lang": "tr"}).status_code == 422
+        assert c.post("/monuments/BUR-0001/speech", json={"text": OUTRO, "lang": "en"}).status_code == 422

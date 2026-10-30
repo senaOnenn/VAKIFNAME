@@ -278,7 +278,7 @@ FILE_RE = re.compile(r"^[0-9a-f]{64}\.jpe?g$")
 def test_every_monument_gets_five_mixed_questions_without_answers(c, mid):
     user = visitor()
     quiz = ready_quiz(c, user, mid)
-    assert set(quiz) == {"quiz_id", "expires_at", "questions"} and re.fullmatch(r"[0-9a-f]{32}", quiz["quiz_id"])
+    assert set(quiz) == {"quiz_id", "expires_at", "lang", "questions"} and quiz["lang"] == "tr" and re.fullmatch(r"[0-9a-f]{32}", quiz["quiz_id"])
     qs = quiz["questions"]
     assert len(qs) == 5 and [q["qid"] for q in qs] == [f"q{i}" for i in range(1, 6)]
     kinds = [q["kind"] for q in qs]
@@ -812,3 +812,51 @@ def test_older_progress_files_are_upgraded_in_place(tmp_path):
     assert old["simulated"] == 0
     assert s.record_engagement("ziyaretci-1", "BUR-0001", "listened") is True
     s.close()
+
+
+# --- İngilizce (Faz 11) ---------------------------------------------------------------------------------------------
+
+def english_catalog(tmp_path: Path, monuments_with_en: set[str]) -> Path:
+    """Seçilen eserlerin kayıtlarına onaylı İngilizce alanlar ekler (testlik metin; gerçekte kitabın İngilizce bölümünden)."""
+    raw = json.loads(json.dumps(RAW))
+    for m in raw["monuments"]:
+        if m["monument_id"] not in monuments_with_en:
+            continue
+        m["name_en"] = f"Monument {m['monument_id'][-2:]}"
+        for f in m["facts"]:
+            f.update(title_en=f"Record {f['fact_id'][-3:]}", text_en=f"English record {f['fact_id'][-3:]} about a waqf building.",
+                     en_page=f["source"]["pdf_physical_page"], en_decision_id=DEC)
+            if f.get("quest"):
+                f["quest"].update(question_en=f"Question {f['fact_id'][-3:]}?",
+                                  choices_en=[f"Option {i}" for i in range(len(f["quest"]["choices"]))],
+                                  explanation_en="Explained in English.")
+    path = tmp_path / "catalog_en.json"
+    path.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
+    return path
+
+
+def test_english_round_uses_only_approved_english_records(tmp_path):
+    every = {m["monument_id"] for m in RAW["monuments"]}
+    with make_client(english_catalog(tmp_path, every)) as c:
+        user = visitor()
+        unlock(c, user, OPEN)
+        engage(c, user, OPEN)
+        quiz = c.post(f"/monuments/{OPEN}/quiz", json={"user_id": user, "lang": "en"}).json()
+        assert quiz["lang"] == "en" and len(quiz["questions"]) == game.QUIZ_SIZE
+        for q in quiz["questions"]:
+            if q["kind"] == "choice":
+                assert q["prompt"].startswith("Question") and all(ch.startswith("Option") for ch in q["choices"])
+            elif q["kind"] == "true_false":
+                assert q["prompt"].startswith("Is this about") and q["statement"].startswith("English record")
+            else:
+                assert q["prompt"].startswith("Which one is")
+
+
+def test_english_falls_back_to_turkish_when_not_enough_english(tmp_path):
+    with make_client(english_catalog(tmp_path, set())) as c:
+        user = visitor()
+        unlock(c, user, OPEN)
+        engage(c, user, OPEN)
+        quiz = c.post(f"/monuments/{OPEN}/quiz", json={"user_id": user, "lang": "en"}).json()
+        assert quiz["lang"] == "tr" and len(quiz["questions"]) == game.QUIZ_SIZE
+        assert not any(q["prompt"].startswith(("Question", "Is this", "Which one")) for q in quiz["questions"])
