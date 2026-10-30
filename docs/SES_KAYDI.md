@@ -114,6 +114,21 @@ Sonra aynısını **iki kez daha** oku: *"Welcome! I am your guide here. This mo
 
 Ham kayıtlar ve klon dosyaları **repoya girmez**; yalnızca bu Mac'te (`~/vakifname-voice/`) tutulur.
 
+### Komutlar (Claude çalıştırır)
+
+```bash
+# Ses ortamı bir kez kurulur (repo dışı): ~/vakifname-voice/.venv (Python 3.11, chatterbox-tts, mlx-whisper, setuptools<81)
+# 1) Adaylar ve kör dinleme dosyaları
+HF_HUB_DISABLE_XET=1 ~/vakifname-voice/.venv/bin/python backend/scripts/voice/candidates.py ses-talha.m4a \
+  --out ~/vakifname-voice/aday/talha            # → liste.md, dinle/tr-A.wav …, anahtar.json
+# 2) Seçilen adayla tüm anlatımı üret ve canlıya kopyala
+deploy/ses/uret-yukle.sh talha-1 ~/vakifname-voice/aday/talha/aday-03.wav [ingilizce-aday.wav]
+# 3) Sunucuda aç: api.env → VAKIFNAME_TTS_PROVIDER=files, VAKIFNAME_TTS_VOICE=talha-1 (+ _EN); systemctl restart calismalar-api
+```
+
+Tuzaklar: Hugging Face indirmesi takılırsa `HF_HUB_DISABLE_XET=1`; `perth` filigran modülü `pkg_resources` ister
+(`setuptools<81`). M1'de cümle başına ~1–2 dk (86 cümle ≈ 3 saat; yarıda kalırsa kaldığı yerden sürer).
+
 ## Kısa kontrol listesi
 
 - [ ] Eşyalı küçük oda / dolap önü; klima, fan kapalı; telefon sessiz
