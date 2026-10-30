@@ -6,7 +6,7 @@ Model referansın yalnızca ilk ~10 sn'sini kullanır; kalite o 10 sn'ye bağlı
 3. Her adayın dilini ve metnini Whisper ile çıkarır; izin cümlesini ve dil dışı parçaları atar.
 4. Her adayla aynı deneme cümlelerini üretir; (a) Whisper benzerliği (anlaşılırlık), (b) üretilen sesin kayıttaki sese
    benzerliği (ses kodlayıcısı, kosinüs) ölçülür.
-5. `liste.md` (puanlı) ve kör dinleme için `dinle/` (A, B, C…; eşleşme `anahtar.json`) yazar.
+5. `liste.md` (puanlı) ve kör dinleme için `dinle/` (en iyi üç aday, harfler karışık; eşleşme `anahtar.json`) yazar.
 
     HF_HUB_DISABLE_XET=1 ~/vakifname-voice/.venv/bin/python candidates.py ~/Downloads/ses-talha.m4a \\
         --out ~/vakifname-voice/aday/talha
@@ -14,6 +14,7 @@ Model referansın yalnızca ilk ~10 sn'sini kullanır; kalite o 10 sn'ye bağlı
 
 import argparse
 import json
+import random
 import shutil
 import subprocess
 import sys
@@ -151,8 +152,10 @@ def main(argv=None) -> int:
     blind.mkdir()
     key, lines = {}, ["# Referans adayları", "", "| dil | aday | puan | anlaşılırlık | ses benzerliği | kırpma | metin |",
                       "|---|---|---|---|---|---|---|"]
+    rng = random.SystemRandom()
     for lang in ("tr", "en"):
         top = [c for c in results if c["dil"] == lang][:3]
+        rng.shuffle(top)  # kör dinleme: harf puan sırasını ele vermesin (eşleşme anahtar.json'da)
         for letter, c in zip("ABC", top):
             joined = torch.cat([ta.load(str(a.out / o))[0] for o in c["ornekler"]], dim=-1)
             ta.save(str(blind / f"{lang}-{letter}.wav"), joined, voice.sr)
