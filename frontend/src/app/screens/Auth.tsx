@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { GoogleButton } from '../components/GoogleButton'
 import { GoldRule, Ornament } from '../components/Ornament'
+import { LangSwitch, useLang } from '../i18n'
 import { googleSignIn, login, register, startGuest, useAuth } from '../session'
 import './auth.css'
 
@@ -22,6 +23,7 @@ function messageOf(e: unknown): string {
 export default function Auth() {
   const navigate = useNavigate()
   const auth = useAuth()
+  const { t, lang } = useLang()
   const uid = useId()
   const [tab, setTab] = useState<Tab>('giris')
   const [email, setEmail] = useState('')
@@ -89,60 +91,61 @@ export default function Auth() {
 
   return (
     <main className="vk-auth">
+      <LangSwitch className="vk-auth__lang" />
       <section className="vk-auth__hero" aria-hidden="false">
         <Ornament className="vk-auth__ornament" />
         <div className="vk-auth__brand">
-          <p className="vk-auth__eyebrow">Vakıf Eserleri Envanter Projesi</p>
+          <p className="vk-auth__eyebrow">{t('Vakıf Eserleri Envanter Projesi')}</p>
           <h1 className="vk-auth__title">VAKIFNAME</h1>
           <GoldRule className="vk-auth__rule" />
           <p className="vk-auth__lead">
-            Vakıf eserlerinin hikâyesini dinle, bilgini sına, mühürleri topla. Eserin önüne gidince mührün altına dönüşsün.
+            {t('Vakıf eserlerinin hikâyesini dinle, bilgini sına, mühürleri topla. Eserin önüne gidince mührün altına dönüşsün.')}
           </p>
-          <ul className="vk-auth__steps" aria-label="Nasıl çalışır">
-            <li><span aria-hidden="true">I</span> Dinle ve sor</li>
-            <li><span aria-hidden="true">II</span> Bilgini sına</li>
-            <li><span aria-hidden="true">III</span> Ziyaret et, altın mühür al</li>
+          <ul className="vk-auth__steps" aria-label={t('Nasıl çalışır')}>
+            <li><span aria-hidden="true">I</span> {t('Dinle ve sor')}</li>
+            <li><span aria-hidden="true">II</span> {t('Bilgini sına')}</li>
+            <li><span aria-hidden="true">III</span> {t('Ziyaret et, altın mühür al')}</li>
           </ul>
         </div>
       </section>
 
       <section className="vk-auth__panel" aria-labelledby={fieldId('h')}>
         <div className="vk-auth__card">
-          <h2 id={fieldId('h')} className="vk-auth__heading">Maceraya katıl</h2>
+          <h2 id={fieldId('h')} className="vk-auth__heading">{t('Maceraya katıl')}</h2>
 
           <GoogleButton onCredential={onGoogle} onError={setGoogleNote} />
           {googleNote && (
             <p className="vk-auth__note" role="status">
-              {googleNote}
+              {t(googleNote)}
             </p>
           )}
 
-          <p className="vk-auth__or" aria-hidden="true"><span>veya e-posta ile</span></p>
+          <p className="vk-auth__or" aria-hidden="true"><span>{t('veya e-posta ile')}</span></p>
 
-          <div className="vk-auth__tabs" role="tablist" aria-label="Hesap işlemi">
-            {(['giris', 'kayit'] as const).map((t) => (
+          <div className="vk-auth__tabs" role="tablist" aria-label={t('Hesap işlemi')}>
+            {(['giris', 'kayit'] as const).map((k) => (
               <button
-                key={t}
+                key={k}
                 type="button"
                 role="tab"
-                id={fieldId(`tab-${t}`)}
-                aria-selected={tab === t}
+                id={fieldId(`tab-${k}`)}
+                aria-selected={tab === k}
                 aria-controls={fieldId('form')}
                 className="vk-auth__tab"
                 onClick={() => {
-                  setTab(t)
+                  setTab(k)
                   setErrors({})
                   setFormError('')
                 }}
               >
-                {t === 'giris' ? 'Giriş yap' : 'Kayıt ol'}
+                {k === 'giris' ? t('Giriş yap') : t('Kayıt ol')}
               </button>
             ))}
           </div>
 
           <div id={fieldId('form')} role="tabpanel" aria-labelledby={fieldId(`tab-${tab}`)}>
           <form onSubmit={submit} noValidate className="vk-auth__form">
-            <label htmlFor={fieldId('email')}>E-posta</label>
+            <label htmlFor={fieldId('email')}>{t('E-posta')}</label>
             <input
               id={fieldId('email')}
               type="email"
@@ -153,9 +156,9 @@ export default function Auth() {
               aria-invalid={!!errors.email}
               aria-describedby={errors.email ? fieldId('email-e') : undefined}
             />
-            {errors.email && <p id={fieldId('email-e')} className="vk-auth__error" role="alert">{errors.email}</p>}
+            {errors.email && <p id={fieldId('email-e')} className="vk-auth__error" role="alert">{t(errors.email)}</p>}
 
-            <label htmlFor={fieldId('pw')}>Parola</label>
+            <label htmlFor={fieldId('pw')}>{t('Parola')}</label>
             <input
               id={fieldId('pw')}
               type="password"
@@ -165,11 +168,11 @@ export default function Auth() {
               aria-invalid={!!errors.password}
               aria-describedby={errors.password ? fieldId('pw-e') : undefined}
             />
-            {errors.password && <p id={fieldId('pw-e')} className="vk-auth__error" role="alert">{errors.password}</p>}
+            {errors.password && <p id={fieldId('pw-e')} className="vk-auth__error" role="alert">{t(errors.password)}</p>}
 
             {register_ && (
               <>
-                <label htmlFor={fieldId('again')}>Parola (tekrar)</label>
+                <label htmlFor={fieldId('again')}>{t('Parola (tekrar)')}</label>
                 <input
                   id={fieldId('again')}
                   type="password"
@@ -179,29 +182,30 @@ export default function Auth() {
                   aria-invalid={!!errors.again}
                   aria-describedby={errors.again ? fieldId('again-e') : undefined}
                 />
-                {errors.again && <p id={fieldId('again-e')} className="vk-auth__error" role="alert">{errors.again}</p>}
+                {errors.again && <p id={fieldId('again-e')} className="vk-auth__error" role="alert">{t(errors.again)}</p>}
               </>
             )}
 
             {formError && (
               <p className="vk-auth__error vk-auth__error--form" role="alert">
-                {formError}
+                {t(formError)}
               </p>
             )}
             <button type="submit" className="vk-btn vk-btn--block" disabled={busy} aria-busy={busy}>
-              {busy ? 'Gönderiliyor…' : register_ ? 'Hesap oluştur' : 'Giriş yap'}
+              {busy ? t('Gönderiliyor…') : register_ ? t('Hesap oluştur') : t('Giriş yap')}
             </button>
             {!register_ && (
-              <Link to="/sifre-sifirla" className="vk-auth__forgot">Şifremi unuttum</Link>
+              <Link to="/sifre-sifirla" className="vk-auth__forgot">{t('Şifremi unuttum')}</Link>
             )}
           </form>
           </div>
 
           <button type="button" className="vk-btn vk-btn--ghost vk-btn--block vk-auth__guest" onClick={guest}>
-            Üye olmadan keşfet
+            {t('Üye olmadan keşfet')}
           </button>
           <p className="vk-auth__note vk-auth__legal">
-            Devam ederek <Link to="/gizlilik">aydınlatma metnini</Link> okuduğunu kabul edersin.
+            {t('Devam ederek')} <Link to="/gizlilik">{t('aydınlatma metnini')}</Link>
+            {lang === 'en' ? '.' : ` ${t('okuduğunu kabul edersin.')}`}
           </p>
         </div>
       </section>

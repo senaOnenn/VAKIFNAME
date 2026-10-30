@@ -5,6 +5,7 @@ import { PeopleCards } from '../components/PeopleCards'
 import { Narrator } from '../components/Narrator'
 import { GoldRule } from '../components/Ornament'
 import { StatusBadge } from '../components/StatusBadge'
+import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
 import './monument.css'
@@ -17,14 +18,15 @@ const CERTAINTY: Record<string, string> = {
 }
 
 function FactItem({ f }: { f: MonumentFact }) {
+  const { t } = useLang()
   return (
     <li className="vk-fact">
       <h3>{f.title}</h3>
       <p>{f.text}</p>
       <p className="vk-fact__meta">
-        <span className={`vk-cert vk-cert--${f.certainty}`}>{CERTAINTY[f.certainty] ?? f.certainty}</span>
+        <span className={`vk-cert vk-cert--${f.certainty}`}>{CERTAINTY[f.certainty] ? t(CERTAINTY[f.certainty]) : f.certainty}</span>
         <span>
-          Kaynak: {f.source.title}, s. {f.source.pdf_physical_page}
+          {t('Kaynak: {title}, s. {page}', { title: f.source.title, page: f.source.pdf_physical_page })}
           {f.sources?.map((s) => (
             <span key={s.url}>
               {' · '}
@@ -45,6 +47,7 @@ export default function MonumentPage() {
   const { id = '' } = useParams()
   const auth = useAuth()
   const uid = progressId(auth)
+  const { t } = useLang()
   const m = useLoad((s) => getMonument(id, s), [id])
   const city = m.data ? citySlug(m.data.city) : ''
   const route = useLoad((s) => (city ? getRoute(city, uid, null, s).catch(() => null) : Promise.resolve(null)), [city, uid])
@@ -57,12 +60,12 @@ export default function MonumentPage() {
     sendEngagement(id, uid, event).then(game.reload, () => undefined)
   }
 
-  if (m.loading) return <main className="vk-page"><p className="vk-page__state" role="status">Eser yükleniyor…</p></main>
+  if (m.loading) return <main className="vk-page"><p className="vk-page__state" role="status">{t('Eser yükleniyor…')}</p></main>
   if (m.error || !m.data)
     return (
       <main className="vk-page">
-        <p className="vk-page__state vk-page__state--error" role="alert">Eser bulunamadı veya yüklenemedi.</p>
-        <Link to="/eserler" className="vk-btn vk-btn--ghost">← Eserlere dön</Link>
+        <p className="vk-page__state vk-page__state--error" role="alert">{t('Eser bulunamadı veya yüklenemedi.')}</p>
+        <Link to="/eserler" className="vk-btn vk-btn--ghost">← {t('Eserlere dön')}</Link>
       </main>
     )
 
@@ -71,7 +74,7 @@ export default function MonumentPage() {
   return (
     <main className="vk-mon">
       <header className="vk-mon__hero">
-        {cover && <img className="vk-mon__img" src={mediaUrl(cover.card_file || cover.file)} alt={`${d.name} görünümü`} />}
+        {cover && <img className="vk-mon__img" src={mediaUrl(cover.card_file || cover.file)} alt={t('{name} görünümü', { name: d.name })} />}
         <div className="vk-mon__shade" aria-hidden="true" />
         <div className="vk-mon__title">
           <p className="vk-page__eyebrow">{typeLabel(d.type)} · {d.district}, {d.city}</p>
@@ -89,14 +92,14 @@ export default function MonumentPage() {
         {game.data && <GamePanel id={id} uid={uid} city={city} game={game.data} onChange={() => { game.reload(); route.reload() }} />}
 
         {d.site_notice && (
-          <aside className="vk-notice" aria-label="Ziyaret uyarısı">
-            <strong>Ziyaret ederken</strong>
+          <aside className="vk-notice" aria-label={t('Ziyaret uyarısı')}>
+            <strong>{t('Ziyaret ederken')}</strong>
             <p>{d.site_notice}</p>
           </aside>
         )}
 
         <section className="vk-facts" aria-labelledby="tarihce">
-          <h2 id="tarihce">Tarihçe ve kaynaklar</h2>
+          <h2 id="tarihce">{t('Tarihçe ve kaynaklar')}</h2>
           <GoldRule className="vk-page__rule" />
           <p className="vk-facts__lead">{d.address}</p>
           <ol>
@@ -108,12 +111,12 @@ export default function MonumentPage() {
 
         {d.images.length > 0 && (
           <section className="vk-gallery" aria-labelledby="galeri">
-            <h2 id="galeri">Görseller</h2>
+            <h2 id="galeri">{t('Görseller')}</h2>
             <ul>
               {d.images.map((img, i) => (
                 <li key={img.image_id}>
                   <figure>
-                    <img src={mediaUrl(img.card_file || img.file)} alt={`${d.name}, görsel ${i + 1}`} loading="lazy" />
+                    <img src={mediaUrl(img.card_file || img.file)} alt={t('{name}, görsel {n}', { name: d.name, n: i + 1 })} loading="lazy" />
                     <figcaption>
                       {img.attribution ?? img.rights_holder}
                       {img.license_url && (

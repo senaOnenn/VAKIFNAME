@@ -4,6 +4,7 @@ import type { GuideResult } from '../../catalog/types'
 import type { MonumentDetail } from '../api'
 import { MS_PER_WEIGHT, mouthAt, mouthFrom, visemes, type Mouth } from '../lipsync'
 import { buildScript, LOCAL_GUIDE } from '../narration'
+import { useLang } from '../i18n'
 import { useNarration } from '../speech'
 import { GuideCharacter } from './GuideCharacter'
 import './narrator.css'
@@ -36,6 +37,7 @@ export function Narrator({
   const lines = useMemo(() => buildScript(monument), [monument])
   const n = useNarration(lines, { onDone: onListened, monumentId: monument.monument_id })
   const [large, setLarge] = useState(false)
+  const { t, locale } = useLang()
   const [mouth, setMouth] = useState<Mouth>('X')
   const line = lines[n.index]
   const speaking = n.state === 'playing'
@@ -72,17 +74,17 @@ export function Narrator({
         </div>
         <div className="vk-narr__talk">
           <div className="vk-narr__who">
-            <h2 id={`${id}-h`}>{LOCAL_GUIDE.name}</h2>
-            <span>{LOCAL_GUIDE.role}</span>
+            <h2 id={`${id}-h`}>{t(LOCAL_GUIDE.name)}</h2>
+            <span>{t(LOCAL_GUIDE.role)}</span>
           </div>
       <div className={`vk-narr__sub${large ? ' vk-narr__sub--large' : ''}`} aria-live={speaking ? 'off' : 'polite'}>
         <p className="vk-narr__line">{line.text}</p>
         {line.source && (
           <p className="vk-narr__src">
             {line.certainty && line.certainty !== 'documented' && (
-              <span className="vk-cert vk-cert--uncertain">{line.certainty === 'reported' ? 'Rivayet' : 'Kesin değil'}</span>
+              <span className="vk-cert vk-cert--uncertain">{line.certainty === 'reported' ? t('Rivayet') : t('Kesin değil')}</span>
             )}
-            Kaynak: {line.source}
+            {t('Kaynak:')} {line.source}
           </p>
         )}
         <p className="vk-narr__pos" aria-hidden="true">{n.index + 1} / {lines.length}</p>
@@ -90,38 +92,38 @@ export function Narrator({
         </div>
       </div>
 
-      <div className="vk-narr__controls" role="group" aria-label="Anlatım denetimleri">
-        <button type="button" className="vk-narr__btn" onClick={() => n.goTo(n.index - 1)} disabled={n.index === 0} aria-label="Önceki cümle">‹</button>
+      <div className="vk-narr__controls" role="group" aria-label={t('Anlatım denetimleri')}>
+        <button type="button" className="vk-narr__btn" onClick={() => n.goTo(n.index - 1)} disabled={n.index === 0} aria-label={t('Önceki cümle')}>‹</button>
         {speaking ? (
-          <button type="button" className="vk-btn" onClick={n.pause}>Duraklat</button>
+          <button type="button" className="vk-btn" onClick={n.pause}>{t('Duraklat')}</button>
         ) : (
           <button type="button" className="vk-btn" onClick={n.play}>
-            {n.state === 'idle' ? 'Dinle' : n.state === 'done' ? 'Baştan dinle' : 'Devam et'}
+            {n.state === 'idle' ? t('Dinle') : n.state === 'done' ? t('Baştan dinle') : t('Devam et')}
           </button>
         )}
-        <button type="button" className="vk-narr__btn" onClick={() => n.goTo(n.index + 1)} disabled={n.index >= lines.length - 1} aria-label="Sonraki cümle">›</button>
+        <button type="button" className="vk-narr__btn" onClick={() => n.goTo(n.index + 1)} disabled={n.index >= lines.length - 1} aria-label={t('Sonraki cümle')}>›</button>
         <label className="vk-narr__opt">
-          Hız
+          {t('Hız')}
           <select value={n.rate} onChange={(e) => n.setRate(Number(e.target.value))}>
             {RATES.map((r) => (
-              <option key={r} value={r}>{r.toLocaleString('tr-TR')}×</option>
+              <option key={r} value={r}>{r.toLocaleString(locale)}×</option>
             ))}
           </select>
         </label>
         <label className="vk-narr__opt">
-          <input type="checkbox" checked={n.muted} onChange={(e) => n.setMuted(e.target.checked)} /> Sessiz (yalnızca altyazı)
+          <input type="checkbox" checked={n.muted} onChange={(e) => n.setMuted(e.target.checked)} /> {t('Sessiz (yalnızca altyazı)')}
         </label>
         <label className="vk-narr__opt">
-          <input type="checkbox" checked={large} onChange={(e) => setLarge(e.target.checked)} /> Büyük altyazı
+          <input type="checkbox" checked={large} onChange={(e) => setLarge(e.target.checked)} /> {t('Büyük altyazı')}
         </label>
       </div>
       {!n.hasVoice && !n.muted && (
-        <p className="vk-narr__note">Tarayıcında Türkçe ses bulunamadı; anlatım altyazıyla ilerler.</p>
+        <p className="vk-narr__note">{t('Tarayıcında Türkçe ses bulunamadı; anlatım altyazıyla ilerler.')}</p>
       )}
-      {n.state === 'done' && <p className="vk-narr__done" role="status">Anlatımı dinledin. ✓</p>}
+      {n.state === 'done' && <p className="vk-narr__done" role="status">{t('Anlatımı dinledin. ✓')}</p>}
 
       <details className="vk-narr__transcript">
-        <summary>Anlatımın tam metni</summary>
+        <summary>{t('Anlatımın tam metni')}</summary>
         <ol>
           {lines.map((l, i) => (
             <li key={i}>
@@ -139,6 +141,7 @@ export function Narrator({
 
 function GuideChat({ monumentId, onAsked }: { monumentId: string; onAsked?: () => void }) {
   const id = useId()
+  const { t } = useLang()
   const [enabled, setEnabled] = useState<boolean | null>(null)
   const [q, setQ] = useState('')
   const [turns, setTurns] = useState<Turn[]>([])
@@ -169,7 +172,7 @@ function GuideChat({ monumentId, onAsked }: { monumentId: string; onAsked?: () =
       setTurns((ts) => ts.map((t, i) => (i === ts.length - 1 ? { ...t, result } : t)))
       onAsked?.()
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Rehber şu anda yanıt veremiyor.'
+      const message = err instanceof Error ? err.message : t('Rehber şu anda yanıt veremiyor.')
       setTurns((ts) => ts.map((t, i) => (i === ts.length - 1 ? { ...t, error: message } : t)))
     } finally {
       setBusy(false)
@@ -178,30 +181,30 @@ function GuideChat({ monumentId, onAsked }: { monumentId: string; onAsked?: () =
 
   return (
     <div className="vk-chat">
-      <h3 id={`${id}-h`}>Rehbere sor</h3>
-      {enabled === false && <p className="vk-narr__note">Rehber şu anda soru alamıyor. Anlatımı dinleyebilir ve kaynakları okuyabilirsin.</p>}
+      <h3 id={`${id}-h`}>{t('Rehbere sor')}</h3>
+      {enabled === false && <p className="vk-narr__note">{t('Rehber şu anda soru alamıyor. Anlatımı dinleyebilir ve kaynakları okuyabilirsin.')}</p>}
       <ol className="vk-chat__log" aria-live="polite" aria-labelledby={`${id}-h`}>
-        {turns.map((t, i) => (
+        {turns.map((turn, i) => (
           <li key={i} className="vk-chat__turn">
-            <p className="vk-chat__q">{t.question}</p>
-            {!t.result && !t.error && <p className="vk-chat__a vk-chat__a--wait">Rehber düşünüyor…</p>}
-            {t.error && <p className="vk-chat__a vk-chat__a--err">{t.error}</p>}
-            {t.result && <Answer r={t.result} />}
+            <p className="vk-chat__q">{turn.question}</p>
+            {!turn.result && !turn.error && <p className="vk-chat__a vk-chat__a--wait">{t('Rehber düşünüyor…')}</p>}
+            {turn.error && <p className="vk-chat__a vk-chat__a--err">{turn.error}</p>}
+            {turn.result && <Answer r={turn.result} />}
           </li>
         ))}
       </ol>
       {enabled !== false && (
         <form className="vk-chat__form" onSubmit={send}>
-          <label htmlFor={`${id}-q`} className="vk-sr-only">Rehbere sorun</label>
+          <label htmlFor={`${id}-q`} className="vk-sr-only">{t('Rehbere sorun')}</label>
           <input
             id={`${id}-q`}
             value={q}
             maxLength={500}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Örn. Bu eseri kim yaptırdı?"
+            placeholder={t('Örn. Bu eseri kim yaptırdı?')}
             disabled={busy || enabled === null}
           />
-          <button type="submit" className="vk-btn" disabled={busy || !q.trim()}>Sor</button>
+          <button type="submit" className="vk-btn" disabled={busy || !q.trim()}>{t('Sor')}</button>
         </form>
       )}
     </div>
@@ -209,6 +212,7 @@ function GuideChat({ monumentId, onAsked }: { monumentId: string; onAsked?: () =
 }
 
 function Answer({ r }: { r: GuideResult }) {
+  const { t } = useLang()
   const facts = new Map(r.facts.map((f) => [f.fact_id, f]))
   if (r.sentences.length === 0) return <p className="vk-chat__a">{r.message}</p>
   const used = [...new Set(r.sentences.flatMap((s) => s.sources))].map((sid) => facts.get(sid)).filter(Boolean)
@@ -217,7 +221,7 @@ function Answer({ r }: { r: GuideResult }) {
       <p>{r.sentences.map((s) => s.text).join(' ')}</p>
       {used.length > 0 && (
         <p className="vk-chat__src">
-          Dayandığı kayıtlar: {used.map((f) => f!.title).join(' · ')}
+          {t('Dayandığı kayıtlar:')} {used.map((f) => f!.title).join(' · ')}
         </p>
       )}
       {r.mode === 'fallback_search' && <p className="vk-chat__src">{r.message}</p>}

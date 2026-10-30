@@ -1,4 +1,5 @@
 import type { Passport, Stamp } from './types'
+import { t } from '../app/i18n'
 
 // localhost (127.0.0.1 değil): oturum çerezi SameSite=Lax; arayüz localhost:5173'teyken aynı site sayılır.
 const DEFAULT_API_BASE_URL = 'http://localhost:8000'
@@ -83,16 +84,16 @@ async function request(
       })
     } catch (error) {
       if (signal?.aborted) throw error
-      if (timedOut) throw new ApiError('timeout', 'Sunucu zamanında yanıt vermedi.')
-      throw new ApiError('network', 'Sunucuya ulaşılamadı.')
+      if (timedOut) throw new ApiError('timeout', t('Sunucu zamanında yanıt vermedi.'))
+      throw new ApiError('network', t('Sunucuya ulaşılamadı.'))
     }
 
     const body: unknown = response.status === 204 ? null : await response.json().catch(() => undefined)
     if (!response.ok) {
-      const message = detailMessage(body) ?? `Sunucu bir hata döndürdü (HTTP ${response.status}).`
+      const message = detailMessage(body) ?? t('Sunucu bir hata döndürdü (HTTP {status}).', { status: response.status })
       throw new ApiError('http', message, response.status)
     }
-    if (body === undefined) throw new ApiError('invalid-response', 'Sunucudan beklenmeyen bir yanıt geldi.')
+    if (body === undefined) throw new ApiError('invalid-response', t('Sunucudan beklenmeyen bir yanıt geldi.'))
     return body
   } finally {
     clearTimeout(timer)

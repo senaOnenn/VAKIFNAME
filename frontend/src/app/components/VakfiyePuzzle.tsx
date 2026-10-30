@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import './vakfiye-puzzle.css'
+import { useLang } from '../i18n'
 
 export type PieceState = 'missing' | 'found' | 'gold'
 
@@ -70,13 +71,14 @@ function Document({ id }: { id: string }) {
  * `pieces[i]` i'nci eserin durumu (katalog sırası); `labels[i]` ekran okuyucu için eser adı.
  */
 export function VakfiyePuzzle({ pieces, labels }: { pieces: PieceState[]; labels: string[] }) {
+  const { t } = useLang()
   const id = useId()
   const found = pieces.filter((p) => p !== 'missing').length
   const gold = pieces.filter((p) => p === 'gold').length
   return (
     <figure className="vk-puzzle">
       <svg viewBox={`-40 -40 ${W + 80} ${H + 80}`} role="img" aria-labelledby={`${id}-t`}>
-        <title id={`${id}-t`}>{`Kayıp Vakfiye: ${pieces.length} parçadan ${found} parça bulundu, ${gold} parça altın`}</title>
+        <title id={`${id}-t`}>{t('Kayıp Vakfiye: {total} parçadan {found} parça bulundu, {gold} parça altın', { total: pieces.length, found, gold })}</title>
         <defs>
           <linearGradient id={`${id}-paper`} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#f7eed6" />
@@ -108,7 +110,7 @@ export function VakfiyePuzzle({ pieces, labels }: { pieces: PieceState[]; labels
                   <path d={d} className="vk-piece__edge" />
                 </>
               )}
-              <title>{`${labels[i] ?? `Parça ${i + 1}`}: ${state === 'missing' ? 'henüz bulunmadı' : state === 'gold' ? 'altın (ziyaret edildi)' : 'bulundu'}`}</title>
+              <title>{`${labels[i] ?? t('Parça {n}', { n: i + 1 })}: ${t(state === 'missing' ? 'henüz bulunmadı' : state === 'gold' ? 'altın (ziyaret edildi)' : 'bulundu')}`}</title>
             </g>
           )
         })}

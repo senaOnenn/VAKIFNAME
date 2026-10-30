@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../api/client'
+import { useLang } from '../i18n'
 import { deleteAccount, endGuest, logout, resendVerification, useAuth } from '../session'
 import './city.css'
 import './account.css'
@@ -9,6 +10,7 @@ import './account.css'
 export default function Account() {
   const auth = useAuth()
   const navigate = useNavigate()
+  const { t } = useLang()
   const [confirming, setConfirming] = useState(false)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -20,12 +22,12 @@ export default function Account() {
     return (
       <main className="vk-city">
         <section className="vk-city__intro">
-          <h1>Hesap</h1>
-          <p>Misafir olarak keşfediyorsun. İlerlemen bu cihazda tutulur; hesap açınca hesabına taşınır.</p>
+          <h1>{t('Hesap')}</h1>
+          <p>{t('Misafir olarak keşfediyorsun. İlerlemen bu cihazda tutulur; hesap açınca hesabına taşınır.')}</p>
           <div className="vk-account__actions">
-            <Link to="/giris" className="vk-btn" onClick={() => endGuest()}>Hesap aç veya giriş yap</Link>
+            <Link to="/giris" className="vk-btn" onClick={() => endGuest()}>{t('Hesap aç veya giriş yap')}</Link>
             <button type="button" className="vk-btn vk-btn--ghost" onClick={() => { endGuest(); leave() }}>
-              Misafir oturumunu kapat
+              {t('Misafir oturumunu kapat')}
             </button>
           </div>
         </section>
@@ -41,7 +43,7 @@ export default function Account() {
       await deleteAccount()
       leave()
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : 'Hesap silinemedi.')
+      setError(e instanceof ApiError ? e.message : t('Hesap silinemedi.'))
       setBusy(false)
     }
   }
@@ -52,26 +54,26 @@ export default function Account() {
       await resendVerification()
       setResend({ state: 'sent' })
     } catch (e) {
-      setResend({ state: 'error', message: e instanceof ApiError ? e.message : 'Bağlantı gönderilemedi.' })
+      setResend({ state: 'error', message: e instanceof ApiError ? e.message : t('Bağlantı gönderilemedi.') })
     }
   }
 
   return (
     <main className="vk-city">
       <section className="vk-city__intro">
-        <h1>Hesap</h1>
+        <h1>{t('Hesap')}</h1>
         <dl className="vk-account__info">
-          {user.display_name && (<><dt>Ad</dt><dd>{user.display_name}</dd></>)}
-          <dt>E-posta</dt>
+          {user.display_name && (<><dt>{t('Ad')}</dt><dd>{user.display_name}</dd></>)}
+          <dt>{t('E-posta')}</dt>
           <dd>{user.email ?? '—'}</dd>
-          <dt>Giriş yöntemi</dt>
-          <dd>{user.provider === 'google' ? 'Google' : 'E-posta ve parola'}</dd>
+          <dt>{t('Giriş yöntemi')}</dt>
+          <dd>{user.provider === 'google' ? 'Google' : t('E-posta ve parola')}</dd>
           {user.email_verified !== undefined && (
             <>
-              <dt>E-posta durumu</dt>
+              <dt>{t('E-posta durumu')}</dt>
               <dd>
                 <span className={user.email_verified ? 'vk-account__badge vk-account__badge--ok' : 'vk-account__badge'}>
-                  {user.email_verified ? 'Doğrulandı' : 'Doğrulanmadı'}
+                  {user.email_verified ? t('Doğrulandı') : t('Doğrulanmadı')}
                 </span>
               </dd>
             </>
@@ -80,35 +82,35 @@ export default function Account() {
         {user.email_verified === false && (
           <div className="vk-account__verify">
             <p>
-              Hesabını korumak ve parolanı unutursan yenileyebilmek için e-posta adresini doğrula. Bağlantı 24 saat geçerlidir.
+              {t('Hesabını korumak ve parolanı unutursan yenileyebilmek için e-posta adresini doğrula. Bağlantı 24 saat geçerlidir.')}
             </p>
             <button type="button" className="vk-btn vk-btn--ghost" onClick={() => void sendAgain()}
               disabled={resend.state === 'busy'} aria-busy={resend.state === 'busy'}>
-              {resend.state === 'busy' ? 'Gönderiliyor…' : 'Bağlantıyı yeniden gönder'}
+              {resend.state === 'busy' ? t('Gönderiliyor…') : t('Bağlantıyı yeniden gönder')}
             </button>
             <p aria-live="polite" className={resend.state === 'error' ? 'vk-auth__error' : 'vk-account__hint'}>
-              {resend.state === 'sent' && `Doğrulama bağlantısını ${user.email ?? 'e-posta adresine'} gönderdik.`}
+              {resend.state === 'sent' && t('Doğrulama bağlantısını {email} gönderdik.', { email: user.email ?? t('e-posta adresine') })}
               {resend.state === 'error' && resend.message}
             </p>
           </div>
         )}
         <div className="vk-account__actions">
           <button type="button" className="vk-btn vk-btn--ghost" onClick={() => void logout().finally(leave)}>
-            Çıkış
+            {t('Çıkış')}
           </button>
         </div>
 
         <section className="vk-account__danger" aria-labelledby="hesap-sil">
-          <h2 id="hesap-sil">Hesabı sil</h2>
-          <p>Hesabın, mühürlerin ve ilerlemen kalıcı olarak silinir. Bu işlem geri alınamaz.</p>
+          <h2 id="hesap-sil">{t('Hesabı sil')}</h2>
+          <p>{t('Hesabın, mühürlerin ve ilerlemen kalıcı olarak silinir. Bu işlem geri alınamaz.')}</p>
           {!confirming ? (
-            <button type="button" className="vk-link-btn" onClick={() => setConfirming(true)}>Hesabımı silmek istiyorum</button>
+            <button type="button" className="vk-link-btn" onClick={() => setConfirming(true)}>{t('Hesabımı silmek istiyorum')}</button>
           ) : (
             <div className="vk-account__actions">
               <button type="button" className="vk-btn vk-btn--danger" onClick={() => void remove()} disabled={busy}>
-                {busy ? 'Siliniyor…' : 'Evet, kalıcı olarak sil'}
+                {busy ? t('Siliniyor…') : t('Evet, kalıcı olarak sil')}
               </button>
-              <button type="button" className="vk-btn vk-btn--ghost" onClick={() => setConfirming(false)}>Vazgeç</button>
+              <button type="button" className="vk-btn vk-btn--ghost" onClick={() => setConfirming(false)}>{t('Vazgeç')}</button>
             </div>
           )}
           {error && <p className="vk-auth__error" role="alert">{error}</p>}

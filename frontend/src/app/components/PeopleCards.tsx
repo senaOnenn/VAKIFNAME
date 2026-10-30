@@ -1,4 +1,5 @@
 import type { PersonCard } from '../api'
+import { useLang } from '../i18n'
 import './people-cards.css'
 
 const SKIP = new Set(['Sultan', 'Şehzade', 've'])
@@ -17,21 +18,22 @@ export function monogram(name: string): string {
  * metnini ve kaynağını gösterir. Fotogerçekçi yüz yerine baş harf madalyonu kullanılır (CLAUDE.md §5).
  */
 export function PeopleCards({ people }: { people: PersonCard[] }) {
+  const { t } = useLang()
   if (!people.length) return null
   return (
-    <section className="vk-people" aria-label="Eserle ilgili tarihî kişiler">
+    <section className="vk-people" aria-label={t('Eserle ilgili tarihî kişiler')}>
       {people.map((p) => (
         <article key={`${p.role}-${p.fact_id}`} className="vk-person">
           <div className="vk-person__medal" aria-hidden="true">
             <span>{monogram(p.name)}</span>
           </div>
           <div className="vk-person__body">
-            <p className="vk-person__role">{p.role_label}</p>
+            <p className="vk-person__role">{t(p.role_label)}</p>
             <h2 className="vk-person__name">{p.name}</h2>
             <p className="vk-person__text">{p.text}</p>
             <p className="vk-person__src">
-              {p.certainty !== 'documented' && <span className="vk-cert vk-cert--uncertain">{p.certainty === 'reported' ? 'Rivayet' : 'Kesin değil'}</span>}
-              Kaynak: {p.source}
+              {p.certainty !== 'documented' && <span className="vk-cert vk-cert--uncertain">{p.certainty === 'reported' ? t('Rivayet') : t('Kesin değil')}</span>}
+              {t('Kaynak:')} {p.source}
             </p>
           </div>
         </article>

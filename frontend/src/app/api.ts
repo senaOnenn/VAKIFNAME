@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { API_BASE_URL, apiGet, apiPost, apiUpload } from '../api/client'
+import { getLang, t as tr } from './i18n'
 import { getVisitorId } from '../visitor'
 import type { AuthState } from './session'
 
@@ -57,7 +58,7 @@ export async function getRoute(
     q.set('lng', pos.longitude.toFixed(6))
   }
   const body = await apiGet(`/route?${q}`, signal, WITH_COOKIE)
-  if (!isRoute(body)) throw new Error('Rota yanıtı beklenen biçimde değil.')
+  if (!isRoute(body)) throw new Error(tr('Rota yanıtı beklenen biçimde değil.'))
   return body
 }
 
@@ -90,7 +91,7 @@ export function useLoad<T>(load: (signal: AbortSignal) => Promise<T>, deps: unkn
     setState((s) => ({ ...s, loading: true, error: null }))
     fn.current(ctl.signal).then(
       (data) => !ctl.signal.aborted && setState({ data, error: null, loading: false }),
-      (e: unknown) => !ctl.signal.aborted && setState({ data: null, error: e instanceof Error ? e.message : 'Yüklenemedi.', loading: false }),
+      (e: unknown) => !ctl.signal.aborted && setState({ data: null, error: e instanceof Error ? e.message : tr('Yüklenemedi.'), loading: false }),
     )
     return () => ctl.abort()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -109,10 +110,12 @@ export const TYPE_LABEL: Record<string, string> = {
   hamam: 'Hamam',
   çeşme: 'Çeşme',
 }
-export const typeLabel = (t: string) => TYPE_LABEL[t] ?? t.charAt(0).toLocaleUpperCase('tr') + t.slice(1)
+/** Tür etiketi arayüz dilinde (bileşen `useLang` ile yeniden çizildiği için o anki dil kullanılır). */
+export const typeLabel = (type: string) => tr(TYPE_LABEL[type] ?? type.charAt(0).toLocaleUpperCase('tr') + type.slice(1))
 
 export function formatDistance(m: number): string {
-  return m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toLocaleString('tr-TR', { maximumFractionDigits: 1 })} km`
+  const locale = getLang() === 'en' ? 'en-GB' : 'tr-TR'
+  return m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toLocaleString(locale, { maximumFractionDigits: 1 })} km`
 }
 
 /** Şehir adını adres çubuğundaki biçime çevirir (İzmir → izmir). */

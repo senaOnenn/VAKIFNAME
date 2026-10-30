@@ -344,3 +344,8 @@
     transition: none;
   }
 }
+.vk-land__barend {
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-3);
+}

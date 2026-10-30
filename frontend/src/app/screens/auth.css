@@ -230,3 +230,18 @@
     background: none;
   }
 }
+.vk-auth {
+  position: relative;
+}
+.vk-auth__lang {
+  position: absolute;
+  top: var(--vk-space-4);
+  right: var(--vk-space-4);
+  z-index: 2;
+}
+@media (max-width: 959px) {
+  /* Dil seçici sağ üstte; tek sütunda başlıkla çakışmasın. */
+  .vk-auth__hero {
+    padding-top: calc(var(--vk-space-6) + 2.5rem);
+  }
+}

@@ -3,12 +3,14 @@ import { Link, useParams } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { getMonument, mediaUrl, progressId, startQuiz, submitQuiz, useLoad, type Quiz, type QuizQuestion, type QuizResult } from '../api'
 import { Seal } from '../components/Seal'
+import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
 import './monument.css'
 import './quiz.css'
 
 function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: number | undefined; onChange: (v: number) => void }) {
+  const { t } = useLang()
   if (q.kind === 'true_false') {
     return (
       <div className="vk-q">
@@ -16,7 +18,7 @@ function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: number |
         <div className="vk-q__tf" role="radiogroup" aria-label={q.prompt}>
           {['Yanlış', 'Doğru'].map((label, i) => (
             <button key={label} type="button" role="radio" aria-checked={value === i} className="vk-q__opt" onClick={() => onChange(i)}>
-              {label}
+              {t(label)}
             </button>
           )).reverse()}
         </div>
@@ -28,7 +30,7 @@ function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: number |
       <div className="vk-q__images" role="radiogroup" aria-label={q.prompt}>
         {q.images.map((img, i) => (
           <button key={img.file} type="button" role="radio" aria-checked={value === i} className="vk-q__img" onClick={() => onChange(i)}>
-            <img src={mediaUrl(img.file)} alt={`Seçenek ${i + 1}`} />
+            <img src={mediaUrl(img.file)} alt={t('Seçenek {n}', { n: i + 1 })} />
             {img.attribution && <span className="vk-q__credit">{img.attribution}</span>}
           </button>
         ))}
@@ -49,6 +51,7 @@ function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: number |
 /** "Rozeti Al": 5 kısa soru, en az 4 doğru → bilgi mührü. Cevaplar sunucuda değerlendirilir. */
 export default function QuizPage() {
   const { id = '' } = useParams()
+  const { t } = useLang()
   const auth = useAuth()
   const uid = progressId(auth)
   const monument = useLoad((s) => getMonument(id, s), [id])
@@ -69,7 +72,7 @@ export default function QuizPage() {
     setAnswers({})
     setIdx(0)
     setError('')
-    startQuiz(id, uid).then(setQuiz, (e) => setError(e instanceof ApiError ? e.message : 'Sorular hazırlanamadı.'))
+    startQuiz(id, uid).then(setQuiz, (e) => setError(e instanceof ApiError ? e.message : t('Sorular hazırlanamadı.')))
   }, [id, uid, attempt, auth.status])
 
   async function submit() {
@@ -78,19 +81,19 @@ export default function QuizPage() {
     try {
       setResult(await submitQuiz(quiz.quiz_id, uid, quiz.questions.map((q) => ({ qid: q.qid, choice: answers[q.qid] }))))
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : 'Cevaplar gönderilemedi.')
+      setError(e instanceof ApiError ? e.message : t('Cevaplar gönderilemedi.'))
     } finally {
       setBusy(false)
     }
   }
 
-  const name = monument.data?.name ?? 'Eser'
-  const back = <Link to={`/eser/${encodeURIComponent(id)}`} className="vk-btn vk-btn--ghost">← Esere dön</Link>
+  const name = monument.data?.name ?? t('Eser')
+  const back = <Link to={`/eser/${encodeURIComponent(id)}`} className="vk-btn vk-btn--ghost">← {t('Esere dön')}</Link>
 
   if (error)
     return (
       <main className="vk-page vk-quiz">
-        <h1 className="vk-quiz__title">Rozeti al · {name}</h1>
+        <h1 className="vk-quiz__title">{t('Rozeti al')} · {name}</h1>
         <p className="vk-page__state vk-page__state--error" role="alert">{error}</p>
         {back}
       </main>
@@ -101,37 +104,37 @@ export default function QuizPage() {
     return (
       <main className="vk-page vk-quiz">
         <section className={`vk-quiz__result${result.passed ? ' is-passed' : ''}`} aria-live="polite">
-          <Seal kind={result.passed ? 'knowledge' : 'empty'} label={result.passed ? 'Bilgi mührü' : 'Mühür kazanılmadı'} stamp={result.passed} size={140} />
-          <h1>{result.passed ? 'Bilgi mührünü kazandın!' : 'Bu sefer olmadı'}</h1>
+          <Seal kind={result.passed ? 'knowledge' : 'empty'} label={result.passed ? t('Bilgi mührü') : t('Mühür kazanılmadı')} stamp={result.passed} size={140} />
+          <h1>{result.passed ? t('Bilgi mührünü kazandın!') : t('Bu sefer olmadı')}</h1>
           <p>
-            {result.total} sorudan {result.score} doğru.{' '}
-            {result.passed ? 'Kayıp Vakfiye’nin bir parçası yerine oturdu. Eseri ziyaret edersen mührün altına dönüşür.' : 'Mühür için en az 4 doğru gerekiyordu. Anlatımı yeniden dinleyip tekrar deneyebilirsin.'}
+            {t('{total} sorudan {score} doğru.', { total: result.total, score: result.score })}{' '}
+            {result.passed ? t('Kayıp Vakfiye’nin bir parçası yerine oturdu. Eseri ziyaret edersen mührün altına dönüşür.') : t('Mühür için en az 4 doğru gerekiyordu. Anlatımı yeniden dinleyip tekrar deneyebilirsin.')}
           </p>
           <div className="vk-quiz__actions">
             {result.passed ? (
-              <Link to="/pasaport" className="vk-btn">Pasaportuma bak</Link>
+              <Link to="/pasaport" className="vk-btn">{t('Pasaportuma bak')}</Link>
             ) : (
-              <button type="button" className="vk-btn" onClick={() => setAttempt((a) => a + 1)}>Yeniden dene</button>
+              <button type="button" className="vk-btn" onClick={() => setAttempt((a) => a + 1)}>{t('Yeniden dene')}</button>
             )}
             {back}
           </div>
         </section>
         <section className="vk-quiz__review" aria-labelledby="degerlendirme">
-          <h2 id="degerlendirme">Cevapların</h2>
+          <h2 id="degerlendirme">{t('Cevapların')}</h2>
           <ol>
             {result.results.map((r, i) => {
               const q = byId.get(r.qid)
               return (
                 <li key={r.qid} className={r.correct ? 'is-correct' : 'is-wrong'}>
                   <p className="vk-quiz__q">{i + 1}. {q?.prompt}</p>
-                  <p className="vk-quiz__verdict">{r.correct ? 'Doğru' : 'Yanlış'}</p>
+                  <p className="vk-quiz__verdict">{r.correct ? t('Doğru') : t('Yanlış')}</p>
                   <p>{r.explanation}</p>
                   {r.fact && (
                     <p className="vk-quiz__src">
                       {r.fact.certainty && r.fact.certainty !== 'documented' && (
-                        <span className="vk-cert vk-cert--uncertain">{r.fact.certainty === 'reported' ? 'Rivayet' : 'Kesin değil'}</span>
+                        <span className="vk-cert vk-cert--uncertain">{r.fact.certainty === 'reported' ? t('Rivayet') : t('Kesin değil')}</span>
                       )}{' '}
-                      Kaynak: {typeof r.fact.source === 'string' ? r.fact.source : '—'}
+                      {t('Kaynak:')} {typeof r.fact.source === 'string' ? r.fact.source : '—'}
                     </p>
                   )}
                 </li>
@@ -146,8 +149,8 @@ export default function QuizPage() {
   if (!quiz)
     return (
       <main className="vk-page vk-quiz">
-        <h1 className="vk-sr-only">Rozeti al · {name}</h1>
-        <p className="vk-page__state" role="status">Sorular hazırlanıyor…</p>
+        <h1 className="vk-sr-only">{t('Rozeti al')} · {name}</h1>
+        <p className="vk-page__state" role="status">{t('Sorular hazırlanıyor…')}</p>
       </main>
     )
 
@@ -157,24 +160,24 @@ export default function QuizPage() {
   return (
     <main className="vk-page vk-quiz">
       <header className="vk-page__head">
-        <p className="vk-page__eyebrow">Rozeti al · {name}</p>
+        <p className="vk-page__eyebrow">{t('Rozeti al')} · {name}</p>
         <div className="vk-quiz__dots" aria-hidden="true">
           {quiz.questions.map((x, i) => (
             <span key={x.qid} className={`${i === idx ? 'is-here' : ''} ${answers[x.qid] !== undefined ? 'is-set' : ''}`} />
           ))}
         </div>
-        <p className="vk-quiz__count">Soru {idx + 1} / {quiz.questions.length}</p>
+        <p className="vk-quiz__count">{t('Soru {n} / {total}', { n: idx + 1, total: quiz.questions.length })}</p>
         <h1 className="vk-quiz__prompt">{q.prompt}</h1>
       </header>
       <QuestionView q={q} value={answers[q.qid]} onChange={(v) => setAnswers((a) => ({ ...a, [q.qid]: v }))} />
       <div className="vk-quiz__nav">
-        <button type="button" className="vk-btn vk-btn--ghost" onClick={() => setIdx(idx - 1)} disabled={idx === 0}>Önceki</button>
+        <button type="button" className="vk-btn vk-btn--ghost" onClick={() => setIdx(idx - 1)} disabled={idx === 0}>{t('Önceki')}</button>
         {last ? (
           <button type="button" className="vk-btn" onClick={() => void submit()} disabled={!allAnswered || busy}>
-            {busy ? 'Gönderiliyor…' : 'Cevapları gönder'}
+            {busy ? t('Gönderiliyor…') : t('Cevapları gönder')}
           </button>
         ) : (
-          <button type="button" className="vk-btn" onClick={() => setIdx(idx + 1)} disabled={answers[q.qid] === undefined}>Sonraki</button>
+          <button type="button" className="vk-btn" onClick={() => setIdx(idx + 1)} disabled={answers[q.qid] === undefined}>{t('Sonraki')}</button>
         )}
       </div>
     </main>

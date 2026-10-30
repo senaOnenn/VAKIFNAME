@@ -6,6 +6,7 @@ import { MonumentCard } from '../components/MonumentCard'
 import { GoldRule, Ornament } from '../components/Ornament'
 import { Seal } from '../components/Seal'
 import { VakfiyePuzzle, type PieceState } from '../components/VakfiyePuzzle'
+import { LangSwitch, useLang } from '../i18n'
 import { startGuest } from '../session'
 import './discover.css'
 import './landing.css'
@@ -15,7 +16,6 @@ const HERO_VIDEO = `${BASE}media/hero.mp4`
 const GUIDE_VIDEO = `${BASE}media/narrator-guide.mp4`
 // Tanıtımdaki örnek yapboz: birkaç parça bulunmuş, biri ziyaretle altın.
 const SAMPLE: PieceState[] = ['found', 'gold', 'missing', 'found', 'missing', 'missing', 'found', 'missing', 'missing', 'missing']
-const SAMPLE_LABELS = SAMPLE.map((_, i) => `Örnek parça ${i + 1}`)
 
 function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
@@ -48,6 +48,8 @@ function useReveal(key: unknown) {
  */
 export default function Landing() {
   const navigate = useNavigate()
+  const { t } = useLang()
+  const SAMPLE_LABELS = SAMPLE.map((_, i) => t('Örnek parça {n}', { n: i + 1 }))
   const reduced = prefersReducedMotion()
   const [heroVideo, setHeroVideo] = useState(true)
   const [guideVideo, setGuideVideo] = useState(true)
@@ -65,8 +67,8 @@ export default function Landing() {
   }
   const ctas = (
     <div className="vk-land__ctas">
-      <Link to="/giris" className="vk-btn">Keşfe başla</Link>
-      <button type="button" className="vk-btn vk-btn--ghost" onClick={guest}>Üye olmadan göz at</button>
+      <Link to="/giris" className="vk-btn">{t('Keşfe başla')}</Link>
+      <button type="button" className="vk-btn vk-btn--ghost" onClick={guest}>{t('Üye olmadan göz at')}</button>
     </div>
   )
 
@@ -74,7 +76,10 @@ export default function Landing() {
     <div className="vk-land" ref={root}>
       <header className="vk-land__bar">
         <span className="vk-land__mark">VAKIFNAME</span>
-        <Link to="/giris" className="vk-land__login">Giriş yap</Link>
+        <div className="vk-land__barend">
+          <LangSwitch />
+          <Link to="/giris" className="vk-land__login">{t('Giriş yap')}</Link>
+        </div>
       </header>
 
       <main>
@@ -95,22 +100,22 @@ export default function Landing() {
           <div className="vk-land__veil" aria-hidden="true" />
           <Ornament className="vk-land__ornament" />
           <div className="vk-land__hero-body">
-            <p className="vk-land__eyebrow">Vakıf Eserleri Envanter Projesi</p>
-            <h1 id="land-h" className="vk-land__title">Vakıf eserlerini yerinde keşfet</h1>
+            <p className="vk-land__eyebrow">{t('Vakıf Eserleri Envanter Projesi')}</p>
+            <h1 id="land-h" className="vk-land__title">{t('Vakıf eserlerini yerinde keşfet')}</h1>
             <GoldRule className="vk-land__rule" />
             <p className="vk-land__lead">
-              Rehberin eserin hikâyesini anlatır; sen dinler, sorar, bilgini sınarsın. Eserin önüne gittiğinde mührün altına döner.
+              {t('Rehberin eserin hikâyesini anlatır; sen dinler, sorar, bilgini sınarsın. Eserin önüne gittiğinde mührün altına döner.')}
             </p>
             {ctas}
-            <p className="vk-land__fine">Ücretsiz · Her bilgi kaynağıyla</p>
+            <p className="vk-land__fine">{t('Ücretsiz · Her bilgi kaynağıyla')}</p>
           </div>
-          <a href="#nasil" className="vk-land__scroll" aria-label="Nasıl çalıştığını gör">
+          <a href="#nasil" className="vk-land__scroll" aria-label={t('Nasıl çalıştığını gör')}>
             <span aria-hidden="true">⌄</span>
           </a>
         </section>
 
         <section id="nasil" className="vk-land__section" aria-labelledby="nasil-h">
-          <h2 id="nasil-h" className="vk-land__h2 vk-reveal">Üç adımda bir eser</h2>
+          <h2 id="nasil-h" className="vk-land__h2 vk-reveal">{t('Üç adımda bir eser')}</h2>
           <ol className="vk-land__steps">
             <li className="vk-land__step vk-reveal">
               <div className="vk-land__visual vk-land__guide">
@@ -126,28 +131,28 @@ export default function Landing() {
                     onError={() => setGuideVideo(false)}
                   />
                 ) : (
-                  <span className="vk-land__guide-fallback" aria-hidden="true">Rehber</span>
+                  <span className="vk-land__guide-fallback" aria-hidden="true">{t('Rehber')}</span>
                 )}
               </div>
               <span className="vk-land__num" aria-hidden="true">I</span>
-              <h3>Dinle ve sor</h3>
-              <p>Rehber eserin hikâyesini sesli ve altyazılı anlatır. Aklına takılanı ona sorarsın.</p>
+              <h3>{t('Dinle ve sor')}</h3>
+              <p>{t('Rehber eserin hikâyesini sesli ve altyazılı anlatır. Aklına takılanı ona sorarsın.')}</p>
             </li>
             <li className="vk-land__step vk-reveal">
               <div className="vk-land__visual">
-                <Seal kind="knowledge" label="Bilgi mührü" size={112} />
+                <Seal kind="knowledge" label={t('Bilgi mührü')} size={112} />
               </div>
               <span className="vk-land__num" aria-hidden="true">II</span>
-              <h3>Bilgini sına</h3>
-              <p>Beş kısa soru. Dördünü bilirsen bilgi mührü senin.</p>
+              <h3>{t('Bilgini sına')}</h3>
+              <p>{t('Beş kısa soru. Dördünü bilirsen bilgi mührü senin.')}</p>
             </li>
             <li className="vk-land__step vk-reveal">
               <div className="vk-land__visual">
-                <Seal kind="gold" label="Altın mühür" size={112} />
+                <Seal kind="gold" label={t('Altın mühür')} size={112} />
               </div>
               <span className="vk-land__num" aria-hidden="true">III</span>
-              <h3>Eseri ziyaret et</h3>
-              <p>Eserin önüne gittiğinde mührün altına dönüşür.</p>
+              <h3>{t('Eseri ziyaret et')}</h3>
+              <p>{t('Eserin önüne gittiğinde mührün altına dönüşür.')}</p>
             </li>
           </ol>
         </section>
@@ -157,15 +162,15 @@ export default function Landing() {
             <VakfiyePuzzle pieces={SAMPLE} labels={SAMPLE_LABELS} />
           </div>
           <div className="vk-land__vakfiye-text vk-reveal">
-            <p className="vk-land__eyebrow">Kayıp Vakfiye</p>
-            <h2 id="vakfiye-h" className="vk-land__h2">Her mühür, kayıp bir vakfiyenin bir parçası</h2>
-            <p>Bir şehrin eserlerini tamamladıkça parçalar yerine oturur. Ziyaret ettiğin eserin parçası altınla parlar.</p>
+            <p className="vk-land__eyebrow">{t('Kayıp Vakfiye')}</p>
+            <h2 id="vakfiye-h" className="vk-land__h2">{t('Her mühür, kayıp bir vakfiyenin bir parçası')}</h2>
+            <p>{t('Bir şehrin eserlerini tamamladıkça parçalar yerine oturur. Ziyaret ettiğin eserin parçası altınla parlar.')}</p>
           </div>
         </section>
 
         {featured.length > 0 && (
           <section className="vk-land__section" aria-labelledby="eserler-h">
-            <h2 id="eserler-h" className="vk-land__h2 vk-reveal">Seni bekleyen eserler</h2>
+            <h2 id="eserler-h" className="vk-land__h2 vk-reveal">{t('Seni bekleyen eserler')}</h2>
             <div className="vk-grid vk-land__grid vk-reveal">
               {featured.map((m) => (
                 <MonumentCard key={m.monument_id} m={m} />
@@ -175,36 +180,38 @@ export default function Landing() {
         )}
 
         <section className="vk-land__section" aria-labelledby="guven-h">
-          <h2 id="guven-h" className="vk-land__h2 vk-reveal">Güvenilir bilgi, saygılı bir dil</h2>
+          <h2 id="guven-h" className="vk-land__h2 vk-reveal">{t('Güvenilir bilgi, saygılı bir dil')}</h2>
           <ul className="vk-land__trust vk-reveal">
             <li>
-              <h3>Kaynaklı</h3>
-              <p>Her bilgi, envanter yayınındaki sayfasıyla birlikte gösterilir.</p>
+              <h3>{t('Kaynaklı')}</h3>
+              <p>{t('Her bilgi, envanter yayınındaki sayfasıyla birlikte gösterilir.')}</p>
             </li>
             <li>
-              <h3>Dürüst</h3>
-              <p>Rivayet ve kesin olmayan bilgi öyle söylenir; bilinmeyen uydurulmaz.</p>
+              <h3>{t('Dürüst')}</h3>
+              <p>{t('Rivayet ve kesin olmayan bilgi öyle söylenir; bilinmeyen uydurulmaz.')}</p>
             </li>
             <li>
-              <h3>Vakur</h3>
-              <p>İbadet mekânlarında ziyaret adabı her adımda hatırlatılır.</p>
+              <h3>{t('Vakur')}</h3>
+              <p>{t('İbadet mekânlarında ziyaret adabı her adımda hatırlatılır.')}</p>
             </li>
           </ul>
           {open.length > 0 && (
             <p className="vk-land__cities vk-reveal">
-              {open.join(', ')} ile başladık{soon.length > 0 ? `; ${soon.join(', ')} yolda.` : '.'}
+              {soon.length > 0
+                ? t('{open} ile başladık; {soon} yolda.', { open: open.join(', '), soon: soon.join(', ') })
+                : t('{open} ile başladık.', { open: open.join(', ') })}
             </p>
           )}
         </section>
 
         <section className="vk-land__final" aria-labelledby="son-h">
-          <h2 id="son-h" className="vk-land__h2">İlk mührün seni bekliyor</h2>
+          <h2 id="son-h" className="vk-land__h2">{t('İlk mührün seni bekliyor')}</h2>
           {ctas}
         </section>
       </main>
 
       <footer className="vk-land__foot">
-        <Link to="/gizlilik">Aydınlatma metni</Link>
+        <Link to="/gizlilik">{t('Aydınlatma metni')}</Link>
       </footer>
     </div>
   )

@@ -1,6 +1,7 @@
 import { useId } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { City } from '../cities'
+import { cityNote, type City } from '../cities'
+import { useLang } from '../i18n'
 import { TURKEY_PATH, TURKEY_VIEWBOX, project } from './turkeyOutline'
 import './turkey-map.css'
 
@@ -15,10 +16,12 @@ const LABEL_OFFSET: Record<string, { dx: number; dy: number; anchor: 'start' | '
 export function TurkeyMap({ cities }: { cities: City[] }) {
   const id = useId()
   const navigate = useNavigate()
+  const { t } = useLang()
+  const open = cities.filter((c) => c.open).map((c) => c.name).join(', ')
   return (
     <figure className="vk-tmap">
       <svg viewBox={TURKEY_VIEWBOX} role="group" aria-labelledby={`${id}-t`}>
-        <title id={`${id}-t`}>{`Türkiye haritası: ${cities.filter((c) => c.open).map((c) => c.name).join(', ') || 'henüz açık şehir yok'} açık, diğer şehirler yakında`}</title>
+        <title id={`${id}-t`}>{t('Türkiye haritası: {open} açık, diğer şehirler yakında', { open: open || t('henüz açık şehir yok') })}</title>
         <defs>
           <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#232b66" />
@@ -59,7 +62,7 @@ export function TurkeyMap({ cities }: { cities: City[] }) {
               key={c.slug}
               href={`/rota/${c.slug}`}
               className="vk-tmap__city vk-tmap__city--open"
-              aria-label={`${c.name}: ${c.note}`}
+              aria-label={`${c.name}: ${cityNote(c, t)}`}
               onClick={(e) => {
                 e.preventDefault()
                 navigate(`/rota/${c.slug}`)
