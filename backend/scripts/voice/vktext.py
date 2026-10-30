@@ -41,6 +41,19 @@ def tr_number(n: int) -> str:
     return " ".join(words + _tr_below_1000(rest))
 
 
+_TR_DATIVE = {"bir": "bire", "iki": "ikiye", "üç": "üçe", "dört": "dörde", "beş": "beşe", "altı": "altıya", "yedi": "yediye",
+              "sekiz": "sekize", "dokuz": "dokuza", "on": "ona", "yirmi": "yirmiye", "otuz": "otuza", "kırk": "kırka",
+              "elli": "elliye", "altmış": "altmışa", "yetmiş": "yetmişe", "seksen": "seksene", "doksan": "doksana",
+              "yüz": "yüze", "bin": "bine", "milyon": "milyona", "sıfır": "sıfıra"}
+
+
+def tr_dative(n: int) -> str:
+    """55 → "elli beşe" (ölçü okunuşu: "elli beşe altmış dokuz metre")."""
+    words = tr_number(n).split()
+    words[-1] = _TR_DATIVE[words[-1]]
+    return " ".join(words)
+
+
 def tr_ordinal(n: int) -> str:
     """19 → "on dokuzuncu"."""
     words = tr_number(n).split()
@@ -112,7 +125,8 @@ def speakable(text: str, lang: str) -> str:
         s = re.sub(r"\b(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)\.\s+(?=[A-ZÇĞİÖŞÜ])",
                    lambda m: _tr_cap(tr_ordinal(_ROMAN[m.group(1)])) + " ", s)
         s = re.sub(r"%\s?(\d+)", lambda m: "yüzde " + m.group(1), s)
-        s = re.sub(r"(\d+)\s*×\s*(\d+)", r"\1 çarpı \2", s)
+        # Ölçü: "55 × 69" → "elli beşe altmış dokuz" (yazıya dökümde "55x69" da gelebilir).
+        s = re.sub(r"(\d+)\s*[×xX]\s*(\d+)", lambda m: f"{tr_dative(int(m.group(1)))} {m.group(2)}", s)
         s = re.sub(r"(\d+)\s*[–—-]\s*(?=\d)", r"\1 ile ", s)
         s = re.sub(r"\b(\d+)\.\s+(?=[a-zçğıöşü])", lambda m: tr_ordinal(int(m.group(1))) + " ", s)
         s = re.sub(r"\b(\d+)['’]([a-zçğıöşü]+)", lambda m: tr_number(int(m.group(1))) + m.group(2), s)
@@ -120,7 +134,7 @@ def speakable(text: str, lang: str) -> str:
     else:
         s = re.sub(r"\b([A-Z][a-z]+) (II|III|IV|V|VI)\b", lambda m: f"{m.group(1)} the {en_ordinal(_ROMAN[m.group(2)]).capitalize()}", s)
         s = re.sub(r"(\d+)\s?%", lambda m: m.group(1) + " percent", s)
-        s = re.sub(r"(\d+)\s*×\s*(\d+)", r"\1 by \2", s)
+        s = re.sub(r"(\d+)\s*[×xX]\s*(\d+)", r"\1 by \2", s)
         s = re.sub(r"(\d+)\s*[–—-]\s*(?=\d)", r"\1 to ", s)
         s = re.sub(r"\b(\d+)(st|nd|rd|th)\b", lambda m: en_ordinal(int(m.group(1))), s)
         s = re.sub(r"\b\d{4}\b", lambda m: en_number(int(m.group(0)), year=True), s)

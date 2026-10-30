@@ -22,7 +22,10 @@ def test_turkish_reading_keeps_words_and_converts_only_the_reading():
     assert vk.speakable("Pirinç Han'ı Sultan II. Bayezid yaptırmıştır.", "tr") == "Pirinç Han'ı Sultan İkinci Bayezid yaptırmıştır."
     assert vk.speakable("Süslemeler 19. yüzyıla aittir. 1862'de yapıldı.", "tr") == \
         "Süslemeler on dokuzuncu yüzyıla aittir. Bin sekiz yüz altmış ikide yapıldı."
-    assert vk.speakable("Yaklaşık 55 × 69 metrelik", "tr") == "Yaklaşık elli beş çarpı altmış dokuz metrelik"
+    assert vk.speakable("Yaklaşık 55 × 69 metrelik", "tr") == "Yaklaşık elli beşe altmış dokuz metrelik"
+    assert vk.tr_dative(10) == "ona" and vk.tr_dative(2) == "ikiye" and vk.tr_dative(1000) == "bine"
+    # Yazıya dökümde "55x69" gelirse de aynı okunuş: denetim yanlış alarm vermez.
+    assert vk.compare("Yaklaşık 55 × 69 metrelik", "Yaklaşık 55x69 metrelik", "tr")[0] == 1.0
 
 
 def test_english_reading():
