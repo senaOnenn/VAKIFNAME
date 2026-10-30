@@ -418,4 +418,5 @@ export const EN: Record<string, string> = {
   'Bu eser için böyle bir keşif sorusu yok.': 'There is no such discovery question for this monument.',
   'Bağlantı kısa süre önce gönderildi; lütfen biraz sonra tekrar deneyin.': 'A link was sent a moment ago; please try again a little later.',
   'Google ile giriş şu anda doğrulanamıyor; lütfen biraz sonra tekrar deneyin.': 'Sign-in with Google cannot be verified right now; please try again a little later.',
+  'Bağlantı yok: harita yerine ana yollar gösteriliyor.': 'No connection: showing main roads instead of the map.',
 }

@@ -1,10 +1,11 @@
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from 'react-leaflet'
 import type { MonumentStatus } from '../api'
 import './route-map.css'
 import { useLang } from '../i18n'
+import { loadOfflineRoads, type OfflineRoads } from './offline-map/roads'
 
 const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
 const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> {contributors}'
@@ -49,13 +50,59 @@ function Fit({ points }: { points: MapPoint[] }) {
   return null
 }
 
+/** Bağlantı yokken altlık: önceden çıkarılmış ana yollar ve nehir (yalnızca gerektiğinde indirilir). */
+function OfflineBase() {
+  const [roads, setRoads] = useState<OfflineRoads | null>(null)
+  useEffect(() => {
+    let alive = true
+    loadOfflineRoads().then((r) => alive && setRoads(r), () => undefined)
+    return () => {
+      alive = false
+    }
+  }, [])
+  if (!roads) return null
+  return (
+    <>
+      {(['river', 'minor', 'major'] as const).map((cls) =>
+        roads[cls].map((line, i) => (
+          <Polyline key={`${cls}-${i}`} positions={line} interactive={false} pathOptions={{ className: `vk-rmap__road vk-rmap__road--${cls}` }} />
+        )),
+      )}
+    </>
+  )
+}
+
+/** Art arda bu kadar karo yüklenemezse bağlantı yok sayılır ve önceden hazırlanmış altlık çizilir. */
+const TILE_FAILURES_OFFLINE = 3
+
 /** Koyu tonlu OSM haritası: durum renkli işaretler, rota sırası ve kesikli altın rota çizgisi. */
 export default function RouteMap({ points, path, start, onSelect, className = '' }: RouteMapProps) {
   const { lang, t } = useLang()
+  const [offline, setOffline] = useState(() => typeof navigator !== 'undefined' && navigator.onLine === false)
+  const failures = useRef(0)
   return (
     <MapContainer className={`vk-rmap ${className}`} center={[40.1885, 29.061]} zoom={14} scrollWheelZoom={false}>
       {/* Atıf metni katman kurulurken okunur; dil değişince katman yeniden kurulur. */}
-      <TileLayer key={lang} url={TILE_URL} attribution={TILE_ATTRIBUTION.replace('{contributors}', t('katkıcıları'))} />
+      <TileLayer
+        key={lang}
+        url={TILE_URL}
+        attribution={TILE_ATTRIBUTION.replace('{contributors}', t('katkıcıları'))}
+        eventHandlers={{
+          tileerror: () => {
+            failures.current += 1
+            if (failures.current >= TILE_FAILURES_OFFLINE) setOffline(true)
+          },
+          tileload: () => {
+            failures.current = 0
+          },
+        }}
+      />
+      {offline && <OfflineBase />}
+      {offline && (
+        <p className="vk-rmap__offline" role="status">
+          {t('Bağlantı yok: harita yerine ana yollar gösteriliyor.')}
+        </p>
+      )}
       {path && path.length > 1 && <Polyline positions={path} pathOptions={{ className: 'vk-rmap__path' }} />}
       {start && (
         <Marker position={[start.lat, start.lng]} icon={START_ICON} keyboard={false}>

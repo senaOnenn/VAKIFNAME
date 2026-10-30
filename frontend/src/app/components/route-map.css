@@ -86,3 +86,38 @@
 .vk-rmap .leaflet-bar {
   border: 1px solid rgb(201 162 75 / 0.4);
 }
+
+/* Bağlantı yokken altlık (ana yollar, nehir) ve bilgi notu. */
+.vk-rmap__road {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.vk-rmap__road--major {
+  stroke: rgb(243 234 211 / 0.42);
+  stroke-width: 3.5px;
+}
+.vk-rmap__road--minor {
+  stroke: rgb(243 234 211 / 0.24);
+  stroke-width: 2px;
+}
+.vk-rmap__road--river {
+  stroke: rgb(143 162 255 / 0.45);
+  stroke-width: 3px;
+}
+.vk-rmap__offline {
+  position: absolute;
+  z-index: 1000;
+  left: 50%;
+  top: var(--vk-space-3, 0.75rem);
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: rgb(15 19 48 / 0.88);
+  border: 1px solid rgb(201 162 75 / 0.5);
+  color: var(--vk-ivory, #f3ead3);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
