@@ -1,448 +1,129 @@
 # VAKIFNAME
-VAKIFNAME - Oyunlaştırılmış Kültür Turu &amp; RAG Destekli Canlı Vasiyet Platformu (Team HisGuard)
 
-## Takım için hızlı başlangıç
+Vakıf Eserleri Envanter Projesi yayınlarındaki eserleri herkes için ulaşılabilir kılan ve insanları eserleri **yerinde
+ziyarete** teşvik eden oyunlaştırılmış rehber (KÖK&KOD Hackathon, takım HisGuard). Bursa pilot şehirdir; ürün yeni
+şehirlere büyüyecek şekilde kuruludur.
 
-**Amaç:** Bursa'daki vakıf eserlerini (10 eserlik dijital katalog, editörün onayladığı 76 tarihî bilgi) eser sayfaları,
-fotoğraf galerisi, harita, keşif görevleri ve dijital pasaportla oyunlaştırılmış bir kültür turuna dönüştürmek. Tarihî
-bilgiler yalnızca insan onayından geçmiş kayıtlardan gelir; yapay zekâ rehberi bu kayıtların dışına çıkamaz.
+- **Canlı (test adresi):** https://calismalar.tikirsoft.com
+- **Çalışma kuralları ve kararlar:** [`CLAUDE.md`](CLAUDE.md) · **görev listesi:** [`TASK.md`](TASK.md)
 
-### Dallar
+## Ne yapar
 
-| Dal | Durum | Kullanım |
-|---|---|---|
-| `develop` | **Kararlı ortak sürüm.** Backend ve frontend testleri geçer; testers ortamında doğrulanmış rehber sürümünü içerir. | Yeni işler buradan dallanır. |
-| `feat/game` | Oyun geliştirme dalı (`develop` ile aynı noktadan başlar) | Oyun ekibi. |
-| `feat/ai-guide-photo-analysis` | **Henüz tam doğrulanmadı** (bkz. o daldaki `docs/GELISTIRME_NOTLARI_YAPAY_ZEKA.md`) | Yalnızca yapay zekâ rehberi geliştirmesi. |
-| `main` | Önceki birleştirilmiş sürüm | `develop`, gözden geçirme sonrası PR ile birleştirilir. |
+Açılış → tanıtım → giriş (e-posta+parola, Google ya da üye olmadan) → şehir seçimi → **rota** (en yakın eser önerilir,
+kilitler mühür kazandıkça açılır) → **eser sayfası**: rehber karakter eseri sesli ve altyazılı anlatır, kullanıcı ona
+soru sorar → **Rozeti Al**: 5 kısa soru, 4 doğru = bilgi mührü → **ziyaret**: konum doğrulanınca mühür altın olur →
+**Kayıp Vakfiye** pasaportu (10 eser = 10 yapboz parçası).
 
-### Kurulum (gizli anahtar veya canlı veritabanı gerekmez)
+- Her tarihî bilgi **onaylı bir kayıttan** gelir ve kaynağı (kitap + sayfa) gösterilir; kesin olmayan bilgi öyle etiketlenir.
+  Rehberin her cümlesi bir kayda bağlıdır; bağlanamayan cümle gösterilmez.
+- **Yönetim paneli** (`/yonetim`): kitap PDF'inden aday kayıt çıkarma (alıntısı kitapta doğrulanır), elle ekleme ve
+  düzenleme, kaynak sayfayla yan yana onay, kitaptan görsel, İngilizce çeviri onayı, anonim istatistik.
+- **Türkçe ve İngilizce:** arayüz, içerik (kitabın İngilizce bölümünden, onaylı) ve anlatım. Tarihî içerikte makine
+  çevirisi yoktur.
+- Erişilebilirlik: altyazı ve tam metin, klavye, ekran okuyucu, büyük altyazı, hareket azaltma (axe taraması temiz).
+
+## Hızlı başlangıç (geliştirme)
 
 ```bash
 git clone git@github.com:senaOnenn/VAKIFNAME.git && cd VAKIFNAME
-git switch develop            # oyun ekibi: git switch feat/game
+git switch feat/game                       # ana dal (main geride kaldı)
 
-# Backend (Python 3.10+; 3.12 ile test edildi)
+# Backend (Python 3.10+)
 cd backend
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env && set -a && . ./.env && set +a     # sahte/varsayılan değerler
-uvicorn app.main:app --reload --port 8000
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+cp .env.example .env                      # seçenekler dosyada açıklamalı; gerçek anahtar yazılmaz
+set -a && . ./.env && set +a && .venv/bin/uvicorn app.main:app --port 8000
 
 # Frontend (ayrı terminal; Node 20.19+ veya 22.12+)
 cd frontend
-cp .env.example .env          # VITE_API_BASE_URL=http://127.0.0.1:8000
-npm ci
-npm run dev                   # http://localhost:5173  ·  demo oyun: http://localhost:5173/?mod=demo
+cp .env.example .env                      # VITE_API_BASE_URL=http://localhost:8000
+npm ci && npm run dev                     # http://localhost:5173
 ```
 
-### Ortam değişkenleri
+> Arayüz API'ye **`localhost`** ile gitmeli: `127.0.0.1` tarayıcı için farklı sitedir ve oturum çerezi gönderilmez.
 
-Tam liste ve açıklamalar: `backend/.env.example` ve `frontend/.env.example`. Oyun geliştirmesi için yeterli olanlar:
-
-| Değişken | Değer | Ne işe yarar |
-|---|---|---|
-| `VAKIFNAME_DEMO_API` | `on` | Kurgusal demo mekânları, demo check-in ve pasaport uçları (`/places`, `/quests/...`) |
-| `VAKIFNAME_PUBLIC_CATALOG_FILE` | `tests/ask_eval/catalog_snapshot.json` | Örnek gerçek katalog (10 eser, 76 onaylı olgu) |
-| `VAKIFNAME_GUIDE_MODE` | `off` | Yapay zekâ rehberi kapalı; anahtar gerekmez |
-| `VITE_API_BASE_URL` | `http://127.0.0.1:8000` | Frontend'in bağlandığı backend |
-
-Anahtarlar (OpenRouter/NVIDIA, dahili erişim anahtarı) depoda **yoktur**; yalnızca yetkili sunucuda korumalı dosyalarda
-tutulur. `.env` dosyaları Git'e girmez.
-
-### Örnek veriyle geliştirme
-
-- **Demo oyun:** `data/places.json` kurgusal mekânlardır; `VAKIFNAME_DEMO_API=on` ile `/places` ve demo görevler çalışır.
-- **Gerçek katalog:** `backend/tests/ask_eval/catalog_snapshot.json` onaylı olguların test anlık görüntüsüdür. Fotoğraf
-  dosyaları depoda olmadığı için galeride görseller yüklenmez (kayıtlar ve kaynak bilgileri görünür).
-- **Kurgusal yayın akışı:** `backend/scripts/e2e_fictional_catalog.py <boş-dizin>` BUR-9xxx kurgusal kataloğu üretir.
-- Dahili V20 verisi, inceleme veritabanı, kitap görselleri ve 121 fotoğraflık ZIP arşivinin görselleri depoda yoktur;
-  bunlara bağlı testler kendiliğinden atlanır.
-
-### Klasör yapısı
-
-```text
-frontend/src/
-  app/VakifnameApp.tsx                   Yönlendirme: açılış, giriş, şehir, rota, eserler, eser, rozet, pasaport, hesap, yönetim
-  app/screens/, app/components/          Ekranlar ve bileşenler (palet: design/tokens.css)
-  app/api.ts, app/session.ts             Oyun/rota API'si ve sunucu oturumu
-  catalog/catalogClient.ts, guideClient.ts   Onaylı katalog ve rehber istemcisi
-  internal/                              Dahili envanter (yalnızca geliştirme sunucusu, ?mod=envanter)
-backend/app/
-  public_catalog.py, monument_routes.py  Onaylı katalog uçları
-  route_engine.py, game.py, progress.py  Rota, oyun kademeleri, mühürler
-  accounts.py, auth_routes.py            Hesaplar (e-posta+parola, Google)
-  guide/                                 Rehber (sağlayıcı seçimi: VAKIFNAME_GUIDE_PROVIDER)
-  stats.py, admin.py                     Anonim istatistik ve yönetici panosu
-```
-
-### Test komutları
-
-```bash
-cd backend && python -m pytest -q     # özel veri yoksa ilgili testler atlanır (skipped)
-cd frontend && npm test               # vitest
-cd frontend && npx tsc -b             # TypeScript denetimi
-cd frontend && npm run build          # derleme + genel paket denetimi (scripts/check-public-build.mjs)
-```
-
-### Önerilen Git iş akışı (oyun ekibi)
-
-1. `git switch feat/game && git pull` — güncel oyun dalı.
-2. Küçük işler için kısa dallar: `git switch -c feat/game-<konu>`; commit'ler küçük ve açıklayıcı olsun.
-3. `develop`'taki yenilikleri almak için `git fetch origin && git merge origin/develop` (paylaşılan dalda rebase ve
-   `--force` kullanılmaz).
-4. İş bitince `feat/game-<konu>` → `feat/game` PR'ı; oyun özelliği tamamlanınca `feat/game` → `develop` PR'ı.
-5. Commit öncesi backend/frontend testleri ve `npx tsc -b`. `.env`, anahtar, veritabanı, görsel ve PDF eklenmez.
-
-## Backend'i çalıştırma
-
-Gereksinim: Python 3.10+
-
-### Linux / macOS
-
-```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-
-### Windows (PowerShell)
-
-```powershell
-cd backend
-py -m venv .venv
-.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-
-Uygulama `http://127.0.0.1:8000` adresinde açılır, API dokümantasyonu `http://127.0.0.1:8000/docs` adresindedir.
-
-Testler (`backend` klasöründe, sanal ortam aktifken): `python -m pytest`
-
-### Endpoint'ler
-
-| Metot | Yol | Açıklama |
-|---|---|---|
-| GET | `/` | Sağlık kontrolü |
-| GET | `/places` | Eser listesi |
-| GET | `/places/{place_id}` | Eser detayı (bulunamazsa 404) |
-| POST | `/quests/{place_id}/check-in` | `{"user_id", "latitude", "longitude"}` ile konum check-in'i |
-| GET | `/users/{user_id}/passport` | Kullanıcının mühürleri |
-
-### Hesap sistemi
-
-E-posta+parola ve Google ile giriş (`app/accounts.py`, `app/auth_routes.py`, `app/google_auth.py`). Oturum `vk_session`
-çereziyle taşınır (HttpOnly, SameSite=Lax, 30 gün); arayüz `fetch` çağrılarında `credentials: 'include'` kullanır.
-
-| Metot | Yol | Açıklama |
-|---|---|---|
-| POST | `/auth/register` | `{"email", "password", "display_name"?, "visitor_id"?}` → 201 + çerez; e-posta kayıtlıysa 409 |
-| POST | `/auth/login` | `{"email", "password", "visitor_id"?}` → 200 + çerez; hatalı bilgide tek tip 401 |
-| POST | `/auth/google` | `{"id_token", "visitor_id"?}` → belirteç sunucuda doğrulanır; yapılandırılmamışsa 503 |
-| POST | `/auth/logout` | Oturumu sunucuda siler, çerezi temizler (204) |
-| GET | `/auth/me` | Oturumdaki kullanıcı `{"user_id", "email", "display_name", "provider"}`; yoksa 401 |
-| DELETE | `/auth/me` | Hesabı, oturumlarını ve ilerlemesini siler (KVKK silme hakkı, 204) |
-
-- Parola yalnızca scrypt özeti, oturum belirteci yalnızca SHA-256 özeti olarak saklanır. Girişte e-postanın kayıtlı
-  olup olmadığı sızdırılmaz. `/auth/*` POST istekleri istemci başına sınırlıdır (varsayılan 10/dk, 60/saat → 429).
-- `visitor_id` (`ziyaretci-<uuid>`) verilirse bu cihazda misafirken kazanılan ilerleme hesaba taşınır; aynı kayıt
-  hesapta varsa hesabınki kalır.
-- Hesap kimliğiyle (`u-<uuid>`) tutulan ilerleme (`/users/{user_id}/seals`, `/monument-passport`, soru cevaplama,
-  check-in) yalnızca aynı hesabın oturumuyla okunur/yazılır (oturum yoksa 401, başka hesapsa 403). Misafir kimlikleri
-  eskisi gibi çalışır.
-- Ortam değişkenleri (`VAKIFNAME_ACCOUNTS_DB`, `VAKIFNAME_COOKIE_SECURE`, `VAKIFNAME_GOOGLE_CLIENT_ID`,
-  `VAKIFNAME_AUTH_RATE`) seçenekleriyle `backend/.env.example` içindedir.
-
-### Eser verisi
-
-Eserler `data/places.json` dosyasından okunur. Farklı bir dosya kullanmak için `VAKIFNAME_PLACES_FILE` ortam değişkenini ayarlayın.
-
-Genel API (`/places`, check-in, pasaport) yalnızca **Demo Keşif Oyunu**'nun kurgusal mekânlarını (`DemoPlace`) sunar. Koordinatları okyanus üzerindedir ve gerçek bir eseri temsil etmez. Bu dosyadaki her kayıt `is_demo: true` olmalıdır ve kimliği `BUR-` ile başlayamaz; aksi halde uygulama açılmaz. Gerçek Bursa eserleri (`RealMonument`, `BUR-xxxx`) bu dosyaya eklenmez; yalnızca dahili katalogda tutulur (bkz. "Dahili V20 veri katmanı"). Onaylı gerçek eserler ayrı `/monuments` API'siyle sunulur (bkz. "Gerçek eser kataloğu ve editör onayı").
-
-### CORS (tarayıcıdan erişim)
-
-Tarayıcıda çalışan bir frontend'in API'yi çağırabilmesi için origin'i izin listesinde olmalıdır. `VAKIFNAME_CORS_ORIGINS` tanımlı değilse yalnızca yerel geliştirme origin'lerine izin verilir:
-
-`http://localhost:3000`, `http://localhost:5173`, `http://127.0.0.1:3000`, `http://127.0.0.1:5173`
-
-Farklı origin'ler için virgülle ayrılmış **tam** adresler verin (şema, alan adı ve port birebir eşleşmelidir). Bu değişken tanımlandığında varsayılan liste kullanılmaz. `*` kabul edilmez.
-
-```bash
-# Linux / macOS
-export VAKIFNAME_CORS_ORIGINS="https://vakifname.example,http://localhost:5173"
-```
-
-```powershell
-# Windows (PowerShell)
-$env:VAKIFNAME_CORS_ORIGINS = "https://vakifname.example,http://localhost:5173"
-```
-
-CORS yalnızca tarayıcıların hangi sitelerden istek atabileceğini belirler. Bir kimlik doğrulama veya erişim kontrolü mekanizması **değildir**: `curl` gibi tarayıcı dışı istemciler origin listesinden bağımsız olarak API'ye erişebilir.
-
-### Bilinen sınırlamalar (MVP)
-
-- **İlerleme bellekte tutulur:** Sunucu yeniden başlatıldığında tüm mühürler silinir. Birden fazla worker ile çalıştırıldığında her worker'ın kendi verisi olur.
-- **Konum doğrulanmaz:** Check-in, istemcinin bildirdiği koordinatlara güvenir. Bu bir simülasyondur; GPS sahteciliğini engellemez ve kullanıcının eseri gerçekten ziyaret ettiğini kanıtlamaz.
-- **Demo uçlarında kimlik doğrulama yoktur:** demo pasaportunda `user_id` serbest metindir. Gerçek eser ilerlemesinde
-  hesap kimlikleri (`u-…`) oturumla korunur (bkz. "Hesap sistemi"); misafir kimlikleri tarayıcıda üretilen takma adlardır.
-
-## Dahili V20 veri katmanı
-
-> **Yalnızca yetkili dahili geliştirme içindir.** Tarihsel editör onayı ve kaynak/görsel lisans incelemesi tamamlanmadı. Bir kayıt ancak inceleme veritabanında ilgili onay kararları kayıtlıysa ve dışa aktarıldıysa genel katalogda görünür; şu anda hiçbir kayıt bu durumda değildir.
-
-V20 bilgi tabanı (10 `BUR-xxxx` eseri, 80 olgu, karantinadaki 57 aday kayıt), orijinal PDF'ler, dahili RAG paketi ve görseller repository **dışında**, yalnızca sunucu kullanıcısının okuyabildiği bir dizinde tutulur (varsayılan `/var/lib/vakifname-internal`, `VAKIFNAME_INTERNAL_DATA_DIR` ile değiştirilebilir, izinler `0700`/`0600`):
-
-```
-v20/            V20 bilgi tabanı, freeze manifesti, editoryal raporlar
-sources/        Orijinal PDF'ler
-rag/runtime/    Dahili RAG teslim paketi (V3 çekirdek, FAISS indeksi)
-rag/venv/       RAG bağımlılıkları için ayrı sanal ortam
-images/monuments/BUR-xxxx/*.jpeg
-manifests/      source_registry.json, source_page_audit.json, image_manifest.json
-models/         Yerel embedding modeli (sabit revizyon)
-```
-
-- Kod: `backend/app/internal/`. Genel uygulama (`app.main`) bu paketi içe aktarmaz; `/places`, check-in ve pasaport sözleşmeleri değişmedi.
-- Kaynak sayfaları **fiziksel PDF sayfasıdır** (1 tabanlı). V20 basılı sayfa numarası içermez; türetilmez.
-- V20'de koordinatlar boştur ve `null` olarak tutulur. Doğrulanmış konumu olmayan eser check-in'e çevrilemez (`to_checkin_place`).
-- Görselin bir esere klasörle bağlanması yayın izni değildir; görseller hiçbir API'den sunulmaz.
-
-### Manifestleri üretme
-
-```bash
-cd backend
-/var/lib/vakifname-internal/rag/venv/bin/pip install -r requirements-internal.txt
-/var/lib/vakifname-internal/rag/venv/bin/python -I scripts/build_internal_manifests.py
-```
-
-### Dahili API (yalnızca loopback)
-
-```bash
-cd backend
-# Anahtar bir kez, yalnızca root'un okuyabildiği dosyaya üretilir; süreç ortamına konmaz.
-sudo install -d -m 700 /var/lib/vakifname-internal/secrets
-sudo bash -c 'umask 077; python3 -c "import secrets; print(secrets.token_urlsafe(48))" > /var/lib/vakifname-internal/secrets/internal_token'
-export VAKIFNAME_INTERNAL_TOKEN_FILE=/var/lib/vakifname-internal/secrets/internal_token
-export VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR=/var/lib/vakifname-internal/models/multilingual-e5-small-614241f
-HF_HUB_OFFLINE=1 /var/lib/vakifname-internal/rag/venv/bin/python -m app.internal.server --port 8765
-```
-
-Anahtar rotasyonu (yetkili yönetici onayıyla; anahtar yazdırılmaz, inceleme veritabanı önce yedeklenir, hata olursa geri
-alınır): `sudo python3 -I scripts/rotate_internal_token.py` (ön denetim) ve ardından `--yes`.
-
-Yalnızca `127.0.0.1` / `::1` üzerinde dinler, loopback dışındaki istemcileri 403 ile reddeder ve her istekte yetki ister (401). CORS ve OpenAPI sayfaları kapalıdır; yanıtlar `Cache-Control: no-store` taşır. Anahtar frontend koduna veya `VITE_*` değişkenlerine konmaz. İki yetki yolu vardır:
-
-- **Komut satırı / betik:** `X-Internal-Token` başlığı.
-- **Tarayıcıdaki envanter ekranı:** anahtar formdan bir kez `POST /internal/session` ile gönderilir. Sunucu 2 saatlik, `HttpOnly`, `SameSite=Strict`, `Path=/internal` bir oturum çerezi verir (anahtarın kendisi değil). Çerezli istekler `X-Vakifname-Review: 1` başlığı da taşımalıdır (CSRF koruması). Dakikada 5 hatalı denemeden sonra giriş 429 ile geçici olarak kapanır. Oturumlar bellekte tutulur; sunucu yeniden başlatılınca düşer.
-
-| Metot | Yol | Açıklama |
-|---|---|---|
-| POST / GET / DELETE | `/internal/session` | İnceleme oturumu aç / denetle / kapat |
-| GET | `/internal/status` | Kayıt sayıları, konum durumları ve erişim politikası |
-| GET | `/internal/catalog/monuments[/{id}]` | Eserler; konum kaydı (`location`), inceleme durumu ve yayın engelleri (`review`); ayrıntıda olgular, fiziksel sayfa referansları ve sayfa denetimi, açık sorunlar |
-| GET | `/internal/catalog/facts/{fact_id}` | Tek olgu ve kaynak referansı |
-| GET | `/internal/catalog/issues` | Açık editoryal sorunlar |
-| GET | `/internal/catalog/drafts` | Karantinadaki aday kayıtlar (yalnızca editoryal inceleme) |
-| GET | `/internal/catalog/images` | Görsel envanteri (yalnızca meta veri) |
-| POST | `/internal/rag/ask` | `{"question": "..."}` — kaynak kontrollü, LLM'siz cevap |
-
-RAG embedding modeli (`intfloat/multilingual-e5-small`) çalışma sırasında ağdan **indirilmez**. `VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR` yerel bir model klasörünü göstermiyorsa anlamsal arama gerektiren sorular kaynak göstermeden `retrieval_unavailable` döner; kural tabanlı cevaplar (tarih çelişkisi, kubbe sayısı, güncel bilgi reddi) çalışmaya devam eder.
-
-### Veri modelleri
-
-| Model | Nerede | Kural |
-|---|---|---|
-| `DemoPlace` | `app/models.py` | Genel API'nin tek mekân tipi. `is_demo: true` zorunlu, `BUR-` kimliği yasak. |
-| `RealMonument` | `app/internal/catalog.py` | `BUR-xxxx` kimlikli gerçek eser. Genel API'de, haritada, check-in'de yok. |
-| `LocationRecord` | `app/internal/catalog.py` | `missing` / `unverified` / `verified`. `verified` için koordinat kaynağı (`field_survey_gnss`, `official_registry`, `cadastral_parcel`, `editor_map_review`), kaynak belgesi, doğruluk (m), doğrulayan ve tarih zorunlu. Koordinat tahmin edilmez; V20'deki tüm eserler `missing`. |
-| `HistoricalFact` + `SourceReference` | `app/internal/catalog.py` | Kaynak PDF ve fiziksel sayfa; `source_page_audit.json` ile alıntının o sayfada bulunup bulunmadığı. |
-| `ReviewStatus` | `app/internal/review.py` | Eser başına editör, lisans, kaynak denetimi, görsel ve konum durumu; `public_release_blockers` boş olmadan eser yayına alınamaz. |
-
-Doğrulanmış konum tek başına check-in açmaz: harita gösterimi (`location_map_display`) ve GPS check-in (`gps_checkin`) ayrı kararlardır.
-
-## Gerçek eser kataloğu ve editör onayı
-
-Akış: **araştırma → kişisel incelemeci kararları → dışa aktarma → genel API**. Genel uygulama V20'yi veya inceleme veritabanını okumaz.
-
-1. **Araştırma** (`data/real_catalog/monument_research.json`, `app/internal/research.py`): 10 eserin kaynakları (Kültür Portalı, Bursa Alan Başkanlığı, V20 PDF fiziksel sayfası), adres iddiaları, kaynaklar arası tutarsızlıklar ve WGS84 koordinat adayları. Dosyadaki her aday `unverified`'dir; dosya `verified` veya incelemeci adı içeremez.
-2. **İnceleme** (`app/internal/review_store.py`, `decisions.py`): `<veri dizini>/review/review.sqlite3`. Kararlar yalnızca eklenir (tetikleyiciler UPDATE/DELETE'i reddeder), denetim günlüğü hash zinciridir. Kayıtlı karar yoksa durum `pending`'dir; kaynak sayfa denetimi onay yerine geçmez.
-   - Paylaşılan `VAKIFNAME_INTERNAL_TOKEN` **bir kişinin kimliğini kanıtlamaz**; yalnızca okuma sağlar. Karar için kişisel hesap gerekir:
-     ```bash
-     cd backend
-     /var/lib/vakifname-internal/rag/venv/bin/python -m app.internal.reviewers add --id ayse.editor --name "Ayşe Yılmaz" --role editor
-     # roller: editor (olgu/kimlik/sorun), rights (kaynak ve görsel hakları), location (konum, harita, check-in)
-     ```
-   - Her karar tek kayıt içindir: önce `POST /internal/review/tickets`, en az 5 sn sonra `POST /internal/review/decisions` (gerekçe ≥15 karakter, onayda kaynak kontrolü). İncelemeci başına 10 dakikada en çok 20 karar. Kayıt veya veri sürümü değişirse karar `stale` olur.
-   - Karar türleri: `catalog_identity`, `fact_editorial`, `fact_publication`, `fact_game_use`, `source_usage_rights`, `image_rights`, `image_publication`, `image_game_use`, `location_verification`, `location_map_display`, `gps_checkin`, `issue_resolution`, `draft_triage` (yayına etkisi yok).
-3. **Dışa aktarma** (yalnızca tüm zinciri geçerli kayıtlar):
-   ```bash
-   cd backend
-   /var/lib/vakifname-internal/rag/venv/bin/python -m app.internal.publish --out ../data/public_catalog/catalog.json
-   ```
-4. **Genel API** (`app/public_catalog.py`, `app/monument_routes.py`; dosya `VAKIFNAME_PUBLIC_CATALOG_FILE`, yoksa katalog boştur):
-
-| Metot | Yol | Açıklama |
-|---|---|---|
-| GET | `/monuments` | Yayımlanmış eserler; `location` doğrulanmış ve haritası onaylı değilse `null` |
-| GET | `/monuments/{monument_id}` | Onaylı olgular (kaynak + fiziksel sayfa), onaylı görseller; yayımlanmamış eser 404 |
-| GET | `/monuments/media/{sha256}.jpeg` | Yalnızca yayın onaylı görsel |
-| POST | `/monuments/{monument_id}/check-in` | Yalnızca `gps_checkin` onaylıysa; aksi halde 409 |
-| GET | `/users/{user_id}/monument-passport` | Gerçek eser mühürleri (demo pasaportundan ayrı) |
-
-Ek dahili uçlar: `POST/DELETE /internal/session/reviewer`, `GET /internal/review/overview`, `GET /internal/review/subjects/{tür}/{kimlik}`, `GET /internal/review/audit`, `GET /internal/review/publication-preview`, `GET /internal/catalog/research/{id}`.
-
-Frontend: varsayılan sayfa **Gerçek Bursa Eserleri** (`/monuments`); **Demo Keşif Oyunu** `?mod=demo` (üretimde `VITE_DEMO_GAME=off` ile kapatılabilir); envanter yalnızca geliştirme sunucusunda `?mod=envanter`. `npm run build` sonunda `scripts/check-public-build.mjs` paketin dahili envanter içermediğini denetler.
-
-RAG genel yayını kapalıdır (FAISS indeks uyumsuzluğu, kanıtsız soruda ilgisiz sonuç); ayrı kalite ve onay aşaması gerekir.
-
-### Embedding modeli
-
-Model bir kez, sabit bir revizyonla ve yalnızca gerekli dosyalarla korumalı dizine indirilir (`trust_remote_code` kullanılmaz; depoda Python kodu yoktur):
-
-```bash
-umask 077
-/var/lib/vakifname-internal/rag/venv/bin/python -I -c "
-from huggingface_hub import snapshot_download
-snapshot_download('intfloat/multilingual-e5-small',
-    revision='614241f622f53c4eeff9890bdc4f31cfecc418b3',
-    local_dir='/var/lib/vakifname-internal/models/multilingual-e5-small-614241f',
-    allow_patterns=['config.json', 'model.safetensors', 'modules.json', '1_Pooling/config.json',
-                    'sentence_bert_config.json', 'sentencepiece.bpe.model', 'special_tokens_map.json',
-                    'tokenizer.json', 'tokenizer_config.json'])"
-export VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR=/var/lib/vakifname-internal/models/multilingual-e5-small-614241f
-```
-
-Anlamsal arama ilk kullanıldığında indeksteki 80 belge vektörü yerel modelle yeniden kodlanıp karşılaştırılır (indeks değiştirilmez). En düşük kosinüs benzerliği `0.999`'un altındaysa cevaplar `retrieval_reliable: false` ve `embedding_index_mismatch` uyarısı taşır; ölçümler `/internal/status` içinde `rag_index_compatibility` alanında görünür. Mevcut teslim indeksi bu revizyonla birebir üretilmemiştir (en düşük kosinüs ≈0.97); bu nedenle anlamsal arama sonuçları şimdilik güvenilir sayılmaz.
+Örnek veri: `backend/tests/ask_eval/catalog_snapshot.json` (10 eser, onaylı kayıtlar). Fotoğraflar depoda yoktur
+(`backend/tests/ask_eval/media/`); yoksa sayfalar görselsiz açılır.
 
 ### Testler
 
-Kurgusal veriyle çalışan testler her ortamda çalışır. Gerçek veri ve RAG testleri, korumalı dizin ve `requirements-internal.txt` bağımlılıkları yoksa; gerçek model testleri `VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR` tanımlı değilse atlanır:
-
 ```bash
-cd backend
-HF_HUB_OFFLINE=1 VAKIFNAME_INTERNAL_EMBEDDING_MODEL_DIR=/var/lib/vakifname-internal/models/multilingual-e5-small-614241f \
-  /var/lib/vakifname-internal/rag/venv/bin/python -m pytest
+cd backend && .venv/bin/python -m pytest -q     # özel veri yoksa ilgili testler atlanır
+cd frontend && npm test && npx tsc -b && npm run build   # build sonunda genel paket denetimi
 ```
 
-## Frontend'i çalıştırma
+Commit öncesi hepsi geçer. Commit mesajları İngilizce; `.env`, anahtar, veritabanı, PDF ve görsel eklenmez.
 
-React + TypeScript + Vite ile yazılmış web arayüzü `frontend/` klasöründedir. Eser, görev ve pasaport verilerini doğrudan backend'den alır; frontend içinde sabit eser listesi yoktur.
+## Demo yedeği (finalde internet ya da sunucu giderse)
 
-Gereksinim: Node.js `20.19+` veya `22.12+`. Önce backend'i yukarıdaki gibi `http://127.0.0.1:8000` adresinde başlatın.
+Dizüstünde canlıyla **aynı sürüm ve aynı içerik**, internetsiz açılır (karar 29 Ekim, A).
 
-### Linux / macOS
+1. **İçeriği eşitle** (finalden önce ve içerik her değiştiğinde): `deploy/yedek/esitle.sh`
+   Canlıdan temel katalog + görseller, içerik deposu (onaylı kayıtlar, kitaplar, kitap görselleri) ve anlatım sesleri
+   `~/vakifname-yedek/` altına gelir. Kişisel veri (hesap, ilerleme, istatistik) gelmez. Çalışan servis durmaz.
+2. **Hazır hesap** (Google girişi internetsiz çalışmaz):
+   ```bash
+   cd backend && set -a && . ~/vakifname-yedek/yedek.env && set +a
+   .venv/bin/python -m app.account_cli --email <eposta> --name "Jüri"   # parola gizli sorulur; --reset ile yenilenir
+   ```
+3. **Aç:** `deploy/yedek/calistir.sh` → http://localhost:5173 (internet yokken `--hizli`: son derlemeyi kullanır).
+4. **İnternetsiz ne olur:** eserler, görseller, anlatım (önceden üretilmiş sesler; yoksa tarayıcı sesi), sorular,
+   ziyaret (sunum modu, ekranda "simülasyon" yazar) ve pasaport çalışır. Rota haritası karolar gelmezse önceden
+   hazırlanmış ana yolları çizer. Rehber sohbeti kaynaklı aramaya düşer. Google girişi yerine hazır hesap kullanılır.
+5. **Prova:** Wi-Fi kapalıyken uçtan uca bir tur (giriş → rota → eser → dinle → soru → Rozeti Al → ziyaret → pasaport).
 
-```bash
-cd frontend
-cp .env.example .env
-npm install
-npm run dev
-```
+## Canlı yayın
 
-### Windows (PowerShell)
+Sunucu, ters vekil ve güncelleme komutları: [`docs/CANLI_YAYIN.md`](docs/CANLI_YAYIN.md). Arayüz Mac'te derlenir ve
+kopyalanır; sunucuda derleme yapılmaz. Çalışan diğer servislere dokunulmaz.
 
-```powershell
-cd frontend
-Copy-Item .env.example .env
-npm install
-npm run dev
-```
+## Belgeler
 
-Arayüz `http://localhost:5173` adresinde açılır.
-
-| Komut | Açıklama |
+| Belge | Konu |
 |---|---|
-| `npm run dev` | Geliştirme sunucusu (`http://localhost:5173`) |
-| `npm test` | Vitest + React Testing Library testleri (ağ erişimi gerekmez) |
-| `npm run build` | Tür denetimi ve üretim derlemesi (`frontend/dist`) |
-| `npm run preview` | Üretim derlemesini `http://localhost:5173` adresinde sunar |
+| [`docs/ICERIK_YONETIMI.md`](docs/ICERIK_YONETIMI.md) | İçerik yönetimi API'si: kitap → aday → onay; elle ekleme; görseller; İngilizce |
+| [`docs/SES_KAYDI.md`](docs/SES_KAYDI.md) | Rehber sesi: kayıt rehberi ve ses klonuyla üretim |
+| [`docs/CANLI_YAYIN.md`](docs/CANLI_YAYIN.md) | Canlı ortam ve güncelleme |
+| [`docs/DAHILI_VERI.md`](docs/DAHILI_VERI.md) | Ekibin dahili V20 veri katmanı ve editör onayı notları |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/NEMOTRON_REHBER.md`](docs/NEMOTRON_REHBER.md) | Ekibin mimari ve rehber notları |
 
-### Yapılandırma
+## Rehber sesi
 
-| Değişken | Varsayılan | Açıklama |
-|---|---|---|
-| `VITE_API_BASE_URL` | `http://127.0.0.1:8000` | Backend adresi. Derleme sırasında koda gömülür; gizli bilgi koymayın. |
+Anlatım, ekipten bir insan sesinin klonuyla **önceden üretilir** ve sunucuda yalnızca çalınır (ücretsiz; Chatterbox
+Multilingual, MIT). Sesi kullanılan kişinin açık izni şarttır. Kayıt ve üretim adımları `docs/SES_KAYDI.md`;
+sunucu ayarı `VAKIFNAME_TTS_PROVIDER=files` (`backend/.env.example`). Sesi olmayan cümlede tarayıcı sesi + altyazı.
 
-Frontend 5173 portunda çalışır çünkü bu port backend'in varsayılan CORS listesinde bulunur. Frontend'i başka bir adreste yayınlarsanız o adresi backend'de `VAKIFNAME_CORS_ORIGINS` ile tanımlayın.
+## Klasör yapısı
 
-### Geliştirme modları
-
-`npm run dev` ile açılan sayfanın üstündeki "Geliştirme ortamı" çubuğu iki ayrı deneyim sunar:
-
-1. **Demo Keşif Oyunu** (varsayılan): kurgusal demo mekânları; harita, check-in, görevler, mühür ve pasaport.
-2. **Gerçek Bursa Envanteri** (`?mod=envanter`): 10 gerçek eserin dahili, erişim kontrollü önizlemesi. Kimlik, kayıt durumu, koordinat doğrulaması, kaynak sayfa denetimi, görsel lisans durumu ve yayın engelleri gösterilir; eser seçilince olgular, fiziksel PDF sayfa referansları, alıntılar ve karantinadaki adaylar incelenebilir. Harita, görev veya check-in içermez; görseller gösterilmez.
-
-Envanter için dahili sunucuyu yukarıdaki gibi `127.0.0.1:8765` üzerinde başlatın. Vite geliştirme sunucusu `/internal` isteklerini yalnızca bu makineden gelen tarayıcılar için oraya iletir (`vite.config.ts`). Envanter kodu yalnızca `import.meta.env.DEV` altında yüklenir; `npm run build` çıktısında ve `npm run preview`'da envanter ekranı ve `/internal` proxy'si yoktur.
-
-### Harita
-
-Harita, OpenStreetMap karolarını internet üzerinden yükler. Bağlantı yoksa harita altlığı görünmez ama eser listesi ve ayrıntılar çalışmaya devam eder. Mevcut kayıtlar kurgusal olduğu için harita üzerinde "Kurgusal demo konumları" uyarısı gösterilir.
-
-OpenStreetMap'in genel karo sunucusu geliştirme ve demo içindir. Yüksek trafikli yayında [kullanım politikasına](https://operations.osmfoundation.org/policies/tiles/) uygun bir karo sağlayıcı kullanılmalıdır.
-
-### Görevler ve dijital pasaport
-
-Her eser için bir keşif görevi vardır. "Demo konumuyla görevi dene" butonu, eserin backend kaydındaki koordinatlarla `POST /quests/{place_id}/check-in` isteği gönderir; tarayıcı konumu (GPS) istenmez ve kullanılmaz. Demo check-in gerçek bir ziyaretin kanıtı değildir.
-
-Pasaport (`GET /users/{user_id}/passport`) ve görev durumları yalnızca backend verisinden gösterilir; mühürler tarayıcıda saklanmaz. Backend ilerlemeyi bellekte tuttuğu için sunucu yeniden başlatılınca mühürler silinir ve arayüz de bunu boş pasaport olarak gösterir.
-
-`user_id`, her tarayıcı sekmesi oturumu için üretilen rastgele bir demo kimliğidir (`sessionStorage`). Kullanıcı hesabı veya kimlik doğrulama **değildir**; kişisel bilgi istenmez.
-
-### Tasarım
-
-Arayüz "Bursa'nın Kayıp Vakfiyesi" kültür atlası tasarımını izler: parşömen zemin, koyu zümrüt yeşili, bakır vurgu ve lacivert/altın pasaport kapağı. Eser kartlarındaki çizgisel mimari çizimler temsilidir; belirli bir eserin rölövesi veya fotoğrafı değildir ve ekranda böyle etiketlenir. Fotoğraflar, lisans ve eser eşleştirmesi onaylanmadan kullanılmaz.
-
-Başlık yazı tipi Cormorant Garamond'dur (SIL Open Font License 1.1). Yalnızca Latin ve Türkçe karakterleri içeren bir WOFF2 alt kümesi olarak `src/assets/fonts/` altında tutulur; lisans metni `public/fonts/OFL-Cormorant-Garamond.txt` ile derlemeye eklenir.
-
-### Henüz olmayanlar
-
-Gerçek kullanıcı hesapları, gerçek konum doğrulaması, gerçek eserlerin genel kataloğu ve RAG sohbeti bu sürümde yoktur.
-
-## Giriş videosu (ana sayfa)
-
-Video depoda tutulmaz (`.gitignore`: `*.mp4`). Sunucudaki tek dosya `../vakifname-video-assets/hero.mp4`
-(değiştirmek için `VAKIFNAME_HERO_VIDEO=/yol/hero.mp4`). `frontend/heroVideo.ts` eklentisi:
-
-- `npm run dev`: yalnızca `/media/hero.mp4` rotasından, Range destekli sunar.
-- `npm run build`: dosyayı MP4 olarak doğrulayıp değiştirmeden `dist/media/hero.mp4`'e kopyalar; statik sunucu aynı
-  adresten verir. Dosya yoksa derleme uyarır ve sayfa temsilî çizimle açılır.
-- CDN kullanılacaksa `VITE_HERO_VIDEO_URL=https://…/hero.mp4` verilir; dosya derlemeye kopyalanmaz.
-
-Video yapay zekâ ile üretilmiştir (dosyadaki C2PA manifesti); arayüzde temsilî olarak etiketlenir, gerçek bir Bursa
-eserinin kaydı olarak sunulmaz.
-
-## Genel platform ve geliştirme ortamı ayrımı
-
-- **Genel platform (production):** yalnızca yayın onaylı gerçek eserler (`GET /monuments`, `GET /monuments/{id}`),
-  gerçek eser pasaportu ve video giriş. Geliştirme çubuğu, mod seçici, Demo Keşif Oyunu ve dahili envanter üretim
-  derlemesinde yoktur; `?mod=demo` ve `?mod=envanter` yok sayılır (`frontend/scripts/check-public-build.mjs` denetler).
-- **Geliştirme ortamı (`npm run dev`):** `?mod=envanter` (yetkili dahili inceleme) ve `?mod=demo` (kurgusal demo, otomatik
-  testler için). Demo uçları genel API'de varsayılan olarak kapalıdır; geliştirmede `VAKIFNAME_DEMO_API=on` ile açılır.
-- **Yayın:** dışa aktarıcı (`python -m app.internal.publish --out ../data/public_catalog/catalog.json`) dosyayı atomik
-  olarak yazar; genel API dosya değişince kataloğu yeniden başlatma olmadan yeniler. Geçersiz dosya reddedilir, son
-  geçerli katalog sunulmaya devam eder.
-
-### Production çalıştırma
-
-```bash
-# 1) Genel API (demo kapalı; yalnızca yayın anlık görüntüsü)
-cd backend && VAKIFNAME_CORS_ORIGINS=https://vakifname.example \
-  .venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-# 2) Arayüz derlemesi ve sunucusu (Vite dev sunucusu son kullanıcıya sunulmaz)
-cd frontend && VITE_API_BASE_URL=https://api.vakifname.example npm run build
-cd backend && .venv/bin/python -m app.web --dist ../frontend/dist --api-origin https://api.vakifname.example --port 4173
+```text
+frontend/src/app/
+  VakifnameApp.tsx                   Yönlendirme: açılış, tanıtım, giriş, şehir, rota, eserler, eser, rozet, pasaport, hesap, yönetim
+  screens/, components/              Ekranlar ve bileşenler (palet: design/tokens.css)
+  screens/admin/                     Yönetim: içerik, kitaptan aday, çeviri, istatistik
+  i18n.tsx, i18n-en.ts, contentLang.ts   Dil seçimi, İngilizce sözlük, içeriğin dili
+  narration.ts, speech.ts, lipsync.ts    Anlatım metni, ses, ağız senkronu
+backend/app/
+  public_catalog.py, monument_routes.py  Onaylı katalog (+ yöneticinin yayımladığı katman)
+  route_engine.py, game.py, progress.py  Rota, oyun kademeleri, sorular, mühürler
+  accounts.py, auth_routes.py            Hesaplar (e-posta+parola, Google, e-posta doğrulama)
+  content/, content_routes.py            İçerik yönetimi ve kitap hattı
+  guide/                                 Rehber (sağlayıcı: VAKIFNAME_GUIDE_PROVIDER)
+  tts.py, speech_routes.py               Anlatım sesi
+  stats.py, admin.py                     Anonim istatistik
+backend/scripts/voice/                   Ses klonuyla toplu üretim (repo dışı ses ortamında çalışır)
+deploy/                                  Canlı yayın şablonları, demo yedeği betikleri
 ```
 
-`app.web` yalnızca `dist` içeriğini sunar (CSP, `nosniff`, `X-Frame-Options: DENY`, video için Range). TLS ve dış
-erişim bir ters vekil (nginx vb.) üzerinden verilmelidir. Dahili inceleme sunucusu (`app.internal.server`) ayrı kalır ve
-yalnızca `127.0.0.1` üzerinde dinler.
+## Giriş videosu (tanıtım sayfası)
 
-Uçtan uca tarayıcı testleri (yalıtılmış portlar, geçici DB, kurgusal onay akışı dahil): `frontend/e2e/run.sh`.
+Video depoda tutulmaz (`*.mp4`). Varsayılan dosya `../vakifname-video-assets/hero.mp4` (değiştirmek için
+`VAKIFNAME_HERO_VIDEO=/yol/hero.mp4`); `npm run build` dosyayı `dist/media/hero.mp4`'e kopyalar, yoksa sayfa geçişli
+zeminle açılır. CDN için `VITE_HERO_VIDEO_URL`. Mevcut video yapay zekâ ile üretilmiştir (dosyadaki C2PA manifesti);
+gerçek bir eserin kaydı olarak sunulmaz.
 
-## Zülal
+## Ekip notları
+
+### Zülal
 
 Çalışma dalı: `feat/game` — oyun geliştirmeleri.
 

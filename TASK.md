@@ -169,14 +169,14 @@
   - [x] `api.env` (Google, yönetici, içerik dizini, sunum modu açık, güvenli çerez), `claude` (sunucuda zaten açık). [ ] SMTP, Google ses anahtarı (Faz 8), [ ] Google ile girişi canlıda yöneticinin denemesi.
   - [ ] Duman testi; ardından sahada deneme (Bursa: Ulu Cami, Muradiye kümesi, Koza Han; iPhone Safari + Android Chrome; konum, ses, yavaş ağ; yarıçap notları).
 - [x] **Eski arayüz kodu silindi** (29 Ekim, dal `feat/remove-legacy-ui`): eski katalog sayfası, "Esere Sor", kurgusal demo oyunu ve bileşenleri, eski tarayıcı senaryoları (~8000 satır, 147 eski test). Dahili envanter (`?mod=envanter`, yalnızca geliştirme) kaldı. Backend demo uçları (`/places`, eski check-in) karar 17 beklediği için duruyor.
-- [ ] **Demo yedeği (karar A, tam):** salonda internet/sunucu/servis giderse demo sürer.
-  - [ ] Dizüstünde canlıyla aynı sürüm, tek komutla açılır (README).
-  - [ ] Harita: Bursa merkezi için önceden hazırlanmış harita görseli (OSM atfıyla); karo gelmezse o kullanılır.
-  - [ ] Rehber internetsiz: kaynaklı aramaya düşer (var); anlatım sesleri önceden üretilip saklanır (Faz 8); sohbet sesi Mac'in Türkçe sesi.
-  - [ ] Hazır e-posta+parola hesabı (Google girişi internetsiz çalışmaz) ve misafir akışı.
-  - [ ] Finalden önce canlıdaki onaylı içerik (içerik deposu + katman) dizüstüne eşitlenir.
+- [~] **Demo yedeği (karar A, tam):** salonda internet/sunucu/servis giderse demo sürer. (30 Ekim, dal `feat/voice-files`)
+  - [x] Dizüstünde canlıyla aynı sürüm, tek komutla açılır: `deploy/yedek/calistir.sh` (derlenmiş arayüz :5173 + API :8000; `--hizli` internetsiz). README baştan yazıldı (ekibin V20 notları `docs/DAHILI_VERI.md`).
+  - [x] Harita: karolar art arda yüklenemezse OSM verisinden önceden çıkarılmış ana yollar + nehir çizilir (12 KB, yalnızca gerekince iner, ODbL atfı), "Bağlantı yok" notu. Görsel yerine vektör: palete uyar, ölçekte bozulmaz.
+  - [~] Rehber internetsiz: kaynaklı aramaya düşer (var); anlatım sesleri ses klonuyla önceden üretilir (`files` sağlayıcısı, eşitlemeyle dizüstüne gelir) — kayıtlar bekleniyor. Sohbet sesi yok (metin).
+  - [x] Hazır e-posta+parola hesabı: `python -m app.account_cli` (doğrulanmış; parola gizli sorulur; `--reset`). [ ] Jüri hesabının e-postası/parolası ekipçe belirlenip hem canlıda hem dizüstünde açılacak.
+  - [x] Eşitleme: `deploy/yedek/esitle.sh` canlıdan katalog + görseller, içerik deposu (çevrim içi SQLite yedeği, servis durmaz), sesler; kişisel veri gelmez. Denendi: internet kesik tarayıcıda giriş → rota (çevrimdışı harita) → eser → rehber çalıştı.
   - [ ] Telefon paylaşımı (hotspot) ilk yedek; akışın ekran kaydı yalnızca son çare (şartname: kayıt demo yerine geçmez).
-  - [ ] Prova: internet kesilerek uçtan uca deneme.
+  - [ ] Prova: Wi-Fi kapalı, uçtan uca (ekip ile).
 - [ ] **Tanıtım videosu** (ürünün çalışma mantığı). Not: **HyperFrames** aracı videoyu kodla üretmek için araştırılabilir (şimdilik yalnızca not, araştırılmadı).
 - [ ] Sunum: problem, hedef kullanıcı, mimari ve veri modeli, veri kullanımı, yenilik, ölçeklenebilirlik. Jüri soruları: veri doğruluğu, telif, kişisel veri.
 - [ ] Özellik dondurma sonrası yalnızca hata düzeltme.
