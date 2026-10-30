@@ -24,6 +24,7 @@ import { trackPage } from './stats'
 const ContentHome = lazy(() => import('./screens/admin/ContentHome'))
 const ContentMonument = lazy(() => import('./screens/admin/ContentMonument'))
 const FactEditor = lazy(() => import('./screens/admin/FactEditor'))
+const TranslationEditor = lazy(() => import('./screens/admin/TranslationEditor'))
 const later = (el: ReactNode) => <Suspense fallback={<p className="vk-page__state" role="status">Yükleniyor…</p>}>{el}</Suspense>
 
 function introSeen(): boolean {
@@ -84,6 +85,7 @@ export default function VakifnameApp() {
             <Route path="/yonetim/icerik/eser/:id" element={later(<ContentMonument />)} />
             <Route path="/yonetim/icerik/eser/:id/yeni-kayit" element={later(<FactEditor />)} />
             <Route path="/yonetim/icerik/kayit/:factId" element={later(<FactEditor />)} />
+            <Route path="/yonetim/icerik/ceviri/:factId" element={later(<TranslationEditor />)} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

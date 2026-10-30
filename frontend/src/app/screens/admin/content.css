@@ -105,6 +105,10 @@
 .vk-ctag--content {
   color: var(--vk-gold);
 }
+.vk-ctag--none {
+  color: var(--vk-ivory-dim);
+  border-style: dashed;
+}
 
 /* Formlar */
 .vk-cform {
@@ -377,4 +381,25 @@
 .vk-bookimg__add {
   display: grid;
   gap: var(--vk-space-2);
+}
+
+/* Çeviri düzenleyici (Faz 11): Türkçe kayıt salt okunur kutuda */
+.vk-trn__tr {
+  display: grid;
+  gap: var(--vk-space-2);
+  padding: var(--vk-space-3) var(--vk-space-4);
+  border-radius: var(--vk-radius);
+  background: rgb(9 12 34 / 0.45);
+  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.2);
+  color: var(--vk-ivory);
+}
+.vk-trn__tr p {
+  margin: 0;
+}
+.vk-trn__tr-title {
+  font-weight: 700;
+  color: var(--vk-gold-bright);
+}
+.vk-trn__en-h {
+  margin-top: var(--vk-space-5);
 }

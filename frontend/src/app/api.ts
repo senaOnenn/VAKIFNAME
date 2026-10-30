@@ -316,18 +316,58 @@ export interface ExtractJob {
   candidates: number
   dropped: number
   error: string | null
+  /** tr: Türkçe kayıt adayları; en: yayındaki Türkçe kayıtların kitabın İngilizce bölümündeki karşılıkları (Faz 11). */
+  kind?: 'tr' | 'en'
 }
 export interface ContentOverview {
   enabled: boolean
   sources: ContentSource[]
   monuments: MonumentRow[]
   drafts: number
+  /** Onay bekleyen İngilizce çeviri taslakları (Faz 11). */
+  translation_drafts?: number
   vocab: { certainty: string[]; category: string[]; type: string[]; cities: { slug: string; name: string }[] }
+}
+/** Bir Türkçe kayda (katalog ya da depo) bağlı İngilizce çeviri: kitabın İngilizce bölümünden, alıntı doğrulamalı. */
+export interface ContentTranslation {
+  fact_id: string
+  monument_id: string
+  fact_title: string | null
+  fact_text: string | null
+  title_en: string
+  text_en: string
+  quote_en: string
+  source_id: string
+  page: number
+  origin: 'pipeline' | 'manual'
+  status: ContentStatus
+  quote_check: 'found' | 'not_found' | 'no_quote'
+  updated_at: string
+  decision: Decision
+}
+export interface MonumentEn {
+  monument_id: string
+  name_en: string
+  site_notice_en: string | null
+  status: ContentStatus
+  decision: Decision
+}
+/** Eserin yayındaki Türkçe kaydı (katalog dahil): çevirinin bağlandığı kayıt. */
+export interface TrFact {
+  fact_id: string
+  title: string
+  text: string
 }
 export interface MonumentEdit {
   monument: ContentMonument
   facts: ContentFact[]
   images: ContentImage[]
+  translations?: ContentTranslation[]
+  monument_en?: MonumentEn | null
+  tr_facts?: TrFact[]
+}
+export type TranslationInput = Pick<ContentTranslation, 'title_en' | 'text_en' | 'quote_en' | 'source_id' | 'page'> & {
+  publish: boolean
 }
 export type FactInput = Pick<
   ContentFact,
@@ -383,11 +423,29 @@ export const updateFact = (id: string, body: FactInput) =>
   apiPost(`${C}/facts/${enc(id)}`, body, undefined, { ...WITH_COOKIE, method: 'PUT' }) as Promise<ContentFact>
 export const factAction = (id: string, action: 'publish' | 'reject' | 'withdraw') =>
   apiPost(`${C}/facts/${enc(id)}/${action}`, {}, undefined, WITH_COOKIE) as Promise<ContentFact>
-export const startExtract = (body: { source_id: string; monument_id: string; page_from: number; page_to: number }) =>
+export const startExtract = (body: {
+  source_id: string
+  monument_id: string
+  page_from: number
+  page_to: number
+  lang?: 'tr' | 'en'
+}) =>
   apiPost(`${C}/extract`, body, undefined, WITH_COOKIE) as Promise<ExtractJob>
 export const getJob = (id: string, signal?: AbortSignal) => apiGet(`${C}/jobs/${enc(id)}`, signal, WITH_COOKIE) as Promise<ExtractJob>
 export const addImage = (monumentId: string, body: ImageInput) =>
   apiPost(`${C}/monuments/${enc(monumentId)}/images`, body, undefined, WITH_COOKIE) as Promise<ContentImage>
+export const listTranslations = (filter: { status?: ContentStatus; monument_id?: string }, signal?: AbortSignal) => {
+  const q = new URLSearchParams(Object.entries(filter).filter(([, v]) => !!v) as [string, string][])
+  return apiGet(`${C}/translations${q.toString() ? `?${q}` : ''}`, signal, WITH_COOKIE) as Promise<{
+    translations: ContentTranslation[]
+  }>
+}
+export const putTranslation = (factId: string, body: TranslationInput) =>
+  apiPost(`${C}/facts/${enc(factId)}/en`, body, undefined, { ...WITH_COOKIE, method: 'PUT' }) as Promise<ContentTranslation>
+export const translationAction = (factId: string, action: 'publish' | 'reject' | 'withdraw') =>
+  apiPost(`${C}/facts/${enc(factId)}/en/${action}`, {}, undefined, WITH_COOKIE) as Promise<ContentTranslation>
+export const putMonumentEn = (id: string, body: { name_en: string; site_notice_en: string | null; publish: boolean }) =>
+  apiPost(`${C}/monuments/${enc(id)}/en`, body, undefined, { ...WITH_COOKIE, method: 'PUT' }) as Promise<MonumentEn>
 /** Kitap sayfasındaki fotoğraf (karar 14 = A); `url` yönetici önizlemesidir. */
 export interface BookImage {
   index: number

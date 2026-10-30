@@ -4,11 +4,13 @@ import {
   createSource,
   getContentOverview,
   listFacts,
+  listTranslations,
   typeLabel,
   uploadContentFile,
   useLoad,
   type ContentFact,
   type ContentOverview,
+  type ContentTranslation,
 } from '../../api'
 import { StatTile } from '../../components/charts'
 import { GoldRule } from '../../components/Ornament'
@@ -23,6 +25,7 @@ import './content.css'
 export default function ContentHome() {
   const overview = useLoad((s) => getContentOverview(s), [])
   const drafts = useLoad((s) => listFacts({ status: 'draft' }, s), [])
+  const enDrafts = useLoad((s) => listTranslations({ status: 'draft' }, s), [])
 
   return (
     <main className="vk-page vk-admin vk-content">
@@ -45,16 +48,25 @@ export default function ContentHome() {
         </p>
       )}
       {overview.data?.enabled && (
-        <Body overview={overview.data} drafts={drafts.data?.facts ?? []} draftsError={drafts.error} onSourceAdded={overview.reload} />
+        <Body
+          overview={overview.data}
+          drafts={drafts.data?.facts ?? []}
+          draftsError={drafts.error}
+          enDrafts={enDrafts.data?.translations ?? []}
+          enDraftsError={enDrafts.error}
+          onSourceAdded={overview.reload}
+        />
       )}
     </main>
   )
 }
 
-function Body({ overview, drafts, draftsError, onSourceAdded }: {
+function Body({ overview, drafts, draftsError, enDrafts, enDraftsError, onSourceAdded }: {
   overview: ContentOverview
   drafts: ContentFact[]
   draftsError: string | null
+  enDrafts: ContentTranslation[]
+  enDraftsError: string | null
   onSourceAdded: () => void
 }) {
   const names = useMemo(() => new Map(overview.monuments.map((m) => [m.monument_id, m.name])), [overview.monuments])
@@ -66,11 +78,19 @@ function Body({ overview, drafts, draftsError, onSourceAdded }: {
     }
     return [...by.entries()]
   }, [drafts])
+  const enGroups = useMemo(() => {
+    const by = new Map<string, ContentTranslation[]>()
+    for (const t of [...enDrafts].sort((a, b) => b.updated_at.localeCompare(a.updated_at))) {
+      by.set(t.monument_id, [...(by.get(t.monument_id) ?? []), t])
+    }
+    return [...by.entries()]
+  }, [enDrafts])
 
   return (
     <div className="vk-admin__body">
       <div className="vk-admin__kpis">
         <StatTile label="Onay bekleyen taslak" value={overview.drafts} />
+        <StatTile label="İngilizce taslaklar" value={overview.translation_drafts ?? 0} />
         <StatTile label="Eser" value={overview.monuments.length} />
         <StatTile label="Kaynak kitap" value={overview.sources.length} />
       </div>
@@ -92,6 +112,33 @@ function Body({ overview, drafts, draftsError, onSourceAdded }: {
                   <Link to={`/yonetim/icerik/kayit/${f.fact_id}`}>{f.title}</Link>
                   <span className="vk-content__muted">
                     {label(CERTAINTY_LABEL, f.certainty)} · {ORIGIN_LABEL[f.origin]} · s. {f.page} · {formatWhen(f.updated_at)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      <section className="vk-admin__card" aria-labelledby="ingilizce-kuyruk">
+        <h2 id="ingilizce-kuyruk">İngilizce taslaklar</h2>
+        <p className="vk-admin__note">
+          İngilizce metin kitabın İngilizce bölümünden alınır; makine çevirisi kullanılmaz. {DRAFT_NOTE}
+        </p>
+        {enDraftsError && <p className="vk-page__state--error" role="alert">{enDraftsError}</p>}
+        {!enDraftsError && enGroups.length === 0 && <p className="vk-admin__note">Onay bekleyen İngilizce taslak yok.</p>}
+        {enGroups.map(([mid, items]) => (
+          <div key={mid} className="vk-content__group">
+            <h3>
+              <Link to={`/yonetim/icerik/eser/${mid}`}>{names.get(mid) ?? mid}</Link>
+              <span className="vk-content__muted"> · {items.length} İngilizce taslak</span>
+            </h3>
+            <ul className="vk-content__list">
+              {items.map((t) => (
+                <li key={t.fact_id}>
+                  <Link to={`/yonetim/icerik/ceviri/${t.fact_id}`} lang="en">{t.title_en}</Link>
+                  <span className="vk-content__muted">
+                    {t.fact_title ? `${t.fact_title} · ` : ''}{ORIGIN_LABEL[t.origin]} · s. {t.page} · {formatWhen(t.updated_at)}
                   </span>
                 </li>
               ))}

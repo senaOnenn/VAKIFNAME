@@ -23,6 +23,7 @@ import { GoldRule } from '../../components/Ornament'
 import { AdminNav } from './AdminNav'
 import { CERTAINTY_LABEL, DRAFT_NOTE, ORIGIN_LABEL, formatWhen, label } from './labels'
 import { BookImagePicker } from './BookImagePicker'
+import { EnglishCard } from './EnglishCard'
 import { PipelinePanel } from './PipelinePanel'
 import { OriginTag, StatusTag } from './StatusTag'
 import '../discover.css'
@@ -113,6 +114,7 @@ function Loaded({ overview, edit, reload, flash }: { overview: ContentOverview; 
         )}
       </section>
 
+      <EnglishCard edit={edit} onChange={reload} />
       <PipelinePanel overview={overview} monument={m} onDone={reload} />
       <ImagesSection monument={m} images={edit.images} onChange={reload} overview={overview} />
     </>
