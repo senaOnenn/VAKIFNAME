@@ -27,3 +27,15 @@ export function factIn(
 
 export const textIn = (tr: string | null | undefined, en: string | null | undefined, lang: Lang) =>
   lang === 'en' && en ? { text: en, turkishOnly: false } : { text: tr ?? '', turkishOnly: lang === 'en' && !!tr }
+
+/**
+ * Görsel atfı ve kaynak satırındaki Türkçe etiketler ("Fotoğraf:", "Görsel:", "s.") İngilizcede çevrilir; ad, eser,
+ * lisans ve kitap adı olduğu gibi kalır.
+ */
+export function creditIn(text: string, lang: Lang): string {
+  if (lang !== 'en') return text
+  return text
+    .replace(/^Fotoğraf: /, 'Photo: ')
+    .replace(/^Görsel: /, 'Image: ')
+    .replace(/, s\. (\d+)$/, ', p. $1')
+}

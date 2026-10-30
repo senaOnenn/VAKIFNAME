@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { mediaUrl, typeLabel, type MonumentStatus, type MonumentSummary } from '../api'
 import { StatusBadge } from './StatusBadge'
-import { nameOf, textIn } from '../contentLang'
+import { creditIn, nameOf, textIn } from '../contentLang'
 import { useLang } from '../i18n'
 
 /** Eser kartı: kapak görseli (atıf satırıyla), tür, ad, kısa giriş ve oyun durumu. Tümü eser sayfasına bağlanır. */
@@ -21,7 +21,7 @@ export function MonumentCard({ m, status }: { m: MonumentSummary; status?: Monum
           {lead.text && <p className="vk-mcard__lead" lang={lead.turkishOnly ? 'tr' : undefined}>{lead.text}</p>}
         </div>
       </Link>
-      {m.cover?.attribution && <p className="vk-mcard__credit">{m.cover.attribution}</p>}
+      {m.cover?.attribution && <p className="vk-mcard__credit">{creditIn(m.cover.attribution, lang)}</p>}
     </article>
   )
 }

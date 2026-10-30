@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { getMonument, mediaUrl, progressId, startQuiz, submitQuiz, useLoad, type Quiz, type QuizQuestion, type QuizResult } from '../api'
 import { Seal } from '../components/Seal'
-import { nameOf } from '../contentLang'
+import { creditIn, nameOf } from '../contentLang'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -11,7 +11,7 @@ import './monument.css'
 import './quiz.css'
 
 function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: number | undefined; onChange: (v: number) => void }) {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   if (q.kind === 'true_false') {
     return (
       <div className="vk-q">
@@ -32,7 +32,7 @@ function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: number |
         {q.images.map((img, i) => (
           <button key={img.file} type="button" role="radio" aria-checked={value === i} className="vk-q__img" onClick={() => onChange(i)}>
             <img src={mediaUrl(img.file)} alt={t('Seçenek {n}', { n: i + 1 })} />
-            {img.attribution && <span className="vk-q__credit">{img.attribution}</span>}
+            {img.attribution && <span className="vk-q__credit">{creditIn(img.attribution, lang)}</span>}
           </button>
         ))}
       </div>

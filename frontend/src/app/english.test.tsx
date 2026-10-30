@@ -148,3 +148,12 @@ describe('sorular (İngilizce)', () => {
     expect(screen.getByText(/not enough approved English records for this monument yet/)).toBeInTheDocument()
   })
 })
+
+describe('atıf etiketleri', () => {
+  it('İngilizcede yalnızca etiketler çevrilir; ad, lisans ve kitap adı aynen kalır', async () => {
+    const { creditIn } = await import('./contentLang')
+    expect(creditIn('Fotoğraf: Ali Veli, CC BY-SA 4.0, Wikimedia Commons', 'en')).toBe('Photo: Ali Veli, CC BY-SA 4.0, Wikimedia Commons')
+    expect(creditIn('Görsel: Bursa Vakıf Eserleri, Cilt I, s. 20', 'en')).toBe('Image: Bursa Vakıf Eserleri, Cilt I, p. 20')
+    expect(creditIn('Fotoğraf: Ali Veli', 'tr')).toBe('Fotoğraf: Ali Veli')
+  })
+})

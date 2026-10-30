@@ -5,7 +5,7 @@ import { PeopleCards } from '../components/PeopleCards'
 import { Narrator } from '../components/Narrator'
 import { GoldRule } from '../components/Ornament'
 import { StatusBadge } from '../components/StatusBadge'
-import { factIn, nameOf, textIn } from '../contentLang'
+import { creditIn, factIn, nameOf, textIn } from '../contentLang'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -76,9 +76,14 @@ export default function MonumentPage() {
   const cover = d.images[0]
   const name = nameOf(d, lang)
   const notice = textIn(d.site_notice, d.site_notice_en, lang)
-  // Tarihî kişi kartının metni bağlı olduğu kaydın metnidir; İngilizcesi onaylıysa o gösterilir.
-  const enText = new Map(d.facts.filter((f) => f.text_en).map((f) => [f.fact_id, f.text_en!]))
-  const peopleIn = (people.data ?? []).map((p) => (lang === 'en' && enText.has(p.fact_id) ? { ...p, text: enText.get(p.fact_id)! } : p))
+  // Tarihî kişi kartının metni bağlı olduğu kaydın metnidir; İngilizcesi onaylıysa o (ve İngilizce sayfası) gösterilir.
+  const enFact = new Map(d.facts.filter((f) => f.text_en).map((f) => [f.fact_id, f]))
+  const peopleIn = (people.data ?? []).map((p) => {
+    const f = lang === 'en' ? enFact.get(p.fact_id) : undefined
+    return f
+      ? { ...p, text: f.text_en!, source: `${f.source.title}, p. ${f.en_page ?? f.source.pdf_physical_page}` }
+      : { ...p, source: creditIn(p.source, lang) }
+  })
   return (
     <main className="vk-mon">
       <header className="vk-mon__hero">
@@ -89,7 +94,7 @@ export default function MonumentPage() {
           <h1>{name}</h1>
           <StatusBadge status={status} />
         </div>
-        {cover?.attribution && <p className="vk-mon__credit">{cover.attribution}</p>}
+        {cover?.attribution && <p className="vk-mon__credit">{creditIn(cover.attribution, lang)}</p>}
       </header>
 
       <div className="vk-mon__body">
@@ -126,7 +131,7 @@ export default function MonumentPage() {
                   <figure>
                     <img src={mediaUrl(img.card_file || img.file)} alt={t('{name}, görsel {n}', { name, n: i + 1 })} loading="lazy" />
                     <figcaption>
-                      {img.attribution ?? img.rights_holder}
+                      {creditIn(img.attribution ?? img.rights_holder, lang)}
                       {img.license_url && (
                         <>
                           {' · '}

@@ -114,15 +114,15 @@ export function LangProvider({ children }: { children: ReactNode }) {
   return <>{children}</>
 }
 
-/** TR | EN seçici: düğme grubu, seçili olan `aria-pressed`. */
+/** TR | EN seçici: düğme grubu, seçili olan `aria-pressed`. Erişilebilir ad görünen kısaltmayı içerir (WCAG 2.5.3). */
 export function LangSwitch({ className = '' }: { className?: string }) {
   const { lang, t: tt } = useLang()
   return (
     <div className={`vk-lang ${className}`} role="group" aria-label={tt('Dil')}>
-      <button type="button" lang="tr" aria-pressed={lang === 'tr'} onClick={() => setLang('tr')} aria-label="Türkçe">
+      <button type="button" lang="tr" aria-pressed={lang === 'tr'} onClick={() => setLang('tr')} aria-label="TR – Türkçe">
         TR
       </button>
-      <button type="button" lang="en" aria-pressed={lang === 'en'} onClick={() => setLang('en')} aria-label="English">
+      <button type="button" lang="en" aria-pressed={lang === 'en'} onClick={() => setLang('en')} aria-label="EN – English">
         EN
       </button>
     </div>
