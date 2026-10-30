@@ -64,6 +64,7 @@ function server(extra: Routes = {}) {
     '/auth/me': { body: ADMIN },
     '/admin/content/overview': { body: OVERVIEW },
     '/admin/content/facts': { body: { facts: [FACT] } },
+    '/admin/content/translations': { body: { translations: [] } },
     '/admin/content/monuments/BUR-5001': { body: MONUMENT },
     '/admin/content/monuments/BUR-1001': { body: CATALOG_MONUMENT },
     '/admin/content/sources/SRC-0001/pages/12': { body: { source_id: 'SRC-0001', page: 12, page_count: 40, text: PAGE_TEXT } },
@@ -242,7 +243,7 @@ describe('eser ve hat', () => {
     expect(await within(panel).findByText('Sıraya alındı…')).toBeInTheDocument()
     expect(await within(panel).findByText('Tamamlandı: 3 aday taslak oldu, 1 aday kaynağında bulunamadığı için düştü.', {}, { timeout: 4000 }))
       .toBeInTheDocument()
-    expect(body(calls(f, '/admin/content/extract')[0].init)).toEqual({ source_id: 'SRC-0001', monument_id: 'BUR-5001', page_from: 12, page_to: 13 })
+    expect(body(calls(f, '/admin/content/extract')[0].init)).toEqual({ source_id: 'SRC-0001', monument_id: 'BUR-5001', page_from: 12, page_to: 13, lang: 'tr' })
     await waitFor(() => expect(calls(f, '/admin/content/monuments/BUR-5001').length).toBeGreaterThan(1))
   }, 10_000)
 
@@ -303,5 +304,118 @@ describe('eser ve hat', () => {
       name: 'Yeni Türbe', alternative_names: [], type: 'türbe', city: 'Bursa', district: 'Osmangazi', address: 'Test Sokağı',
       latitude: 40.1901, longitude: 29.0612, site_notice: null, publish: true,
     })
+  })
+})
+
+
+// --- İngilizce (Faz 11) ------------------------------------------------------------------------------------------
+
+const EN_PAGE = 'The Grand Mosque was com-\nmissioned by Sultan Bayezid and completed in 1399 with twenty domes.'
+const TRANSLATION = {
+  fact_id: 'BUR-1001-F001', monument_id: 'BUR-1001', fact_title: 'Yapım yılı', fact_text: 'Cami 1399 yılında tamamlandı.',
+  title_en: 'Completion', text_en: 'The mosque was completed in 1399.', quote_en: 'commissioned by Sultan Bayezid and completed in 1399',
+  source_id: 'SRC-0001', page: 14, origin: 'pipeline' as const, status: 'draft' as const, quote_check: 'found' as const,
+  updated_at: '2026-10-29T12:00:00Z', decision: null,
+}
+const CATALOG_EDIT = {
+  ...CATALOG_MONUMENT,
+  translations: [TRANSLATION],
+  monument_en: null,
+  tr_facts: [
+    { fact_id: 'BUR-1001-F001', title: 'Yapım yılı', text: 'Cami 1399 yılında tamamlandı.' },
+    { fact_id: 'BUR-1001-F002', title: 'Kubbeler', text: 'Yapıyı yirmi kubbe örter.' },
+  ],
+}
+const enServer = (extra: Routes = {}) =>
+  server({
+    '/admin/content/monuments/BUR-1001': { body: CATALOG_EDIT },
+    '/admin/content/sources/SRC-0001/pages/14': { body: { source_id: 'SRC-0001', page: 14, page_count: 40, text: EN_PAGE } },
+    ...extra,
+  })
+
+describe('İngilizce içerik (Faz 11)', () => {
+  it('çeviri düzenleyici: Türkçe kaydı gösterir, İngilizce alıntıyı sayfada vurgular ve onaylayıp yayımlar', async () => {
+    const f = enServer({
+      '/admin/content/facts/BUR-1001-F001/en/publish': { body: { ...TRANSLATION, status: 'published',
+        decision: { decision_id: 'DEC-1', by: 'yonetici@example.com', at: '2026-10-29T12:05:00Z' } } },
+    })
+    open('/yonetim/icerik/ceviri/BUR-1001-F001')
+    expect(await screen.findByRole('heading', { name: 'Çeviriyi incele' })).toBeInTheDocument()
+    expect(screen.getByText('Cami 1399 yılında tamamlandı.')).toBeInTheDocument()
+    expect(screen.getByText('İngilizce metin kitabın İngilizce bölümünden alınır; makine çevirisi kullanılmaz.')).toBeInTheDocument()
+    expect(screen.getByLabelText('İngilizce başlık')).toHaveValue('Completion')
+    const mark = await screen.findByText((_, el) => el?.tagName === 'MARK')
+    expect(mark.textContent).toContain('missioned by Sultan Bayezid and completed in 1399')
+    expect(screen.getByText(/Taslak: yönetici onaylayıp/)).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Onayla ve yayımla' }))
+    expect(await screen.findByText('Çeviri onaylandı ve yayımlandı.')).toBeInTheDocument()
+    expect(calls(f, '/admin/content/facts/BUR-1001-F001/en/publish')).toHaveLength(1)
+  })
+
+  it('düzenlenen çeviri PUT ile gider; sunucunun 409 gerekçesi olduğu gibi gösterilir', async () => {
+    const f = enServer({
+      '/admin/content/facts/BUR-1001-F001/en': { status: 409, body: { detail: 'Alıntı kaynağın 14. sayfasında bulunamadı; alıntıyı veya sayfayı düzeltin.' } },
+    })
+    open('/yonetim/icerik/ceviri/BUR-1001-F001')
+    const quote = await screen.findByLabelText(/Kitabın İngilizce bölümünden birebir alıntı/)
+    await userEvent.clear(quote)
+    await userEvent.type(quote, 'not in the book')
+    expect(await screen.findByText(/alıntı bu sayfada bulunamadı/)).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Onayla ve yayımla' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('Alıntı kaynağın 14. sayfasında bulunamadı; alıntıyı veya sayfayı düzeltin.')
+    const put = calls(f, '/admin/content/facts/BUR-1001-F001/en')[0].init
+    expect(put.method).toBe('PUT')
+    expect(body(put)).toEqual({ title_en: 'Completion', text_en: 'The mosque was completed in 1399.', quote_en: 'not in the book',
+      source_id: 'SRC-0001', page: 14, publish: true })
+  })
+
+  it('eserin İngilizce adı katalog eserinde de yayımlanır; kayıtların İngilizce durumu listelenir', async () => {
+    const f = enServer({
+      '/admin/content/monuments/BUR-1001/en': { body: { monument_id: 'BUR-1001', name_en: 'Grand Mosque', site_notice_en: null,
+        status: 'published', decision: { decision_id: 'DEC-2', by: 'yonetici@example.com', at: '2026-10-29T12:00:00Z' } } },
+    })
+    open('/yonetim/icerik/eser/BUR-1001')
+    const card = await screen.findByRole('region', { name: 'İngilizce' })
+    const status = within(card).getByRole('list', { name: 'Kayıtların İngilizce durumu' })
+    expect(within(status).getByRole('link', { name: 'Yapım yılı' })).toHaveAttribute('href', '/yonetim/icerik/ceviri/BUR-1001-F001')
+    expect(within(status).getByText('Taslak')).toBeInTheDocument()
+    expect(within(status).getByText('Yok')).toBeInTheDocument()
+    await userEvent.type(within(card).getByLabelText('İngilizce ad'), 'Grand Mosque')
+    await userEvent.click(within(card).getByRole('button', { name: 'Kaydet ve yayımla' }))
+    expect(await within(card).findByText('İngilizce ad yayımlandı.')).toBeInTheDocument()
+    const put = calls(f, '/admin/content/monuments/BUR-1001/en')[0].init
+    expect(put.method).toBe('PUT')
+    expect(body(put)).toEqual({ name_en: 'Grand Mosque', site_notice_en: null, publish: true })
+  })
+
+  it('hat İngilizce kipinde lang=en gönderir ve sonucu İngilizce karşılık olarak bildirir', async () => {
+    const job = { job_id: 'JOB-2', source_id: 'SRC-0001', monument_id: 'BUR-5001', page_from: 12, page_to: 13, kind: 'en',
+      created_at: '2026-10-29T10:00:00Z', candidates: 0, dropped: 0, error: null }
+    const f = server({
+      '/admin/content/extract': { status: 202, body: { ...job, status: 'queued', finished_at: null } },
+      '/admin/content/jobs/JOB-2': { body: { ...job, status: 'done', finished_at: '2026-10-29T10:01:00Z', candidates: 4, dropped: 2 } },
+    })
+    open('/yonetim/icerik/eser/BUR-5001')
+    const panel = await screen.findByRole('region', { name: 'Kitaptan aday kayıt çıkar' })
+    await userEvent.click(within(panel).getByLabelText('İngilizce karşılıklar (kitabın İngilizce bölümünden)'))
+    await userEvent.clear(within(panel).getByLabelText('Başlangıç sayfası'))
+    await userEvent.type(within(panel).getByLabelText('Başlangıç sayfası'), '12')
+    await userEvent.type(within(panel).getByLabelText('Bitiş sayfası'), '13')
+    await userEvent.click(within(panel).getByRole('button', { name: 'İngilizce karşılık çıkar' }))
+    expect(await within(panel).findByText('Tamamlandı: 4 İngilizce karşılık taslak oldu, 2 aday kaynağında bulunamadığı için düştü.', {}, { timeout: 4000 }))
+      .toBeInTheDocument()
+    expect(body(calls(f, '/admin/content/extract')[0].init)).toEqual({ source_id: 'SRC-0001', monument_id: 'BUR-5001', page_from: 12, page_to: 13, lang: 'en' })
+  }, 10_000)
+
+  it('ana sayfa İngilizce taslakları esere göre listeler ve çeviri düzenleyicisine bağlar', async () => {
+    server({
+      '/admin/content/overview': { body: { ...OVERVIEW, translation_drafts: 1 } },
+      '/admin/content/translations': { body: { translations: [TRANSLATION] } },
+    })
+    open('/yonetim/icerik')
+    const queue = await screen.findByRole('region', { name: 'İngilizce taslaklar' })
+    expect(await within(queue).findByRole('link', { name: 'Completion' })).toHaveAttribute('href', '/yonetim/icerik/ceviri/BUR-1001-F001')
+    expect(within(queue).getByText(/1 İngilizce taslak/)).toBeInTheDocument()
+    expect(screen.getByText('İngilizce taslaklar', { selector: '.vk-stat__label' })).toBeInTheDocument()
   })
 })

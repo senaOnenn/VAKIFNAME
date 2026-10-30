@@ -310,7 +310,7 @@ function QuestEditor({ quest, onChange }: { quest: Quest | null; onChange: (q: Q
 }
 
 /** Atıf verilen kaynak sayfa: metin, alıntı vurgusu ve komşu sayfalar arasında gezinme. */
-function SourcePageView({ sourceId, sourceTitle, page, quote, onUsePage }: {
+export function SourcePageView({ sourceId, sourceTitle, page, quote, onUsePage }: {
   sourceId: string
   sourceTitle: string
   page: number
