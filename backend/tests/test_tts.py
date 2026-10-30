@@ -146,3 +146,43 @@ def test_english_narration_uses_english_voice_and_approved_english_only(tmp_path
         # Türkçe metin İngilizce olarak, İngilizce metin Türkçe olarak seslendirilmez.
         assert c.post("/monuments/BUR-0001/speech", json={"text": intro, "lang": "tr"}).status_code == 422
         assert c.post("/monuments/BUR-0001/speech", json={"text": OUTRO, "lang": "en"}).status_code == 422
+
+
+def test_files_provider_plays_only_pregenerated_audio_and_never_synthesizes(tmp_path):
+    """30 Ekim kararı: ses klonuyla önceden üretilmiş dosyalar; sunucu üretmez, eksik cümle 404 → tarayıcı sesi."""
+    from app.public_catalog import PublicCatalogRepository
+    from app.tts_export import jobs
+
+    settings = TtsSettings(provider="files", voice="talha-1", voice_en="talha-1", cache_dir=tmp_path / "tts")
+    service = SpeechService(settings)
+    assert service.enabled and not service.generates and service.voice("tr") == "talha-1"
+    assert service.status() == {"enabled": True, "provider": "files", "voice": "talha-1"}
+    app = create_app(public_catalog_file=SNAPSHOT, demo_api=False)
+    app.state.speech = service
+    catalog = PublicCatalogRepository(SNAPSHOT).catalog
+    work = jobs(catalog, service, ["tr", "en"])
+    assert work and all(j["lang"] == "tr" for j in work)  # anlık görüntüde onaylı İngilizce kayıt yok → İngilizce iş yok
+    assert len({j["file"] for j in work}) == len(work)
+    m = catalog.monuments[0]
+    intro = next(j for j in work if j["monument_id"] == m.monument_id and j["text"] == INTRO.format(name=m.name))
+    with TestClient(app) as c:
+        missing = c.post(f"/monuments/{m.monument_id}/speech", json={"text": intro["text"]})
+        assert missing.status_code == 404  # önceden üretilmemiş: üretim yok
+        (tmp_path / "tts" / intro["file"]).write_bytes(b"ID3 klon")  # üretim betiğinin yazdığı dosya
+        r = c.post(f"/monuments/{m.monument_id}/speech", json={"text": intro["text"]})
+        assert r.status_code == 200 and r.json()["url"] == f"/speech/audio/{intro['file']}"
+        assert c.get(r.json()["url"]).content == b"ID3 klon"
+        assert c.post(f"/monuments/{m.monument_id}/speech", json={"text": "Uydurma cümle."}).status_code == 422
+        # Üretim olmadığı için sınır yok: çok sayıda istek 429 almaz.
+        for _ in range(40):
+            assert c.post(f"/monuments/{m.monument_id}/speech", json={"text": OUTRO}).status_code == 404
+    assert next(j for j in jobs(catalog, service, ["tr"]) if j["file"] == intro["file"])["ready"] is True
+
+
+def test_files_provider_env(monkeypatch, tmp_path):
+    monkeypatch.setenv("VAKIFNAME_TTS_PROVIDER", "files")
+    monkeypatch.setenv("VAKIFNAME_TTS_VOICE", "ayse-1")
+    s = TtsSettings.from_env()
+    assert s.provider == "files" and s.voice == "ayse-1" and s.voice_en == "auto"
+    s.cache_dir = tmp_path
+    assert SpeechService(s).voice("en") == "default"

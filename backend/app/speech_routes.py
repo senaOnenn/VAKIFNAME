@@ -1,7 +1,8 @@
 """Seslendirme uçları (Faz 8; bkz. `tts.py`).
 
 - `GET /speech/status`: seslendirme açık mı (kapalıysa arayüz tarayıcı sesini kullanır).
-- `POST /monuments/{id}/speech {text}`: cümle eserin onaylı anlatımına aitse ses dosyasının adresi (yoksa üretilir).
+- `POST /monuments/{id}/speech {text, lang}`: cümle eserin onaylı anlatımına aitse ses dosyasının adresi (yoksa üretilir;
+  `files` sağlayıcısında üretilmez, 404).
 - `GET /speech/audio/{file}`: önbellekteki ses dosyası.
 """
 
@@ -42,7 +43,7 @@ def speak(request: Request, body: SpeechRequest, monument_id: Annotated[Monument
         raise HTTPException(status_code=404, detail="Eser bulunamadı veya henüz yayımlanmadı.")
     if body.text not in narration_texts(m, body.lang):
         raise HTTPException(status_code=422, detail="Yalnızca eserin onaylı anlatımı seslendirilir.")
-    if service.path(service.file_for(body.text, body.lang)) is None:
+    if service.generates and service.path(service.file_for(body.text, body.lang)) is None:
         # Yalnızca yeni üretim sınırlanır; önbellekteki ses serbest.
         client = request.client.host if request.client else "unknown"
         retry = request.app.state.speech_limiter.check(client)
@@ -51,6 +52,8 @@ def speak(request: Request, body: SpeechRequest, monument_id: Annotated[Monument
     try:
         file, _ = service.ensure(body.text, body.lang)
     except TtsError as e:
+        if e.kind == "missing":  # önceden üretilmemiş cümle: arayüz tarayıcı sesine düşer
+            raise HTTPException(status_code=404, detail="Bu cümlenin sesi henüz hazır değil.") from e
         raise HTTPException(status_code=503, detail=f"Seslendirme şu anda yapılamıyor ({e.kind}).") from e
     return {"url": f"/speech/audio/{file}"}
 

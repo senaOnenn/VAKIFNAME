@@ -1,7 +1,9 @@
 """Seslendirme (Faz 8): rehber anlatımının sesi bir ses servisinden üretilir ve dosya olarak önbelleğe alınır.
 
-Sağlayıcı env ile seçilir (`VAKIFNAME_TTS_PROVIDER`): `off` (varsayılan; arayüz tarayıcı sesini kullanır) | `google`
-(Google Cloud Text-to-Speech, Chirp 3 HD Türkçe). Yenisi (ör. ElevenLabs) `TtsProvider` arayüzüyle eklenir.
+Sağlayıcı env ile seçilir (`VAKIFNAME_TTS_PROVIDER`): `off` (varsayılan; arayüz tarayıcı sesini kullanır) | `files`
+(30 Ekim kararı: ekipten bir insan sesinin klonuyla **önceden üretilmiş** dosyalar; sunucu üretmez, yalnızca çalar; üretim
+`python -m app.tts_export` + `scripts/voice/`, bkz. docs/SES_KAYDI.md) | `google` (Google Cloud Text-to-Speech, Chirp 3 HD;
+yedek). Yenisi `TtsProvider` arayüzüyle eklenir.
 
 Kurallar:
 - Yalnızca eserin **onaylı anlatımına ait** cümle seslendirilir (`narration_texts`): karşılama/kapanış kalıbı ya da yayımlanmış
@@ -105,8 +107,8 @@ class TtsSettings:
     def from_env(cls) -> "TtsSettings":
         e = os.environ.get
         provider = e("VAKIFNAME_TTS_PROVIDER", "off").strip().lower() or "off"
-        if provider not in ("off", "google"):
-            raise ValueError(f"VAKIFNAME_TTS_PROVIDER={provider}: geçerli değerler off | google")
+        if provider not in ("off", "files", "google"):
+            raise ValueError(f"VAKIFNAME_TTS_PROVIDER={provider}: geçerli değerler off | files | google")
         cache = e("VAKIFNAME_TTS_CACHE_DIR", "").strip()
         key = e("VAKIFNAME_TTS_GOOGLE_KEY_FILE", "").strip()
         return cls(provider=provider, voice=e("VAKIFNAME_TTS_VOICE", "auto").strip() or "auto",
@@ -143,7 +145,7 @@ class SpeechService:
         }
         self._lock = threading.Lock()
         self._inflight: dict[str, threading.Lock] = {}
-        if settings.provider != "off" and provider is None:
+        if settings.provider == "google" and provider is None:
             key = settings.key_file.read_text(encoding="utf-8").strip() if settings.key_file and settings.key_file.is_file() else ""
             self.provider = GoogleTts(key) if key else None
             if not key:
@@ -153,10 +155,19 @@ class SpeechService:
 
     @property
     def enabled(self) -> bool:
-        return self.settings.provider != "off" and self.provider is not None and self.settings.cache_dir is not None
+        if self.settings.provider == "off" or self.settings.cache_dir is None:
+            return False
+        return self.settings.provider == "files" or self.provider is not None
+
+    @property
+    def generates(self) -> bool:
+        """Eksik ses istek anında üretilir mi (`files` üretmez: önceden üretilmemiş cümle tarayıcı sesine düşer)."""
+        return self.settings.provider != "files"
 
     def voice(self, lang: str = "tr") -> Optional[str]:
         code = LANGUAGES[lang]
+        if self.settings.provider == "files":
+            return self._voices.get(lang) or "default"
         if self._voices.get(lang) is None and self.provider is not None:
             try:
                 self._voices[lang] = pick_voice(self.provider.voices(code), code)
@@ -190,6 +201,8 @@ class SpeechService:
         target = self.settings.cache_dir / file
         if target.is_file():
             return file, False
+        if not self.generates:
+            raise TtsError("missing")
         with self._lock:
             lock = self._inflight.setdefault(file, threading.Lock())
         with lock:
