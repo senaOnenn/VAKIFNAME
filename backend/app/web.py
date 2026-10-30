@@ -32,7 +32,7 @@ GSI = "https://accounts.google.com/gsi/"
 APP_ROUTES = re.compile(
     r"^/(giris|gizlilik|dogrula|sifre-sifirla|sifre-yenile|sehir|bursa|eserler|pasaport|hesap|yonetim"
     r"|rota/[a-z0-9-]{1,40}|eser/[A-Za-z0-9-]{1,20}(/rozet)?"
-    r"|yonetim/icerik(/(eser|kayit)/[A-Za-z0-9-]{1,30}(/yeni-kayit)?)?)/?$"
+    r"|yonetim/icerik(/(eser|kayit|ceviri)/[A-Za-z0-9-]{1,30}(/yeni-kayit)?)?)/?$"
 )
 
 

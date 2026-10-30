@@ -64,7 +64,7 @@ def test_rejects_api_origin_with_path_and_missing_build(tmp_path, dist):
 @pytest.mark.parametrize("path", ["/giris", "/sehir", "/rota/bursa", "/eserler", "/eser/BUR-0001", "/eser/BUR-0001/rozet",
                                   "/pasaport", "/hesap", "/yonetim", "/yonetim/icerik", "/yonetim/icerik/eser/BUR-5001",
                                   "/yonetim/icerik/eser/yeni", "/yonetim/icerik/eser/BUR-0001/yeni-kayit",
-                                  "/yonetim/icerik/kayit/BUR-0001-F501", "/dogrula", "/sifre-yenile"])
+                                  "/yonetim/icerik/kayit/BUR-0001-F501", "/yonetim/icerik/ceviri/BUR-0001-F001", "/dogrula", "/sifre-yenile"])
 def test_app_routes_open_directly(dist, path):
     # Sayfa adres çubuğundan açılınca ya da yenilenince uygulama yüklenir.
     with TestClient(create_web_app(dist, API)) as c:
