@@ -18,9 +18,9 @@ import type { Plugin } from 'vite'
 const here = dirname(fileURLToPath(import.meta.url))
 export const DEFAULT_HERO_VIDEO = resolve(here, '..', '..', 'vakifname-video-assets', 'hero.mp4')
 export const HERO_VIDEO_FILE = 'media/hero.mp4'
-/** Eser sayfasındaki yerel rehber karakterinin sessiz konuşma döngüsü (ekibin karakter videosu; ses tarayıcıda üretilir). */
-export const DEFAULT_NARRATOR_VIDEO = resolve(here, '..', '..', 'vakifname-video-assets', 'narrator-guide.mp4')
-export const NARRATOR_VIDEO_FILE = 'media/narrator-guide.mp4'
+/** Telefonlar için dikey, küçük sürüm (30 Ekim: yavaş ağda 2,3 MB yerine ~200 KB; ffmpeg ile ortadan 9:16 kesit, sessiz). */
+export const DEFAULT_HERO_MOBILE_VIDEO = resolve(here, '..', '..', 'vakifname-video-assets', 'hero-mobil.mp4')
+export const HERO_MOBILE_VIDEO_FILE = 'media/hero-mobil.mp4'
 const MAX_BYTES = 25 * 1024 * 1024
 
 export type VideoCheck = { ok: true; size: number } | { ok: false; reason: string }

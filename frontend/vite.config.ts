@@ -1,7 +1,7 @@
 /// <reference types="vitest/config" />
 import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
-import { DEFAULT_NARRATOR_VIDEO, NARRATOR_VIDEO_FILE, heroVideoAsset } from './heroVideo.ts'
+import { DEFAULT_HERO_MOBILE_VIDEO, HERO_MOBILE_VIDEO_FILE, heroVideoAsset } from './heroVideo.ts'
 
 const LOOPBACK = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1'])
 
@@ -41,7 +41,7 @@ export default defineConfig({
     react(),
     internalLoopbackOnly(),
     heroVideoAsset(),
-    heroVideoAsset(process.env.VAKIFNAME_NARRATOR_VIDEO ?? DEFAULT_NARRATOR_VIDEO, NARRATOR_VIDEO_FILE, 'Rehber videosu'),
+    heroVideoAsset(process.env.VAKIFNAME_HERO_MOBILE_VIDEO ?? DEFAULT_HERO_MOBILE_VIDEO, HERO_MOBILE_VIDEO_FILE, 'Giriş videosu (mobil)'),
   ],
   // Backend'in varsayılan CORS listesindeki port; preview de aynı portu kullanır.
   // `/internal` proxy'si yalnızca geliştirme sunucusunda vardır; `preview` ve üretim derlemesi dahili API'ye erişmez.

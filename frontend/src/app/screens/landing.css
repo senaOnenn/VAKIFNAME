@@ -204,15 +204,13 @@
   overflow: hidden;
   box-shadow: var(--vk-shadow-gold);
 }
-.vk-land__guide video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 25%;
+.vk-land__guide {
+  height: 132px;
+  background: radial-gradient(circle at 50% 60%, rgb(201 162 75 / 0.22), transparent 70%), var(--vk-night-2, #1a2050);
 }
-.vk-land__guide-fallback {
-  font-family: var(--vk-font-display);
-  color: var(--vk-gold-bright);
+.vk-land__guide .vk-gchar {
+  width: 118%;
+  margin-top: 18%;
 }
 
 .vk-land__vakfiye {

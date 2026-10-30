@@ -79,7 +79,7 @@ cd frontend && npm run dev          # http://localhost:5173
 cd backend && .venv/bin/python -m pytest
 cd frontend && npm test && npx tsc -b && npm run build
 ```
-Medya (görsel) ve giriş videosu repoda yoktur: görseller `backend/tests/ask_eval/media/` (git'e girmez), video `~/vakifname-video-assets/hero.mp4`.
+Medya (görsel) ve giriş videosu repoda yoktur: görseller `backend/tests/ask_eval/media/` (git'e girmez), video `~/vakifname-video-assets/hero.mp4` (+ telefonlar için dikey küçük sürüm `hero-mobil.mp4`, 30 Ekim).
 
 ## 7. Çalışma biçimi
 - **Önce anla, sonra yaz.** Büyük değişiklikte plan → onay → uygulama. Ekip kodu sorgulamadan ilerlemişti; biz **gerekçeli** ilerleriz.

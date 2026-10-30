@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { citySlug, getMonuments, useLoad } from '../api'
 import { CITIES, withCatalog } from '../cities'
+import { GuideCharacter } from '../components/GuideCharacter'
 import { MonumentCard } from '../components/MonumentCard'
 import { GoldRule, Ornament } from '../components/Ornament'
 import { Seal } from '../components/Seal'
@@ -13,12 +14,19 @@ import './landing.css'
 
 const BASE = import.meta.env.BASE_URL
 const HERO_VIDEO = `${BASE}media/hero.mp4`
-const GUIDE_VIDEO = `${BASE}media/narrator-guide.mp4`
+const HERO_VIDEO_MOBILE = `${BASE}media/hero-mobil.mp4`
 // Tanıtımdaki örnek yapboz: birkaç parça bulunmuş, biri ziyaretle altın.
 const SAMPLE: PieceState[] = ['found', 'gold', 'missing', 'found', 'missing', 'missing', 'found', 'missing', 'missing', 'missing']
 
 function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+}
+
+/** Arka plan videosu: veri tasarrufu açıksa hiç indirilmez; dar ekranda dikey küçük sürüm (yavaş ağ, 30 Ekim). */
+function heroSource(): string | null {
+  if (typeof navigator !== 'undefined' && (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData) return null
+  const narrow = typeof window !== 'undefined' && !!window.matchMedia?.('(max-width: 700px)').matches
+  return narrow ? HERO_VIDEO_MOBILE : HERO_VIDEO
 }
 
 /** Bölümler ekrana girerken yavaşça belirir; hareket azaltılmışsa ya da tarayıcı desteklemiyorsa hemen görünür. */
@@ -51,8 +59,7 @@ export default function Landing() {
   const { t } = useLang()
   const SAMPLE_LABELS = SAMPLE.map((_, i) => t('Örnek parça {n}', { n: i + 1 }))
   const reduced = prefersReducedMotion()
-  const [heroVideo, setHeroVideo] = useState(true)
-  const [guideVideo, setGuideVideo] = useState(true)
+  const [hero, setHero] = useState(heroSource)
   const catalog = useLoad((s) => getMonuments(s), [])
   const all = catalog.data?.monuments ?? []
   const featured = all.filter((m) => m.cover).slice(0, 3)
@@ -84,17 +91,18 @@ export default function Landing() {
 
       <main>
         <section className="vk-land__hero" aria-labelledby="land-h">
-          {heroVideo && (
+          {hero && (
             <video
               className="vk-land__video"
-              src={reduced ? `${HERO_VIDEO}#t=6` : HERO_VIDEO}
+              src={reduced ? `${hero}#t=6` : hero}
               autoPlay={!reduced}
               muted
               loop
               playsInline
               preload={reduced ? 'metadata' : 'auto'}
               aria-hidden="true"
-              onError={() => setHeroVideo(false)}
+              // Küçük sürüm yoksa büyüğü denenir; o da yoksa geçişli zemin kalır.
+              onError={() => setHero((h) => (h === HERO_VIDEO_MOBILE ? HERO_VIDEO : null))}
             />
           )}
           <div className="vk-land__veil" aria-hidden="true" />
@@ -119,20 +127,7 @@ export default function Landing() {
           <ol className="vk-land__steps">
             <li className="vk-land__step vk-reveal">
               <div className="vk-land__visual vk-land__guide">
-                {guideVideo ? (
-                  <video
-                    src={reduced ? `${GUIDE_VIDEO}#t=2` : GUIDE_VIDEO}
-                    autoPlay={!reduced}
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    aria-hidden="true"
-                    onError={() => setGuideVideo(false)}
-                  />
-                ) : (
-                  <span className="vk-land__guide-fallback" aria-hidden="true">{t('Rehber')}</span>
-                )}
+                <GuideCharacter mouth="X" speaking={false} />
               </div>
               <span className="vk-land__num" aria-hidden="true">I</span>
               <h3>{t('Dinle ve sor')}</h3>
