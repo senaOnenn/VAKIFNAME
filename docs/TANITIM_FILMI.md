@@ -1,4 +1,4 @@
-# Tanıtım filmi — senaryo ve sahne listesi (onaya sunulan taslak)
+# Tanıtım filmi — senaryo ve sahne listesi (onaylandı, 30 Ekim)
 
 > Faz 9 (29 Ekim kararları): harita üzerinde eser eser yolculuk; site ekran görüntüsü yok; tarihî kişiler yalnızca
 > portre madalyonuyla (K4); tanıtım sayfasında 10–15 sn sessiz döngü + "Tanıtım filmini izle" (tam film, sesli).
@@ -28,6 +28,6 @@ küçük "canlandırma" etiketi; ekran görüntüsü yok; "sınav" denmez.
 
 ## Onay bekleyenler
 
-1. Sahne listesi ve metin (bu sayfa).
+1. ~~Sahne listesi ve metin~~ — onaylandı (30 Ekim).
 2. Müzik: telifsiz sakin bir parça (ney/ud tınılı ya da yalnız piyano) — seçenekler sonra dinletilir.
-3. Ses: rehberin klon sesi kayıtlar gelince; o zamana kadar taslak, Mac'in Türkçe sesiyle.
+3. ~~Ses~~ — rehberin klon sesi (Zülal, `zulal-1`).

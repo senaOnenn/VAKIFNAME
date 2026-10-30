@@ -136,7 +136,7 @@
   - [~] Adaylar → kör dinleme → **seçim: tr-B, en-B** (Talha, 30 Ekim; ikisi de hafif gürültü azaltılmış kayıttan; benzerlik 0,92 / 0,90, anlaşılırlık 1,00). Ses adı `zulal-1`. Arşiv: `~/vakifname-voice/arsiv/2026-10-30-zulal/` (ham kayıtlar, tüm adaylar, kör dinleme, seçilenler, üretim; `BENIOKU.md`). [ ] 86 cümle üretimi (başladı) → denetim raporu → canlıda `files` açma.
 
 ## Faz 9 — Tanıtım filmi (gündem 3)
-- [~] Senaryo + sahne listesi + metin — onaya sunulan taslak `docs/TANITIM_FILMI.md` (30 Ekim; 9 sahne, ~75 sn, tarihî cümleler onaylı kayıtlardan aynen). (kurgu taslağı: Türkiye haritası → Bursa → Ulu Cami (rehber anlatır, kaynak ekranda, banisi portre madalyonuyla) → soru → bilgi mührü → Koza Han → Osman Gazi Türbesi → altın mühür → Kayıp Vakfiye → şehirlerin ışıkları → kapanış). Müzik ve metin onaya sunulur.
+- [x] Senaryo + sahne listesi + metin — **onaylandı (Talha, 30 Ekim)**: `docs/TANITIM_FILMI.md` (9 sahne, ~75 sn, tarihî cümleler onaylı kayıtlardan aynen). (kurgu taslağı: Türkiye haritası → Bursa → Ulu Cami (rehber anlatır, kaynak ekranda, banisi portre madalyonuyla) → soru → bilgi mührü → Koza Han → Osman Gazi Türbesi → altın mühür → Kayıp Vakfiye → şehirlerin ışıkları → kapanış). Müzik ve metin onaya sunulur.
 - [ ] Çizimler: Faz 8 karakteri + eser silüetleri (vektör, palet A); bilgiler yalnızca onaylı kayıtlardan.
 - [ ] HyperFrames ile üretim (Node 22+, FFmpeg); seslendirme Faz 8 Google sesi; Türkçe altyazı (dosya ve gömülü sürüm).
 - [ ] Çıktılar: tam film (16:9, sesli), açılış için 10–15 sn yazısız sessiz döngü (masaüstü + mobil küçük sürüm), kapak karesi.
