@@ -124,7 +124,8 @@ const MON = {
   ulu: { lat: 40.183926, lng: 29.061884, name: 'Bursa Ulu Camii' },
   koza: { lat: 40.18437, lng: 29.063537, name: 'Koza Han' },
   osman: { lat: 40.186831, lng: 29.057366, name: 'Osman Gazi Türbesi' },
-  start: { lat: 40.1885, lng: 29.061 },
+  // Ziyaretçinin konumu (temsilî): Ulu Cami'nin güneyi — en yakın eser 1 numara olur, rota kendini kesmez.
+  start: { lat: 40.1812, lng: 29.0612 },
 }
 // Film için Bursa görünümü: 1,67 × 2,55 km, ~648 px/km.
 const bursa = (lat, lng) => ({ x: 135 + ((lng - 29.045) / 0.03) * 1650, y: ((40.193 - lat) / 0.015) * 1080 })
@@ -441,8 +442,9 @@ function loop(portrait) {
   const width = portrait ? 1080 : W
   const height = portrait ? 1920 : H
   // Dikey çerçevede rota merkeze alınır.
-  // Dikeyde harita yatay boyutunda kalır, duraklar (≈1000,540) ekranın ortasına gelir.
-  const shift = portrait ? 'transform:translate(-710px,285px) scale(1.25);transform-origin:0 0' : ''
+  // Dikeyde harita 1,8 kat büyütülür (1080 px yükseklik 1944 px olur, ekranı doldurur); durakların ortası (≈985,650)
+  // yatayda ortada, dikeyde ekranın ~%60'ında kalır.
+  const shift = portrait ? 'transform:translate(-1233px,-24px) scale(1.8);transform-origin:0 0' : ''
   const body = `<section class="clip scene" id="l1" data-start="0" data-duration="12" data-track-index="1">
     <div class="loop-map" style="${shift}">${bursaMap('lm')}</div></section>`
   const js = [
