@@ -79,6 +79,8 @@ class GuideRequest(BaseModel):
     monument_id: Optional[MonumentId] = None
     history: list[HistoryTurn] = Field(default_factory=list, max_length=8)
     image: Optional[GuideImage] = None
+    # en: yalnızca eserin onaylı İngilizce kayıtlarından İngilizce cevap (Faz 11).
+    lang: Literal["tr", "en"] = "tr"
 
     @field_validator("question")
     @classmethod
@@ -241,7 +243,8 @@ def guide_ask(body: GuideRequest, request: Request, response: Response):
     try:
         image_bytes = img.decode_base64(body.image.data) if body.image is not None else None
         # Geçersiz dosya veya yüz içeren fotoğraf, sağlayıcıya herhangi bir çağrı yapılmadan reddedilir.
-        result = service.ask(body.question, body.monument_id, [h.model_dump() for h in body.history], image_bytes)
+        result = service.ask(body.question, body.monument_id, [h.model_dump() for h in body.history], image_bytes,
+                             lang=body.lang)
     except img.ImageRejected as e:
         raise HTTPException(status_code=400, detail=str(e)) from None
     finally:

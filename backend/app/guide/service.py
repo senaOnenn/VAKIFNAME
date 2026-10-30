@@ -199,9 +199,22 @@ class GuideService:
     # --- Cevap ----------------------------------------------------------------------------------------------------
 
     def ask(self, question: str, monument_id: Optional[str] = None, history: Optional[list[dict]] = None,
-            image_bytes: Optional[bytes] = None) -> dict:
+            image_bytes: Optional[bytes] = None, lang: str = "tr") -> dict:
         t0 = time.perf_counter()
         usage = Usage(deadline=time.monotonic() + self.settings.deadline_s)
+        if lang == "en" and image_bytes is None:
+            try:
+                res = self._answer_en(question, monument_id, (history or [])[-self.settings.history_turns:], usage)
+            except ProviderError as e:
+                self._log_provider_error(e)
+                res = self._base("generative", "unavailable", EN_UNAVAILABLE, fallback_reason=e.kind)
+            res["usage"] = {"calls": usage.calls, "prompt_tokens": usage.prompt_tokens,
+                            "completion_tokens": usage.completion_tokens, "provider_latency_ms": usage.latency_ms,
+                            "cost_usd": usage.cost, "total_ms": int((time.perf_counter() - t0) * 1000)}
+            res["models"] = list(dict.fromkeys(usage.models))
+            res["notice"] = EN_NOTICE
+            res["question"] = question
+            return res
         engine = self.ask_service.engine()
         history = (history or [])[-self.settings.history_turns:]
         photo, clean = None, None
@@ -260,6 +273,53 @@ class GuideService:
                 "missing": "", "removed_claims": 0, "monument": None, "monuments": [], "options": [], "photo": None,
                 "search": None, "fallback_reason": None, "manual_options": [], "actions": [], "interpreted_question": None,
                 **extra}
+
+    def _answer_en(self, question: str, monument_id: Optional[str], history: list[dict], usage: Usage) -> dict:
+        """İngilizce rehber (Faz 11): yalnızca eserin onaylı İngilizce kayıtları (`text_en`; kitabın İngilizce bölümünden,
+        yönetici onaylı). Her cümle dayandığı kayıt kimliğini taşır; kimliksiz cümle ve kayıtta geçmeyen sayı atılır."""
+        m = self.ask_service.repo.get(monument_id) if monument_id else None
+        if m is None:
+            return self._base("generative", "monument_not_identified",
+                              "Ask me on a monument's page and I will answer from its approved English records.")
+        name = m.name_en or m.name
+        mon = {"monument_id": m.monument_id, "name": name}
+        facts = [f for f in m.facts if f.text_en]
+        if not facts:
+            return self._base("generative", "insufficient_evidence",
+                              f"I don't have approved English records for {name} yet. The Turkish records and their "
+                              "sources are on this page.", monument=mon)
+        records = "\n".join(f"[{f.fact_id}] ({f.certainty}) {f.text_en}" for f in facts)
+        messages = [{"role": "system", "content": EN_SYSTEM}]
+        for h in history:
+            messages += [{"role": "user", "content": str(h.get("question", ""))[:500]},
+                         {"role": "assistant", "content": str(h.get("answer", ""))[:800]}]
+        messages.append({"role": "user", "content": f"Approved records about {name}:\n{records}\n\nQuestion: {question}"})
+        text = self._call(self.settings.text_model, messages, self.settings.max_answer_tokens, usage, est_tokens=1500)
+        data = parse(text) or {}
+        valid = {f.fact_id: f for f in facts}
+        sentences, removed = [], 0
+        for s in data.get("sentences") or []:
+            if not isinstance(s, dict):
+                removed += 1
+                continue
+            t = str(s.get("text") or "").strip()
+            ids = [i for i in (s.get("sources") or []) if isinstance(i, str) and i in valid]
+            numbers = set(re.findall(r"\d+", t))
+            cited = " ".join(valid[i].text_en for i in ids)
+            if not t or not ids or any(n not in cited for n in numbers):
+                removed += 1
+                continue
+            sentences.append({"text": t[:400], "sources": ids})
+        if not sentences:
+            return self._base("generative", "not_found", "I couldn't find this in my approved English records.",
+                              monument=mon, removed_claims=removed)
+        used = {i for s in sentences for i in s["sources"]}
+        views = [{"fact_id": f.fact_id, "monument_id": m.monument_id, "monument_name": name, "title": f.title_en,
+                  "text": f.text_en, "certainty": f.certainty, "certainty_label": CERTAINTY_EN.get(f.certainty, f.certainty),
+                  "sources": [{"title": s.title, "publisher": s.publisher, "url": s.url} for s in f.sources],
+                  "publication_decision_id": f.en_decision_id} for f in facts if f.fact_id in used]
+        return self._base("generative", "answered", "", sentences=sentences, facts=views, monument=mon,
+                          removed_claims=removed)
 
     def _observe(self, question: str, clean: img.CleanImage, engine, usage: Usage) -> dict:
         """Görsel iki aşamada değerlendirilir: önce katalogdan bağımsız gözlem (yapı türü, özellikler, kimliğin
@@ -515,6 +575,19 @@ def _options(engine, mids) -> list[dict]:
 def _sentences(text: str) -> list[str]:
     # Yalnızca büyük harf veya tırnakla başlayan cümleden önce bölünür: "16. yüzyılda", "1. kat" bölünmez.
     return [s.strip() for s in re.split(r"(?<=[.!?])\s+(?=[A-ZÇĞİÖŞÜÂÎÛ\"“‘'(])", " ".join(text.split())) if s.strip()]
+
+
+EN_SYSTEM = """You are the local guide of a historic foundation (waqf) building. Answer ONLY from the approved records you
+are given. Rules:
+- Every sentence must list the ids of the records it relies on.
+- Do not add names, dates, numbers or facts that are not in those records. No general knowledge, no guesses.
+- If a record is marked "reported" or "uncertain", say so ("According to tradition…", "It is not certain…").
+- If the records do not answer the question, return {"sentences": []}.
+- Warm, respectful and short: at most 4 sentences.
+Return only one JSON object: {"sentences": [{"text": "...", "sources": ["<record id>"]}]}"""
+EN_NOTICE = "The guide is a character (an impersonation). Every sentence is based on an approved record with its source."
+EN_UNAVAILABLE = "The guide can't answer right now. You can read the approved records and their sources on this page."
+CERTAINTY_EN = {"documented": "Documented in the sources", "reported": "Reported tradition", "uncertain": "Not certain"}
 
 
 def _fact_view(d) -> dict:

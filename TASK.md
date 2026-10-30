@@ -146,6 +146,7 @@
 - [ ] Slaytlar: organizasyonun şablonu paylaşılınca.
 
 ## Faz 11 — İngilizce (karar 15 = C, tam)
+- [x] Backend (30 Ekim, dal `feat/english-content`): kayıt/soru/eser için İngilizce alanlar ve yayın katmanı; çeviri kayıtları (kitabın İngilizce bölümünden alıntı doğrulamalı, onaylı); hattın İngilizce kipi; İngilizce "Rozeti Al" turu (yalnızca İngilizcesi onaylı kayıtlar, en az 2 metin sorusu; yetmezse Türkçeye düşer ve söyler); iki dilli seslendirme (İngilizce kalıplar + `VAKIFNAME_TTS_VOICE_EN`); İngilizce rehber (yalnızca onaylı İngilizce kayıtlar, her cümle kayıt kimliğiyle, kayıtta olmayan sayı atılır).
 - [ ] Arayüz: dil seçici (TR/EN, tarayıcı diline göre ilk seçim, kalıcı), tüm arayüz metinleri sözlükten; tarih/sayı biçimi dile göre.
 - [ ] İçerik modeli: kayıt, soru ve eser adı için isteğe bağlı İngilizce alanlar (`title_en`, `text_en`, soru/şık/açıklama EN, eser adı EN).
 - [ ] Hat: kitabın İngilizce bölümünden aday; İngilizce alıntı aynı sayfada (ya da bitişiğinde) doğrulanır → taslak → yönetici onayı. Mevcut kayıtlar için İngilizce karşılık adayları aynı yolla.
