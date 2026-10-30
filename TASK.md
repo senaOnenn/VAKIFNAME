@@ -144,8 +144,8 @@
 ## Faz 10 — Sunum (gündem 4; şartname 5.4)
 - [ ] İskelet (onaylandı 29 Ekim): 1 açılış (film kesiti) · 2 problem ve hedef kullanıcı (5.2.1) · 3 çözüm (5.1.1) · 4 canlı demo ~5 dk: ziyaretçi akışı + yönetici kitaptan aday → onay → eser sayfasında canlı (5.4) · 5 veri kullanımı ve doğruluk (5.1.3, 5.2.2) · 6 mimari ve veri modeli (5.1.2) · 7 erişilebilirlik (5.1.4) · 8 güvenlik, test, kişisel veri (5.1.5) · 9 kaynak ve lisanslar · 10 yenilikçilik · 11 ölçek ve yol haritası · 12 takım (5.2.3) · 13 kapanış + soru.
 - [ ] Konuşma metni + konuşmacı notları (4 üye; kim neyi anlatır).
-- [ ] Dakika dakika demo senaryosu + aksilik B planı.
-- [ ] Jüri soru-cevap kartları (~15): yapay zekâ uydurursa, konum taklidi, internet giderse, yeni şehir süresi, maliyet, KVKK …
+- [~] Dakika dakika demo senaryosu + aksilik B planı — taslak `docs/SUNUM.md` (30 Ekim; konuşmacılar ekipçe).
+- [~] Jüri soru-cevap kartları (~15): yapay zekâ uydurursa, konum taklidi, internet giderse, yeni şehir süresi, maliyet, KVKK … — 15 kart taslağı `docs/SUNUM.md`; ekip okuyup düzeltecek.
 - [ ] Slaytlar: organizasyonun şablonu paylaşılınca.
 
 ## Faz 11 — İngilizce (karar 15 = C, tam)
