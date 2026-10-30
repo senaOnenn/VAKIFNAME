@@ -27,7 +27,10 @@ export function EnglishCard({ edit, onChange }: { edit: MonumentEdit; onChange: 
     setBusy(true)
     setMsg(null)
     try {
-      await putMonumentEn(m.monument_id, { name_en: name.trim(), site_notice_en: notice.trim() || null, publish })
+      // Kart yeniden kurulmaz (onay mesajı kalır); alanlar sunucunun kaydettiği değerle güncellenir.
+      const saved = await putMonumentEn(m.monument_id, { name_en: name.trim(), site_notice_en: notice.trim() || null, publish })
+      setName(saved.name_en)
+      setNotice(saved.site_notice_en ?? '')
       setMsg({ text: publish ? 'İngilizce ad yayımlandı.' : 'İngilizce ad taslak olarak kaydedildi.', error: false })
       onChange()
     } catch (e) {

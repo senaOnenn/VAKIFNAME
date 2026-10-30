@@ -114,7 +114,7 @@ function Loaded({ overview, edit, reload, flash }: { overview: ContentOverview; 
         )}
       </section>
 
-      <EnglishCard key={edit.monument_en?.decision?.decision_id ?? edit.monument_en?.name_en ?? 'en'} edit={edit} onChange={reload} />
+      <EnglishCard edit={edit} onChange={reload} />
       <PipelinePanel overview={overview} monument={m} onDone={reload} />
       <ImagesSection monument={m} images={edit.images} onChange={reload} overview={overview} />
     </>
