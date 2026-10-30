@@ -1,4 +1,5 @@
 import type { MonumentStatus } from '../api'
+import { useLang } from '../i18n'
 
 const LABEL: Record<MonumentStatus, string> = {
   locked: 'Kilitli',
@@ -9,11 +10,12 @@ const LABEL: Record<MonumentStatus, string> = {
 
 /** Eserin oyundaki durumu: kilit, açık, bilgi mührü (indigo) veya ziyaretle altın mühür. */
 export function StatusBadge({ status }: { status: MonumentStatus | undefined }) {
+  const { t } = useLang()
   if (!status) return null
   return (
     <span className={`vk-status vk-status--${status}`}>
       <span className="vk-status__dot" aria-hidden="true" />
-      {LABEL[status]}
+      {t(LABEL[status])}
     </span>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect, useId, useState, type FormEvent, type ReactNode } from 'reac
 import { Link, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { GoldRule } from '../components/Ornament'
+import { useLang } from '../i18n'
 import { clearLinkToken, readLinkToken, requestPasswordReset, resetPassword, useAuth, verifyEmail } from '../session'
 import './auth.css'
 
@@ -22,12 +23,13 @@ function useLinkToken(): string | null {
 
 function Card({ title, children }: { title: string; children: ReactNode }) {
   const id = useId()
+  const { t } = useLang()
   return (
     <main className="vk-auth vk-auth--single">
       <section className="vk-auth__panel" aria-labelledby={id}>
         <div className="vk-auth__card">
           <p className="vk-auth__eyebrow">VAKIFNAME</p>
-          <h1 id={id} className="vk-auth__heading">{title}</h1>
+          <h1 id={id} className="vk-auth__heading">{t(title)}</h1>
           <GoldRule className="vk-auth__rule" />
           {children}
         </div>
@@ -39,6 +41,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
 /** `/dogrula#t=…`: e-posta doğrulama bağlantısı. */
 export function VerifyEmail() {
   const token = useLinkToken()
+  const { t } = useLang()
   const auth = useAuth()
   const [status, setStatus] = useState<'checking' | 'ok' | 'error'>(token ? 'checking' : 'error')
   const [error, setError] = useState(token ? '' : 'Bağlantı eksik ya da bozuk. E-postadaki bağlantıyı yeniden aç.')
@@ -63,18 +66,18 @@ export function VerifyEmail() {
   return (
     <Card title={status === 'ok' ? 'E-postan doğrulandı' : 'E-posta doğrulama'}>
       <div aria-live="polite" className="vk-auth__message">
-        {status === 'checking' && <p role="status">Bağlantı denetleniyor…</p>}
-        {status === 'ok' && <p role="status">Teşekkürler. Hesabının e-posta adresi artık doğrulanmış.</p>}
-        {status === 'error' && <p className="vk-auth__error vk-auth__error--form" role="alert">{error}</p>}
+        {status === 'checking' && <p role="status">{t('Bağlantı denetleniyor…')}</p>}
+        {status === 'ok' && <p role="status">{t('Teşekkürler. Hesabının e-posta adresi artık doğrulanmış.')}</p>}
+        {status === 'error' && <p className="vk-auth__error vk-auth__error--form" role="alert">{t(error)}</p>}
       </div>
       {status === 'ok' && (
         <Link to={signedIn ? '/sehir' : '/giris'} className="vk-btn vk-btn--block">
-          {signedIn ? 'Keşfe devam et' : 'Giriş yap'}
+          {signedIn ? t('Keşfe devam et') : t('Giriş yap')}
         </Link>
       )}
       {status === 'error' && (
         <Link to={signedIn ? '/hesap' : '/giris'} className="vk-btn vk-btn--ghost vk-btn--block">
-          {signedIn ? 'Hesabımdan yeni bağlantı iste' : 'Giriş sayfasına dön'}
+          {signedIn ? t('Hesabımdan yeni bağlantı iste') : t('Giriş sayfasına dön')}
         </Link>
       )}
     </Card>
@@ -84,6 +87,7 @@ export function VerifyEmail() {
 /** `/sifre-sifirla`: parola yenileme bağlantısı iste. Cevap, hesabın olup olmadığını belli etmez. */
 export function ForgotPassword() {
   const uid = useId()
+  const { t } = useLang()
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [sent, setSent] = useState(false)
@@ -111,13 +115,12 @@ export function ForgotPassword() {
     <Card title="Parolanı yenile">
       {sent ? (
         <p role="status" className="vk-auth__message">
-          Bu adresle kayıtlı bir hesap varsa parola yenileme bağlantısını gönderdik. Bağlantı kısa süre geçerlidir;
-          gelen kutunu ve istenmeyen e-posta klasörünü kontrol et.
+          {t('Bu adresle kayıtlı bir hesap varsa parola yenileme bağlantısını gönderdik. Bağlantı kısa süre geçerlidir; gelen kutunu ve istenmeyen e-posta klasörünü kontrol et.')}
         </p>
       ) : (
         <form onSubmit={submit} noValidate className="vk-auth__form">
-          <p className="vk-auth__note">Hesabının e-posta adresini yaz; yeni parola belirlemen için bir bağlantı gönderelim.</p>
-          <label htmlFor={`${uid}-email`}>E-posta</label>
+          <p className="vk-auth__note">{t('Hesabının e-posta adresini yaz; yeni parola belirlemen için bir bağlantı gönderelim.')}</p>
+          <label htmlFor={`${uid}-email`}>{t('E-posta')}</label>
           <input
             id={`${uid}-email`}
             type="email"
@@ -128,13 +131,13 @@ export function ForgotPassword() {
             aria-invalid={!!error}
             aria-describedby={error ? `${uid}-e` : undefined}
           />
-          {error && <p id={`${uid}-e`} className="vk-auth__error" role="alert">{error}</p>}
+          {error && <p id={`${uid}-e`} className="vk-auth__error" role="alert">{t(error)}</p>}
           <button type="submit" className="vk-btn vk-btn--block" disabled={busy} aria-busy={busy}>
-            {busy ? 'Gönderiliyor…' : 'Bağlantı gönder'}
+            {busy ? t('Gönderiliyor…') : t('Bağlantı gönder')}
           </button>
         </form>
       )}
-      <Link to="/giris" className="vk-auth__back">Giriş sayfasına dön</Link>
+      <Link to="/giris" className="vk-auth__back">{t('Giriş sayfasına dön')}</Link>
     </Card>
   )
 }
@@ -144,6 +147,7 @@ export function ResetPassword() {
   const token = useLinkToken()
   const navigate = useNavigate()
   const uid = useId()
+  const { t } = useLang()
   const [password, setPassword] = useState('')
   const [again, setAgain] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -154,9 +158,9 @@ export function ResetPassword() {
     return (
       <Card title="Parolanı yenile">
         <p className="vk-auth__error vk-auth__error--form" role="alert">
-          Bağlantı eksik ya da bozuk. E-postadaki bağlantıyı yeniden aç veya yeni bir bağlantı iste.
+          {t('Bağlantı eksik ya da bozuk. E-postadaki bağlantıyı yeniden aç veya yeni bir bağlantı iste.')}
         </p>
-        <Link to="/sifre-sifirla" className="vk-btn vk-btn--block">Yeni bağlantı iste</Link>
+        <Link to="/sifre-sifirla" className="vk-btn vk-btn--block">{t('Yeni bağlantı iste')}</Link>
       </Card>
     )
   }
@@ -183,8 +187,8 @@ export function ResetPassword() {
   return (
     <Card title="Yeni parola belirle">
       <form onSubmit={submit} noValidate className="vk-auth__form">
-        <p className="vk-auth__note">Yeni parolan kaydedilince diğer cihazlardaki oturumların kapanır.</p>
-        <label htmlFor={`${uid}-pw`}>Yeni parola</label>
+        <p className="vk-auth__note">{t('Yeni parolan kaydedilince diğer cihazlardaki oturumların kapanır.')}</p>
+        <label htmlFor={`${uid}-pw`}>{t('Yeni parola')}</label>
         <input
           id={`${uid}-pw`}
           type="password"
@@ -194,8 +198,8 @@ export function ResetPassword() {
           aria-invalid={!!errors.password}
           aria-describedby={errors.password ? `${uid}-pw-e` : undefined}
         />
-        {errors.password && <p id={`${uid}-pw-e`} className="vk-auth__error" role="alert">{errors.password}</p>}
-        <label htmlFor={`${uid}-again`}>Yeni parola (tekrar)</label>
+        {errors.password && <p id={`${uid}-pw-e`} className="vk-auth__error" role="alert">{t(errors.password)}</p>}
+        <label htmlFor={`${uid}-again`}>{t('Yeni parola (tekrar)')}</label>
         <input
           id={`${uid}-again`}
           type="password"
@@ -205,14 +209,14 @@ export function ResetPassword() {
           aria-invalid={!!errors.again}
           aria-describedby={errors.again ? `${uid}-again-e` : undefined}
         />
-        {errors.again && <p id={`${uid}-again-e`} className="vk-auth__error" role="alert">{errors.again}</p>}
+        {errors.again && <p id={`${uid}-again-e`} className="vk-auth__error" role="alert">{t(errors.again)}</p>}
         {formError && (
           <p className="vk-auth__error vk-auth__error--form" role="alert">
-            {formError} <Link to="/sifre-sifirla">Yeni bağlantı iste</Link>
+            {t(formError)} <Link to="/sifre-sifirla">{t('Yeni bağlantı iste')}</Link>
           </p>
         )}
         <button type="submit" className="vk-btn vk-btn--block" disabled={busy} aria-busy={busy}>
-          {busy ? 'Kaydediliyor…' : 'Parolayı kaydet'}
+          {busy ? t('Kaydediliyor…') : t('Parolayı kaydet')}
         </button>
       </form>
     </Card>

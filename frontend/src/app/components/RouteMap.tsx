@@ -4,9 +4,10 @@ import { useEffect } from 'react'
 import { MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from 'react-leaflet'
 import type { MonumentStatus } from '../api'
 import './route-map.css'
+import { useLang } from '../i18n'
 
 const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> katkıcıları'
+const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> {contributors}'
 
 export interface MapPoint {
   id: string
@@ -50,9 +51,11 @@ function Fit({ points }: { points: MapPoint[] }) {
 
 /** Koyu tonlu OSM haritası: durum renkli işaretler, rota sırası ve kesikli altın rota çizgisi. */
 export default function RouteMap({ points, path, start, onSelect, className = '' }: RouteMapProps) {
+  const { lang, t } = useLang()
   return (
     <MapContainer className={`vk-rmap ${className}`} center={[40.1885, 29.061]} zoom={14} scrollWheelZoom={false}>
-      <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
+      {/* Atıf metni katman kurulurken okunur; dil değişince katman yeniden kurulur. */}
+      <TileLayer key={lang} url={TILE_URL} attribution={TILE_ATTRIBUTION.replace('{contributors}', t('katkıcıları'))} />
       {path && path.length > 1 && <Polyline positions={path} pathOptions={{ className: 'vk-rmap__path' }} />}
       {start && (
         <Marker position={[start.lat, start.lng]} icon={START_ICON} keyboard={false}>

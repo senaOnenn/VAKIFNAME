@@ -9,6 +9,8 @@ export interface City {
   lng: number
   open: boolean
   note: string
+  /** Katalogdaki eser sayısı (`withCatalog`); varsa not "N eser" olarak çevrilir. */
+  count?: number
 }
 
 export const CITIES: City[] = [
@@ -27,6 +29,10 @@ export function withCatalog(cities: City[], cityNames: string[] | null, slug: (n
   for (const n of cityNames) counts.set(slug(n), (counts.get(slug(n)) ?? 0) + 1)
   return cities.map((c) => {
     const n = counts.get(c.slug) ?? 0
-    return { ...c, open: n > 0, note: n > 0 ? `${n} eser` : 'Yakında' }
+    return { ...c, open: n > 0, count: n, note: n > 0 ? `${n} eser` : 'Yakında' }
   })
 }
+
+/** Şehir notu arayüz dilinde: eser sayısı ya da sabit not ("Pilot şehir", "Yakında"). */
+export const cityNote = (c: City, t: (tr: string, vars?: Record<string, string | number>) => string) =>
+  c.count ? t('{n} eser', { n: c.count }) : t(c.note)

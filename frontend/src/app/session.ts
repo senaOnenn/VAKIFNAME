@@ -1,6 +1,7 @@
 import { useEffect, useSyncExternalStore } from 'react'
 import { apiGet, apiPost, ApiError } from '../api/client'
 import { getVisitorId } from '../visitor'
+import { t } from './i18n'
 
 /**
  * Oturum durumu. Hesaplar sunucudadır (`/auth/*`, HttpOnly `vk_session` çerezi); tarayıcı yalnızca "misafir" tercihini
@@ -50,7 +51,7 @@ function isUser(v: unknown): v is AuthUser {
 }
 
 function signedIn(body: unknown): AuthUser {
-  if (!isUser(body)) throw new ApiError('invalid-response', 'Sunucudan beklenmeyen bir yanıt geldi.')
+  if (!isUser(body)) throw new ApiError('invalid-response', t('Sunucudan beklenmeyen bir yanıt geldi.'))
   guestFlag(false)
   set({ status: 'user', user: body })
   return body
@@ -176,6 +177,6 @@ export function resetAuthForTests(): void {
 
 /** Kısa görünen ad: ad, yoksa e-posta, misafirse "Misafir". */
 export function displayName(s: AuthState): string {
-  if (s.status === 'user') return s.user.display_name || s.user.email || 'Hesabım'
-  return 'Misafir'
+  if (s.status === 'user') return s.user.display_name || s.user.email || t('Hesabım')
+  return t('Misafir')
 }

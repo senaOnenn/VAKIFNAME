@@ -129,3 +129,13 @@
 .vk-verify-notice p {
   margin: 0;
 }
+.vk-shell__end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-3);
+  min-width: 0;
+}
+.vk-shell__end .vk-shell__chip {
+  margin-left: 0;
+}

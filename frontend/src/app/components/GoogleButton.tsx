@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLang } from '../i18n'
 
 /** Google Cloud "VAKIFNAME" projesinin Web istemci kimliği (gizli değildir). Boşsa Google girişi kapalıdır. */
 export const GOOGLE_CLIENT_ID: string = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''
@@ -48,6 +49,7 @@ function GoogleMark() {
 export function GoogleButton({ onCredential, onError }: { onCredential: (idToken: string) => void; onError: (m: string) => void }) {
   const slot = useRef<HTMLDivElement>(null)
   const [failed, setFailed] = useState(false)
+  const { lang, t } = useLang()
   const cb = useRef(onCredential)
   cb.current = onCredential
 
@@ -62,8 +64,9 @@ export function GoogleButton({ onCredential, onError }: { onCredential: (idToken
           ux_mode: 'popup',
           callback: (r) => (r.credential ? cb.current(r.credential) : onError('Google girişi tamamlanmadı.')),
         })
+        slot.current.innerHTML = '' // dil değişince düğme yeniden çizilir
         gsi.renderButton(slot.current, {
-          theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', locale: 'tr',
+          theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', locale: lang,
           width: Math.min(360, slot.current.clientWidth || 320),
         })
       })
@@ -71,7 +74,7 @@ export function GoogleButton({ onCredential, onError }: { onCredential: (idToken
     return () => {
       alive = false
     }
-  }, [onError])
+  }, [onError, lang])
 
   if (GOOGLE_CLIENT_ID && !failed) return <div ref={slot} className="vk-google-slot" />
   return (
@@ -86,7 +89,7 @@ export function GoogleButton({ onCredential, onError }: { onCredential: (idToken
         )
       }
     >
-      <GoogleMark /> Google ile devam et
+      <GoogleMark /> {t('Google ile devam et')}
     </button>
   )
 }

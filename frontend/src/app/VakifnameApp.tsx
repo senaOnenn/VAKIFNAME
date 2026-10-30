@@ -8,6 +8,7 @@ import AdminPage from './screens/AdminPage'
 import Auth from './screens/Auth'
 import City from './screens/City'
 import { ForgotPassword, ResetPassword, VerifyEmail } from './screens/EmailLink'
+import { LangProvider } from './i18n'
 import Intro, { INTRO_SEEN_KEY } from './screens/Intro'
 import Landing from './screens/Landing'
 import MonumentPage from './screens/MonumentPage'
@@ -59,6 +60,7 @@ function OnNavigate() {
 export default function VakifnameApp() {
   return (
     <div className="vk-app">
+      <LangProvider>
       <BrowserRouter>
         <OnNavigate />
         <Routes>
@@ -86,6 +88,7 @@ export default function VakifnameApp() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
+      </LangProvider>
     </div>
   )
 }

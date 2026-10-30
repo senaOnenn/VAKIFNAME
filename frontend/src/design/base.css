@@ -103,3 +103,31 @@ body:has(.vk-app) {
 .vk-link-btn:hover {
   color: var(--vk-gold-bright);
 }
+
+/* Dil seçici (TR | EN): küçük, erişilebilir düğme grubu. */
+.vk-lang {
+  display: inline-flex;
+  border: 1px solid rgb(201 162 75 / 0.5);
+  border-radius: 999px;
+  overflow: hidden;
+  flex: none;
+}
+.vk-lang button {
+  min-width: 2.4rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.6rem;
+  border: 0;
+  background: transparent;
+  color: var(--vk-ivory-dim);
+  font: 600 0.78rem/1 var(--vk-font-ui);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.vk-lang button[aria-pressed='true'] {
+  background: var(--vk-gold-gradient);
+  color: var(--vk-night-deep);
+}
+.vk-lang button:focus-visible {
+  outline: 2px solid var(--vk-gold-bright);
+  outline-offset: -2px;
+}

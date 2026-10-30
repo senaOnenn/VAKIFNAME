@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { GoldRule, Ornament } from '../components/Ornament'
+import { useLang } from '../i18n'
 import './intro.css'
 
 const TITLE = 'VAKIFNAME'
@@ -9,6 +10,7 @@ const REDUCED_DURATION_MS = 1800
 
 /** Açılış: VAKIFNAME yazısı belirir, ardından tanıtım sayfası açılır (`onDone`). Her zaman atlanabilir. */
 export default function Intro({ onDone }: { onDone: () => void }) {
+  const { t } = useLang()
 
   useEffect(() => {
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
@@ -32,7 +34,7 @@ export default function Intro({ onDone }: { onDone: () => void }) {
   }, [onDone])
 
   return (
-    <main className="vk-intro" aria-label="VAKIFNAME açılış">
+    <main className="vk-intro" aria-label={t('VAKIFNAME açılış')}>
       <div className="vk-intro__halo" aria-hidden="true" />
       <Ornament className="vk-intro__ornament" />
       <div className="vk-intro__center">
@@ -44,7 +46,7 @@ export default function Intro({ onDone }: { onDone: () => void }) {
           ))}
         </h1>
         <GoldRule className="vk-intro__rule" />
-        <p className="vk-intro__tagline">Geçmişin izinde, geleceğe bir miras</p>
+        <p className="vk-intro__tagline">{t('Geçmişin izinde, geleceğe bir miras')}</p>
       </div>
       <button
         type="button"
@@ -58,7 +60,7 @@ export default function Intro({ onDone }: { onDone: () => void }) {
           onDone()
         }}
       >
-        Geç
+        {t('Geç')}
       </button>
     </main>
   )

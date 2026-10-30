@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach } from 'vitest'
+import { resetLangForTests } from '../app/i18n'
 
 // Node 25'in deneysel global `localStorage`'ı (--localstorage-file yolu verilmeden) jsdom'unkini gölgeler ve metotları
 // çalışmaz. Depolama kullanılamıyorsa testlere bellek içi bir Storage verilir.
@@ -29,6 +30,12 @@ if (typeof window !== 'undefined') {
   }
 }
 
+// jsdom tarayıcı dilini en-US verir; uygulama testleri Türkçe arayüzle yazıldı (İngilizce testler dili kendisi seçer).
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window.navigator, 'languages', { value: ['tr-TR', 'tr'], configurable: true })
+  Object.defineProperty(window.navigator, 'language', { value: 'tr-TR', configurable: true })
+}
+
 // jsdom `scrollTo`'yu uygulamaz (konsola hata yazar); sayfa geçişi testleri için sessiz bir yer tutucu.
 if (typeof window !== 'undefined') window.scrollTo = () => {}
 
@@ -37,4 +44,5 @@ afterEach(() => {
   if (typeof window === 'undefined') return
   cleanup()
   window.history.replaceState(null, '', '/')
+  resetLangForTests()
 })
