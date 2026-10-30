@@ -146,7 +146,8 @@ def main(argv=None) -> int:
             ref = a.ref_en if (lang == "en" and a.ref_en) else a.ref
             cfg = 0.0 if (lang == "en" and not a.ref_en) else None  # farklı dilde referans: aksan taşınmasın
             pieces, worst, notes, tries = [], 1.0, [], 0
-            for text in sentences(job["text"]):
+            # Önce okunuşa çevrilir, sonra bölünür: "II. Murad" ya da "19. yüzyıl" cümle sonu sanılmasın.
+            for text in sentences(speakable(job["text"], lang)):
                 wav, sim, heard, n = make_piece(voice, text, lang, ref, a.attempts, tmp, cfg)
                 tries += n
                 worst = min(worst, sim)

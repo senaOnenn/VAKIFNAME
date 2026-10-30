@@ -50,3 +50,11 @@ def test_sentence_split_for_long_facts():
     long = "Ulu Cami'yi kimin tasarladığı kesin olarak bilinmiyor; " + "araştırmacılar birçok ad anıyor, " * 8 + "son."
     parts = vk.sentences(long)
     assert len(parts) > 1 and all(len(p) <= 260 for p in parts) and " ".join(parts) == long
+
+
+def test_abbreviations_are_read_before_splitting_sentences():
+    text = "Asıl türbe mekânında II. Murad'dan başka mezar yoktur. Süslemeler 19. yüzyıla aittir."
+    parts = vk.sentences(vk.speakable(text, "tr"))
+    assert parts == ["Asıl türbe mekânında İkinci Murad'dan başka mezar yoktur.", "Süslemeler on dokuzuncu yüzyıla aittir."]
+    # Okunuşa çevrilmiş parça tekrar çevrilince değişmez (denetim karşılaştırması bozulmaz).
+    assert all(vk.speakable(p, "tr") == p for p in parts)
