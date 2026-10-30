@@ -90,7 +90,9 @@ async function request(
 
     const body: unknown = response.status === 204 ? null : await response.json().catch(() => undefined)
     if (!response.ok) {
-      const message = detailMessage(body) ?? t('Sunucu bir hata döndürdü (HTTP {status}).', { status: response.status })
+      // Sunucu mesajları Türkçedir; İngilizce arayüzde sözlükte karşılığı varsa çevrilir (yoksa olduğu gibi kalır).
+      const detail = detailMessage(body)
+      const message = detail ? t(detail) : t('Sunucu bir hata döndürdü (HTTP {status}).', { status: response.status })
       throw new ApiError('http', message, response.status)
     }
     if (body === undefined) throw new ApiError('invalid-response', t('Sunucudan beklenmeyen bir yanıt geldi.'))

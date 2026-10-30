@@ -157,3 +157,15 @@ describe('atıf etiketleri', () => {
     expect(creditIn('Fotoğraf: Ali Veli', 'tr')).toBe('Fotoğraf: Ali Veli')
   })
 })
+
+describe('sunucu mesajları (İngilizce)', () => {
+  it('sözlükte karşılığı olan sunucu mesajı İngilizce gösterilir', async () => {
+    open('/eser/BUR-1001/rozet', {
+      '/monuments/BUR-1001/quiz': {
+        status: 409,
+        body: { detail: 'Bu eser henüz kilitli. Rotadaki açık eserlerden birinin bilgi mührünü alınca sıradaki kilit açılır.' },
+      },
+    })
+    expect(await screen.findByText(/^This monument is still locked\./)).toBeInTheDocument()
+  })
+})
