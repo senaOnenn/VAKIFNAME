@@ -14,7 +14,7 @@ HOST=${HOST:-89.167.32.115}
 REMOTE=/root/calismalar
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 VOICE_ENV=${VOICE_ENV:-$HOME/vakifname-voice/.venv}
-OUT=$HOME/vakifname-voice/out/$NAME
+OUT=${OUT:-$HOME/vakifname-voice/out/$NAME}   # üretim klasörü (ör. arşivdeki uretim/)
 mkdir -p "$OUT"
 
 echo "1/3 cümle listesi (sunucu)…"
