@@ -378,6 +378,8 @@ function cues(t, lang) {
       out.push({ a, b: Math.min(b, s.start + s.dur), text: p })
     }
   }
+  // Bir satır bir sonraki başlamadan biter (iki altyazı üst üste görünmesin).
+  for (let i = 0; i + 1 < out.length; i++) out[i].b = Math.min(out[i].b, out[i + 1].a - 0.04)
   return out
 }
 const vttTime = (x) => {
