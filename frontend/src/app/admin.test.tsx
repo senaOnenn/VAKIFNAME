@@ -31,21 +31,27 @@ afterEach(() => vi.unstubAllGlobals())
 describe('anonim sayfa sayımı', () => {
   it('adresleri sayfa türüne çevirir; listede olmayanı saymaz', () => {
     expect(pageOf('/eser/BUR-1001')).toEqual({ page: 'eser', monument_id: 'BUR-1001' })
-    expect(pageOf('/eser/BUR-1001/rozet')).toEqual({ page: 'rozet', monument_id: 'BUR-1001' })
-    expect(pageOf('/rota/bursa')).toEqual({ page: 'rota' })
+    expect(pageOf('/oyun/eser/BUR-1001/rozet')).toEqual({ page: 'rozet', monument_id: 'BUR-1001' })
+    expect(pageOf('/oyun/rota/bursa')).toEqual({ page: 'rota' })
+    expect(pageOf('/oyun/sehir')).toEqual({ page: 'sehir' })
+    expect(pageOf('/harita')).toEqual({ page: 'eserler' })
+    // Eski adresler oyun paneline yönlenir; yönlenme öncesi adres ve eserin mühür yolu ayrıca sayılmaz.
+    expect(pageOf('/sehir')).toBeNull()
+    expect(pageOf('/rota/bursa')).toBeNull()
+    expect(pageOf('/oyun/eser/BUR-1001')).toBeNull()
     expect(pageOf('/gizlilik')).toBeNull()
   })
 
   it('çerezsiz gönderir; "izleme" kapalıysa hiç göndermez', () => {
     const f = stubFetch({})
-    trackPage('/sehir', 1_000)
-    trackPage('/sehir', 1_500) // aynı sayfa hemen tekrar: sayılmaz
+    trackPage('/oyun/sehir', 1_000)
+    trackPage('/oyun/sehir', 1_500) // aynı sayfa hemen tekrar: sayılmaz
     expect(f).toHaveBeenCalledTimes(1)
     const [url, init] = f.mock.calls[0]
     expect(String(url)).toMatch(/\/stats\/hit$/)
     expect(JSON.parse(String(init!.body))).toEqual({ page: 'sehir' })
     expect(init).not.toHaveProperty('credentials')
-    trackPage('/sehir', 9_000)
+    trackPage('/oyun/sehir', 9_000)
     expect(f).toHaveBeenCalledTimes(2)
     vi.stubGlobal('navigator', { ...navigator, doNotTrack: '1' })
     trackPage('/eserler', 20_000)

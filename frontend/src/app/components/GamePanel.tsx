@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { sendVisit, type GameState, type VisitResult } from '../api'
+import { gamePath } from '../gameCity'
 import { useLang } from '../i18n'
 import { Seal } from './Seal'
 import './game-panel.css'
@@ -60,7 +61,7 @@ export function GamePanel({ id, uid, city, game, onChange }: {
       <section className="vk-game vk-game--locked" aria-labelledby="muhur-yolu">
         <h2 id="muhur-yolu">{t('Mühür yolu')}</h2>
         <p>{t('Bu eser henüz kilitli. Rotandaki açık eserlerden birinin mührünü aldıkça yeni eserlerin kilidi açılır.')}</p>
-        <Link to={`/rota/${city}`} className="vk-btn vk-btn--ghost">{t('Rotaya dön')}</Link>
+        <Link to={gamePath.route(city)} className="vk-btn vk-btn--ghost">{t('Rotaya dön')}</Link>
       </section>
     )
   }
@@ -83,6 +84,7 @@ export function GamePanel({ id, uid, city, game, onChange }: {
               {game.listened ? t('Anlatımı dinledin ✓') : t('Rehberin anlatımını sonuna kadar dinle.')}
               {game.guide_required && ' ' + (game.asked ? t('Rehbere sordun ✓') : t('Rehbere en az bir soru sor.'))}
             </p>
+            {!tier1 && <Link to={`/eser/${encodeURIComponent(id)}`} className="vk-btn vk-btn--ghost">{t('Eser sayfasında dinle')}</Link>}
           </div>
         </li>
         <li className={game.knowledge ? 'is-done' : tier1 ? 'is-current' : ''}>
@@ -92,7 +94,7 @@ export function GamePanel({ id, uid, city, game, onChange }: {
             <p>{game.knowledge ? t('Bilgi mührünü aldın ✓ Vakfiyenin bir parçası yerine oturdu.') : t('{n} kısa soru; en az {m} doğru gerekir.', { n: game.quiz_size, m: game.pass_mark })}</p>
             {!game.knowledge && (
               game.ready_for_quiz ? (
-                <Link to={`/eser/${encodeURIComponent(id)}/rozet`} className="vk-btn">{t('Rozeti Al')}</Link>
+                <Link to={gamePath.quiz(id)} className="vk-btn">{t('Rozeti Al')}</Link>
               ) : (
                 <button type="button" className="vk-btn" disabled>{t('Rozeti Al')}</button>
               )

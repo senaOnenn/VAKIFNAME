@@ -329,3 +329,9 @@
     grid-template-columns: 1.4fr 1fr;
   }
 }
+.vk-next__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--vk-space-2);
+}

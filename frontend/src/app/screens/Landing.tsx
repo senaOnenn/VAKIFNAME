@@ -84,7 +84,7 @@ export default function Landing() {
 
   const guest = () => {
     startGuest()
-    navigate('/sehir')
+    navigate('/oyun/sehir')
   }
   const ctas = (
     <div className="vk-land__ctas">

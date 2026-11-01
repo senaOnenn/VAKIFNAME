@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { stubFetch } from '../test/fixtures'
@@ -129,8 +129,8 @@ describe('Şehir seçimi', () => {
     const kut = { ...summary('KUT-1001', 'Kurşunlu Camii', 'cami', 39.42, 29.98), city: 'Kütahya' }
     routes({ '/monuments': { body: { ...CATALOG, published_count: 4, monuments: [...CATALOG.monuments, kut] } } })
     open('/sehir')
-    expect(await screen.findByRole('link', { name: 'Kütahya: 1 eser' })).toHaveAttribute('href', '/rota/kutahya')
-    expect(screen.getByRole('link', { name: 'Bursa: 3 eser' })).toHaveAttribute('href', '/rota/bursa')
+    expect(await screen.findByRole('link', { name: 'Kütahya: 1 eser' })).toHaveAttribute('href', '/oyun/rota/kutahya')
+    expect(screen.getByRole('link', { name: 'Bursa: 3 eser' })).toHaveAttribute('href', '/oyun/rota/bursa')
     expect(within(screen.getByRole('list', { name: 'Şehirler' })).getAllByRole('link')).toHaveLength(2)
   })
 })
@@ -204,5 +204,132 @@ describe('Eser sayfası', () => {
     open('/eser/BUR-1999')
     expect(await screen.findByText('Eser bulunamadı veya yüklenemedi.')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '← Eserlere dön' })).toHaveAttribute('href', '/eserler')
+  })
+})
+
+describe('Oyun paneli ve gezinme', () => {
+  const GAME = {
+    monument_id: 'BUR-1009', locked: false, listened: true, asked: false, guide_required: true, ready_for_quiz: false,
+    quiz_size: 5, pass_mark: 4, knowledge: null, visit: null, visit_radius_m: 50, simulated_visit_allowed: false, site_notice: null,
+  }
+  const mainNav = () => screen.getByRole('navigation', { name: 'Ana menü' })
+
+  it('oyun girişi: devam eden görev, sıradaki adım, rozet ilerlemesi, oyunlara erişim ve keşfe dönüş', async () => {
+    routes({ '/monuments/BUR-1009/game': { body: GAME } })
+    open('/oyun')
+    expect(await screen.findByRole('heading', { level: 1, name: 'Kayıp Vakfiye' })).toBeInTheDocument()
+    expect(within(mainNav()).getByRole('link', { name: 'Oyun' })).toHaveAttribute('aria-current', 'page')
+    const gameNav = screen.getByRole('navigation', { name: 'Oyun menüsü' })
+    expect(within(gameNav).getByRole('link', { name: 'Oyun girişi' })).toHaveAttribute('aria-current', 'page')
+    const quest = await screen.findByRole('region', { name: 'Devam eden görev' })
+    expect(within(quest).getByRole('heading', { name: 'Koza Han' })).toBeInTheDocument()
+    expect(await within(quest).findByText('Rehberin anlatımını dinle ve bir soru sor')).toBeInTheDocument()
+    expect(within(quest).getByRole('link', { name: 'Göreve devam et' })).toHaveAttribute('href', '/oyun/eser/BUR-1009')
+    expect(within(quest).getByRole('link', { name: 'Rotayı gör' })).toHaveAttribute('href', '/oyun/rota/bursa')
+    expect(screen.getByRole('link', { name: /1 \/ 10 vakfiye parçası/ })).toHaveAttribute('href', '/pasaport')
+    const games = within(screen.getByRole('region', { name: 'Oyunlar' })).getAllByRole('link')
+    expect(games.map((a) => a.getAttribute('href'))).toEqual(['/oyun/rota/bursa', '/oyun/eser/BUR-1009', '/pasaport'])
+    const exit = within(screen.getByRole('navigation', { name: 'Oyundan çık' }))
+    expect(exit.getByRole('link', { name: 'Keşfe dön' })).toHaveAttribute('href', '/eserler')
+    expect(exit.getByRole('link', { name: 'Haritaya dön' })).toHaveAttribute('href', '/harita')
+  })
+
+  it('rota oyun panelindedir; duraklar eserin mühür yoluna gider, oyun menüsünde "Rotam" etkin', async () => {
+    routes()
+    open('/oyun/rota/bursa')
+    const next = await screen.findByRole('region', { name: 'Sıradaki durak' })
+    expect(within(next).getByRole('link', { name: 'Mühür yoluna git' })).toHaveAttribute('href', '/oyun/eser/BUR-1009')
+    expect(within(next).getByRole('link', { name: 'Eseri aç' })).toHaveAttribute('href', '/eser/BUR-1009')
+    const stops = screen.getByRole('list', { name: 'Rota durakları' })
+    expect(within(stops).getByRole('link', { name: /Koza Han/ })).toHaveAttribute('href', '/oyun/eser/BUR-1009')
+    expect(within(screen.getByRole('navigation', { name: 'Oyun menüsü' })).getByRole('link', { name: 'Rotam' })).toHaveAttribute('aria-current', 'page')
+    expect(window.localStorage.getItem('vakifname.gameCity')).toBe('bursa')
+  })
+
+  it('eski oyun adresleri oyun paneline yönlenir (paylaşılmış bağlantılar çalışır)', async () => {
+    routes()
+    const { unmount } = open('/rota/bursa')
+    await screen.findByRole('region', { name: 'Sıradaki durak' })
+    expect(window.location.pathname).toBe('/oyun/rota/bursa')
+    unmount()
+    open('/sehir')
+    await screen.findByRole('heading', { name: 'Nereyi keşfetmek istersin?' })
+    expect(window.location.pathname).toBe('/oyun/sehir')
+  })
+
+  it('eser sayfası Keşfet bölümündedir ve oyun kontrolü içermez', async () => {
+    routes({ '/monuments/BUR-1001/game': { body: { ...GAME, monument_id: 'BUR-1001', knowledge: { earned_at: '2026-10-27T10:00:00Z' } } } })
+    open('/eser/BUR-1001')
+    expect(await screen.findByRole('heading', { level: 1, name: 'Bursa Ulu Camii' })).toBeInTheDocument()
+    expect(within(mainNav()).getByRole('link', { name: 'Keşfet' })).toHaveAttribute('aria-current', 'page')
+    const link = await screen.findByRole('region', { name: 'Bu eserin mühür yolu' })
+    expect(within(link).getByText(/Bilgi mührünü aldın/)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Konumumu doğrula' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: 'Oyun menüsü' })).not.toBeInTheDocument()
+  })
+
+  it('oyun panelinde eserin mühür yolu: ziyaret uyarısı oyun adımlarından önce, esere ve rotaya bağlantı', async () => {
+    routes({ '/monuments/BUR-1001/game': { body: { ...GAME, monument_id: 'BUR-1001' } } })
+    open('/oyun/eser/BUR-1001')
+    expect(await screen.findByRole('heading', { level: 1, name: 'Bursa Ulu Camii' })).toBeInTheDocument()
+    const notice = screen.getByRole('complementary', { name: 'Ziyaret uyarısı' })
+    const steps = await screen.findByRole('region', { name: 'Mühür yolu' })
+    expect(notice.compareDocumentPosition(steps) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(screen.getByRole('link', { name: /Eserin hikâyesini ve kaynaklarını aç/ })).toHaveAttribute('href', '/eser/BUR-1001')
+  })
+
+  it('Keşfet ↔ Harita ↔ Oyun arasında gezinme; tarayıcının geri ve ileri tuşu çalışır', async () => {
+    routes({ '/monuments/BUR-1009/game': { body: GAME } })
+    open('/eserler')
+    await screen.findByRole('heading', { name: 'Koza Han' })
+    await userEvent.click(within(mainNav()).getByRole('link', { name: 'Harita' }))
+    expect(window.location.pathname).toBe('/harita')
+    expect(await screen.findByRole('heading', { level: 1, name: 'Eser haritası' })).toBeInTheDocument()
+    expect(within(mainNav()).getByRole('link', { name: 'Harita' })).toHaveAttribute('aria-current', 'page')
+    await userEvent.click(within(mainNav()).getByRole('link', { name: 'Oyun' }))
+    expect(await screen.findByRole('heading', { level: 1, name: 'Kayıp Vakfiye' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('link', { name: '← Keşfe dön' }))
+    expect(window.location.pathname).toBe('/eserler')
+    await act(async () => window.history.back())
+    await waitFor(() => expect(window.location.pathname).toBe('/oyun'))
+    expect(await screen.findByRole('heading', { level: 1, name: 'Kayıp Vakfiye' })).toBeInTheDocument()
+    await act(async () => window.history.back())
+    await waitFor(() => expect(window.location.pathname).toBe('/harita'))
+    await act(async () => window.history.forward())
+    await waitFor(() => expect(window.location.pathname).toBe('/oyun'))
+  })
+
+  it('Rehber sayfası eser seçmeden sorar (eser kimliği gönderilmez)', async () => {
+    const fetchMock = routes({
+      '/guide/status': { body: { enabled: true, configured: true } },
+      '/guide/ask': {
+        body: {
+          question: 'Külliye nedir?', mode: 'fallback_search', status: 'answered', message: 'Bunu kaynaklarımda bulamadım.',
+          sentences: [], facts: [], identities: [], missing: '', removed_claims: 0, monument: null, monuments: [], options: [],
+          photo: null, search: null, fallback_reason: null, notice: '', usage: { calls: 0, prompt_tokens: 0, completion_tokens: 0, total_ms: 1 },
+        },
+      },
+    })
+    open('/rehber')
+    expect(await screen.findByRole('heading', { level: 1, name: 'Rehbere sor' })).toBeInTheDocument()
+    expect(within(mainNav()).getByRole('link', { name: 'Rehber' })).toHaveAttribute('aria-current', 'page')
+    const box = await screen.findByRole('textbox')
+    await waitFor(() => expect(box).toBeEnabled())
+    await userEvent.type(box, 'Külliye nedir?')
+    await userEvent.click(screen.getByRole('button', { name: 'Sor' }))
+    expect(await screen.findByText('Bunu kaynaklarımda bulamadım.')).toBeInTheDocument()
+    const ask = fetchMock.mock.calls.find(([u]) => String(u).includes('/guide/ask'))!
+    expect(JSON.parse(String(ask[1]!.body))).not.toHaveProperty('monument_id')
+  })
+})
+
+describe('oyun menüsü', () => {
+  it('rota açılmadan eserin mühür yoluna gelinse de "Rotam" o eserin şehrine döner ve etkindir', async () => {
+    routes({ '/monuments/BUR-1001/game': { body: { monument_id: 'BUR-1001', locked: false, listened: false, asked: false, guide_required: true,
+      ready_for_quiz: false, quiz_size: 5, pass_mark: 4, knowledge: null, visit: null, visit_radius_m: 50, simulated_visit_allowed: false, site_notice: null } } })
+    open('/oyun/eser/BUR-1001')
+    const rotam = await within(await screen.findByRole('navigation', { name: 'Oyun menüsü' })).findByRole('link', { name: 'Rotam' })
+    expect(rotam).toHaveAttribute('href', '/oyun/rota/bursa')
+    expect(rotam).toHaveAttribute('aria-current', 'page')
   })
 })

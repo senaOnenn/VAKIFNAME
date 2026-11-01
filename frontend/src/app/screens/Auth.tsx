@@ -55,10 +55,10 @@ export default function Auth() {
       if (register_) {
         const user = await register(email.trim(), password)
         // Şehir ekranında "doğrulama bağlantısı gönderildi" bildirimi çıkar (bkz. AppShell).
-        navigate('/sehir', { replace: true, state: { verifySent: user.email } })
+        navigate('/oyun/sehir', { replace: true, state: { verifySent: user.email } })
       } else {
         await login(email.trim(), password)
-        navigate('/sehir')
+        navigate('/oyun/sehir')
       }
     } catch (e) {
       setFormError(messageOf(e))
@@ -72,7 +72,7 @@ export default function Auth() {
       setGoogleNote('')
       try {
         await googleSignIn(idToken)
-        navigate('/sehir')
+        navigate('/oyun/sehir')
       } catch (e) {
         setGoogleNote(messageOf(e))
       }
@@ -82,10 +82,10 @@ export default function Auth() {
 
   function guest() {
     startGuest()
-    navigate('/sehir')
+    navigate('/oyun/sehir')
   }
 
-  if (auth.status === 'user') return <Navigate to="/sehir" replace />
+  if (auth.status === 'user') return <Navigate to="/oyun/sehir" replace />
 
   const fieldId = (n: string) => `${uid}-${n}`
 

@@ -183,3 +183,40 @@
     animation: none;
   }
 }
+
+/* Oyun paneline bağlantı: katalog sayfasında yalnızca durum + geçiş (oyun kontrolleri panelde). */
+.vk-gamelink {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--vk-space-3) var(--vk-space-4);
+  padding: var(--vk-space-4) var(--vk-space-5);
+  border-radius: var(--vk-radius-lg);
+  border: 1px solid rgb(201 162 75 / 0.35);
+  background: linear-gradient(160deg, rgb(35 43 102 / 0.6), rgb(15 19 48 / 0.8));
+}
+.vk-gamelink__text {
+  display: grid;
+  gap: var(--vk-space-1);
+  min-width: 0;
+}
+.vk-gamelink h2 {
+  font-size: 1.4rem;
+  color: var(--vk-ivory);
+}
+.vk-gamelink p:not(.vk-page__eyebrow) {
+  color: var(--vk-ivory-dim);
+  font-size: 0.92rem;
+}
+.vk-gamelink .vk-btn {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+@media (min-width: 700px) {
+  .vk-gamelink {
+    grid-template-columns: auto 1fr auto;
+  }
+  .vk-gamelink .vk-btn {
+    grid-column: auto;
+  }
+}

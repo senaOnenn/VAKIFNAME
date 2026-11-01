@@ -68,7 +68,8 @@ describe('arayüz dili', () => {
     expect(await screen.findByRole('heading', { name: 'Where would you like to explore?' })).toBeInTheDocument()
     const nav = screen.getByRole('navigation', { name: 'Main menu' })
     expect(within(nav).getByRole('link', { name: 'Explore' })).toBeInTheDocument()
-    expect(within(nav).getByRole('link', { name: 'Passport' })).toBeInTheDocument()
+    expect(within(nav).getByRole('link', { name: 'Seals' })).toBeInTheDocument()
+    expect(within(nav).getByRole('link', { name: 'Game' })).toBeInTheDocument()
     expect(screen.getByText('Guest')).toBeInTheDocument()
 
     await userEvent.click(within(screen.getByRole('group', { name: 'Language' })).getByRole('button', { name: 'TR – Türkçe' }))

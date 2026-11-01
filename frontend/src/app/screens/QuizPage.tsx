@@ -4,6 +4,7 @@ import { ApiError } from '../../api/client'
 import { getMonument, mediaUrl, progressId, startQuiz, submitQuiz, useLoad, type Quiz, type QuizQuestion, type QuizResult } from '../api'
 import { Seal } from '../components/Seal'
 import { creditIn, nameOf } from '../contentLang'
+import { gamePath } from '../gameCity'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -90,7 +91,7 @@ export default function QuizPage() {
 
   const name = monument.data ? nameOf(monument.data, lang) : t('Eser')
   const turkishOnly = lang === 'en' && quiz?.lang === 'tr'
-  const back = <Link to={`/eser/${encodeURIComponent(id)}`} className="vk-btn vk-btn--ghost">← {t('Esere dön')}</Link>
+  const back = <Link to={gamePath.monument(id)} className="vk-btn vk-btn--ghost">← {t('Mühür yoluna dön')}</Link>
 
   if (error)
     return (
@@ -114,7 +115,7 @@ export default function QuizPage() {
           </p>
           <div className="vk-quiz__actions">
             {result.passed ? (
-              <Link to="/pasaport" className="vk-btn">{t('Pasaportuma bak')}</Link>
+              <Link to="/pasaport" className="vk-btn">{t('Rozetlerime bak')}</Link>
             ) : (
               <button type="button" className="vk-btn" onClick={() => setAttempt((a) => a + 1)}>{t('Yeniden dene')}</button>
             )}

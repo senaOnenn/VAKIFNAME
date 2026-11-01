@@ -3,6 +3,7 @@ import { citySlug, getMonuments, useLoad } from '../api'
 import { CITIES, cityNote, withCatalog } from '../cities'
 import { GoldRule } from '../components/Ornament'
 import { TurkeyMap } from '../components/TurkeyMap'
+import { gamePath } from '../gameCity'
 import { useLang } from '../i18n'
 import './city.css'
 
@@ -25,7 +26,7 @@ export default function City() {
         {cities.map((c) => (
           <li key={c.slug}>
             {c.open ? (
-              <Link to={`/rota/${c.slug}`} className="vk-city__card vk-city__card--open">
+              <Link to={gamePath.route(c.slug)} className="vk-city__card vk-city__card--open">
                 <span className="vk-city__name">{c.name}</span>
                 <span className="vk-city__note">{cityNote(c, t)}</span>
                 <span className="vk-city__go" aria-hidden="true">{t('Keşfe başla')} →</span>

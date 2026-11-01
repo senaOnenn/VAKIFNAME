@@ -1,10 +1,11 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { formatDistance, getRoute, progressId, typeLabel, useLoad } from '../api'
 import { CITIES } from '../cities'
 import { GoldRule } from '../components/Ornament'
 import { StatusBadge } from '../components/StatusBadge'
 import { nameOf } from '../contentLang'
+import { gamePath, rememberGameCity } from '../gameCity'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -30,6 +31,10 @@ export default function RoutePage() {
   const [geoNote, setGeoNote] = useState('')
   const route = useLoad((s) => getRoute(city, uid, pos, s), [city, uid, pos?.latitude, pos?.longitude])
   const cityName = CITIES.find((c) => c.slug === city)?.name ?? city
+  // Oyun girişi ve oyun menüsü son açılan rotaya döner.
+  useEffect(() => {
+    if (city) rememberGameCity(city)
+  }, [city])
 
   function locate() {
     if (!('geolocation' in navigator)) return setGeoNote(t('Tarayıcın konum paylaşmayı desteklemiyor.'))
@@ -78,7 +83,10 @@ export default function RoutePage() {
               <p id="siradaki" className="vk-next__label">{t('Sıradaki durak')}</p>
               <h2>{nameOf(next, lang)}</h2>
               <p className="vk-next__meta">{typeLabel(next.type)} · {t(START_FROM[r.start.source], { d: formatDistance(next.distance_m) })}</p>
-              <Link to={`/eser/${encodeURIComponent(next.monument_id)}`} className="vk-btn">{t('Eseri aç')}</Link>
+              <div className="vk-next__actions">
+                <Link to={gamePath.monument(next.monument_id)} className="vk-btn">{t('Mühür yoluna git')}</Link>
+                <Link to={`/eser/${encodeURIComponent(next.monument_id)}`} className="vk-btn vk-btn--ghost">{t('Eseri aç')}</Link>
+              </div>
             </section>
           ) : (
             r.completed_count === r.total && (
@@ -98,7 +106,7 @@ export default function RoutePage() {
                   ]}
                   path={[[r.start.latitude, r.start.longitude], ...r.stops.map((s) => [s.latitude, s.longitude] as [number, number])]}
                   start={{ lat: r.start.latitude, lng: r.start.longitude, label: t(START_LABEL[r.start.source]) }}
-                  onSelect={(id) => navigate(`/eser/${encodeURIComponent(id)}`)}
+                  onSelect={(id) => navigate(gamePath.monument(id))}
                 />
               </Suspense>
               <div className="vk-route__geo">
@@ -111,7 +119,7 @@ export default function RoutePage() {
               {r.stops.map((s) => (
                 <li key={s.monument_id} className={`vk-stop vk-stop--${s.state}${s.monument_id === r.next ? ' vk-stop--next' : ''}`}>
                   <span className="vk-stop__order" aria-hidden="true">{s.order}</span>
-                  <Link to={`/eser/${encodeURIComponent(s.monument_id)}`} className="vk-stop__link">
+                  <Link to={gamePath.monument(s.monument_id)} className="vk-stop__link">
                     <span className="vk-stop__name">{nameOf(s, lang)}</span>
                     <span className="vk-stop__meta">{typeLabel(s.type)} · {formatDistance(s.distance_m)}</span>
                   </Link>
@@ -127,7 +135,7 @@ export default function RoutePage() {
               <ul>
                 {r.completed.map((c) => (
                   <li key={c.monument_id}>
-                    <Link to={`/eser/${encodeURIComponent(c.monument_id)}`}>{nameOf(c, lang)}</Link>
+                    <Link to={gamePath.monument(c.monument_id)}>{nameOf(c, lang)}</Link>
                     <StatusBadge status={c.visit ? 'gold' : 'completed'} />
                   </li>
                 ))}

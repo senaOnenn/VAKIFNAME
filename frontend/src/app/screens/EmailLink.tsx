@@ -71,7 +71,7 @@ export function VerifyEmail() {
         {status === 'error' && <p className="vk-auth__error vk-auth__error--form" role="alert">{t(error)}</p>}
       </div>
       {status === 'ok' && (
-        <Link to={signedIn ? '/sehir' : '/giris'} className="vk-btn vk-btn--block">
+        <Link to={signedIn ? '/oyun/sehir' : '/giris'} className="vk-btn vk-btn--block">
           {signedIn ? t('Keşfe devam et') : t('Giriş yap')}
         </Link>
       )}
@@ -177,7 +177,7 @@ export function ResetPassword() {
     setBusy(true)
     try {
       await resetPassword(token!, password)
-      navigate('/sehir', { replace: true })
+      navigate('/oyun/sehir', { replace: true })
     } catch (e) {
       setFormError(messageOf(e, 'Parola kaydedilemedi.'))
       setBusy(false)

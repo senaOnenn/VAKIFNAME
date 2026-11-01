@@ -17,3 +17,12 @@ export const UserIcon = () => (
 export const ChartIcon = () => (
   <svg {...base}><path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3" /></svg>
 )
+export const MapIcon = () => (
+  <svg {...base}><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2z" /><path d="M9 4v14M15 6v14" /></svg>
+)
+export const GuideIcon = () => (
+  <svg {...base}><path d="M4 5h16v11H9l-5 4z" /><path d="M8 9h8M8 12h5" /></svg>
+)
+export const PuzzleIcon = () => (
+  <svg {...base}><path d="M5 8h3a2 2 0 1 1 4 0h3v3a2 2 0 1 1 0 4v4H5v-4a2 2 0 1 0 0-4z" /></svg>
+)

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { getMonuments, getRoute, progressId, statusMap, typeLabel, useLoad, citySlug } from '../api'
 import { MonumentCard } from '../components/MonumentCard'
 import { GoldRule } from '../components/Ornament'
@@ -10,7 +10,8 @@ import './discover.css'
 
 const RouteMap = lazy(() => import('../components/RouteMap'))
 
-/** Eserler: şehir ve türe göre filtre, liste veya harita görünümü, oyundaki durum rozetleri. */
+/** Keşfet (`/eserler`, liste) ve Harita (`/harita`): şehir ve türe göre filtre, oyundaki durum rozetleri. Görünüm adresten
+ * gelir; böylece ana menüde ayrı bölümlerdir ve tarayıcının geri tuşu görünümler arasında çalışır. */
 export default function Monuments() {
   const auth = useAuth()
   const navigate = useNavigate()
@@ -19,7 +20,8 @@ export default function Monuments() {
   const uid = progressId(auth)
   const [type, setType] = useState('')
   const [city, setCity] = useState('')
-  const [view, setView] = useState<'liste' | 'harita'>('liste')
+  const view: 'liste' | 'harita' = useLocation().pathname === '/harita' ? 'harita' : 'liste'
+  const setView = (v: 'liste' | 'harita') => navigate(v === 'harita' ? '/harita' : '/eserler')
 
   const all = catalog.data?.monuments ?? []
   // Kilit durumları her şehrin kendi rotasından gelir; bir rota yüklenemezse o şehrin eserleri yine listelenir.
@@ -36,7 +38,8 @@ export default function Monuments() {
   return (
     <main className="vk-page">
       <header className="vk-page__head">
-        <h1>{t('Eserler')}</h1>
+        <p className="vk-page__eyebrow">{t('Keşfet')}</p>
+        <h1>{view === 'harita' ? t('Eser haritası') : t('Eserler')}</h1>
         <GoldRule className="vk-page__rule" />
         <p>{t("Vakıf Eserleri Envanter Projesi'nde belgelenmiş eserler. Bir esere dokun, hikâyesini dinle.")}</p>
       </header>

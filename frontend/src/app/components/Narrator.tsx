@@ -148,7 +148,10 @@ export function Narrator({
   )
 }
 
-function GuideChat({ monumentId, onAsked }: { monumentId: string; onAsked?: () => void }) {
+/** Rehberle yazışma. `monumentId` yoksa soru bütün onaylı katalogda aranır (Rehber sayfası). */
+export function GuideChat({ monumentId, onAsked, placeholder = 'Örn. Bu eseri kim yaptırdı?' }: {
+  monumentId: string | null; onAsked?: () => void; placeholder?: string
+}) {
   const id = useId()
   const { t, lang } = useLang()
   const [enabled, setEnabled] = useState<boolean | null>(null)
@@ -210,7 +213,7 @@ function GuideChat({ monumentId, onAsked }: { monumentId: string; onAsked?: () =
             value={q}
             maxLength={500}
             onChange={(e) => setQ(e.target.value)}
-            placeholder={t('Örn. Bu eseri kim yaptırdı?')}
+            placeholder={t(placeholder)}
             disabled={busy || enabled === null}
           />
           <button type="submit" className="vk-btn" disabled={busy || !q.trim()}>{t('Sor')}</button>

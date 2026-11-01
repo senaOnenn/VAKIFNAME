@@ -80,34 +80,41 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-describe('mühür yolu (eser sayfası)', () => {
+describe('mühür yolu (oyun paneli)', () => {
   it('kilitli eserde oyun yerine kilit açıklaması ve rotaya dönüş verir', async () => {
     server(game({ locked: true }))
-    open(`/eser/${ID}`)
+    open(`/oyun/eser/${ID}`)
     expect(await screen.findByText(/Bu eser henüz kilitli/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Rotaya dön' })).toHaveAttribute('href', '/rota/bursa')
+    expect(screen.getAllByRole('link', { name: /Rotaya dön/ }).map((a) => a.getAttribute('href'))).toEqual(['/oyun/rota/bursa', '/oyun/rota/bursa'])
   })
 
   it('I. kademe bitmeden "Rozeti Al" kapalıdır; hazır olunca sınava götürür', async () => {
     const srv = server(game())
-    const { unmount } = open(`/eser/${ID}`)
+    const { unmount } = open(`/oyun/eser/${ID}`)
     expect(await screen.findByRole('button', { name: 'Rozeti Al' })).toBeDisabled()
+    expect(screen.getByRole('link', { name: 'Eser sayfasında dinle' })).toHaveAttribute('href', `/eser/${ID}`)
     unmount()
     srv.set(game({ listened: true, asked: true, ready_for_quiz: true }))
-    open(`/eser/${ID}`)
-    expect(await screen.findByRole('link', { name: 'Rozeti Al' })).toHaveAttribute('href', `/eser/${ID}/rozet`)
+    open(`/oyun/eser/${ID}`)
+    expect(await screen.findByRole('link', { name: 'Rozeti Al' })).toHaveAttribute('href', `/oyun/eser/${ID}/rozet`)
   })
 
   it('anlatım sonuna kadar dinlenince sunucuya "listened" bildirilir', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const srv = server(game())
     open(`/eser/${ID}`)
-    await screen.findByRole('button', { name: 'Rozeti Al' })
+    // Eser sayfası katalogdur: oyun kontrolleri yok, yalnızca durum ve oyun paneline geçiş.
+    const link = await screen.findByRole('region', { name: 'Bu eserin mühür yolu' })
+    expect(within(link).getByRole('link', { name: 'Mühür yoluna git' })).toHaveAttribute('href', `/oyun/eser/${ID}`)
+    expect(screen.queryByRole('button', { name: 'Rozeti Al' })).not.toBeInTheDocument()
+    expect(within(link).getByText(/Yukarıdaki anlatımı sonuna kadar dinle/)).toBeInTheDocument()
+    // Sunucu sonraki okumada I. kademeyi tamam sayar (soru da sorulmuş); sayfa durumu yeniden okur.
+    srv.set(game({ asked: true, ready_for_quiz: true }))
     await userEvent.click(screen.getByRole('button', { name: 'Dinle' }))
     await act(async () => {
       vi.advanceTimersByTime(60_000)
     })
-    expect(await screen.findByText(/Anlatımı dinledin ✓/)).toBeInTheDocument()
+    expect(await within(link).findByText('Anlatımı dinledin. Rozeti Al soruları seni bekliyor.')).toBeInTheDocument()
     expect(srv.calls.find((c) => c.path === 'engagement')!.body).toMatchObject({ event: 'listened', user_id: expect.stringMatching(/^ziyaretci-/) })
   })
 
@@ -120,7 +127,7 @@ describe('mühür yolu (eser sayfası)', () => {
       },
     })
     vi.stubGlobal('navigator', { ...navigator, geolocation: { getCurrentPosition: (ok: PositionCallback) => ok({ coords: { latitude: 40.1839, longitude: 29.0619 } } as GeolocationPosition) } })
-    open(`/eser/${ID}`)
+    open(`/oyun/eser/${ID}`)
     expect(screen.queryByRole('button', { name: /Sunum modu/ })).not.toBeInTheDocument()
     await userEvent.click(await screen.findByRole('button', { name: 'Konumumu doğrula' }))
     expect(await screen.findByText('Ziyaretin doğrulandı. Mührün altına dönüştü!')).toBeInTheDocument()
@@ -136,7 +143,7 @@ describe('mühür yolu (eser sayfası)', () => {
         return { body: { status: 'gold', distance_m: null, radius_m: 50, visit_seal: { earned_at: '2026-10-27T11:00:00Z' } } }
       },
     })
-    open(`/eser/${ID}`)
+    open(`/oyun/eser/${ID}`)
     await userEvent.click(await screen.findByRole('button', { name: 'Sunum modu: ziyareti simüle et' }))
     await screen.findByText('Ziyaretin doğrulandı. Mührün altına dönüştü!')
     expect(visitBody).toMatchObject({ simulate: true })
@@ -168,7 +175,7 @@ describe('Rozeti Al (sınav)', () => {
         return { body: result(4) }
       },
     })
-    open(`/eser/${ID}/rozet`)
+    open(`/oyun/eser/${ID}/rozet`)
     expect(await screen.findByText('Soru 1 / 5')).toBeInTheDocument()
     await answerAll()
     expect(await screen.findByRole('heading', { name: 'Bilgi mührünü kazandın!' })).toBeInTheDocument()
@@ -194,9 +201,9 @@ describe('Rozeti Al (sınav)', () => {
 
   it('sunucu sınavı reddederse (ör. I. kademe bitmedi) nedenini ve geri dönüşü gösterir', async () => {
     server(game(), { [`/monuments/${ID}/quiz`]: { status: 409, body: { detail: 'Önce anlatımı dinleyip rehbere bir soru sormalısın.' } } })
-    open(`/eser/${ID}/rozet`)
+    open(`/oyun/eser/${ID}/rozet`)
     expect(await screen.findByText('Önce anlatımı dinleyip rehbere bir soru sormalısın.')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: '← Esere dön' })).toHaveAttribute('href', `/eser/${ID}`)
+    expect(screen.getByRole('link', { name: '← Mühür yoluna dön' })).toHaveAttribute('href', `/oyun/eser/${ID}`)
   })
 })
 

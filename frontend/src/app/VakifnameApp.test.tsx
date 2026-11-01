@@ -224,17 +224,21 @@ describe('giriş / kayıt (sunucu)', () => {
 describe('kabuk, hesap ve şehir seçimi', () => {
   beforeEach(() => window.sessionStorage.setItem(INTRO_SEEN_KEY, '1'))
 
-  it('üst ve alt menüde aynı dört bölüm vardır; sayfa değişir', async () => {
+  it('üst ve alt menüde aynı beş bölüm vardır; sayfa değişir, alt sayfada bölüm etkin kalır', async () => {
     fakeAuthServer()
     open('/giris')
     await userEvent.click(await screen.findByRole('button', { name: 'Üye olmadan keşfet' }))
     for (const name of ['Ana menü', 'Alt menü']) {
       const nav = screen.getByRole('navigation', { name })
-      expect(within(nav).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual(['/sehir', '/eserler', '/pasaport', '/hesap'])
+      expect(within(nav).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual(['/eserler', '/harita', '/rehber', '/oyun', '/pasaport'])
     }
-    await userEvent.click(within(screen.getByRole('navigation', { name: 'Alt menü' })).getByRole('link', { name: /Pasaport/ }))
+    // Girişten sonra şehir seçimi oyun panelindedir: "Oyun" etkin.
+    expect(window.location.pathname).toBe('/oyun/sehir')
+    expect(within(screen.getByRole('navigation', { name: 'Ana menü' })).getByRole('link', { name: 'Oyun' })).toHaveAttribute('aria-current', 'page')
+    await userEvent.click(within(screen.getByRole('navigation', { name: 'Alt menü' })).getByRole('link', { name: /Rozetler/ }))
     expect(window.location.pathname).toBe('/pasaport')
-    expect(within(screen.getByRole('navigation', { name: 'Ana menü' })).getByRole('link', { name: 'Pasaport' })).toHaveAttribute('aria-current', 'page')
+    expect(within(screen.getByRole('navigation', { name: 'Ana menü' })).getByRole('link', { name: 'Rozetler' })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('link', { name: 'Hesap: Misafir' })).toHaveAttribute('href', '/hesap')
   })
 
   it('oturum yoksa kabuk sayfaları girişe yönlendirir', async () => {
@@ -248,9 +252,9 @@ describe('kabuk, hesap ve şehir seçimi', () => {
     open('/giris')
     await userEvent.click(await screen.findByRole('button', { name: 'Üye olmadan keşfet' }))
     const cards = screen.getByRole('list', { name: 'Şehirler' })
-    expect(within(cards).getByRole('link', { name: /Bursa/ })).toHaveAttribute('href', '/rota/bursa')
+    expect(within(cards).getByRole('link', { name: /Bursa/ })).toHaveAttribute('href', '/oyun/rota/bursa')
     expect(cards.querySelectorAll('a')).toHaveLength(1)
-    expect(screen.getByRole('link', { name: 'Bursa: Pilot şehir' })).toHaveAttribute('href', '/rota/bursa')
+    expect(screen.getByRole('link', { name: 'Bursa: Pilot şehir' })).toHaveAttribute('href', '/oyun/rota/bursa')
     expect(screen.getAllByText('Yakında').length).toBeGreaterThanOrEqual(5)
   })
 

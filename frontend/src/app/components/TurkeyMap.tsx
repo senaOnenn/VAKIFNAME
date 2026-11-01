@@ -1,6 +1,7 @@
 import { useId } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { cityNote, type City } from '../cities'
+import { gamePath } from '../gameCity'
 import { useLang } from '../i18n'
 import { TURKEY_PATH, TURKEY_VIEWBOX, project } from './turkeyOutline'
 import './turkey-map.css'
@@ -60,12 +61,12 @@ export function TurkeyMap({ cities }: { cities: City[] }) {
           return (
             <a
               key={c.slug}
-              href={`/rota/${c.slug}`}
+              href={gamePath.route(c.slug)}
               className="vk-tmap__city vk-tmap__city--open"
               aria-label={`${c.name}: ${cityNote(c, t)}`}
               onClick={(e) => {
                 e.preventDefault()
-                navigate(`/rota/${c.slug}`)
+                navigate(gamePath.route(c.slug))
               }}
             >
               <circle className="vk-tmap__pulse" cx={x} cy={y} r="10" />

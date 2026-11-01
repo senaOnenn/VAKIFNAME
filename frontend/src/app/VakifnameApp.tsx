@@ -1,13 +1,18 @@
 import { lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
 import '../design/tokens.css'
 import '../design/base.css'
 import AppShell from './AppShell'
+import GameLayout from './GameLayout'
+import { gamePath } from './gameCity'
 import Account from './screens/Account'
 import AdminPage from './screens/AdminPage'
 import Auth from './screens/Auth'
 import City from './screens/City'
 import { ForgotPassword, ResetPassword, VerifyEmail } from './screens/EmailLink'
+import GameHome from './screens/GameHome'
+import GameMonument from './screens/GameMonument'
+import GuidePage from './screens/GuidePage'
 import { LangProvider } from './i18n'
 import Intro, { INTRO_SEEN_KEY } from './screens/Intro'
 import Landing from './screens/Landing'
@@ -43,8 +48,14 @@ function Home() {
   const auth = useAuth()
   const [seen, setSeen] = useState(introSeen)
   const done = useCallback(() => setSeen(true), [])
-  if (auth.status === 'user' || auth.status === 'guest') return <Navigate to="/sehir" replace />
+  if (auth.status === 'user' || auth.status === 'guest') return <Navigate to={gamePath.cities} replace />
   return seen ? <Landing /> : <Intro onDone={done} />
+}
+
+/** Oyun ekranlarının eski adresleri (paylaşılmış bağlantılar, yer imleri) oyun paneline yönlenir. */
+function OldGameRoute({ to }: { to: (p: Record<string, string>) => string }) {
+  const params = useParams()
+  return <Navigate to={to(params as Record<string, string>)} replace />
 }
 
 /** Sayfa değişince en üste dön ve sayfayı anonim olarak say (bkz. stats.ts). */
@@ -72,12 +83,23 @@ export default function VakifnameApp() {
           <Route path="/sifre-sifirla" element={<ForgotPassword />} />
           <Route path="/sifre-yenile" element={<ResetPassword />} />
           <Route element={<AppShell />}>
-            <Route path="/sehir" element={<City />} />
-            <Route path="/rota/:city" element={<RoutePage />} />
-            <Route path="/bursa" element={<Navigate to="/rota/bursa" replace />} />
+            {/* Katalog: Keşfet (liste), Harita, eser sayfası, Rehber */}
             <Route path="/eserler" element={<Monuments />} />
+            <Route path="/harita" element={<Monuments />} />
             <Route path="/eser/:id" element={<MonumentPage />} />
-            <Route path="/eser/:id/rozet" element={<QuizPage />} />
+            <Route path="/rehber" element={<GuidePage />} />
+            {/* Oyun paneli: kendi başlığı ve menüsüyle ayrı bölüm (kurallar ve ilerleme aynı) */}
+            <Route path="/oyun" element={<GameLayout />}>
+              <Route index element={<GameHome />} />
+              <Route path="sehir" element={<City />} />
+              <Route path="rota/:city" element={<RoutePage />} />
+              <Route path="eser/:id" element={<GameMonument />} />
+              <Route path="eser/:id/rozet" element={<QuizPage />} />
+            </Route>
+            <Route path="/sehir" element={<Navigate to={gamePath.cities} replace />} />
+            <Route path="/rota/:city" element={<OldGameRoute to={(p) => gamePath.route(p.city)} />} />
+            <Route path="/bursa" element={<Navigate to={gamePath.route('bursa')} replace />} />
+            <Route path="/eser/:id/rozet" element={<OldGameRoute to={(p) => gamePath.quiz(p.id)} />} />
             <Route path="/pasaport" element={<Passport />} />
             <Route path="/hesap" element={<Account />} />
             <Route path="/yonetim" element={<AdminPage />} />

@@ -1,0 +1,120 @@
+/* Oyun paneli: katalogdan ayrılan bölge. Aynı palet A; ayrım çerçeve, ince indigo ışıma ve kendi menüsüyle yapılır. */
+.vk-gamezone {
+  min-height: 100%;
+  background:
+    radial-gradient(90% 60% at 50% 0%, rgb(74 91 255 / 0.12), transparent 70%),
+    linear-gradient(180deg, rgb(9 12 34 / 0.55), transparent 22rem);
+}
+.vk-gamebar {
+  border-bottom: 1px solid rgb(201 162 75 / 0.28);
+  background: linear-gradient(180deg, rgb(35 43 102 / 0.55), rgb(15 19 48 / 0.35));
+}
+.vk-gamebar__inner {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: var(--vk-space-3) var(--vk-space-4);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'id exit'
+    'nav nav';
+  align-items: center;
+  gap: var(--vk-space-3);
+}
+.vk-gamebar__id {
+  grid-area: id;
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-3);
+  min-width: 0;
+  text-decoration: none;
+}
+.vk-gamebar__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid rgb(201 162 75 / 0.6);
+  background: radial-gradient(circle at 35% 30%, rgb(233 200 116 / 0.22), rgb(15 19 48 / 0.9));
+  color: var(--vk-gold-bright);
+}
+.vk-gamebar__eyebrow {
+  display: block;
+  color: var(--vk-gold);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.vk-gamebar__title {
+  display: block;
+  font: 600 1.35rem/1.1 var(--vk-font-display);
+  color: var(--vk-ivory);
+}
+.vk-gamebar__exit {
+  grid-area: exit;
+  justify-self: end;
+  padding: var(--vk-space-2) var(--vk-space-3);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgb(201 162 75 / 0.45);
+  color: var(--vk-ivory) !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.vk-gamebar__exit:hover {
+  border-color: var(--vk-gold);
+}
+/* Oyun menüsü: mobilde tam genişlik bölmeli seçici, masaüstünde başlığın yanında. */
+.vk-gamebar__nav {
+  grid-area: nav;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgb(9 12 34 / 0.6);
+  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.2);
+}
+.vk-gamebar__link {
+  display: grid;
+  place-items: center;
+  min-height: 40px;
+  padding: 0 var(--vk-space-3);
+  border-radius: 999px;
+  color: var(--vk-ivory-dim) !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.vk-gamebar__link:hover {
+  color: var(--vk-ivory) !important;
+}
+.vk-gamebar__link.is-active {
+  background: var(--vk-gold-gradient);
+  color: var(--vk-night) !important;
+}
+@media (min-width: 900px) {
+  .vk-gamebar__inner {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'id nav exit';
+    padding: var(--vk-space-3) var(--vk-space-5);
+    gap: var(--vk-space-5);
+  }
+  .vk-gamebar__nav {
+    justify-self: center;
+    grid-auto-columns: auto;
+  }
+  .vk-gamebar__link {
+    padding: 0 var(--vk-space-4);
+  }
+}

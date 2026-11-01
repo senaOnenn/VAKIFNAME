@@ -1,11 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
-import { citySlug, getGame, getMonument, getPeople, getRoute, mediaUrl, progressId, sendEngagement, statusMap, typeLabel, useLoad, type MonumentFact } from '../api'
-import { GamePanel } from '../components/GamePanel'
+import { citySlug, getGame, getMonument, getPeople, getRoute, mediaUrl, progressId, sendEngagement, statusMap, typeLabel, useLoad, type GameState, type MonumentFact } from '../api'
 import { PeopleCards } from '../components/PeopleCards'
+import { Seal } from '../components/Seal'
 import { Narrator } from '../components/Narrator'
 import { GoldRule } from '../components/Ornament'
 import { StatusBadge } from '../components/StatusBadge'
 import { creditIn, factIn, nameOf, textIn } from '../contentLang'
+import { gamePath } from '../gameCity'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
@@ -39,6 +40,37 @@ function FactItem({ f }: { f: MonumentFact }) {
         </span>
       </p>
     </li>
+  )
+}
+
+/** Eserin oyundaki durumu ve sıradaki adım (Türkçe anahtar; ekranda çevrilir). */
+function gameNote(g: GameState): string {
+  if (g.locked) return 'Bu eser rotanda henüz kilitli; açık eserlerin mührünü aldıkça kilidi açılır.'
+  if (g.visit) return 'Bu eserin altın mührü sende.'
+  if (g.knowledge) return 'Bilgi mührünü aldın. Eseri yerinde ziyaret edersen mührün altına dönüşür.'
+  if (g.ready_for_quiz) return 'Anlatımı dinledin. Rozeti Al soruları seni bekliyor.'
+  return g.guide_required
+    ? 'Yukarıdaki anlatımı sonuna kadar dinle ve rehbere bir soru sor; Rozeti Al soruları açılır.'
+    : 'Yukarıdaki anlatımı sonuna kadar dinle; Rozeti Al soruları açılır.'
+}
+
+/**
+ * Oyuna bağlantı: eser sayfası katalogdur, oyun kontrolleri (sorular, ziyaret doğrulaması) oyun panelindedir. Burada
+ * yalnızca mühür durumu ve panele geçiş görünür; I. kademe (dinle ve sor) bu sayfadaki anlatımla sayılır.
+ */
+function GameLink({ id, game }: { id: string; game: GameState }) {
+  const { t } = useLang()
+  const seal = game.visit ? 'gold' : game.knowledge ? 'knowledge' : 'empty'
+  return (
+    <section className="vk-gamelink" aria-labelledby="oyun-baglanti">
+      <Seal kind={seal} size={56} label={t(seal === 'gold' ? 'Altın mühür' : seal === 'knowledge' ? 'Bilgi mührü' : 'Mühür henüz yok')} />
+      <div className="vk-gamelink__text">
+        <p className="vk-page__eyebrow">{t('Oyun')}</p>
+        <h2 id="oyun-baglanti">{t('Bu eserin mühür yolu')}</h2>
+        <p>{t(gameNote(game))}</p>
+      </div>
+      <Link to={gamePath.monument(id)} className="vk-btn">{t('Mühür yoluna git')}</Link>
+    </section>
   )
 }
 
@@ -102,7 +134,7 @@ export default function MonumentPage() {
 
         <Narrator key={lang} monument={d} onListened={() => engage('listened')} onAsked={() => engage('asked')} />
 
-        {game.data && <GamePanel id={id} uid={uid} city={city} game={game.data} onChange={() => { game.reload(); route.reload() }} />}
+        {game.data && <GameLink id={id} game={game.data} />}
 
         {d.site_notice && (
           <aside className="vk-notice" aria-label={t('Ziyaret uyarısı')}>

@@ -139,3 +139,19 @@
 .vk-shell__end .vk-shell__chip {
   margin-left: 0;
 }
+.vk-shell__chip {
+  text-decoration: none;
+  color: var(--vk-ivory-dim) !important;
+}
+.vk-shell__chip:hover,
+.vk-shell__chip.active {
+  border-color: var(--vk-gold-bright);
+  color: var(--vk-ivory) !important;
+}
+/* Dar telefonlar (360 px): logo + dil seçici + ad düğmesi sığsın, yatay kaydırma olmasın. */
+@media (max-width: 899px) {
+  .vk-shell__top {
+    gap: var(--vk-space-3);
+    padding: var(--vk-space-3) var(--vk-space-4);
+  }
+}

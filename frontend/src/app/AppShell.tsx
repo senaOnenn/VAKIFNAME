@@ -1,16 +1,22 @@
 import { useState } from 'react'
 import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { ChartIcon, CompassIcon, DomeIcon, SealIcon, UserIcon } from './components/Icons'
+import { ChartIcon, CompassIcon, GuideIcon, MapIcon, PuzzleIcon, SealIcon } from './components/Icons'
 import { LangSwitch, useLang } from './i18n'
 import { displayName, useAuth, type AuthUser } from './session'
 import './app-shell.css'
 
+/**
+ * Ana bölümler. Keşfet, Harita ve Rehber katalogdur; Oyun kendi paneli ve menüsüyle ayrı bölümdür; Rozetler pasaporttur.
+ * Hesap üst çubuktaki ad düğmesindedir. `match`: bölümün alt sayfalarında da etkin görünmesi için (ör. eser sayfası Keşfet'tir).
+ */
 const NAV = [
-  { to: '/sehir', label: 'Keşfet', Icon: CompassIcon },
-  { to: '/eserler', label: 'Eserler', Icon: DomeIcon },
-  { to: '/pasaport', label: 'Pasaport', Icon: SealIcon },
-  { to: '/hesap', label: 'Hesap', Icon: UserIcon },
+  { to: '/eserler', label: 'Keşfet', Icon: CompassIcon, match: (p: string) => p === '/eserler' || p.startsWith('/eser/') },
+  { to: '/harita', label: 'Harita', Icon: MapIcon, match: (p: string) => p === '/harita' },
+  { to: '/rehber', label: 'Rehber', Icon: GuideIcon, match: (p: string) => p === '/rehber' },
+  { to: '/oyun', label: 'Oyun', Icon: PuzzleIcon, match: (p: string) => p === '/oyun' || p.startsWith('/oyun/') },
+  { to: '/pasaport', label: 'Rozetler', Icon: SealIcon, match: (p: string) => p === '/pasaport' },
 ]
+const ADMIN = { to: '/yonetim', label: 'Yönetim', Icon: ChartIcon, match: (p: string) => p.startsWith('/yonetim') }
 
 const VERIFY_DISMISSED = 'vakifname.verifyNoticeDismissed'
 
@@ -49,28 +55,29 @@ function VerifyNotice({ user }: { user: AuthUser }) {
   )
 }
 
-/** Oturum açılmış sayfaların kabuğu: web'de üst menü, mobilde alt sekme çubuğu (aynı bağlantılar). */
+/** Oturum açılmış sayfaların kabuğu: web'de üst menü, mobilde alt sekme çubuğu (aynı bağlantılar, etkin bölüm belirgin). */
 export default function AppShell() {
   const auth = useAuth()
   const { t } = useLang()
+  const { pathname } = useLocation()
   if (auth.status === 'loading') return <p className="vk-shell__loading" role="status">{t('Yükleniyor…')}</p>
   if (auth.status === 'none') return <Navigate to="/giris" replace />
-  const nav = auth.status === 'user' && auth.user.is_admin ? [...NAV, { to: '/yonetim', label: 'Yönetim', Icon: ChartIcon }] : NAV
+  const nav = (auth.status === 'user' && auth.user.is_admin ? [...NAV, ADMIN] : NAV).map((n) => ({ ...n, active: n.match(pathname) }))
   return (
     <div className="vk-shell">
       <a className="vk-shell__skip" href="#icerik">{t('İçeriğe geç')}</a>
       <header className="vk-shell__top">
-        <NavLink to="/sehir" className="vk-shell__logo">VAKIFNAME</NavLink>
+        <Link to="/eserler" className="vk-shell__logo">VAKIFNAME</Link>
         <nav aria-label={t('Ana menü')} className="vk-shell__topnav">
-          {nav.map(({ to, label }) => (
-            <NavLink key={to} to={to} className="vk-shell__toplink">{t(label)}</NavLink>
+          {nav.map(({ to, label, active }) => (
+            <Link key={to} to={to} className={`vk-shell__toplink${active ? ' active' : ''}`} aria-current={active ? 'page' : undefined}>{t(label)}</Link>
           ))}
         </nav>
         <div className="vk-shell__end">
           <LangSwitch />
-          <span className="vk-shell__chip">
+          <NavLink to="/hesap" className="vk-shell__chip" aria-label={t('Hesap: {name}', { name: displayName(auth) })}>
             {displayName(auth)}
-          </span>
+          </NavLink>
         </div>
       </header>
       <div id="icerik" className="vk-shell__main">
@@ -78,11 +85,11 @@ export default function AppShell() {
         <Outlet />
       </div>
       <nav aria-label={t('Alt menü')} className="vk-shell__tabs">
-        {nav.map(({ to, label, Icon }) => (
-          <NavLink key={to} to={to} className="vk-shell__tab">
+        {nav.map(({ to, label, Icon, active }) => (
+          <Link key={to} to={to} className={`vk-shell__tab${active ? ' active' : ''}`} aria-current={active ? 'page' : undefined}>
             <Icon />
             <span>{t(label)}</span>
-          </NavLink>
+          </Link>
         ))}
       </nav>
     </div>
