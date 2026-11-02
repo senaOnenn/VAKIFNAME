@@ -182,14 +182,18 @@ export function matchMove(m: Match, t: number, aOut: { x: number; y: number }, a
 export const flowVisibility = (top: number, vh: number) => ramp(vh - top, vh * 0.05, vh * 0.45)
 
 /**
- * Sabitlenen bölümün zaman çizelgesi (`p`: sabit aralıktaki ilerleme). Metin ilk %30'da girer, ortada (dinlenme anı,
- * `REST_P`) tam ve hareketsizdir; sahneden ayrılırken dinlenme anının hemen ardından başlayıp sabit aralığın sonuna dek
- * usulca çekilir (yürüyüş eğrisinin yavaş kalkışıyla ~1 sn). Geçiş bölümler arasındaki bir ekran boyunda oynar; metin
- * geçiş anında ekranda olmaz.
+ * Sabitlenen bölümün zaman çizelgesi (`p`: sabit aralıktaki ilerleme). Metin `TEXT_IN` aralığında girer (motor, %60'ı
+ * geçince öğeleri süreye bağlı olarak sırayla gösterir: kamera yerleşirken başlar, başlık varışta oturur); ortada
+ * (dinlenme anı, `REST_P`) tam ve hareketsizdir. Sahneden ayrılırken `TEXT_OUT` aralığında kaydırmaya bağlı olarak
+ * çekilir (CSS sırayı açar: önce düğmeler, sonra açıklama, en son başlık). Dinlenme anının iki yanında metnin tam
+ * okunduğu pencere geniştir (elle kaydıranlar için de). Geçiş bölümler arasındaki bir ekran boyunda oynar; metin geçiş
+ * anında ekranda olmaz.
  */
 export const REST_P = 0.5
-export const textIn = (p: number, first: boolean) => (first ? 1 : ramp(p, 0, 0.3))
-export const textOut = (p: number) => 1 - smooth(ramp(p, 0.53, 1))
+export const TEXT_IN: [number, number] = [0.08, 0.36]
+export const TEXT_OUT: [number, number] = [0.58, 1]
+export const textIn = (p: number, first: boolean) => (first ? 1 : ramp(p, TEXT_IN[0], TEXT_IN[1]))
+export const textOut = (p: number) => 1 - smooth(ramp(p, TEXT_OUT[0], TEXT_OUT[1]))
 export function textVisibility(p: number, first: boolean) {
   return Math.min(textIn(p, first), textOut(p))
 }
@@ -235,6 +239,86 @@ export function nextStop(m: StopModel, y: number, dir: 1 | -1): number | null {
   if (dir > 0) return stops.find((s) => s > y + 2) ?? null
   for (let k = stops.length - 1; k >= 0; k--) if (stops[k] < y - 2) return stops[k]
   return null
+}
+
+/**
+ * Düğümlerden geçen, uçlarında hızı sıfır olan monoton eğri (Fritsch–Carlson kübik Hermite). `ts`: zaman kesirleri,
+ * `ss`: mesafe kesirleri (ikisi de 0'dan 1'e artan). Hız düğümlerde süreklidir: hareket bir aşamadan ötekine sarsıntısız
+ * geçer, hiçbir aşamada geri gitmez.
+ */
+export function monotoneEase(ts: number[], ss: number[]): (x: number) => number {
+  const n = ts.length
+  const d: number[] = []
+  for (let i = 0; i < n - 1; i++) d.push((ss[i + 1] - ss[i]) / (ts[i + 1] - ts[i]))
+  const m = ts.map(() => 0)
+  for (let i = 1; i < n - 1; i++) {
+    if (d[i - 1] <= 0 || d[i] <= 0) continue
+    const h0 = ts[i] - ts[i - 1]
+    const h1 = ts[i + 1] - ts[i]
+    const w1 = 2 * h1 + h0
+    const w2 = h1 + 2 * h0
+    m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i])
+  }
+  return (x: number) => {
+    if (x <= 0) return 0
+    if (x >= 1) return 1
+    let i = 0
+    while (i < n - 2 && x >= ts[i + 1]) i++
+    const h = ts[i + 1] - ts[i]
+    const u = (x - ts[i]) / h
+    const u2 = u * u
+    const u3 = u2 * u
+    return (2 * u3 - 3 * u2 + 1) * ss[i] + (u3 - 2 * u2 + u) * h * m[i] + (-2 * u3 + 3 * u2) * ss[i + 1] + (u3 - u2) * h * m[i + 1]
+  }
+}
+
+/**
+ * Bir sahne geçişinin zaman dağılımı (süre kesirleri). Kaydırma mesafesi aşamalara eşit yayılmaz: eski sahnenin metni
+ * kademeli çekilirken kamera yavaşça kalkar (`leave`), iki görselin eşleştirmeli geçişi sakin ve okunur bir hızla oynar
+ * (`image`), yeni sahne uzun bir varışla yerine oturur (`settle`; yeni metin bu sırada belirmeye başlar).
+ */
+export const TRIP = { leave: 0.36, image: 0.4, settle: 0.24 }
+
+/**
+ * İki durak arasındaki yolculuğun eğrisi: zaman → mesafe kesri. Yolculuk tek bir sahne sınırını geçiyorsa o sınırın
+ * görsel geçiş bölgesi (`zone`: StoryExperience'taki `sceneMix` yarı genişliği, ekran oranı) ve ileri gidişte eski
+ * sahnenin metin çıkışının başladığı yer düğüm olur; böylece süre metin çıkışına, görsel geçişine ve varışa
+ * `TRIP` oranlarında dağılır. Uzak sıçramada (Home/End) ya da bölge yolculuğun dışında kalıyorsa `null` (çağıran düz
+ * bir yürüyüş eğrisi kullanır).
+ */
+export function tripEase(m: StopModel, from: number, to: number, zone = 0.45): ((x: number) => number) | null {
+  const L = to - from
+  const vh = m.vh
+  if (Math.abs(L) < 1 || !vh || m.tops.length < 2) return null
+  const s = (y: number) => (y - from) / L
+  const inside = (v: number) => v > 0.02 && v < 0.98
+  const crossed: [number, number][] = []
+  let exitAt: number | null = null
+  for (let j = 1; j < m.tops.length; j++) {
+    const a = s(m.tops[j] - (zone + 0.5) * vh)
+    const b = s(m.tops[j] + (zone - 0.5) * vh)
+    const lo = Math.min(a, b)
+    const hi = Math.max(a, b)
+    if (hi <= 0 || lo >= 1) continue
+    crossed.push([lo, hi])
+    // İleri gidişte eski sahne sabitlenmişse metninin çekilmeye başladığı yer (bkz. `TEXT_OUT`).
+    if (L > 0 && m.pinned[j - 1]) {
+      const i = j - 1
+      const ex = s(m.tops[i] + TEXT_OUT[0] * Math.max(0, m.heights[i] - vh))
+      exitAt = inside(ex) && ex < lo - 0.02 ? ex : null
+    }
+  }
+  if (crossed.length !== 1) return null
+  const [lo, hi] = crossed[0]
+  if (!inside(lo) || !inside(hi) || hi - lo < 0.05) return null
+  const t1 = TRIP.leave
+  const t2 = TRIP.leave + TRIP.image
+  if (exitAt !== null) {
+    // Durak ile metin çıkışının başı arasındaki yol kısa bir ilk adımdır; asıl ayrılış süresi metnin çekilişine kalır.
+    const pre = Math.min(0.2, Math.max(0.06, exitAt * 0.9))
+    return monotoneEase([0, pre, t1, t2, 1], [0, exitAt, lo, hi, 1])
+  }
+  return monotoneEase([0, t1, t2, 1], [0, lo, hi, 1])
 }
 
 /**
