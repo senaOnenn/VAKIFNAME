@@ -22,7 +22,6 @@ import Passport from './screens/Passport'
 import Privacy from './screens/Privacy'
 import QuizPage from './screens/QuizPage'
 import RoutePage from './screens/RoutePage'
-import { useAuth } from './session'
 import { trackPage } from './stats'
 
 // İçerik yönetimi yalnızca yöneticinin açtığı ekranlardır: ayrı parçada yüklenir, ziyaretçinin paketine girmez.
@@ -41,14 +40,12 @@ function introSeen(): boolean {
 }
 
 /**
- * Ana sayfa: açılış animasyonu (oturum başına bir kez) → tanıtım (ürün ne, nasıl oynanır, giriş çağrısı).
- * Oturumu olan kullanıcı doğrudan şehir seçimine geçer.
+ * Ana sayfa: açılış animasyonu (oturum başına bir kez) → hikâyesel tanıtım. Görev 35'ten beri oturumu olan kullanıcı da
+ * ana sayfayı görür; üst menüden Keşfet, Harita, Rehber ve Oyun'a geçer.
  */
 function Home() {
-  const auth = useAuth()
   const [seen, setSeen] = useState(introSeen)
   const done = useCallback(() => setSeen(true), [])
-  if (auth.status === 'user' || auth.status === 'guest') return <Navigate to={gamePath.cities} replace />
   return seen ? <Landing /> : <Intro onDone={done} />
 }
 

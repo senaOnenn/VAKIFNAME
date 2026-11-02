@@ -60,7 +60,7 @@ function open(path: string) {
 
 const AUTH_HEADING = { name: 'Maceraya katıl' }
 const CITY_HEADING = { name: 'Nereyi keşfetmek istersin?' }
-const LANDING_HEADING = { level: 1, name: 'Vakıf eserlerini yerinde keşfet' }
+const LANDING_HEADING = { level: 1, name: 'Geçmişi Keşfet, Mirası Yaşat.' }
 
 beforeEach(() => {
   resetAuthForTests()
@@ -93,33 +93,34 @@ describe('açılış', () => {
     expect(window.sessionStorage.getItem(INTRO_SEEN_KEY)).toBe('1')
   })
 
-  it('tanıtım ürünü üç adımda anlatır; "Keşfe başla" girişe, "Üye olmadan göz at" şehir seçimine götürür', async () => {
+  it('tanıtım oyunun mühürlerini anlatır; "Giriş yap veya hesap aç" girişe götürür', async () => {
     fakeAuthServer()
     window.sessionStorage.setItem(INTRO_SEEN_KEY, '1')
     open('/')
     expect(await screen.findByRole('heading', LANDING_HEADING)).toBeInTheDocument()
-    for (const step of ['Dinle ve sor', 'Bilgini sına', 'Eseri ziyaret et']) {
-      expect(screen.getByRole('heading', { level: 3, name: step })).toBeInTheDocument()
-    }
+    expect(screen.getByRole('img', { name: 'Bilgi mührü' })).toBeInTheDocument()
     expect(screen.getByRole('img', { name: 'Altın mühür' })).toBeInTheDocument()
-    await userEvent.click(screen.getAllByRole('link', { name: 'Keşfe başla' })[0])
+    await userEvent.click(screen.getByRole('link', { name: 'Giriş yap veya hesap aç' }))
     expect(await screen.findByRole('heading', AUTH_HEADING)).toBeInTheDocument()
   })
 
-  it('tanıtımdan üye olmadan göz atılabilir', async () => {
+  it('tanıtımdan üye olmadan uygulamaya geçilebilir (misafir)', async () => {
     fakeAuthServer()
     window.sessionStorage.setItem(INTRO_SEEN_KEY, '1')
     open('/')
-    await userEvent.click((await screen.findAllByRole('button', { name: 'Üye olmadan göz at' }))[0])
-    expect(await screen.findByRole('heading', CITY_HEADING)).toBeInTheDocument()
+    await userEvent.click(await screen.findByRole('link', { name: 'Uygulamaya geç' }))
+    expect(window.location.pathname).toBe('/eserler')
+    expect(await screen.findByText('Misafir')).toBeInTheDocument()
   })
 
-  it('oturumu olan kullanıcı açılışı görmeden şehir seçimine geçer', async () => {
+  it('oturumu olan kullanıcı da ana sayfayı görür; menüden oyuna geçer', async () => {
     fakeAuthServer({ user_id: 'u-9', email: 'ali@example.com', display_name: null, provider: 'password' })
     window.sessionStorage.setItem(INTRO_SEEN_KEY, '1')
     open('/')
-    expect(await screen.findByRole('heading', CITY_HEADING)).toBeInTheDocument()
-    expect(screen.getByText('ali@example.com')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', LANDING_HEADING)).toBeInTheDocument()
+    expect(await screen.findByRole('link', { name: 'Hesap: ali@example.com' })).toHaveAttribute('href', '/hesap')
+    await userEvent.click(within(screen.getAllByRole('navigation', { name: 'Ana menü' })[0]).getByRole('link', { name: 'Oyun' }))
+    expect(window.location.pathname).toBe('/oyun')
   })
 })
 

@@ -2,7 +2,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
 import { resolve } from 'node:path'
-import { DEFAULT_FILM_DIR, DEFAULT_HERO_MOBILE_VIDEO, DEFAULT_HERO_VIDEO, FILM_ASSETS, HERO_MOBILE_VIDEO_FILE, filmAssets, heroVideoAsset, mediaVersion } from './heroVideo.ts'
+import { DEFAULT_FILM_DIR, DEFAULT_HERO_MOBILE_VIDEO, DEFAULT_HERO_VIDEO, DEFAULT_LANDING_ART_DIR, FILM_ASSETS, HERO_MOBILE_VIDEO_FILE, LANDING_ART, filmAssets, heroVideoAsset, landingArt, mediaVersion } from './heroVideo.ts'
 
 const LOOPBACK = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1'])
 
@@ -38,10 +38,12 @@ function internalLoopbackOnly(): Plugin {
 }
 
 const FILM_DIR = process.env.VAKIFNAME_FILM_DIR ?? DEFAULT_FILM_DIR
+const LANDING_ART_DIR = process.env.VAKIFNAME_LANDING_ART_DIR ?? DEFAULT_LANDING_ART_DIR
 const MEDIA_VERSION = mediaVersion([
   process.env.VAKIFNAME_HERO_VIDEO ?? DEFAULT_HERO_VIDEO,
   process.env.VAKIFNAME_HERO_MOBILE_VIDEO ?? DEFAULT_HERO_MOBILE_VIDEO,
   ...FILM_ASSETS.map((a) => resolve(FILM_DIR, a.name)),
+  ...LANDING_ART.map((n) => resolve(LANDING_ART_DIR, n)),
 ])
 
 export default defineConfig({
@@ -52,6 +54,7 @@ export default defineConfig({
     heroVideoAsset(),
     heroVideoAsset(process.env.VAKIFNAME_HERO_MOBILE_VIDEO ?? DEFAULT_HERO_MOBILE_VIDEO, HERO_MOBILE_VIDEO_FILE, 'Giriş videosu (mobil)'),
     filmAssets(),
+    landingArt(LANDING_ART_DIR),
   ],
   // Backend'in varsayılan CORS listesindeki port; preview de aynı portu kullanır.
   // `/internal` proxy'si yalnızca geliştirme sunucusunda vardır; `preview` ve üretim derlemesi dahili API'ye erişmez.

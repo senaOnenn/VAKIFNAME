@@ -30,8 +30,10 @@ TILE_ORIGIN = "https://tile.openstreetmap.org"
 GSI = "https://accounts.google.com/gsi/"
 # Arayüzün sayfa yolları (frontend/src/app/VakifnameApp.tsx). Yalnızca bunlar index.html'e düşer.
 APP_ROUTES = re.compile(
-    r"^/(giris|gizlilik|dogrula|sifre-sifirla|sifre-yenile|sehir|bursa|eserler|pasaport|hesap|yonetim"
+    r"^/(giris|gizlilik|dogrula|sifre-sifirla|sifre-yenile|sehir|bursa|eserler|harita|rehber|pasaport|hesap|yonetim"
     r"|rota/[a-z0-9-]{1,40}|eser/[A-Za-z0-9-]{1,20}(/rozet)?"
+    # Oyun paneli (Görev 34): giriş, şehir, rota, eserin mühür yolu ve Rozeti Al.
+    r"|oyun(/sehir|/rota/[a-z0-9-]{1,40}|/eser/[A-Za-z0-9-]{1,20}(/rozet)?)?"
     r"|yonetim/icerik(/(eser|kayit|ceviri)/[A-Za-z0-9-]{1,30}(/yeni-kayit)?)?)/?$"
 )
 

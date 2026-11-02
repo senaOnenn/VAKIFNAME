@@ -196,3 +196,66 @@ export function mediaVersion(paths: string[]): string {
   for (const p of paths) if (existsSync(p) && statSync(p).isFile()) h.update(readFileSync(p))
   return h.digest('hex').slice(0, 10)
 }
+
+/**
+ * Ana sayfa hikâyesinin 7 sahne görseli: `scripts/landing-art.sh` çıktısı, depo kardeşi
+ * `../vakifname-assets/story-v2/web/` (veya `VAKIFNAME_LANDING_ART_DIR`). Depoya girmez. Yalnızca bu listedeki dosyalar
+ * `<base>media/sahne/<ad>` adresinden sunulur ve derlemeye kopyalanır. Biri eksikse sayfa o katmanı gece zeminiyle
+ * gösterir (görsel olmadan da okunur). Genişlikler özgün dosyanınkidir (büyütme yok): sahne 1 1680 px, diğerleri 1920 px.
+ */
+export const DEFAULT_LANDING_ART_DIR = resolve(here, '..', '..', 'vakifname-assets', 'story-v2', 'web')
+export const SCENE_WIDTHS = [1680, 1920, 1920, 1920, 1920, 1920, 1920] as const
+export const LANDING_ART = SCENE_WIDTHS.flatMap((w, i) => [`scene-${i + 1}-1280.webp`, `scene-${i + 1}-${w}.webp`])
+const MAX_ART_BYTES = 2 * 1024 * 1024
+
+/** Dosyanın küçük bir WebP olduğunu denetler (`RIFF....WEBP`). */
+export function inspectWebp(path: string): VideoCheck {
+  let size: number
+  try {
+    const st = statSync(path)
+    if (!st.isFile()) return { ok: false, reason: 'dosya değil' }
+    size = st.size
+  } catch {
+    return { ok: false, reason: 'bulunamadı' }
+  }
+  if (size < 16 || size > MAX_ART_BYTES) return { ok: false, reason: `boyut uygun değil (${size} bayt)` }
+  const head = Buffer.alloc(12)
+  const fd = openSync(path, 'r')
+  try {
+    readSync(fd, head, 0, 12, 0)
+  } finally {
+    closeSync(fd)
+  }
+  if (head.toString('latin1', 0, 4) !== 'RIFF' || head.toString('latin1', 8, 12) !== 'WEBP') return { ok: false, reason: 'WebP değil' }
+  return { ok: true, size }
+}
+
+export function landingArt(dir = process.env.VAKIFNAME_LANDING_ART_DIR ?? DEFAULT_LANDING_ART_DIR): Plugin {
+  let base = '/'
+  return {
+    name: 'vakifname-landing-art',
+    configResolved(config) {
+      base = config.base
+    },
+    configureServer(server) {
+      const prefix = `${base.replace(/\/$/, '')}/media/sahne/`
+      server.middlewares.use((req, res, next) => {
+        const path = (req.url ?? '').split('?')[0]
+        if (!path.startsWith(prefix) || (req.method !== 'GET' && req.method !== 'HEAD')) return next()
+        const name = path.slice(prefix.length)
+        const c = LANDING_ART.includes(name) ? inspectWebp(resolve(dir, name)) : ({ ok: false, reason: 'listede yok' } as const)
+        if (!c.ok) {
+          res.statusCode = 404
+          res.end()
+          return
+        }
+        send(resolve(dir, name), c.size, req.headers.range, req.method, res, 'image/webp')
+      })
+    },
+    generateBundle() {
+      const bad = LANDING_ART.filter((n) => !inspectWebp(resolve(dir, n)).ok)
+      if (bad.length) this.warn(`Ana sayfa illüstrasyonlarından ${bad.length} tanesi derlemeye eklenmedi (${bad.slice(0, 3).join(', ')}…): ${dir}`)
+      for (const n of LANDING_ART) if (!bad.includes(n)) this.emitFile({ type: 'asset', fileName: `media/sahne/${n}`, source: readFileSync(resolve(dir, n)) })
+    },
+  }
+}

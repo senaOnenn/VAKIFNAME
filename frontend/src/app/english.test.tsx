@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { stubFetch } from '../test/fixtures'
@@ -121,7 +121,10 @@ describe('anlatıcı (İngilizce)', () => {
       },
     })
     render(<Narrator monument={DETAIL} />)
-    await userEvent.type(await screen.findByRole('textbox'), 'Who built it?')
+    // Rehber durumu gelene kadar kutu kapalıdır; yazmadan önce açılmasını bekle (yük altında yarış olmasın).
+    const box = await screen.findByRole('textbox')
+    await waitFor(() => expect(box).toBeEnabled())
+    await userEvent.type(box, 'Who built it?')
     await userEvent.click(screen.getByRole('button', { name: 'Ask' }))
     expect(await screen.findByText('From approved English records:')).toBeInTheDocument()
     const ask = fetchMock.mock.calls.find(([u]) => String(u).includes('/guide/ask'))!

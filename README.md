@@ -121,6 +121,27 @@ Video depoda tutulmaz (`*.mp4`). Varsayılan dosya `../vakifname-video-assets/he
 zeminle açılır. CDN için `VITE_HERO_VIDEO_URL`. Mevcut video yapay zekâ ile üretilmiştir (dosyadaki C2PA manifesti);
 gerçek bir eserin kaydı olarak sunulmaz.
 
+Not: Görev 36'dan beri ana sayfa bu videoyu göstermez (7 sahnelik hikâye, aşağıda); dosya varsa derlemeye yine kopyalanır.
+
+## Ana sayfa sahne görselleri (7 sahne)
+
+Görseller depoda tutulmaz. Temiz bir kurulumda:
+
+1. Ekipten 7 özgün PNG'yi (`1.png` … `7.png`; 1920×1080, sahne 1: 1680×944) alıp depo kardeşi
+   `../vakifname-assets/story-v2/` klasörüne koyun.
+2. Web kopyalarını üretin (gerekli: `ffmpeg`, `ffprobe`; orijinaller değişmez):
+   `frontend/scripts/landing-art.sh` → `../vakifname-assets/story-v2/web/scene-{1..7}-{1280,özgün genişlik}.webp`
+   (14 dosya, ~1,8 MB). Başka klasör için: `frontend/scripts/landing-art.sh /yol/story-v2` ve
+   `VAKIFNAME_LANDING_ART_DIR=/yol/story-v2/web`.
+3. `npm run dev` bu dosyaları `/media/sahne/<ad>.webp` adresinden sunar; `npm run build` onları
+   `dist/media/sahne/`'ye kopyalar (eksik dosya için derleme uyarısı verir). Görsel yoksa sayfa gece zeminiyle açılır,
+   metin ve düğmeler çalışır.
+
+Sunulan dosyalar `frontend/heroVideo.ts` içindeki `LANDING_ART` listesiyle sınırlıdır; adres sürümü (`?v=`) dosya
+içeriğinden hesaplanır, görsel değişince önbellek yenilenir. Harita sahnesindeki şehir noktaları gerçek koordinattan,
+görsele uydurulmuş bir dönüşümle yerleşir (`frontend/src/app/story/engine.ts`, `mapPoint`); harita görseli değişirse bu
+dönüşüm yeniden ölçülmelidir.
+
 ## Ekip notları
 
 ### Zülal

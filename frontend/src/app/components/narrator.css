@@ -261,3 +261,66 @@
 .vk-narr__sub--large {
   background: rgb(0 0 0 / 0.75);
 }
+
+/* Fotoğrafla soru (Rehber sayfası) */
+.vk-chat__photo {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--vk-space-2);
+}
+.vk-chat__pick {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 var(--vk-space-4);
+  border-radius: 999px;
+  border: 1px dashed rgb(233 200 116 / 0.7);
+  color: var(--vk-ivory);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+.vk-chat__pick:focus-within {
+  outline: 2px solid var(--vk-gold-bright);
+  outline-offset: 2px;
+}
+.vk-chat__preview {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: var(--vk-space-3);
+  align-items: start;
+}
+.vk-chat__preview img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: var(--vk-radius);
+}
+.vk-chat__preview figcaption {
+  display: grid;
+  gap: var(--vk-space-2);
+  justify-items: start;
+  font-size: 0.88rem;
+  color: var(--vk-ivory-dim);
+}
+.vk-chat__consent {
+  display: flex;
+  gap: var(--vk-space-2);
+  align-items: flex-start;
+}
+.vk-chat__consent input {
+  margin-top: 0.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--vk-gold);
+}
+.vk-chat__thumb {
+  display: block;
+  width: 120px;
+  max-width: 100%;
+  margin-bottom: var(--vk-space-2);
+  border-radius: 10px;
+}

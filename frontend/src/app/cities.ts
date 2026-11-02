@@ -9,17 +9,21 @@ export interface City {
   lng: number
   open: boolean
   note: string
+  /** Türkçe ilgi hâli (ör. "Bursa'nın"): metinde şehir adı sabit yazılmaz, veriden gelir (CLAUDE.md §1). */
+  genitive: string
+  /** Türkçe ayrılma hâli (ör. "Bursa’dan"). */
+  ablative: string
   /** Katalogdaki eser sayısı (`withCatalog`); varsa not "N eser" olarak çevrilir. */
   count?: number
 }
 
 export const CITIES: City[] = [
-  { slug: 'bursa', name: 'Bursa', lat: 40.1885, lng: 29.061, open: true, note: 'Pilot şehir' },
-  { slug: 'kutahya', name: 'Kütahya', lat: 39.4167, lng: 29.9833, open: false, note: 'Yakında' },
-  { slug: 'konya', name: 'Konya', lat: 37.8746, lng: 32.4932, open: false, note: 'Yakında' },
-  { slug: 'hatay', name: 'Hatay', lat: 36.2025, lng: 36.1606, open: false, note: 'Yakında' },
-  { slug: 'izmir', name: 'İzmir', lat: 38.4237, lng: 27.1428, open: false, note: 'Yakında' },
-  { slug: 'manisa', name: 'Manisa', lat: 38.6191, lng: 27.4289, open: false, note: 'Yakında' },
+  { slug: 'bursa', name: 'Bursa', lat: 40.1885, lng: 29.061, open: true, note: 'Pilot şehir', genitive: 'Bursa’nın', ablative: 'Bursa’dan' },
+  { slug: 'kutahya', name: 'Kütahya', lat: 39.4167, lng: 29.9833, open: false, note: 'Yakında', genitive: 'Kütahya’nın', ablative: 'Kütahya’dan' },
+  { slug: 'konya', name: 'Konya', lat: 37.8746, lng: 32.4932, open: false, note: 'Yakında', genitive: 'Konya’nın', ablative: 'Konya’dan' },
+  { slug: 'hatay', name: 'Hatay', lat: 36.2025, lng: 36.1606, open: false, note: 'Yakında', genitive: 'Hatay’ın', ablative: 'Hatay’dan' },
+  { slug: 'izmir', name: 'İzmir', lat: 38.4237, lng: 27.1428, open: false, note: 'Yakında', genitive: 'İzmir’in', ablative: 'İzmir’den' },
+  { slug: 'manisa', name: 'Manisa', lat: 38.6191, lng: 27.4289, open: false, note: 'Yakında', genitive: 'Manisa’nın', ablative: 'Manisa’dan' },
 ]
 
 /** Katalogdaki eser sayısına göre şehir listesini günceller: en az bir eseri olan şehir açılır. */

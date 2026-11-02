@@ -66,7 +66,8 @@ describe('yönetim paneli', () => {
     const nav = await screen.findByRole('navigation', { name: 'Ana menü' })
     await userEvent.click(within(nav).getByRole('link', { name: 'Yönetim' }))
     expect(await screen.findByRole('heading', { name: 'Ziyaret istatistikleri' })).toBeInTheDocument()
-    expect(screen.getByText('Tekil ziyaretçi (günlük toplam)').nextSibling).toHaveTextContent('8')
+    // Başlık veriden önce çizilir; sayıları beklemeden aramak yük altında yarış yaratıyordu.
+    expect((await screen.findByText('Tekil ziyaretçi (günlük toplam)')).nextSibling).toHaveTextContent('8')
     expect(screen.getByRole('group', { name: 'Eser sayfası görüntülemeleri' })).toBeInTheDocument()
     expect(screen.getByRole('cell', { name: 'Eser sayfası' })).toBeInTheDocument()
     expect(screen.getByRole('group', { name: 'Oyun kademelerine ulaşan sayısı' })).toBeInTheDocument()

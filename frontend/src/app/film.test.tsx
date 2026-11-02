@@ -44,7 +44,7 @@ describe('tanıtım filmi', () => {
 
   it('film derlemede yoksa düğme hiç görünmez', async () => {
     open(false)
-    expect(await screen.findByRole('heading', { level: 1, name: 'Vakıf eserlerini yerinde keşfet' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Geçmişi Keşfet, Mirası Yaşat.' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Tanıtım filmini izle/ })).not.toBeInTheDocument()
   })
 })

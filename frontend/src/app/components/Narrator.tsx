@@ -1,5 +1,5 @@
-import { useEffect, useId, useMemo, useState, type FormEvent } from 'react'
-import { askGuide, getGuideAvailability, type GuideTurn } from '../../catalog/guideClient'
+import { useEffect, useId, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { askGuide, getGuideAvailability, preparePhoto, type GuideImage, type GuideTurn } from '../../catalog/guideClient'
 import type { GuideResult } from '../../catalog/types'
 import type { MonumentDetail } from '../api'
 import { MS_PER_WEIGHT, mouthAt, mouthFrom, visemes, type Mouth } from '../lipsync'
@@ -13,6 +13,8 @@ const RATES = [0.85, 1, 1.15]
 
 interface Turn {
   question: string
+  /** Soruyla gönderilen fotoğrafın önizlemesi (yalnızca bu sayfada; saklanmaz). */
+  photo?: string
   result?: GuideResult
   error?: string
 }
@@ -148,16 +150,42 @@ export function Narrator({
   )
 }
 
-/** Rehberle yazışma. `monumentId` yoksa soru bütün onaylı katalogda aranır (Rehber sayfası). */
-export function GuideChat({ monumentId, onAsked, placeholder = 'Örn. Bu eseri kim yaptırdı?' }: {
-  monumentId: string | null; onAsked?: () => void; placeholder?: string
+/**
+ * Rehberle yazışma. `monumentId` yoksa soru bütün onaylı katalogda aranır (Rehber sayfası). `allowPhoto`: fotoğrafla soru
+ * (ziyaretçi fotoğrafta yüz, kişisel bilgi veya gizli belge olmadığını onaylar; fotoğraf saklanmaz, bkz. guide_routes.py).
+ * `initial`: ana sayfadan gelen soru (rehber açıksa bir kez gönderilir) ya da seçilmiş fotoğraf.
+ */
+export function GuideChat({ monumentId, onAsked, placeholder = 'Örn. Bu eseri kim yaptırdı?', allowPhoto = false, initial }: {
+  monumentId: string | null; onAsked?: () => void; placeholder?: string; allowPhoto?: boolean
+  initial?: { question?: string; photo?: File }
 }) {
   const id = useId()
   const { t, lang } = useLang()
   const [enabled, setEnabled] = useState<boolean | null>(null)
-  const [q, setQ] = useState('')
+  const [q, setQ] = useState(initial?.question ?? '')
   const [turns, setTurns] = useState<Turn[]>([])
   const [busy, setBusy] = useState(false)
+  const [photo, setPhoto] = useState<{ image: GuideImage; previewUrl: string } | null>(null)
+  const [consent, setConsent] = useState(false)
+  const [photoNote, setPhotoNote] = useState('')
+  const autoAsked = useRef(false)
+
+  async function pickPhoto(file: File | undefined) {
+    if (!file) return
+    setPhotoNote('')
+    setConsent(false)
+    try {
+      setPhoto(await preparePhoto(file))
+    } catch {
+      setPhoto(null)
+      setPhotoNote(t('Fotoğraf okunamadı. JPEG, PNG ya da WebP bir dosya seç.'))
+    }
+  }
+  useEffect(() => {
+    if (allowPhoto && initial?.photo) void pickPhoto(initial.photo)
+    // Yalnızca ilk açılışta (ana sayfadan gelen dosya).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     const ctl = new AbortController()
@@ -168,19 +196,40 @@ export function GuideChat({ monumentId, onAsked, placeholder = 'Örn. Bu eseri k
     return () => ctl.abort()
   }, [])
 
-  async function send(e: FormEvent) {
+  // Ana sayfadan gelen soru: rehber açıksa bir kez kendiliğinden gönderilir; kapalıysa kutuda kalır.
+  useEffect(() => {
+    if (enabled && initial?.question && !initial.photo && !autoAsked.current) {
+      autoAsked.current = true
+      void ask(initial.question.trim(), null)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled])
+
+  function send(e: FormEvent) {
     e.preventDefault()
-    const question = q.trim()
+    const question = q.trim() || (photo ? t('Bu fotoğraftaki yapı hangisi?') : '')
     if (!question || busy) return
+    if (photo && !consent) {
+      setPhotoNote(t('Fotoğrafı göndermek için onay kutusunu işaretle.'))
+      return
+    }
+    void ask(question, photo)
+  }
+
+  async function ask(question: string, withPhoto: { image: GuideImage; previewUrl: string } | null) {
     setQ('')
+    setPhoto(null)
+    setConsent(false)
+    setPhotoNote('')
     setBusy(true)
     const history: GuideTurn[] = turns
       .filter((t) => t.result)
       .slice(-3)
       .map((t) => ({ question: t.question, answer: t.result!.sentences.map((s) => s.text).join(' ') || t.result!.message }))
-    setTurns((ts) => [...ts, { question }])
+    setTurns((ts) => [...ts, { question, photo: withPhoto?.previewUrl }])
     try {
-      const result = await askGuide(question, monumentId, history, null, undefined, lang)
+      const image = withPhoto ? { ...withPhoto.image, consent: true as const } : null
+      const result = await askGuide(question, monumentId, history, image, undefined, lang)
       setTurns((ts) => ts.map((t, i) => (i === ts.length - 1 ? { ...t, result } : t)))
       onAsked?.()
     } catch (err) {
@@ -198,7 +247,10 @@ export function GuideChat({ monumentId, onAsked, placeholder = 'Örn. Bu eseri k
       <ol className="vk-chat__log" aria-live="polite" aria-labelledby={`${id}-h`}>
         {turns.map((turn, i) => (
           <li key={i} className="vk-chat__turn">
-            <p className="vk-chat__q">{turn.question}</p>
+            <p className="vk-chat__q">
+              {turn.photo && <img className="vk-chat__thumb" src={turn.photo} alt={t('Gönderilen fotoğraf')} />}
+              {turn.question}
+            </p>
             {!turn.result && !turn.error && <p className="vk-chat__a vk-chat__a--wait">{t('Rehber düşünüyor…')}</p>}
             {turn.error && <p className="vk-chat__a vk-chat__a--err">{turn.error}</p>}
             {turn.result && <Answer r={turn.result} />}
@@ -216,7 +268,35 @@ export function GuideChat({ monumentId, onAsked, placeholder = 'Örn. Bu eseri k
             placeholder={t(placeholder)}
             disabled={busy || enabled === null}
           />
-          <button type="submit" className="vk-btn" disabled={busy || !q.trim()}>{t('Sor')}</button>
+          <button type="submit" className="vk-btn" disabled={busy || (!q.trim() && !photo)}>{t('Sor')}</button>
+          {allowPhoto && (
+            <div className="vk-chat__photo">
+              {photo ? (
+                <figure className="vk-chat__preview">
+                  <img src={photo.previewUrl} alt={t('Seçilen fotoğraf')} />
+                  <figcaption>
+                    <label className="vk-chat__consent">
+                      <input type="checkbox" checked={consent} onChange={(e) => (setConsent(e.target.checked), setPhotoNote(''))} />
+                      {t('Fotoğrafta yüz, kişisel bilgi veya gizli belge yok; göndermeyi onaylıyorum. Fotoğraf saklanmaz.')}
+                    </label>
+                    <button type="button" className="vk-link-btn" onClick={() => (setPhoto(null), setConsent(false))}>{t('Fotoğrafı kaldır')}</button>
+                  </figcaption>
+                </figure>
+              ) : (
+                <label className="vk-chat__pick">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="vk-sr-only"
+                    disabled={busy || enabled === null}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => (void pickPhoto(e.target.files?.[0]), (e.target.value = ''))}
+                  />
+                  <span aria-hidden="true">⬆</span> {t('Fotoğraf ekle')}
+                </label>
+              )}
+              {photoNote && <p className="vk-chat__a--err" role="alert">{photoNote}</p>}
+            </div>
+          )}
         </form>
       )}
     </div>

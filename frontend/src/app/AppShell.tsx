@@ -67,7 +67,7 @@ export default function AppShell() {
     <div className="vk-shell">
       <a className="vk-shell__skip" href="#icerik">{t('İçeriğe geç')}</a>
       <header className="vk-shell__top">
-        <Link to="/eserler" className="vk-shell__logo">VAKIFNAME</Link>
+        <Link to="/" className="vk-shell__logo">VAKIFNAME</Link>
         <nav aria-label={t('Ana menü')} className="vk-shell__topnav">
           {nav.map(({ to, label, active }) => (
             <Link key={to} to={to} className={`vk-shell__toplink${active ? ' active' : ''}`} aria-current={active ? 'page' : undefined}>{t(label)}</Link>
