@@ -154,6 +154,7 @@ describe('sorular (İngilizce)', () => {
             questions: [{ qid: 'q1', kind: 'choice', prompt: 'Kaç kubbe?', choices: ['12', '20'] }] },
         }
       },
+      '/quiz/q-1/open': { body: { qid: 'q1', seconds: 30, seconds_left: 30, answered: false } },
     })
     const prompt = await screen.findByRole('heading', { level: 1, name: 'Kaç kubbe?' })
     expect(prompt).toHaveAttribute('lang', 'tr')

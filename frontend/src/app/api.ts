@@ -172,20 +172,32 @@ export interface Quiz {
   expires_at: string
   /** Soruların dili: İngilizce istenip onaylı İngilizce kayıt yetmezse 'tr' (Faz 11). */
   lang?: 'tr' | 'en'
+  /** Soru başına cevap süresi (saniye; 7 Kasım: 30). */
+  seconds_per_question?: number
   questions: QuizQuestion[]
+}
+export interface QuizAnswerResult {
+  qid: string
+  correct: boolean
+  correct_choice: number
+  /** Süre doldu (cevap yok ya da geç geldi): yanlış sayılır. */
+  timed_out?: boolean
+  explanation: string
+  fact: { title: string; text: string; source: string; certainty?: string } | null
 }
 export interface QuizResult {
   score: number
   total: number
   passed: boolean
-  results: {
-    qid: string
-    correct: boolean
-    correct_choice: number
-    explanation: string
-    fact: { title: string; text: string; source: string; certainty?: string } | null
-  }[]
+  results: QuizAnswerResult[]
   knowledge_seal: { earned_at: string; new: boolean } | null
+}
+/** Tek sorunun cevabı (7 Kasım): anında sonuç; son soruda `final` oyunun sonucudur. */
+export interface QuizStepResult extends QuizAnswerResult {
+  score: number
+  answered: number
+  total: number
+  final: QuizResult | null
 }
 export type VisitStatus = 'gold' | 'already' | 'out_of_range' | 'needs_knowledge' | 'simulation_disabled'
 export interface VisitResult {
@@ -204,6 +216,10 @@ export const startQuiz = (id: string, userId: string, lang: 'tr' | 'en' = 'tr') 
   apiPost(`/monuments/${enc(id)}/quiz`, lang === 'en' ? { user_id: userId, lang } : { user_id: userId }, undefined, WITH_COOKIE) as Promise<Quiz>
 export const submitQuiz = (quizId: string, userId: string, answers: { qid: string; choice: number }[]) =>
   apiPost(`/quiz/${enc(quizId)}/submit`, { user_id: userId, answers }, undefined, WITH_COOKIE) as Promise<QuizResult>
+export const openQuestion = (quizId: string, userId: string, qid: string) =>
+  apiPost(`/quiz/${enc(quizId)}/open`, { user_id: userId, qid }, undefined, WITH_COOKIE) as Promise<{ qid: string; seconds: number; seconds_left: number; answered: boolean }>
+export const answerQuestion = (quizId: string, userId: string, qid: string, choice: number | null) =>
+  apiPost(`/quiz/${enc(quizId)}/answer`, { user_id: userId, qid, choice }, undefined, WITH_COOKIE) as Promise<QuizStepResult>
 export const sendVisit = (id: string, userId: string, body: { latitude?: number; longitude?: number; simulate?: boolean }) =>
   apiPost(`/monuments/${enc(id)}/visit`, { user_id: userId, ...body }, undefined, WITH_COOKIE) as Promise<VisitResult>
 

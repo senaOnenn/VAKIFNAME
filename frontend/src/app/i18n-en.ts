@@ -479,6 +479,22 @@ export const EN: Record<string, string> = {
   'Önceki': 'Previous',
   'Sonraki': 'Next',
   'Cevapları gönder': 'Submit answers',
+  // 7 Kasım: anında geri bildirim ve soru başına süre
+  'Doğru cevap': 'Correct',
+  'Doğru cevap!': 'Correct!',
+  'Yanlış cevap': 'Wrong',
+  'Senin cevabın, yanlış': 'Your answer, wrong',
+  'Süre doldu': 'Time is up',
+  'Süre doldu; yanlış sayıldı.': 'Time is up; counted as wrong.',
+  '{n} doğru': '{n} correct',
+  '{n} yanlış': '{n} wrong',
+  'Kalan süre: {n} saniye': 'Time left: {n} seconds',
+  '{n} sn': '{n} s',
+  '10 saniye kaldı': '10 seconds left',
+  'Sonraki soru': 'Next question',
+  'Sonucu gör': 'See the result',
+  'Soru açılamadı.': 'The question could not be opened.',
+  'Cevap gönderilemedi.': 'The answer could not be sent.',
   'Seçenek {n}': 'Option {n}',
 
   // Pasaport

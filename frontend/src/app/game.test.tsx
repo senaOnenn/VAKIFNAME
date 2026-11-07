@@ -33,11 +33,6 @@ const QUIZ: Quiz = {
     { qid: 'e', kind: 'choice', prompt: 'Kaç kubbe?', choices: ['12', '20'] },
   ],
 }
-const result = (score: number) => ({
-  score, total: 5, passed: score >= 4,
-  results: QUIZ.questions.map((q, i) => ({ qid: q.qid, correct: i < score, correct_choice: 1, explanation: `Açıklama ${q.qid}`, fact: { title: 'Yapım', text: '...', source: 'Cilt I, s. 20' } })),
-  knowledge_seal: score >= 4 ? { earned_at: '2026-10-27T10:00:00Z', new: true } : null,
-})
 
 type Calls = { path: string; body: Record<string, unknown> }[]
 function server(state: GameState, extra: Record<string, unknown> = {}) {
@@ -208,52 +203,120 @@ describe('mühür yolu (oyun paneli)', () => {
 })
 
 describe('Rozeti Al (sınav)', () => {
-  async function answerAll() {
-    await userEvent.click(await screen.findByRole('radio', { name: /^Seçenek 1/ }))
-    await userEvent.click(screen.getByRole('button', { name: 'Sonraki' }))
-    expect(screen.getByText('Yirmi kubbeyle örtülüdür.')).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('radio', { name: 'Doğru' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Sonraki' }))
-    await userEvent.click(screen.getByRole('radio', { name: 'Yıldırım Bayezid' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Sonraki' }))
-    await userEvent.click(screen.getByRole('radio', { name: 'Kündekâri' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Sonraki' }))
-    expect(screen.getByRole('button', { name: 'Cevapları gönder' })).toBeDisabled()
-    await userEvent.click(screen.getByRole('radio', { name: '20' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Cevapları gönder' }))
+  // 7 Kasım: sorular tek tek cevaplanır; sunucu her cevabı hemen değerlendirir (test sunucusu doğruları bilir).
+  const RIGHT: Record<string, number> = { a: 0, b: 1, c: 1, d: 0, e: 1 }
+  function steps() {
+    const sent: { qid: string; choice: number | null }[] = []
+    const opened: string[] = []
+    let score = 0
+    const routes = {
+      '/quiz/q-1/open': (init?: RequestInit) => {
+        const { qid } = JSON.parse(String(init!.body))
+        opened.push(qid)
+        return { body: { qid, seconds: 30, seconds_left: 30, answered: false } }
+      },
+      '/quiz/q-1/answer': (init?: RequestInit) => {
+        const { qid, choice } = JSON.parse(String(init!.body))
+        sent.push({ qid, choice })
+        const correct = choice !== null && choice === RIGHT[qid]
+        if (correct) score++
+        const one = (q: string, ok: boolean, c: number | null) => ({
+          qid: q, correct: ok, correct_choice: RIGHT[q], timed_out: c === null, explanation: `Açıklama ${q}`,
+          fact: { title: 'Yapım', text: '...', source: 'Cilt I, s. 20' },
+        })
+        const final = sent.length === 5 ? {
+          score, total: 5, passed: score >= 4,
+          results: sent.map((x) => one(x.qid, x.choice !== null && x.choice === RIGHT[x.qid], x.choice)),
+          knowledge_seal: score >= 4 ? { earned_at: '2026-10-27T10:00:00Z', new: true } : null,
+        } : null
+        return { body: { ...one(qid, correct, choice), score, answered: sent.length, total: 5, final } }
+      },
+    }
+    return { sent, opened, routes }
   }
 
-  it('5 soru cevaplanır; 4 doğru ile bilgi mührü kazanılır, cevaplar kaynaklarıyla gösterilir', async () => {
-    let submitted: Record<string, unknown> = {}
-    const { fetchMock } = server(game({ ready_for_quiz: true }), {
-      [`/monuments/${ID}/quiz`]: { status: 201, body: QUIZ },
-      '/quiz/q-1/submit': (init?: RequestInit) => {
-        submitted = JSON.parse(String(init!.body))
-        return { body: result(4) }
-      },
-    })
+  async function pick(name: string | RegExp) {
+    await userEvent.click(await screen.findByRole('radio', { name }))
+  }
+  async function next() {
+    await userEvent.click(await screen.findByRole('button', { name: 'Sonraki soru' }))
+  }
+
+  it('her cevap hemen değerlendirilir: doğru yeşil ✓, yanlış kırmızı ✗; sayaç görünür; 4 doğru ile mühür', async () => {
+    const st = steps()
+    const { fetchMock } = server(game({ ready_for_quiz: true }), { [`/monuments/${ID}/quiz`]: { status: 201, body: { ...QUIZ, seconds_per_question: 30 } }, ...st.routes })
     open(`/oyun/eser/${ID}/rozet`)
     expect(await screen.findByText('Soru 1 / 5')).toBeInTheDocument()
-    await answerAll()
+    expect(await screen.findByRole('timer', { name: 'Kalan süre: 30 saniye' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Önceki' })).not.toBeInTheDocument()
+    await pick(/^Seçenek 1/)
+    expect(await screen.findByText('✓ Doğru cevap!')).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: /^Seçenek 1/ })).toHaveClass('is-right')
+    expect(screen.getByText('✓ 1 doğru')).toBeInTheDocument()
+    expect(screen.queryByRole('timer')).not.toBeInTheDocument()  // cevaplanınca süre durur
+    expect(screen.getByRole('radio', { name: /^Seçenek 2/ })).toBeDisabled()  // cevap değiştirilemez
+    await next()
+    expect(screen.getByText('Yirmi kubbeyle örtülüdür.')).toBeInTheDocument()
+    await pick('Doğru')
+    await next()
+    await pick('Yıldırım Bayezid')
+    await next()
+    await pick('Kündekâri')
+    await next()
+    await pick('12')  // yanlış
+    expect(await screen.findByText('✗ Yanlış cevap')).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: /^12/ })).toHaveClass('is-wrong')
+    expect(screen.getByRole('radio', { name: /^20/ })).toHaveClass('is-right')  // doğru şık gösterilir
+    expect(screen.getByText('✓ 4 doğru')).toBeInTheDocument()
+    expect(screen.getByText('✗ 1 yanlış')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Sonucu gör' }))
     expect(await screen.findByRole('heading', { name: 'Bilgi mührünü kazandın!' })).toBeInTheDocument()
     expect(screen.getByRole('img', { name: 'Bilgi mührü' })).toBeInTheDocument()
-    expect(submitted.answers).toEqual([{ qid: 'a', choice: 0 }, { qid: 'b', choice: 1 }, { qid: 'c', choice: 1 }, { qid: 'd', choice: 0 }, { qid: 'e', choice: 1 }])
+    expect(st.sent).toEqual([{ qid: 'a', choice: 0 }, { qid: 'b', choice: 1 }, { qid: 'c', choice: 1 }, { qid: 'd', choice: 0 }, { qid: 'e', choice: 0 }])
+    expect(st.opened).toEqual(['a', 'b', 'c', 'd', 'e'])
     expect(screen.getAllByText('Kaynak: Cilt I, s. 20')).toHaveLength(5)
     expect(fetchMock.mock.calls.filter(([u]) => String(u).endsWith('/quiz'))).toHaveLength(1)
   })
 
   it('3 doğruda mühür verilmez; "Yeniden dene" yeni sınav açar', async () => {
-    const { fetchMock } = server(game({ ready_for_quiz: true }), {
-      [`/monuments/${ID}/quiz`]: { status: 201, body: QUIZ },
-      '/quiz/q-1/submit': { body: result(3) },
-    })
+    const st = steps()
+    const { fetchMock } = server(game({ ready_for_quiz: true }), { [`/monuments/${ID}/quiz`]: { status: 201, body: QUIZ }, ...st.routes })
     open(`/eser/${ID}/rozet`)
-    await answerAll()
+    await pick(/^Seçenek 1/)
+    await next()
+    await pick('Doğru')
+    await next()
+    await pick('Yıldırım Bayezid')
+    await next()
+    await pick('Malakâri')
+    await next()
+    await pick('12')
+    await userEvent.click(await screen.findByRole('button', { name: 'Sonucu gör' }))
     expect(await screen.findByRole('heading', { name: 'Bu sefer olmadı' })).toBeInTheDocument()
     expect(screen.getByText(/en az 4 doğru gerekiyordu/)).toBeInTheDocument()
+    expect(screen.getByText('✗ 2 yanlış')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Yeniden dene' }))
     expect(await screen.findByText('Soru 1 / 5')).toBeInTheDocument()
     expect(fetchMock.mock.calls.filter(([u]) => String(u).endsWith('/quiz'))).toHaveLength(2)
+  })
+
+  it('30 saniyede cevap verilmezse cevapsız gönderilir ve yanlış sayılır', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    const st = steps()
+    server(game({ ready_for_quiz: true }), { [`/monuments/${ID}/quiz`]: { status: 201, body: QUIZ }, ...st.routes })
+    open(`/oyun/eser/${ID}/rozet`)
+    expect(await screen.findByRole('timer', { name: 'Kalan süre: 30 saniye' })).toBeInTheDocument()
+    await act(async () => {
+      vi.advanceTimersByTime(20_000)
+    })
+    expect(screen.getByRole('timer', { name: 'Kalan süre: 10 saniye' })).toHaveClass('is-low')
+    await act(async () => {
+      vi.advanceTimersByTime(10_500)
+    })
+    expect(await screen.findByText('✗ Süre doldu; yanlış sayıldı.')).toBeInTheDocument()
+    expect(st.sent).toEqual([{ qid: 'a', choice: null }])
+    expect(screen.getByRole('radio', { name: /^Seçenek 1/ })).toHaveClass('is-right')
+    expect(screen.getByText('✗ 1 yanlış')).toBeInTheDocument()
   })
 
   it('sunucu sınavı reddederse (ör. I. kademe bitmedi) nedenini ve geri dönüşü gösterir', async () => {

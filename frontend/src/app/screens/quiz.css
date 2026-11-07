@@ -223,3 +223,163 @@
   background: rgb(9 12 34 / 0.6);
   border-left-color: var(--vk-gold);
 }
+
+/* ── Anında geri bildirim ve süre (7 Kasım, Talha) ─────────────────────────────────────────────────────────────────
+   Doğru = yeşil, yanlış = kırmızı. Paletteki "yeşil yok" kuralının tek istisnasıdır (durum rengi, yalnızca bu ekranda);
+   renk tek başına anlam taşımaz: yanında her zaman ✓ / ✗ ve "Doğru/Yanlış" yazısı vardır (renk körlüğü). */
+.vk-quiz {
+  --vk-ok: #3fae72;
+  --vk-ok-ink: #8fe0b0;
+  --vk-bad: #d4566a;
+  --vk-bad-ink: #f4a3ae;
+}
+.vk-quiz__dots span.is-right {
+  background: var(--vk-ok);
+  border-color: var(--vk-ok);
+}
+.vk-quiz__dots span.is-wrong {
+  background: var(--vk-bad);
+  border-color: var(--vk-bad);
+}
+.vk-quiz__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--vk-space-2) var(--vk-space-4);
+}
+.vk-quiz__tally {
+  display: flex;
+  gap: var(--vk-space-3);
+  margin: 0;
+  font: 600 0.95rem var(--vk-font-ui);
+}
+.vk-quiz__tally .is-right {
+  color: var(--vk-ok-ink);
+}
+.vk-quiz__tally .is-wrong {
+  color: var(--vk-bad-ink);
+}
+.vk-quiz__tally--big {
+  justify-content: center;
+  font-size: 1.2rem;
+}
+.vk-quiz__timer {
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-3);
+  max-width: 40rem;
+}
+.vk-quiz__timer-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: rgb(201 162 75 / 0.18);
+  overflow: hidden;
+}
+.vk-quiz__timer-bar {
+  display: block;
+  height: 100%;
+  background: var(--vk-gold-gradient);
+  transform-origin: left center;
+  transition: transform 250ms linear;
+}
+.vk-quiz__timer-n {
+  min-width: 3.5rem;
+  text-align: right;
+  font: 600 0.95rem var(--vk-font-ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--vk-ivory-dim);
+}
+.vk-quiz__timer.is-low .vk-quiz__timer-bar {
+  background: var(--vk-bad);
+}
+.vk-quiz__timer.is-low .vk-quiz__timer-n {
+  color: var(--vk-bad-ink);
+}
+.vk-q__opt:disabled,
+.vk-q__img:disabled {
+  cursor: default;
+  transform: none;
+}
+.vk-q__opt.is-right,
+.vk-q__img.is-right {
+  background: rgb(63 174 114 / 0.22);
+  border: 2px solid var(--vk-ok);
+  color: var(--vk-ivory);
+}
+.vk-q__opt.is-wrong,
+.vk-q__img.is-wrong {
+  background: rgb(212 86 106 / 0.22);
+  border: 2px solid var(--vk-bad);
+  color: var(--vk-ivory);
+}
+.vk-q__opt.is-dim,
+.vk-q__img.is-dim {
+  opacity: 0.55;
+}
+.vk-q__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-left: var(--vk-space-2);
+  border-radius: 50%;
+  font-weight: 700;
+  color: var(--vk-night);
+  vertical-align: middle;
+}
+.is-right > .vk-q__mark {
+  background: var(--vk-ok-ink);
+}
+.is-wrong > .vk-q__mark {
+  background: var(--vk-bad-ink);
+}
+.vk-q__img .vk-q__mark {
+  justify-self: center;
+  margin: 0;
+}
+.vk-quiz__feedback {
+  margin-top: var(--vk-space-4);
+  padding: var(--vk-space-4) var(--vk-space-5);
+  border-radius: var(--vk-radius);
+  border-left: 4px solid;
+  background: var(--vk-surface);
+}
+.vk-quiz__feedback.is-right {
+  border-color: var(--vk-ok);
+}
+.vk-quiz__feedback.is-wrong {
+  border-color: var(--vk-bad);
+}
+.vk-quiz__feedback-h {
+  margin: 0 0 var(--vk-space-2);
+  font: 700 1.1rem var(--vk-font-ui);
+}
+.vk-quiz__feedback.is-right .vk-quiz__feedback-h {
+  color: var(--vk-ok-ink);
+}
+.vk-quiz__feedback.is-wrong .vk-quiz__feedback-h {
+  color: var(--vk-bad-ink);
+}
+.vk-quiz__review li.is-correct .vk-quiz__verdict {
+  color: var(--vk-ok-ink);
+}
+.vk-quiz__review li.is-wrong .vk-quiz__verdict {
+  color: var(--vk-bad-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vk-quiz__timer-bar {
+    transition: none;
+  }
+}
+.vk-quiz__timer {
+  width: min(100%, 40rem);
+}
+/* Sonuç kartı açık (fildişi) zeminde: koyu tonlar (okunabilirlik). */
+.vk-quiz__result .vk-quiz__tally .is-right {
+  color: #1d6b42;
+}
+.vk-quiz__result .vk-quiz__tally .is-wrong {
+  color: #a3283f;
+}

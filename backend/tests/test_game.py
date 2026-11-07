@@ -252,7 +252,7 @@ FILE_RE = re.compile(r"^[0-9a-f]{64}\.jpe?g$")
 def test_every_monument_gets_five_mixed_questions_without_answers(c, mid):
     user = visitor(c)
     quiz = ready_quiz(c, user, mid)
-    assert set(quiz) == {"quiz_id", "expires_at", "lang", "questions"} and quiz["lang"] == "tr" and re.fullmatch(r"[0-9a-f]{32}", quiz["quiz_id"])
+    assert set(quiz) == {"quiz_id", "expires_at", "lang", "seconds_per_question", "questions"} and quiz["lang"] == "tr" and re.fullmatch(r"[0-9a-f]{32}", quiz["quiz_id"])
     qs = quiz["questions"]
     assert len(qs) == 5 and [q["qid"] for q in qs] == [f"q{i}" for i in range(1, 6)]
     kinds = [q["kind"] for q in qs]
@@ -453,7 +453,7 @@ def test_four_of_five_passes_and_awards_the_knowledge_seal_once(c):
     assert [x["correct"] for x in body["results"]] == [True] * 4 + [False]
     items = server_items(c, quiz["quiz_id"])
     for res, item in zip(body["results"], items):
-        assert set(res) == {"qid", "correct", "correct_choice", "explanation", "fact"}
+        assert set(res) == {"qid", "correct", "correct_choice", "timed_out", "explanation", "fact"}
         assert res["correct_choice"] == item["answer"] and res["explanation"]
         if item["kind"] == "image_pick":
             assert res["fact"] is None
@@ -876,3 +876,106 @@ def test_english_falls_back_to_turkish_when_not_enough_english(tmp_path):
         quiz = c.post(f"/monuments/{OPEN}/quiz", json={"user_id": user, "lang": "en"}).json()
         assert quiz["lang"] == "tr" and len(quiz["questions"]) == game.QUIZ_SIZE
         assert not any(q["prompt"].startswith(("Question", "Is this", "Which one")) for q in quiz["questions"])
+
+
+# --- Tek tek cevaplama (7 Kasım): anında doğru/yanlış, soru başına 30 sn --------------------------------------------
+
+def open_q(c, user, quiz_id, qid):
+    return c.post(f"/quiz/{quiz_id}/open", json={"user_id": user, "qid": qid})
+
+
+def answer_q(c, user, quiz_id, qid, choice):
+    return c.post(f"/quiz/{quiz_id}/answer", json={"user_id": user, "qid": qid, "choice": choice})
+
+
+def wrong(item) -> int:
+    return (item["answer"] + 1) % game.option_count(item)
+
+
+def test_each_answer_is_graded_at_once_and_reveals_the_right_choice_only_after_answering(c):
+    user = visitor(c)
+    quiz = ready_quiz(c, user)
+    assert quiz["seconds_per_question"] == game.QUESTION_SECONDS == 30
+    items = server_items(c, quiz["quiz_id"])
+    r = open_q(c, user, quiz["quiz_id"], "q1")
+    assert r.status_code == 200 and r.headers["cache-control"] == "no-store"
+    assert r.json() == {"qid": "q1", "seconds": 30, "seconds_left": 30, "answered": False}
+    r = answer_q(c, user, quiz["quiz_id"], "q1", items[0]["answer"])
+    body = r.json()
+    assert r.status_code == 200 and body["correct"] is True and body["timed_out"] is False
+    assert body["correct_choice"] == items[0]["answer"] and body["explanation"]
+    assert (body["score"], body["answered"], body["total"], body["final"]) == (1, 1, 5, None)
+    open_q(c, user, quiz["quiz_id"], "q2")
+    body = answer_q(c, user, quiz["quiz_id"], "q2", wrong(items[1])).json()
+    assert body["correct"] is False and body["correct_choice"] == items[1]["answer"] and body["score"] == 1
+
+
+def test_questions_open_in_order_and_an_answer_is_final(c):
+    user = visitor(c)
+    quiz = ready_quiz(c, user)
+    qid = quiz["quiz_id"]
+    items = server_items(c, qid)
+    assert open_q(c, user, qid, "q2").status_code == 409
+    assert answer_q(c, user, qid, "q1", 0).status_code == 409  # açılmadan cevap yok
+    assert open_q(c, user, qid, "q9").status_code == 404
+    open_q(c, user, qid, "q1")
+    assert answer_q(c, user, qid, "q1", 9).status_code == 422
+    assert answer_q(c, user, qid, "q1", wrong(items[0])).status_code == 200
+    r = answer_q(c, user, qid, "q1", items[0]["answer"])
+    assert r.status_code == 409 and "zaten" in r.json()["detail"]
+    # Tek tek akış başladıktan sonra toplu gönderimle cevap değiştirilemez.
+    r = submit(c, user, qid, answers_with(c, qid, 5))
+    assert r.status_code == 409 and "tek tek" in r.json()["detail"]
+
+
+def test_time_runs_on_the_server_late_or_empty_answers_count_as_wrong(c):
+    user = visitor(c)
+    now = datetime.now(timezone.utc)
+    c.app.state.game_clock = lambda: now
+    quiz = ready_quiz(c, user)
+    qid = quiz["quiz_id"]
+    items = server_items(c, qid)
+    open_q(c, user, qid, "q1")
+    c.app.state.game_clock = lambda: now + timedelta(seconds=10)
+    assert open_q(c, user, qid, "q1").json()["seconds_left"] == 20  # yeniden açmak süreyi sıfırlamaz
+    c.app.state.game_clock = lambda: now + timedelta(seconds=game.QUESTION_SECONDS + game.ANSWER_GRACE_SECONDS + 1)
+    body = answer_q(c, user, qid, "q1", items[0]["answer"]).json()
+    assert body["correct"] is False and body["timed_out"] is True and body["correct_choice"] == items[0]["answer"]
+    open_q(c, user, qid, "q2")
+    body = answer_q(c, user, qid, "q2", None).json()  # süre doldu: istemci cevapsız gönderir
+    assert body["correct"] is False and body["timed_out"] is True and body["score"] == 0
+    # Payın içindeki cevap sayılır.
+    t3 = now + timedelta(minutes=1)
+    c.app.state.game_clock = lambda: t3
+    open_q(c, user, qid, "q3")
+    c.app.state.game_clock = lambda: t3 + timedelta(seconds=game.QUESTION_SECONDS + 2)
+    assert answer_q(c, user, qid, "q3", items[2]["answer"]).json()["correct"] is True
+
+
+def test_last_answer_closes_the_quiz_and_awards_the_seal(c):
+    user = visitor(c)
+    quiz = ready_quiz(c, user)
+    qid = quiz["quiz_id"]
+    items = server_items(c, qid)
+    for i, item in enumerate(items):
+        assert open_q(c, user, qid, item["qid"]).status_code == 200
+        body = answer_q(c, user, qid, item["qid"], item["answer"] if i != 2 else None).json()
+    final = body["final"]
+    assert final is not None and set(final) == {"score", "total", "passed", "results", "knowledge_seal"}
+    assert (final["score"], final["total"], final["passed"]) == (4, 5, True)
+    assert [r["timed_out"] for r in final["results"]] == [False, False, True, False, False]
+    assert final["knowledge_seal"]["new"] is True and state(c, user)["knowledge"] is not None
+    assert open_q(c, user, qid, "q1").status_code == 409  # kapanan oyun açılmaz
+
+
+def test_failed_step_quiz_can_be_retried_with_fresh_steps(c):
+    user = visitor(c)
+    quiz = ready_quiz(c, user)
+    items = server_items(c, quiz["quiz_id"])
+    for item in items:
+        open_q(c, user, quiz["quiz_id"], item["qid"])
+        body = answer_q(c, user, quiz["quiz_id"], item["qid"], wrong(item)).json()
+    assert body["final"]["passed"] is False and state(c, user)["knowledge"] is None
+    again = start(c, user).json()
+    assert open_q(c, user, again["quiz_id"], "q1").json()["seconds_left"] == 30
+    assert c.app.state.monument_progress.quiz_steps(quiz["quiz_id"]) == {}

@@ -36,6 +36,10 @@ from .public_catalog import PublicCatalog, PublicFact, PublicImage, PublicMonume
 QUIZ_SIZE = 5
 PASS_MARK = 4
 QUIZ_TTL = timedelta(minutes=30)
+# 7 Kasım (Talha): her sorunun cevap süresi. Süre soru ekrana gelince başlar; dolarsa cevap boş kaydedilir, yanlış sayılır.
+QUESTION_SECONDS = 30
+# Ağ gecikmesi payı: süre içinde verilip geç ulaşan cevap reddedilmesin.
+ANSWER_GRACE_SECONDS = 3
 DEFAULT_VISIT_RADIUS_M = 50  # 29 Ekim kararı (önceki 35 m büyük yapılarda kapıdaki ziyaretçiyi dışarıda bırakıyordu)
 MAX_VISIT_RADIUS_M = 1000
 # Bu mesafedeki eserler aynı yapı topluluğu sayılır (Muradiye'de dört eser 100 m içinde, Osman/Orhan Gazi 28 m).
@@ -352,13 +356,17 @@ def option_count(item: dict) -> int:
     return len(item["choices"] if item["kind"] == "choice" else item["images"])
 
 
-def grade(items: Sequence[dict], answers: dict[str, int]) -> tuple[int, list[dict]]:
-    """`answers`: soru kimliği → seçilen şık (doğru/yanlışta 1 = Doğru, 0 = Yanlış). Puan ve soru başına sonuç."""
-    results = []
-    for item in items:
-        correct = answers[item["qid"]] == item["answer"]
-        results.append({"qid": item["qid"], "correct": correct, "correct_choice": item["answer"],
-                        "explanation": item["explanation"], "fact": item["fact"]})
+def grade_one(item: dict, choice: Optional[int]) -> dict:
+    """Tek sorunun sonucu. `choice` None: süre doldu ya da cevap yok (yanlış)."""
+    return {"qid": item["qid"], "correct": choice is not None and choice == item["answer"],
+            "correct_choice": item["answer"], "timed_out": choice is None,
+            "explanation": item["explanation"], "fact": item["fact"]}
+
+
+def grade(items: Sequence[dict], answers: dict[str, Optional[int]]) -> tuple[int, list[dict]]:
+    """`answers`: soru kimliği → seçilen şık (doğru/yanlışta 1 = Doğru, 0 = Yanlış; None = cevap yok). Puan ve soru
+    başına sonuç."""
+    results = [grade_one(item, answers.get(item["qid"])) for item in items]
     return sum(r["correct"] for r in results), results
 
 

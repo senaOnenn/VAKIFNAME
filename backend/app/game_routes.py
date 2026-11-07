@@ -14,7 +14,10 @@ Kademeler (ekip kararı, CLAUDE.md §2.6; soru kuralları için bkz. `game.py`):
    ziyaretçiden kullanamayacağı bir adım istenmez. Olaylar istemciden gelir ve bir kez kaydedilir.
 2. **Rozeti Al**: yalnızca 1. kademe bitmişse ve eser kullanıcı için açıksa (rota kilidi, bkz.
    `route_routes.monument_locked`). 5 soru; en az 4 doğru bilgi mührü verir. Doğru cevaplar sunucuda kalır ve ancak
-   gönderimden sonra açıklanır. Her sınav bir kez gönderilir ve `game.QUIZ_TTL` sonra geçersizdir. Kalınca yeni sınav
+   gönderimden sonra açıklanır. **7 Kasım:** sorular tek tek cevaplanır (`/quiz/{id}/open` → `/quiz/{id}/answer`):
+   her soru sırayla açılır, süresi (`game.QUESTION_SECONDS`) açılışta başlar ve sunucuda sayılır; cevap bir kez yazılır,
+   doğru şık o soru cevaplanınca (ya da süre dolunca) açıklanır. Süresi dolan soru yanlış sayılır. Son cevapta sınav
+   kapanır ve mühür verilir. Her sınav bir kez gönderilir ve `game.QUIZ_TTL` sonra geçersizdir. Kalınca yeni sınav
    açılabilir (önceki sınavda sorulmamış kayıtlar önceliklidir).
 3. **Ziyaret**: yalnızca bilgi mühründen sonra. Bildirilen konum eserin onaylı noktasıyla karşılaştırılır (yarıçap:
    katalogdaki check-in noktası ve yarıçapı, yoksa harita konumu ve `VAKIFNAME_VISIT_RADIUS_M`). Sunum modunda
@@ -57,6 +60,11 @@ QUIZ_SUBMITTED = "Bu cevaplar zaten gönderildi."
 QUIZ_EXPIRED = "Süre doldu. Rozeti yeniden dene."
 ANSWERS_MISMATCH = "Her soruya tam olarak bir cevap gönderilmelidir."
 BAD_CHOICE = "Geçersiz seçenek."
+STEP_UNKNOWN = "Bu soru bu oyunda yok."
+STEP_OUT_OF_ORDER = "Sorular sırayla cevaplanır; önce açık soruyu cevaplayın."
+STEP_NOT_OPEN = "Bu soru henüz açılmadı."
+STEP_DONE = "Bu soru zaten cevaplandı."
+STEP_FLOW = "Bu oyunda sorular tek tek cevaplanıyor."
 NO_LOCATION = "Bu eserin onaylı konumu olmadığı için ziyaret doğrulanamaz."
 LOCATION_REQUIRED = "Ziyaret doğrulaması için enlem ve boylam birlikte gönderilmelidir."
 
@@ -82,6 +90,16 @@ class QuizAnswer(_Strict):
     qid: Annotated[str, StringConstraints(pattern=r"^q[1-9]$")]
     # Doğru/yanlış sorusunda 1 = Doğru, 0 = Yanlış; diğerlerinde şık sırası (0 tabanlı).
     choice: int = Field(strict=True, ge=0, le=9)
+
+
+class StepRequest(_Strict):
+    user_id: UserId
+    qid: Annotated[str, StringConstraints(pattern=r"^q[1-9]$")]
+
+
+class StepAnswerRequest(StepRequest):
+    # None: süre doldu (cevap yok). Doğru/yanlışta 1 = Doğru, 0 = Yanlış; diğerlerinde şık sırası (0 tabanlı).
+    choice: Optional[int] = Field(default=None, strict=True, ge=0, le=9)
 
 
 class SubmitRequest(_Strict):
@@ -220,41 +238,109 @@ def start_quiz(request: Request, response: Response, body: QuizRequest, monument
     except _NotEnoughQuestions:
         raise HTTPException(status_code=409, detail=NOT_ENOUGH) from None
     response.headers["Cache-Control"] = "no-store"
-    return {"quiz_id": quiz_id, "expires_at": expires_at, "lang": lang,
+    return {"quiz_id": quiz_id, "expires_at": expires_at, "lang": lang, "seconds_per_question": game.QUESTION_SECONDS,
             "questions": [game.public_question(i) for i in items]}
 
 
-@router.post("/quiz/{quiz_id}/submit")
-def submit_quiz(request: Request, response: Response, body: SubmitRequest, quiz_id: Annotated[QuizId, Path()]):
-    require_progress_access(request, body.user_id)
+def _active_quiz(request: Request, quiz_id: str, user_id: str) -> tuple[MonumentProgressStore, dict, datetime]:
+    """Sahibi olunan, gönderilmemiş ve süresi geçmemiş sınav (aksi hâlde uygun hata)."""
+    require_progress_access(request, user_id)
     store = _progress(request)
     quiz = store.quiz(quiz_id)
     if quiz is None:
         raise HTTPException(status_code=404, detail=QUIZ_NOT_FOUND)
-    if quiz["user_id"] != body.user_id:
+    if quiz["user_id"] != user_id:
         raise HTTPException(status_code=403, detail=QUIZ_NOT_YOURS)
     if quiz["submitted_at"] is not None:
         raise HTTPException(status_code=409, detail=QUIZ_SUBMITTED)
     now = _now(request)
     if datetime.fromisoformat(quiz["expires_at"]) <= now:
         raise HTTPException(status_code=410, detail=QUIZ_EXPIRED)
+    return store, quiz, now
+
+
+def _finish(request: Request, store: MonumentProgressStore, quiz: dict, answers: dict[str, Optional[int]],
+            now: datetime) -> dict:
+    """Sınavı puanlar ve kapatır; geçtiyse bilgi mührünü verir (XP mühürle birlikte depoda türetilir)."""
+    items = quiz["items"]
+    m = _monument(request, quiz["monument_id"])
+    score, results = game.grade(items, answers)
+    if not store.close_quiz(quiz["quiz_id"], _iso(now), score):
+        raise HTTPException(status_code=409, detail=QUIZ_SUBMITTED)
+    passed = score >= game.PASS_MARK
+    seal = None
+    if passed:
+        record, created = store.add_seal(quiz["user_id"], m.monument_id, m.name, "knowledge")
+        seal = {**seal_view(record), "new": created}
+    return {"score": score, "total": len(items), "passed": passed, "results": results, "knowledge_seal": seal}
+
+
+def _seconds_left(opened_at: str, now: datetime) -> int:
+    used = (now - datetime.fromisoformat(opened_at)).total_seconds()
+    return max(0, int(game.QUESTION_SECONDS - used + 0.999))
+
+
+@router.post("/quiz/{quiz_id}/open")
+def open_question(request: Request, response: Response, body: StepRequest, quiz_id: Annotated[QuizId, Path()]):
+    """Soruyu açar; süresi buradan başlar. Sorular sırayla açılır; yeniden açmak süreyi sıfırlamaz."""
+    store, quiz, now = _active_quiz(request, quiz_id, body.user_id)
+    qids = [i["qid"] for i in quiz["items"]]
+    if body.qid not in qids:
+        raise HTTPException(status_code=404, detail=STEP_UNKNOWN)
+    steps = store.quiz_steps(quiz_id)
+    if any(steps.get(q, {}).get("answered_at") is None for q in qids[:qids.index(body.qid)]):
+        raise HTTPException(status_code=409, detail=STEP_OUT_OF_ORDER)
+    step = store.open_step(quiz_id, body.qid, _iso(now))
+    response.headers["Cache-Control"] = "no-store"
+    return {"qid": body.qid, "seconds": game.QUESTION_SECONDS, "seconds_left": _seconds_left(step["opened_at"], now),
+            "answered": step["answered_at"] is not None}
+
+
+@router.post("/quiz/{quiz_id}/answer")
+def answer_question(request: Request, response: Response, body: StepAnswerRequest,
+                    quiz_id: Annotated[QuizId, Path()]):
+    """Tek sorunun cevabı: bir kez yazılır, hemen değerlendirilir; doğru şık bu yanıtta açıklanır. Süre (+ ağ payı)
+    geçtiyse cevap boş kaydedilir. Son soruda sınav kapanır ve sonuç (`final`) döner."""
+    store, quiz, now = _active_quiz(request, quiz_id, body.user_id)
+    items = {i["qid"]: i for i in quiz["items"]}
+    item = items.get(body.qid)
+    if item is None:
+        raise HTTPException(status_code=404, detail=STEP_UNKNOWN)
+    step = store.quiz_steps(quiz_id).get(body.qid)
+    if step is None:
+        raise HTTPException(status_code=409, detail=STEP_NOT_OPEN)
+    if step["answered_at"] is not None:
+        raise HTTPException(status_code=409, detail=STEP_DONE)
+    if body.choice is not None and body.choice >= game.option_count(item):
+        raise HTTPException(status_code=422, detail=BAD_CHOICE)
+    used = (now - datetime.fromisoformat(step["opened_at"])).total_seconds()
+    choice = body.choice if used <= game.QUESTION_SECONDS + game.ANSWER_GRACE_SECONDS else None
+    if not store.answer_step(quiz_id, body.qid, choice, _iso(now)):
+        raise HTTPException(status_code=409, detail=STEP_DONE)
+    steps = store.quiz_steps(quiz_id)
+    answers = {q: s["choice"] for q, s in steps.items() if s["answered_at"] is not None}
+    result = game.grade_one(item, choice)
+    final = _finish(request, store, quiz, answers, now) if len(answers) == len(items) else None
+    response.headers["Cache-Control"] = "no-store"
+    return {**result, "score": sum(game.grade_one(items[q], c)["correct"] for q, c in answers.items()),
+            "answered": len(answers), "total": len(items), "final": final}
+
+
+@router.post("/quiz/{quiz_id}/submit")
+def submit_quiz(request: Request, response: Response, body: SubmitRequest, quiz_id: Annotated[QuizId, Path()]):
+    """Toplu gönderim (eski akış). Sorular tek tek cevaplanmaya başlandıysa kapalıdır (cevaplar değiştirilemez)."""
+    store, quiz, now = _active_quiz(request, quiz_id, body.user_id)
+    if store.quiz_steps(quiz_id):
+        raise HTTPException(status_code=409, detail=STEP_FLOW)
     items = quiz["items"]
     answers = {a.qid: a.choice for a in body.answers}
     if len(answers) != len(body.answers) or set(answers) != {i["qid"] for i in items}:
         raise HTTPException(status_code=422, detail=ANSWERS_MISMATCH)
     if any(answers[i["qid"]] >= game.option_count(i) for i in items):
         raise HTTPException(status_code=422, detail=BAD_CHOICE)
-    m = _monument(request, quiz["monument_id"])
-    score, results = game.grade(items, answers)
-    if not store.close_quiz(quiz_id, _iso(now), score):
-        raise HTTPException(status_code=409, detail=QUIZ_SUBMITTED)
-    passed = score >= game.PASS_MARK
-    seal = None
-    if passed:
-        record, created = store.add_seal(body.user_id, m.monument_id, m.name, "knowledge")
-        seal = {**seal_view(record), "new": created}
+    result = _finish(request, store, quiz, answers, now)
     response.headers["Cache-Control"] = "no-store"
-    return {"score": score, "total": len(items), "passed": passed, "results": results, "knowledge_seal": seal}
+    return result
 
 
 @router.post("/monuments/{monument_id}/visit")

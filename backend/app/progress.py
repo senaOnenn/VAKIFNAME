@@ -82,6 +82,16 @@ CREATE TABLE IF NOT EXISTS quizzes (
     score INTEGER
 );
 CREATE INDEX IF NOT EXISTS quizzes_by_user ON quizzes (user_id, monument_id);
+-- 7 Kasım: sorular tek tek cevaplanır. Her soru ekrana geldiğinde açılır (`opened_at`, süre buradan sayılır); cevap bir
+-- kez yazılır ve değişmez. `choice` NULL = süre doldu / cevap yok (yanlış sayılır).
+CREATE TABLE IF NOT EXISTS quiz_steps (
+    quiz_id TEXT NOT NULL,
+    qid TEXT NOT NULL,
+    opened_at TEXT NOT NULL,
+    choice INTEGER,
+    answered_at TEXT,
+    PRIMARY KEY (quiz_id, qid)
+);
 CREATE TABLE IF NOT EXISTS xp_events (
     user_id TEXT NOT NULL,
     source TEXT NOT NULL CHECK (source IN ('first_discovery', 'listened', 'listen_and_ask', 'knowledge', 'visit')),
@@ -287,6 +297,8 @@ class MonumentProgressStore:
                 row = self._db.execute("SELECT items FROM quizzes WHERE user_id=? AND monument_id=? "
                                        "ORDER BY created_at DESC, rowid DESC LIMIT 1", (user_id, monument_id)).fetchone()
                 items = compose(json.loads(row["items"]) if row else [])
+                self._db.execute("DELETE FROM quiz_steps WHERE quiz_id IN (SELECT quiz_id FROM quizzes WHERE user_id=? "
+                                 "AND monument_id=?)", (user_id, monument_id))
                 self._db.execute("DELETE FROM quizzes WHERE user_id=? AND monument_id=?", (user_id, monument_id))
                 self._db.execute("INSERT INTO quizzes (quiz_id, user_id, monument_id, items, created_at, expires_at) "
                                  "VALUES (?,?,?,?,?,?)", (quiz_id, user_id, monument_id,
@@ -303,6 +315,26 @@ class MonumentProgressStore:
         if row is None:
             return None
         return {**dict(row), "items": json.loads(row["items"])}
+
+    def quiz_steps(self, quiz_id: str) -> dict[str, dict]:
+        """Sorunun açılış ve cevap kayıtları (soru kimliği → kayıt)."""
+        with self._lock:
+            rows = self._db.execute("SELECT * FROM quiz_steps WHERE quiz_id=?", (quiz_id,)).fetchall()
+        return {r["qid"]: dict(r) for r in rows}
+
+    def open_step(self, quiz_id: str, qid: str, opened_at: str) -> dict:
+        """Soruyu açar (ilk açılış kalır: yeniden açmak süreyi sıfırlamaz) ve kaydı döndürür."""
+        with self._lock:
+            self._db.execute("INSERT OR IGNORE INTO quiz_steps (quiz_id, qid, opened_at) VALUES (?,?,?)",
+                             (quiz_id, qid, opened_at))
+            return dict(self._db.execute("SELECT * FROM quiz_steps WHERE quiz_id=? AND qid=?", (quiz_id, qid)).fetchone())
+
+    def answer_step(self, quiz_id: str, qid: str, choice: Optional[int], answered_at: str) -> bool:
+        """Cevabı bir kez yazar. Yalnızca ilk cevap True alır (eş zamanlı ikinci cevap False)."""
+        with self._lock:
+            cur = self._db.execute("UPDATE quiz_steps SET choice=?, answered_at=? WHERE quiz_id=? AND qid=? "
+                                   "AND answered_at IS NULL", (choice, answered_at, quiz_id, qid))
+            return cur.rowcount == 1
 
     def close_quiz(self, quiz_id: str, submitted_at: str, score: int) -> bool:
         """Sınavı gönderilmiş olarak işaretler. Yalnızca ilk gönderim True alır (eş zamanlı ikinci gönderim False)."""
