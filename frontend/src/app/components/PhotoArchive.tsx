@@ -109,14 +109,16 @@ export function PhotoArchive({ photos, monumentName, publishedCount }: {
 
   const tile = (ph: ArchivePhoto, i: number) => (
     <li key={ph.key} className="vk-archive__item">
+      {/* Erişilebilir ad, düğmenin içindeki görünen yazıyı (kaynak) da içerir (WCAG 2.5.3). */}
       <button ref={(el) => { tiles.current[i] = el }} type="button" className="vk-archive__open" onClick={() => setOpen(i)}
-        aria-label={t('İncele: {alt} (fotoğraf {i} / {n})', { i: i + 1, n, alt: ph.title || ph.alt })}>
+        aria-label={t('İncele: {alt} (fotoğraf {i} / {n})', { i: i + 1, n, alt: ph.title || ph.alt }) + (ph.caption ? ` ${ph.caption}` : '')}>
         {/* Önizleme alanı doldurur (kırpılabilir); inceleyicide fotoğrafın tamamı görünür. */}
         <img src={i === 0 ? ph.src : ph.thumbSrc} alt={ph.alt} width={ph.width ?? undefined} height={ph.height ?? undefined}
           loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
         {ph.caption && <span className="vk-archive__caption">{ph.caption}</span>}
-        {more > 0 && i === shown - 1 && <span className="vk-archive__more-badge" aria-hidden="true">+{more}</span>}
       </button>
+      {/* Kalan sayısı düğmenin dışında (üstüne biner): düğmenin adı görünen yazıyla çelişmesin. */}
+      {more > 0 && i === shown - 1 && <span className="vk-archive__more-badge" aria-hidden="true">+{more}</span>}
     </li>
   )
 

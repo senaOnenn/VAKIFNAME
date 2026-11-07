@@ -5,7 +5,8 @@ import './account.css'
 
 /**
  * Kişisel verilerin işlenmesine dair bilgilendirme. Metin, sistemin gerçekte sakladığı verilere göre yazılmıştır
- * (backend/app/accounts.py, progress.py). Hukuki metin değildir; yayın öncesi kurumun KVKK metniyle değiştirilmelidir.
+ * (backend/app/accounts.py, progress.py, guide_routes.py, stats.py; 7 Kasım: rehber, istatistik ve tarayıcıdaki ayarlar
+ * eklendi). Hukuki metin değildir; yayın öncesi kurumun KVKK metniyle değiştirilmelidir.
  */
 export default function Privacy() {
   const { t } = useLang()
@@ -27,10 +28,32 @@ export default function Privacy() {
           <li>{t('Ziyaret doğrulaması için konumun yalnızca o an kontrol edilir; konum geçmişi tutulmaz.')}</li>
           <li>{t('Misafirken ilerlemen bu cihazda rastgele bir kimlikle tutulur; hesap açınca hesabına taşınır.')}</li>
         </ul>
+        <h2>{t('Rehberle konuşursan')}</h2>
+        <ul>
+          <li>{t('Yazdığın soru, cevap üretilmesi için yapay zekâ hizmetine (Anthropic Claude) gönderilir. Soru ve konuşma bizde kaydedilmez, loglanmaz.')}</li>
+          <li>{t('İstersen yüklediğin fotoğraf yalnızca o istek için bellekte işlenir, bizde kaydedilmez ve görsel tanıma hizmetine (OpenRouter üzerinden ücretsiz bir model) gönderilir. Ücretsiz hizmetler gönderilen içeriği kendi koşullarına göre saklayabilir; bu yüzden fotoğrafta yüz bulunursa hiçbir yere gönderilmeden reddedilir.')}</li>
+          <li>{t('Bu hizmetler yurt dışındaki sunucularda çalışabilir.')}</li>
+        </ul>
+        <h2>{t('Ziyaret istatistikleri')}</h2>
+        <ul>
+          <li>{t('Çerez kullanmadan yalnızca günlük sayaçlar tutulur (ziyaretçi sayısı, sayfa ve eser görüntülenmesi). IP adresin ve tarayıcı bilgin diske yazılmaz.')}</li>
+        </ul>
+        <h2>{t('Bu cihazda')}</h2>
+        <ul>
+          <li>{t('Dil seçimin, erişilebilirlik ayarların ve açılış animasyonunu gördüğün bu tarayıcıda saklanır; sunucuya gönderilmez.')}</li>
+        </ul>
         <h2>{t('Hakların')}</h2>
         <ul>
           <li>{t('Hesap sayfasından hesabını ve tüm ilerlemeni kalıcı olarak silebilirsin.')}</li>
-          <li>{t('Verilerin reklam veya üçüncü taraflarla paylaşım için kullanılmaz.')}</li>
+          <li>{t('Verilerin reklam için kullanılmaz ve satılmaz; yalnızca yukarıda yazılan hizmetlere, yazılan amaçla gider.')}</li>
+        </ul>
+        <h2>{t('Lisanslar')}</h2>
+        <ul>
+          <li>{t('Eser bilgileri ve kitap fotoğrafları Vakıf Eserleri Envanter Projesi yayınlarındandır; diğer fotoğrafların lisansı ve atfı her fotoğrafın altında yazar.')}</li>
+          <li>
+            {t('Kullandığımız açık kaynak yazılımların lisansları:')}{' '}
+            <a href="/acik-kaynak-lisanslari.txt">{t('açık kaynak lisansları')}</a>
+          </li>
         </ul>
         <Link to="/giris" className="vk-btn vk-btn--ghost">← {t('Geri dön')}</Link>
       </section>

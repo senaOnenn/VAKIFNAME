@@ -221,6 +221,9 @@
   top: var(--vk-space-4);
   right: var(--vk-space-4);
   z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-2);
 }
 @media (max-width: 959px) {
   /* Dil seçici sağ üstte; tek sütunda başlıkla çakışmasın. */

@@ -155,7 +155,8 @@ describe('açılış', () => {
     await screen.findByRole('heading', LANDING_HEADING)
     await userEvent.click(within(screen.getAllByRole('navigation', { name: 'Ana menü' })[0]).getByRole('link', { name: 'Harita' }))
     expect(window.location.pathname).toBe('/harita')
-    expect(await screen.findByText('Misafir')).toBeInTheDocument()
+    // Sayfa parçası yüklenince üst çubuk yeniden çizilir; bulunan öge eskimesin diye her denemede yeniden aranır.
+    await vi.waitFor(() => expect(screen.getByText('Misafir')).toBeInTheDocument())
   })
 
   it('oturumu olan kullanıcı da ana sayfayı görür; menüden oyuna geçer', async () => {
@@ -218,7 +219,7 @@ describe('giriş / kayıt (sunucu)', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Seç ve maceraya başla' }))
     expect(await screen.findByRole('heading', CITY_HEADING)).toBeInTheDocument()
     expect(screen.getByText('ayse@example.com')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Kâşifin: Gezgin. Kâşifini değiştir' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Kâşifin Gezgin. Kâşifini değiştir' })).toBeInTheDocument()
     expect(calls.find((c) => c.path === '/player/character')!.body).toEqual({ character_id: 'gezgin' })
     const reg = calls.find((c) => c.path === '/auth/register')!
     expect(reg.body).toEqual({ email: 'ayse@example.com', password: PASSWORD, visitor_id: 'ziyaretci-0b8f2c1e-1a2b-4c3d-8e9f-0123456789ab', lang: 'tr' })

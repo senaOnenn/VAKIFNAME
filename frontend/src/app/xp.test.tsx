@@ -35,7 +35,7 @@ describe('XP ve seviye (R6.4)', () => {
     expect(meter).toHaveAttribute('value', '55')
     // Karakterin görünümü (geçici amblem) hesaplanan aşamaya bağlıdır.
     expect(document.querySelector('.vk-gamebar__portrait')).toHaveAttribute('data-stage', 'gezginlik')
-    expect(screen.getByRole('link', { name: 'Kâşifin: Nakkaş Çırağı. Kâşifini değiştir' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Kâşifin Nakkaş Çırağı. Kâşifini değiştir' })).toBeInTheDocument()
     expect(screen.queryByRole('status', { name: /XP/ })).toBeNull()
   })
 

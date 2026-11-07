@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from 'react'
+import { reducedMotion } from '../a11y'
 import { GoldRule } from '../components/Ornament'
 import { useLang } from '../i18n'
 import './intro.css'
@@ -11,8 +12,6 @@ const REDUCED_SHOW_MS = 1500
 /** Perdenin çözülme süresi (intro.css'teki geçişle aynı). */
 export const INTRO_FADE_MS = 1100
 const REDUCED_FADE_MS = 200
-
-const reducedMotion = () => !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
 /**
  * Açılış: VAKIFNAME yazısı belirir; süre dolunca (ya da "Geç", Esc, Enter) `onLeave` çağrılır ve tanıtım sayfası

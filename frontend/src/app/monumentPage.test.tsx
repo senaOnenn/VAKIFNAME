@@ -219,7 +219,7 @@ describe('Eser sayfası (R3)', () => {
     const archive = await openArchive()
     const tiles = () => within(archive).getAllByRole('button', { name: /^İncele:/ })
     expect(tiles()).toHaveLength(5)
-    expect(within(tiles()[4]).getByText('+2')).toBeInTheDocument()
+    expect(within(tiles()[4].closest('li')!).getByText('+2')).toBeInTheDocument()
     expect(within(archive).getByText('7 yayımlanmış fotoğraf')).toBeInTheDocument()
     const toggle = within(archive).getByRole('button', { name: 'Bütün fotoğrafları göster (7)' })
     expect(toggle).toHaveAttribute('aria-expanded', 'false')

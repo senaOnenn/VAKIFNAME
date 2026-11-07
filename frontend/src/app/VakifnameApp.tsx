@@ -2,6 +2,8 @@ import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useState, type
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
 import '../design/tokens.css'
 import '../design/base.css'
+import '../design/a11y.css'
+import './a11y' // erişilebilirlik ayarları ilk çizimden önce <html>'e uygulanır
 import { gamePath } from './gameCity'
 import { RequireAccount } from './RequireAccount'
 import { LangProvider } from './i18n'

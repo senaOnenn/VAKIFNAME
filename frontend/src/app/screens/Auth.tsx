@@ -1,4 +1,5 @@
 import { useCallback, useId, useState, type FormEvent } from 'react'
+import { A11yMenu } from '../components/A11yMenu'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { GoogleButton } from '../components/GoogleButton'
@@ -108,7 +109,10 @@ export default function Auth() {
 
   return (
     <main className="vk-auth">
-      <LangSwitch className="vk-auth__lang" />
+      <div className="vk-auth__lang">
+        <A11yMenu />
+        <LangSwitch />
+      </div>
       <section className="vk-auth__hero" aria-hidden="false">
         <div className="vk-auth__brand">
           <p className="vk-auth__eyebrow">{t('Vakıf Eserleri Envanter Projesi')}</p>

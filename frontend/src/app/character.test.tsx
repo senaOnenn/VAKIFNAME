@@ -71,14 +71,14 @@ describe('karakter seçimi (R6.3)', () => {
     const put = f.mock.calls.find((c) => new URL(String(c[0])).pathname === '/player/character')!
     expect((put[1] as RequestInit).method).toBe('PUT')
     expect(JSON.parse(String((put[1] as RequestInit).body))).toEqual({ character_id: 'nakkas' })
-    expect(await screen.findByRole('link', { name: 'Kâşifin: Nakkaş Çırağı. Kâşifini değiştir' })).toBeInTheDocument()
+    expect(await screen.findByRole('link', { name: 'Kâşifin Nakkaş Çırağı. Kâşifini değiştir' })).toBeInTheDocument()
   })
 
   it('karakterini seçmiş oyuncu seçim ekranını görmeden oyuna girer', async () => {
     open('/oyun/sehir', { '/auth/me': SIGNED_IN, '/player/profile': PROFILE })
     expect(await screen.findByRole('heading', { name: 'Nereyi keşfetmek istersin?' })).toBeInTheDocument()
     expect(window.location.pathname).toBe('/oyun/sehir')
-    expect(screen.getByRole('link', { name: 'Kâşifin: Gezgin. Kâşifini değiştir' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Kâşifin Gezgin. Kâşifini değiştir' })).toBeInTheDocument()
   })
 
   it('kâşif sonradan değiştirilebilir: mevcut seçim işaretli gelir, kayıttan sonra aynı sayfaya dönülür', async () => {
@@ -87,7 +87,7 @@ describe('karakter seçimi (R6.3)', () => {
       '/player/profile': PROFILE,
       '/player/character': { body: { character: { id: 'katip', chosen_at: '2026-11-01T10:00:00+00:00' }, progress: progressOf(0) } },
     })
-    await userEvent.click(await screen.findByRole('link', { name: 'Kâşifin: Gezgin. Kâşifini değiştir' }))
+    await userEvent.click(await screen.findByRole('link', { name: 'Kâşifin Gezgin. Kâşifini değiştir' }))
     expect(await screen.findByRole('heading', { level: 1, name: 'Kâşifini değiştir' })).toBeInTheDocument()
     await waitFor(() => expect(screen.getByRole('radio', { name: 'Gezgin' })).toBeChecked())
     await userEvent.click(screen.getByRole('radio', { name: 'Kâtip Çırağı' }))

@@ -84,6 +84,8 @@ class QuizRequest(_Strict):
     user_id: UserId
     # en: yalnızca İngilizcesi onaylı kayıtlardan; yetmezse Türkçe sorular verilir ve yanıttaki `lang` bunu söyler.
     lang: Literal["tr", "en"] = "tr"
+    # Erişilebilirlik ayarı (WCAG 2.2.1 "süre ayarlanabilir"): soru başına süre sınırı uygulanmaz.
+    untimed: bool = False
 
 
 class QuizAnswer(_Strict):
@@ -234,11 +236,13 @@ def start_quiz(request: Request, response: Response, body: QuizRequest, monument
     now = _now(request)
     quiz_id, expires_at = uuid.uuid4().hex, _iso(now + game.QUIZ_TTL)
     try:
-        items = _progress(request).start_quiz(quiz_id, body.user_id, m.monument_id, _iso(now), expires_at, compose)
+        items = _progress(request).start_quiz(quiz_id, body.user_id, m.monument_id, _iso(now), expires_at, compose,
+                                              untimed=body.untimed)
     except _NotEnoughQuestions:
         raise HTTPException(status_code=409, detail=NOT_ENOUGH) from None
     response.headers["Cache-Control"] = "no-store"
-    return {"quiz_id": quiz_id, "expires_at": expires_at, "lang": lang, "seconds_per_question": game.QUESTION_SECONDS,
+    return {"quiz_id": quiz_id, "expires_at": expires_at, "lang": lang,
+            "seconds_per_question": None if body.untimed else game.QUESTION_SECONDS,
             "questions": [game.public_question(i) for i in items]}
 
 
@@ -292,6 +296,8 @@ def open_question(request: Request, response: Response, body: StepRequest, quiz_
         raise HTTPException(status_code=409, detail=STEP_OUT_OF_ORDER)
     step = store.open_step(quiz_id, body.qid, _iso(now))
     response.headers["Cache-Control"] = "no-store"
+    if quiz.get("untimed"):
+        return {"qid": body.qid, "seconds": None, "seconds_left": None, "answered": step["answered_at"] is not None}
     return {"qid": body.qid, "seconds": game.QUESTION_SECONDS, "seconds_left": _seconds_left(step["opened_at"], now),
             "answered": step["answered_at"] is not None}
 
@@ -314,7 +320,8 @@ def answer_question(request: Request, response: Response, body: StepAnswerReques
     if body.choice is not None and body.choice >= game.option_count(item):
         raise HTTPException(status_code=422, detail=BAD_CHOICE)
     used = (now - datetime.fromisoformat(step["opened_at"])).total_seconds()
-    choice = body.choice if used <= game.QUESTION_SECONDS + game.ANSWER_GRACE_SECONDS else None
+    in_time = quiz.get("untimed") or used <= game.QUESTION_SECONDS + game.ANSWER_GRACE_SECONDS
+    choice = body.choice if in_time else None
     if not store.answer_step(quiz_id, body.qid, choice, _iso(now)):
         raise HTTPException(status_code=409, detail=STEP_DONE)
     steps = store.quiz_steps(quiz_id)

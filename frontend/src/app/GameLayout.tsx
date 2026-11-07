@@ -76,13 +76,15 @@ export default function GameLayout() {
           </nav>
           {hero && prog && (
             <div className="vk-gamebar__hero" data-stage={prog.stage}>
-              <Link to={`/oyun/karakter?${NEXT_PARAM}=${here}`} className="vk-gamebar__hero-link" aria-label={t('Kâşifin: {name}. Kâşifini değiştir', { name: t(hero.name) })}>
+              <Link to={`/oyun/karakter?${NEXT_PARAM}=${here}`} className="vk-gamebar__hero-link">
                 <span className="vk-gamebar__face" aria-hidden="true">
                   <KasifPortrait id={hero.id} stage={prog.stage} crop="bust" className="vk-gamebar__portrait" />
                 </span>
                 <span className="vk-gamebar__who">
-                  <span className="vk-gamebar__hero-label">{t('Kâşifin')}</span>
+                  {/* Erişilebilir ad görünen yazıdan oluşur (WCAG 2.5.3); eylem ekran okuyucuya ayrıca söylenir. */}
+                  <span className="vk-gamebar__hero-label">{t('Kâşifin')}</span>{' '}
                   <span className="vk-gamebar__hero-name">{t(hero.name)}</span>
+                  <span className="vk-sr-only">. {t('Kâşifini değiştir')}</span>
                 </span>
               </Link>
               <div className="vk-gamebar__level">

@@ -495,6 +495,39 @@ export const EN: Record<string, string> = {
   'Sonucu gör': 'See the result',
   'Soru açılamadı.': 'The question could not be opened.',
   'Cevap gönderilemedi.': 'The answer could not be sent.',
+  // 7 Kasım: erişilebilirlik ayarları
+  'Erişilebilirlik ayarları': 'Accessibility settings',
+  'Erişilebilirlik': 'Accessibility',
+  'Yazı boyutu': 'Text size',
+  'Normal': 'Normal',
+  'Büyük': 'Large',
+  'Çok büyük': 'Extra large',
+  'Yüksek kontrast': 'High contrast',
+  'Hareketi azalt': 'Reduce motion',
+  'Sorularda süre sınırı olmasın': 'No time limit on questions',
+  'Her soruda 30 saniye yerine istediğin kadar düşünebilirsin.': 'Take as long as you need instead of 30 seconds per question.',
+  'Ayarlar yalnızca bu tarayıcıda saklanır.': 'Settings are stored only in this browser.',
+  'Süre sınırı yok (erişilebilirlik ayarı).': 'No time limit (accessibility setting).',
+  // 7 Kasım: aydınlatma metni (rehber, istatistik, cihazdaki ayarlar, lisanslar)
+  'Rehberle konuşursan': 'If you talk to the guide',
+  'Yazdığın soru, cevap üretilmesi için yapay zekâ hizmetine (Anthropic Claude) gönderilir. Soru ve konuşma bizde kaydedilmez, loglanmaz.':
+    'Your question is sent to an AI service (Anthropic Claude) to produce the answer. We do not store or log questions or conversations.',
+  'İstersen yüklediğin fotoğraf yalnızca o istek için bellekte işlenir, bizde kaydedilmez ve görsel tanıma hizmetine (OpenRouter üzerinden ücretsiz bir model) gönderilir. Ücretsiz hizmetler gönderilen içeriği kendi koşullarına göre saklayabilir; bu yüzden fotoğrafta yüz bulunursa hiçbir yere gönderilmeden reddedilir.':
+    'A photo you choose to upload is processed in memory for that request only, is not stored by us, and is sent to an image recognition service (a free model via OpenRouter). Free services may keep submitted content under their own terms; that is why a photo with a face is rejected without being sent anywhere.',
+  'Bu hizmetler yurt dışındaki sunucularda çalışabilir.': 'These services may run on servers outside Türkiye.',
+  'Ziyaret istatistikleri': 'Visit statistics',
+  'Çerez kullanmadan yalnızca günlük sayaçlar tutulur (ziyaretçi sayısı, sayfa ve eser görüntülenmesi). IP adresin ve tarayıcı bilgin diske yazılmaz.':
+    'Without cookies, we keep daily counters only (visitors, page and monument views). Your IP address and browser details are not written to disk.',
+  'Bu cihazda': 'On this device',
+  'Dil seçimin, erişilebilirlik ayarların ve açılış animasyonunu gördüğün bu tarayıcıda saklanır; sunucuya gönderilmez.':
+    'Your language, accessibility settings and whether you have seen the opening animation are stored in this browser; they are not sent to the server.',
+  'Verilerin reklam için kullanılmaz ve satılmaz; yalnızca yukarıda yazılan hizmetlere, yazılan amaçla gider.':
+    'Your data is not used for advertising and is never sold; it goes only to the services listed above, for the stated purpose.',
+  'Lisanslar': 'Licences',
+  'Eser bilgileri ve kitap fotoğrafları Vakıf Eserleri Envanter Projesi yayınlarındandır; diğer fotoğrafların lisansı ve atfı her fotoğrafın altında yazar.':
+    'Monument information and book photographs come from the publications of the Foundation Monuments Inventory Project; the licence and credit of every other photo is shown beneath it.',
+  'Kullandığımız açık kaynak yazılımların lisansları:': 'Licences of the open-source software we use:',
+  'açık kaynak lisansları': 'open-source licences',
   'Seçenek {n}': 'Option {n}',
 
   // Pasaport
@@ -565,7 +598,6 @@ export const EN: Record<string, string> = {
     'As a guest, your progress is kept on this device under a random identifier and moves to your account when you sign up.',
   'Hakların': 'Your rights',
   'Hesap sayfasından hesabını ve tüm ilerlemeni kalıcı olarak silebilirsin.': 'You can permanently delete your account and all your progress from the account page.',
-  'Verilerin reklam veya üçüncü taraflarla paylaşım için kullanılmaz.': 'Your data is never used for advertising or shared with third parties.',
   'Geri dön': 'Go back',
   // Sunucu hata mesajları (istemci `detail` metnini sözlükten çevirir).
   'Bu eserin bilgi mührünü zaten aldınız.': 'You have already earned the knowledge seal for this monument.',
@@ -812,7 +844,6 @@ export const EN: Record<string, string> = {
   'Seç ve maceraya başla': 'Choose and start the adventure',
   'Şimdilik keşfe dön': 'Back to exploring for now',
   'Kâşifin': 'Your explorer',
-  'Kâşifin: {name}. Kâşifini değiştir': 'Your explorer: {name}. Change your explorer',
   'Gezgin': 'Wayfarer',
   'Nakkaş Çırağı': 'Apprentice Illuminator',
   'Kâtip Çırağı': 'Apprentice Scribe',

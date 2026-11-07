@@ -27,8 +27,10 @@
 /* Kompakt künye: portre madalyonu, ad ve aşama, seviye ve ince XP çubuğu (tek satır). */
 .vk-book2__crest {
   display: flex;
+  flex-wrap: wrap; /* büyük yazıda dar ekranda taşmasın (erişilebilirlik ayarı) */
   align-items: center;
   gap: var(--vk-space-3);
+  max-width: 100%;
 }
 .vk-book2__portrait {
   width: 60px;

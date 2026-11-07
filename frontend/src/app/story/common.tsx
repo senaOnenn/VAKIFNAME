@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState, type MouseEvent, type RefObject } from 'react'
+import { A11yMenu } from '../components/A11yMenu'
 import { Link, useNavigate } from 'react-router-dom'
 import { mediaUrl, typeLabel, type MonumentSummary } from '../api'
 import { creditIn, nameOf, textIn } from '../contentLang'
@@ -65,6 +66,7 @@ export function StoryBar({ barRef }: { barRef: RefObject<HTMLElement | null> }) 
       <Link to="/" className="vk-story__mark">VAKIFNAME</Link>
       <nav aria-label={t('Ana menü')} className="vk-story__nav">{links}</nav>
       <div className="vk-story__end">
+        <A11yMenu />
         <LangSwitch />
         {auth.status === 'none' ? (
           <Link to="/giris" className="vk-story__login">{t('Giriş yap')}</Link>

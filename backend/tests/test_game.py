@@ -979,3 +979,20 @@ def test_failed_step_quiz_can_be_retried_with_fresh_steps(c):
     again = start(c, user).json()
     assert open_q(c, user, again["quiz_id"], "q1").json()["seconds_left"] == 30
     assert c.app.state.monument_progress.quiz_steps(quiz["quiz_id"]) == {}
+
+
+def test_untimed_quiz_has_no_question_limit_for_accessibility(c):
+    """Erişilebilirlik ayarı: süre sınırı yok (WCAG 2.2.1). Geç gelen cevap da sayılır; sayaç gönderilmez."""
+    user = visitor(c)
+    now = datetime.now(timezone.utc)
+    c.app.state.game_clock = lambda: now
+    unlock(c, user, OPEN)
+    engage(c, user, OPEN)
+    r = c.post(f"/monuments/{OPEN}/quiz", json={"user_id": user, "untimed": True})
+    assert r.status_code == 201 and r.json()["seconds_per_question"] is None
+    qid = r.json()["quiz_id"]
+    items = server_items(c, qid)
+    assert open_q(c, user, qid, "q1").json() == {"qid": "q1", "seconds": None, "seconds_left": None, "answered": False}
+    c.app.state.game_clock = lambda: now + timedelta(minutes=5)
+    body = answer_q(c, user, qid, "q1", items[0]["answer"]).json()
+    assert body["correct"] is True and body["timed_out"] is False

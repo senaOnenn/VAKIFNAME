@@ -158,6 +158,9 @@ class MonumentProgressStore:
         # Faz 5 öncesi dosyalarda bu sütun yoktur; eski mühürler gerçek (simülasyon olmayan) mühürdür.
         if "simulated" not in {r["name"] for r in self._db.execute("PRAGMA table_info(seals)")}:
             self._db.execute("ALTER TABLE seals ADD COLUMN simulated INTEGER NOT NULL DEFAULT 0")
+        # 7 Kasım: erişilebilirlik ayarı "süre sınırı yok" (WCAG 2.2.1) sınav başına saklanır.
+        if "untimed" not in {r["name"] for r in self._db.execute("PRAGMA table_info(quizzes)")}:
+            self._db.execute("ALTER TABLE quizzes ADD COLUMN untimed INTEGER NOT NULL DEFAULT 0")
         self._lock = threading.Lock()
 
     def close(self):
@@ -288,7 +291,7 @@ class MonumentProgressStore:
     # --- Kademe 2: sınavlar -----------------------------------------------------------
 
     def start_quiz(self, quiz_id: str, user_id: str, monument_id: str, created_at: str, expires_at: str,
-                   compose: Callable[[list[dict]], list[dict]]) -> list[dict]:
+                   compose: Callable[[list[dict]], list[dict]], untimed: bool = False) -> list[dict]:
         """Yeni sınavı tek işlemde yazar: `compose(önceki sınavın soruları)` soruları üretir (yeniden denemede farklı
         seçim için). Kullanıcının bu eserdeki önceki sınavları silinir; eser başına en fazla bir sınav tutulur."""
         with self._lock:
@@ -300,9 +303,10 @@ class MonumentProgressStore:
                 self._db.execute("DELETE FROM quiz_steps WHERE quiz_id IN (SELECT quiz_id FROM quizzes WHERE user_id=? "
                                  "AND monument_id=?)", (user_id, monument_id))
                 self._db.execute("DELETE FROM quizzes WHERE user_id=? AND monument_id=?", (user_id, monument_id))
-                self._db.execute("INSERT INTO quizzes (quiz_id, user_id, monument_id, items, created_at, expires_at) "
-                                 "VALUES (?,?,?,?,?,?)", (quiz_id, user_id, monument_id,
-                                                          json.dumps(items, ensure_ascii=False), created_at, expires_at))
+                self._db.execute("INSERT INTO quizzes (quiz_id, user_id, monument_id, items, created_at, expires_at, "
+                                 "untimed) VALUES (?,?,?,?,?,?,?)",
+                                 (quiz_id, user_id, monument_id, json.dumps(items, ensure_ascii=False), created_at,
+                                  expires_at, int(untimed)))
                 self._db.execute("COMMIT")
             except BaseException:
                 self._db.execute("ROLLBACK")

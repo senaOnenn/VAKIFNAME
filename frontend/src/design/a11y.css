@@ -1,0 +1,61 @@
+/* Erişilebilirlik ayarları (7 Kasım; bkz. app/a11y.ts). Ayar `<html>` üzerinde: data-vk-text, .vk-hc, .vk-calm. */
+
+/* Yazı boyutu: arayüz rem ile ölçülür; kök boyut büyüyünce yazı, boşluk ve düğmeler birlikte büyür. */
+html[data-vk-text='large'] {
+  font-size: 112.5%;
+}
+html[data-vk-text='xlarge'] {
+  font-size: 125%;
+}
+
+/* Yüksek kontrast: soluk metin tam fildişi, altın parlak, bağlantıların altı çizili, odak halkası kalın. */
+html.vk-hc {
+  --vk-ivory-dim: #f3ead3;
+  --vk-gold: #e9c874;
+  --vk-surface: #0c1030;
+  --vk-night-gradient: linear-gradient(#05071a, #05071a);
+}
+html.vk-hc body,
+html.vk-hc .vk-app {
+  background: #05071a;
+}
+html.vk-hc .vk-folio,
+html.vk-hc .vk-book {
+  --ink-dim: #2b2116;
+  --ink-gold: #4f3606;
+}
+html.vk-hc a:not(.vk-btn):not(.vk-waxbtn):not(.vk-shell__toplink):not(.vk-shell__tab):not(.vk-shell__logo):not(.vk-story__mark) {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+html.vk-hc :focus-visible {
+  outline: 3px solid #fff3cf !important;
+  outline-offset: 2px !important;
+}
+html.vk-hc .vk-ch__text::before {
+  /* Görselin üstündeki başlık ve metnin arkası koyulaşır. */
+  background: rgb(5 7 26 / 0.86) !important;
+  opacity: 1 !important;
+}
+
+/* Hareketi azalt: işletim sistemi ayarı ("prefers-reduced-motion") ile aynı etki, sitenin içinden. */
+html.vk-calm,
+html.vk-calm *,
+html.vk-calm *::before,
+html.vk-calm *::after {
+  animation-duration: 0.001ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Büyük yazıda dar ekranda başlık çubuğu taşmasın: denetimler ikinci satıra iner (yana kaydırma olmaz). */
+@media (max-width: 640px) {
+  html[data-vk-text] .vk-shell__top,
+  html[data-vk-text] .vk-story__bar {
+    flex-wrap: wrap;
+    row-gap: var(--vk-space-2);
+  }
+}

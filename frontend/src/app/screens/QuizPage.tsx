@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ApiError } from '../../api/client'
+import { getA11y, reducedMotion } from '../a11y'
 import { answerQuestion, getMonument, mediaUrl, openQuestion, progressId, startQuiz, useLoad, type Quiz, type QuizAnswerResult, type QuizQuestion, type QuizResult, type QuizStepResult } from '../api'
 import { Seal } from '../components/Seal'
 import { creditIn, nameOf } from '../contentLang'
@@ -130,11 +131,13 @@ export default function QuizPage() {
     setIdx(0)
     setDeadline(null)
     setError('')
-    startQuiz(id, uid, lang).then(setQuiz, (e) => setError(e instanceof ApiError ? e.message : t('Sorular hazırlanamadı.')))
+    startQuiz(id, uid, lang, getA11y().untimed).then(setQuiz, (e) => setError(e instanceof ApiError ? e.message : t('Sorular hazırlanamadı.')))
   }, [id, uid, attempt, auth.status]) // dil değişince açık oyun yeniden başlamaz; yeni denemede yeni dil kullanılır
 
   const q = quiz?.questions[idx]
   const step = q ? steps[q.qid] : undefined
+  // Erişilebilirlik ayarı "süre sınırı yok": sunucu süre göndermez (null), sayaç gösterilmez.
+  const untimed = quiz !== null && quiz.seconds_per_question === null
   const total = quiz?.seconds_per_question ?? 30
 
   // Soru ekrana gelince sunucuda açılır; süre oradan başlar (yeniden açmak süreyi sıfırlamaz).
@@ -146,7 +149,7 @@ export default function QuizPage() {
       (r) => {
         if (!alive) return
         setNow(Date.now())
-        setDeadline(Date.now() + r.seconds_left * 1000)
+        setDeadline(r.seconds_left === null ? Number.POSITIVE_INFINITY : Date.now() + r.seconds_left * 1000)
       },
       (e) => alive && setError(e instanceof ApiError ? e.message : t('Soru açılamadı.')),
     )
@@ -156,7 +159,7 @@ export default function QuizPage() {
   }, [quiz, q?.qid]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (deadline === null) return
+    if (deadline === null || deadline === Number.POSITIVE_INFINITY) return
     const timer = window.setInterval(() => setNow(Date.now()), 250)
     return () => window.clearInterval(timer)
   }, [deadline])
@@ -186,8 +189,7 @@ export default function QuizPage() {
   const answeredHere = !!(q && steps[q.qid])
   useEffect(() => {
     if (!answeredHere) return
-    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    navRef.current?.scrollIntoView?.({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' })
+    navRef.current?.scrollIntoView?.({ block: 'nearest', behavior: reducedMotion() ? 'auto' : 'smooth' })
   }, [answeredHere, idx])
 
   // Süre dolunca cevapsız gönderilir (yanlış sayılır).
@@ -283,7 +285,8 @@ export default function QuizPage() {
         {turkishOnly && (
           <p className="vk-quiz__note">{t('Bu eser için yeterli onaylı İngilizce kayıt yok; sorular Türkçe.')}</p>
         )}
-        {!step && (
+        {!step && untimed && <p className="vk-quiz__note">{t('Süre sınırı yok (erişilebilirlik ayarı).')}</p>}
+        {!step && !untimed && (
           <div className={`vk-quiz__timer${left <= 10 ? ' is-low' : ''}`} role="timer" aria-label={t('Kalan süre: {n} saniye', { n: left })}>
             <span className="vk-quiz__timer-track" aria-hidden="true">
               <span className="vk-quiz__timer-bar" style={{ transform: `scaleX(${left / total})` }} />

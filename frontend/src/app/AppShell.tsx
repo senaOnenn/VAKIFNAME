@@ -1,4 +1,5 @@
 import { Suspense, useState } from 'react'
+import { A11yMenu } from './components/A11yMenu'
 import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { PageLoading } from './PageLoading'
 import { loginPath } from './RequireAccount'
@@ -77,6 +78,7 @@ export default function AppShell() {
           ))}
         </nav>
         <div className="vk-shell__end">
+          <A11yMenu />
           <LangSwitch />
           <NavLink to="/hesap" className="vk-shell__chip" aria-label={t('Hesap: {name}', { name: displayName(auth) })}>
             {displayName(auth)}

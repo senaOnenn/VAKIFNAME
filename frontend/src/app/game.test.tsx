@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { PLAYER, stubFetch, SIGNED_IN, PROFILE } from '../test/fixtures'
 import VakifnameApp from './VakifnameApp'
 import type { GameState, Quiz } from './api'
+import { A11Y_KEY, resetA11yForTests } from './a11y'
 import { INTRO_SEEN_KEY } from './screens/Intro'
 import { resetAuthForTests } from './session'
 
@@ -316,6 +317,30 @@ describe('Rozeti Al (sınav)', () => {
     expect(st.sent).toEqual([{ qid: 'a', choice: null }])
     expect(screen.getByRole('radio', { name: /^Seçenek 1/ })).toHaveClass('is-right')
     expect(screen.getByText('✗ 1 yanlış')).toBeInTheDocument()
+  })
+
+  it('erişilebilirlik ayarı "süre sınırı yok": sunucuya bildirilir, sayaç gösterilmez', async () => {
+    window.localStorage.setItem(A11Y_KEY, JSON.stringify({ text: 'normal', contrast: false, calm: false, untimed: true }))
+    resetA11yForTests()
+    let body: Record<string, unknown> = {}
+    const st = steps()
+    server(game({ ready_for_quiz: true }), {
+      [`/monuments/${ID}/quiz`]: (init?: RequestInit) => {
+        body = JSON.parse(String(init!.body))
+        return { status: 201, body: { ...QUIZ, seconds_per_question: null } }
+      },
+      ...st.routes,
+      '/quiz/q-1/open': { body: { qid: 'a', seconds: null, seconds_left: null, answered: false } },
+    })
+    open(`/oyun/eser/${ID}/rozet`)
+    expect(await screen.findByText('Süre sınırı yok (erişilebilirlik ayarı).')).toBeInTheDocument()
+    expect(body).toMatchObject({ untimed: true })
+    expect(screen.queryByRole('timer')).not.toBeInTheDocument()
+    await vi.waitFor(() => expect(screen.getByRole('radio', { name: /^Seçenek 1/ })).toBeEnabled())
+    await userEvent.click(screen.getByRole('radio', { name: /^Seçenek 1/ }))
+    expect(await screen.findByText('✓ Doğru cevap!')).toBeInTheDocument()
+    window.localStorage.removeItem(A11Y_KEY)
+    resetA11yForTests()
   })
 
   it('sunucu sınavı reddederse (ör. I. kademe bitmedi) nedenini ve geri dönüşü gösterir', async () => {
