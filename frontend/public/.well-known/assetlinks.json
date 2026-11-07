@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.tikirsoft.vakifname",
+      "sha256_cert_fingerprints": ["67:22:7C:FB:6F:CB:17:E1:1B:88:CA:58:7C:3F:E2:94:60:15:09:FF:1B:E0:51:05:D6:FB:D2:E3:F1:14:09:41"]
+    }
+  }
+]

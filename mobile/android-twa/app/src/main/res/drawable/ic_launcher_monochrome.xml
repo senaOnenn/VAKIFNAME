@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Geçici ikon: takım logosundaki lale amblemi (tasarım gelince değişecek). Önemli kısım ortadaki 66 dp dairede. Android 13 tema ikonu (tek renk). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <group android:scaleX="0.22" android:scaleY="0.22" android:translateX="-122.00" android:translateY="25.40">
+        <path android:pathData="M800,42 C789,81 765,104 768,136 C770,165 791,180 800,190 C809,180 830,165 832,136 C835,104 811,81 800,42Z" android:strokeColor="#FFFFFFFF" android:strokeWidth="13" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" />
+        <path android:pathData="M780,87 C735,105 725,148 753,184 C768,204 785,210 800,219 C815,210 832,204 847,184 C875,148 865,105 820,87" android:strokeColor="#FFFFFFFF" android:strokeWidth="13" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" />
+        <path android:pathData="M748,124 C714,151 724,194 760,217 C775,226 790,230 800,236 C810,230 825,226 840,217 C876,194 886,151 852,124" android:strokeColor="#FFFFFFFF" android:strokeWidth="13" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" />
+        <path android:pathData="M800,31 V14 M785,29 L800,10 L815,29 M800,237 V250" android:strokeColor="#FFFFFFFF" android:strokeWidth="13" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" />
+    </group>
+</vector>
