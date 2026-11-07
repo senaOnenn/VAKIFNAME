@@ -188,3 +188,11 @@
 - [ ] RAG doğruluk/atıf testleri ve "kaynak yok" davranışı.
 - [ ] Fotoğraflı rehber (yüz tarama bileşeni kurulu değil) — yeni tasarımda gerekiyor mu?
 - [ ] Codex (ChatGPT hesabı) ve Anthropic API sağlayıcıları: `registry.py`'de planlı, yazılmadı.
+
+## 7 Kasım — Sena'nın sürümü canlıda
+- Kaynak: Sena'nın zip'i (`VAKIFNAME.zip`, Antigravity çalışma ağacı) → dal `sena/zip-20261107` (30 Ekim `feat/game` üzerine; +2 düzeltme: `/oyun/karakter` doğrudan açılış, POSIX anahtar izni testi). Testler: backend 1000, ön yüz 386 (1 kararsız test).
+- Canlı: `calismalar.tikirsoft.com` bu sürüm. Önceki kurulumun ve ekibin eski kurulumlarının (8110/4173 servisleri, `/root/vakifname*` 11 klasör/arşiv, `/etc/vakifname`) yedeği Mac'te `~/vakifname-sunucu-yedek/2026-11-07/` (sha256 doğrulandı), sunucudan silindi. `/var/lib/vakifname-internal` (3,8 GB, editör onay kayıtları, V20) dokunulmadı.
+- İngilizce: Sena'nın kitaptan taslakları canlı içerik deposuna aktarıldı — 75 kayıt (34 soruyla) + 10 eser adı/uyarısı **taslak**, yönetici onayı bekliyor; kitaplar kaynak olarak eklendi (Cilt I, II; özetler eşleşti).
+- Kitap fotoğrafları (Talha kararı, 7 Kasım; CLAUDE.md §3): Sena'nın yerel önizlemesindeki 17 fotoğraf (kitaptaki görsellerle piksel eşleşmeli) panel akışıyla yayımlandı; atıf "Fotoğraf: Bursa Vakıf Eserleri Envanteri, Cilt X, s. N", hak sahibi Vakıf Eserleri Envanter Projesi.
+- Rehbere fotoğrafla sorma açık: OpenRouter (yalnızca `:free`, `nemotron-3.5-super-vl`), Sena'nın anahtarları `/root/calismalar/secrets` (600); yüz denetimi modelleri + onnxruntime/numpy; görsel zaman sınırı 40 sn. Tanıma zayıf (denemelerde eşleşmedi, uydurmadı). Evren anahtarı yüklü, seçili değil.
+- Açık: erkek Osmanlı portresi canlıda Zülal'in (kadın) sesiyle konuşuyor — karar bekliyor.
