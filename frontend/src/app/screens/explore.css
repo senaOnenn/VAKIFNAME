@@ -1,0 +1,345 @@
+/* Keşfet (R2): dijital müze / sergi düzeni. Bütün kurallar `.vk-explore` kapsamındadır; discover.css'teki ortak sınıflar
+   (vk-page__*, vk-filters, vk-chip, vk-mcard) başka ekranlarda değişmeden kalır. Palet ve yazı tipleri token'lardan. */
+.vk-explore {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: var(--vk-space-4) var(--vk-space-4) var(--vk-space-7);
+  display: grid;
+  gap: var(--vk-space-5);
+}
+
+/* ── Sergi karşılaması ───────────────────────────────────────────────────────────────────────────────────────────
+   Ana sayfadaki gibi tam ekran sahne değil: içerik sütununda, yuvarlak köşeli bir "sergi panosu". Fotoğraf solda koyu,
+   sağda açık bir geçişle metne yer açar; ad ve atıf görselin üstünde okunur kalır. */
+.vk-explore__hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  align-items: end;
+  min-height: clamp(280px, 36vw, 440px);
+  border-radius: var(--vk-radius-lg);
+  border: 1px solid var(--vk-line-faint);
+  background: var(--vk-night-gradient);
+}
+.vk-explore__hero-img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 55%;
+}
+.vk-explore__hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* Geçiş, metin sütununun gerçek genişliğine (en fazla 36rem) bağlıdır: metnin altı her ekran genişliğinde ≥ %76 örtülü
+     kalır (en kötü durum bembeyaz fotoğrafta gövde metni ≥ 4.5:1; gereken en az %73). Sütunun sağı hızla açılır; mimari
+     görünür. Yüzde durak kullanılmaz: dar ekranda metin geçişin açık bölgesine taşardı. */
+  background:
+    linear-gradient(90deg, rgb(9 12 34 / 0.9) 0, rgb(9 12 34 / 0.76) 36rem, rgb(9 12 34 / 0.06) 54rem, transparent 100%),
+    linear-gradient(0deg, rgb(9 12 34 / 0.4), transparent 38%);
+}
+.vk-explore__intro {
+  display: grid;
+  justify-items: start;
+  gap: var(--vk-space-3);
+  max-width: 36rem;
+  padding: var(--vk-space-6) var(--vk-space-6) var(--vk-space-6);
+}
+.vk-explore__intro h1 {
+  font-size: var(--vk-text-display);
+  line-height: 1.02;
+  color: var(--vk-ivory);
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.5);
+}
+.vk-explore__intro p:not(.vk-page__eyebrow) {
+  color: var(--vk-ivory-dim);
+  max-width: var(--vk-measure);
+}
+.vk-explore__rule {
+  width: 150px;
+}
+.vk-explore__meta {
+  color: var(--vk-gold-bright) !important;
+  font-size: var(--vk-text-sm);
+  letter-spacing: 0.04em;
+}
+.vk-explore__credit {
+  position: absolute;
+  right: var(--vk-space-3);
+  bottom: var(--vk-space-3);
+  max-width: min(60%, 28rem);
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgb(9 12 34 / 0.82); /* beyaz fotoğraf üstünde de ≥ 4.5:1 */
+  color: var(--vk-ivory-dim);
+  font-size: 0.7rem;
+}
+/* Harita görünümünde karşılama alçalır; harita ilk ekrana gelir. */
+.vk-explore__hero--compact {
+  min-height: clamp(180px, 20vw, 240px);
+}
+.vk-explore__hero--compact .vk-explore__intro {
+  padding-block: var(--vk-space-5);
+}
+
+/* ── Araç çubuğu ───────────────────────────────────────────────────────────────────────────────────────────────
+   1. sıra: arama (birincil) + görünüm (Liste | Harita). 2. sıra: etiketli şehir ve eser türü (ikincil süzgeçler).
+   Her denetimin küçük altın etiketi var; süs çerçevesi yok, yalnızca ince ayraç. */
+.vk-explore__bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'search view'
+    'filters filters';
+  align-items: end;
+  justify-content: stretch;
+  gap: var(--vk-space-4) var(--vk-space-5);
+  padding-bottom: var(--vk-space-4);
+  border-bottom: 1px solid var(--vk-line-faint);
+}
+.vk-explore__label {
+  color: var(--vk-gold);
+  font-size: var(--vk-text-xs);
+  font-weight: 600;
+  letter-spacing: var(--vk-tracking-eyebrow);
+  text-transform: uppercase;
+}
+.vk-explore__search {
+  grid-area: search;
+  display: grid;
+  gap: var(--vk-space-2);
+  max-width: 34rem;
+}
+.vk-explore__searchbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.vk-explore__searchbox svg {
+  position: absolute;
+  left: 16px;
+  color: var(--vk-ivory-dim);
+  pointer-events: none;
+}
+.vk-explore__searchbox input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--vk-space-4) 0 2.75rem;
+  border-radius: var(--vk-radius-pill);
+  border: 1px solid var(--vk-line-strong);
+  background: var(--vk-night-deep);
+  color: var(--vk-ivory);
+  font: inherit;
+  transition: border-color var(--vk-dur-fast) var(--vk-ease);
+}
+.vk-explore__searchbox input::placeholder {
+  color: rgb(201 194 174 / 0.8);
+}
+.vk-explore__searchbox input:hover {
+  border-color: var(--vk-gold-bright);
+}
+.vk-explore__searchbox input:focus-visible {
+  border-radius: var(--vk-radius-pill); /* genel odak kuralı köşeleri 6 px yapmasın */
+}
+.vk-explore__filters {
+  grid-area: filters;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--vk-space-3) var(--vk-space-6);
+  min-width: 0;
+}
+/* Şehir ve tür: etiket üstte, denetim altta (aynı hizada). */
+.vk-explore .vk-filters__city,
+.vk-explore__types {
+  display: grid;
+  gap: var(--vk-space-2);
+  min-width: 0;
+}
+.vk-explore .vk-filters__city select,
+.vk-explore .vk-chip {
+  min-height: 44px; /* dokunma hedefi */
+}
+/* Görünüm seçici: tek parça segment; seçili olan altın dolgu. Liste/Harita geçişi kolay bulunur. */
+.vk-explore__view {
+  grid-area: view;
+  justify-self: end;
+  flex-wrap: nowrap;
+  gap: 0;
+  padding: 3px;
+  border-radius: var(--vk-radius-pill);
+  border: 1px solid var(--vk-line);
+}
+.vk-explore .vk-explore__view .vk-chip {
+  border-color: transparent;
+  padding-inline: var(--vk-space-4);
+}
+.vk-explore .vk-explore__view .vk-chip[aria-pressed='true'] {
+  background: var(--vk-gold-gradient);
+  color: var(--vk-night);
+  border-color: transparent;
+}
+/* Simgeli görünüm düğmesinde ✓ işareti yerine simge yeter (seçili durum dolgu + aria-pressed ile bellidir). */
+.vk-explore .vk-explore__view .vk-chip[aria-pressed='true']::before {
+  content: none;
+}
+.vk-explore .vk-explore__view .vk-chip svg {
+  flex: none;
+}
+
+/* ── Eser kartları: büyük fotoğraf + müze etiketi ────────────────────────────────────────────────────────────── */
+.vk-explore .vk-grid {
+  gap: var(--vk-space-6) var(--vk-space-5);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .vk-explore .vk-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .vk-explore .vk-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.vk-explore .vk-mcard {
+  overflow: visible;
+  background: none;
+  box-shadow: none;
+  border-radius: var(--vk-radius-lg);
+  align-content: start;
+}
+/* Hover: kart yükselmez; fotoğraf hafifçe yakınlaşır. Klavye odağı (altın halka) korunur. */
+.vk-explore .vk-mcard:hover {
+  transform: none;
+}
+.vk-explore .vk-mcard:hover:not(:focus-within) {
+  box-shadow: none;
+}
+.vk-explore .vk-mcard:focus-within {
+  box-shadow: 0 0 0 2px var(--vk-night-deep), 0 0 0 4px var(--vk-gold-bright);
+}
+.vk-explore .vk-mcard__media {
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--vk-radius-lg);
+  box-shadow: 0 18px 40px rgb(0 0 0 / 0.35), inset 0 0 0 1px var(--vk-line-faint);
+}
+.vk-explore .vk-mcard__media img {
+  object-position: center 55%;
+}
+.vk-explore .vk-mcard__body {
+  gap: var(--vk-space-2);
+  padding: var(--vk-space-4) var(--vk-space-1) var(--vk-space-1);
+}
+.vk-explore .vk-mcard__type {
+  font-size: var(--vk-text-xs);
+  letter-spacing: var(--vk-tracking-eyebrow);
+}
+.vk-explore .vk-mcard__name {
+  font-size: clamp(1.45rem, 2.1vw, 1.8rem);
+  line-height: 1.15;
+}
+.vk-explore .vk-mcard__lead {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+/* Çok sütunda aynı sıradaki kartların ad, giriş ve atıf satırları hizalı: tür tek satır, ad ve giriş iki satırlık yer
+   ayırır (kısa ad veya giriş alttakileri yukarı kaydırmaz). Tek sütunda (telefon) yer ayrılmaz. */
+@media (min-width: 640px) {
+  .vk-explore .vk-mcard__type {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .vk-explore .vk-mcard__name {
+    min-height: calc(2 * 1.15em);
+  }
+  .vk-explore .vk-mcard__lead {
+    min-height: calc(2 * 1.55em);
+  }
+}
+.vk-explore .vk-mcard__credit {
+  padding: 0 var(--vk-space-1) var(--vk-space-1);
+}
+
+/* Hareket: yalnızca hareket azaltılmamışsa; kartlar bir kez yumuşakça belirir, fotoğraf hover'da yakınlaşır. */
+@media (prefers-reduced-motion: no-preference) {
+  .vk-explore .vk-mcard__media img {
+    transition: transform var(--vk-dur-slow) var(--vk-ease);
+  }
+  .vk-explore .vk-mcard:hover .vk-mcard__media img {
+    transform: scale(1.04);
+  }
+  .vk-explore .vk-grid > .vk-mcard {
+    animation: vk-explore-in 600ms var(--vk-ease) both;
+  }
+  .vk-explore .vk-grid > .vk-mcard:nth-child(2) { animation-delay: 60ms; }
+  .vk-explore .vk-grid > .vk-mcard:nth-child(3) { animation-delay: 120ms; }
+  .vk-explore .vk-grid > .vk-mcard:nth-child(4) { animation-delay: 180ms; }
+  .vk-explore .vk-grid > .vk-mcard:nth-child(n + 5) { animation-delay: 240ms; }
+}
+@keyframes vk-explore-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* ── Telefon ───────────────────────────────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .vk-explore {
+    padding-top: 0;
+  }
+  /* Karşılama kenardan kenara; metin altta, geçiş alttan yukarı. Atıf üstte (metinle çakışmaz). */
+  .vk-explore__hero {
+    margin-inline: calc(-1 * var(--vk-space-4));
+    border-radius: 0;
+    border-inline: 0;
+    min-height: 320px;
+  }
+  /* Telefonda metin altta: alttan 15rem (metin bloğu) ≥ %78 örtülü; üstte fotoğraf açılır. */
+  .vk-explore__hero::after {
+    background: linear-gradient(0deg, rgb(9 12 34 / 0.92) 0, rgb(9 12 34 / 0.78) 15rem, rgb(9 12 34 / 0.25) 21rem, rgb(9 12 34 / 0.08) 100%);
+  }
+  .vk-explore__intro {
+    padding: var(--vk-space-6) var(--vk-space-4) var(--vk-space-5);
+  }
+  .vk-explore__credit {
+    top: var(--vk-space-3);
+    bottom: auto;
+    max-width: calc(100% - 2 * var(--vk-space-3));
+  }
+  .vk-explore__hero--compact {
+    min-height: 200px;
+  }
+  /* Telefonda tek sütun: görünüm seçici, arama, sonra şehir ve tür; hepsi tam genişlik. */
+  .vk-explore__bar {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'view'
+      'search'
+      'filters';
+    gap: var(--vk-space-4);
+  }
+  .vk-explore__search {
+    max-width: none;
+  }
+  .vk-explore__view {
+    justify-self: stretch;
+    width: 100%;
+  }
+  .vk-explore .vk-filters__city,
+  .vk-explore .vk-filters__city select {
+    width: 100%;
+  }
+  .vk-explore .vk-explore__view .vk-chip {
+    flex: 1;
+    justify-content: center;
+  }
+}

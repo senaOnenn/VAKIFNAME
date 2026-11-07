@@ -2,13 +2,13 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { formatDistance, getRoute, progressId, typeLabel, useLoad } from '../api'
 import { CITIES } from '../cities'
-import { GoldRule } from '../components/Ornament'
-import { StatusBadge } from '../components/StatusBadge'
+import { RouteLedger, SealTally } from '../components/GameParts'
 import { nameOf } from '../contentLang'
 import { gamePath, rememberGameCity } from '../gameCity'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
+import './route-page.css'
 
 const RouteMap = lazy(() => import('../components/RouteMap'))
 
@@ -20,7 +20,10 @@ const START_FROM = {
   city_center: 'şehir merkezi noktasından {d}',
 } as const
 
-/** Şehir rotası: en yakın rozetsiz eser önerilir; 3 eser açık, her bilgi mührü bir kilit açar. Kayıp Vakfiye ilerlemesi. */
+/**
+ * Şehir rotası (R6.5, R6.7): harita ve parşömen üzerinde eserler defteri. Kilit yok: bütün eserler seçilebilir; en yakın
+ * eser yalnızca öneridir. Her satır eserin görev ekranına gider. Kurallar sunucudadır.
+ */
 export default function RoutePage() {
   const { city = '' } = useParams()
   const auth = useAuth()
@@ -52,20 +55,14 @@ export default function RoutePage() {
   const r = route.data
   const next = r?.stops.find((s) => s.monument_id === r.next)
   return (
-    <main className="vk-page">
-      <header className="vk-page__head">
-        <p className="vk-page__eyebrow">{t('Kayıp Vakfiye')} · {cityName}</p>
+    <main className="vk-routepage">
+      <header className="vk-routepage__head">
+        <p className="vk-routepage__eyebrow">{t('Kayıp Vakfiye')} · {cityName}</p>
         <h1>{t('{city} rotası', { city: cityName })}</h1>
-        <GoldRule className="vk-page__rule" />
         {r && (
-          <div className="vk-progress" aria-label={t('Kayıp Vakfiye: {total} parçadan {found} parça bulundu', { total: r.total, found: r.completed_count })}>
-            <div className="vk-progress__pieces" aria-hidden="true">
-              {Array.from({ length: r.total }, (_, i) => (
-                <span key={i} className={i < r.completed_count ? 'is-found' : ''} />
-              ))}
-            </div>
-            <span>{t('{found} / {total} vakfiye parçası', { found: r.completed_count, total: r.total })}</span>
-          </div>
+          <p className="vk-routepage__count" aria-label={t('Kayıp Vakfiye: {total} parçadan {found} parça bulundu', { total: r.total, found: r.completed_count })}>
+            {t('{found} / {total} vakfiye parçası', { found: r.completed_count, total: r.total })}
+          </p>
         )}
       </header>
 
@@ -77,72 +74,54 @@ export default function RoutePage() {
       )}
 
       {r && (
-        <>
-          {next ? (
-            <section className="vk-next" aria-labelledby="siradaki">
-              <p id="siradaki" className="vk-next__label">{t('Sıradaki durak')}</p>
-              <h2>{nameOf(next, lang)}</h2>
-              <p className="vk-next__meta">{typeLabel(next.type)} · {t(START_FROM[r.start.source], { d: formatDistance(next.distance_m) })}</p>
-              <div className="vk-next__actions">
-                <Link to={gamePath.monument(next.monument_id)} className="vk-btn">{t('Mühür yoluna git')}</Link>
-                <Link to={`/eser/${encodeURIComponent(next.monument_id)}`} className="vk-btn vk-btn--ghost">{t('Eseri aç')}</Link>
-              </div>
-            </section>
-          ) : (
-            r.completed_count === r.total && (
-              <section className="vk-next">
-                <h2>{t('Kayıp Vakfiye tamamlandı')}</h2>
-                <p>{t('Bu şehirdeki bütün vakfiye parçalarını buldun.')}</p>
-              </section>
-            )
-          )}
-
-          <div className="vk-route">
-            <div className="vk-route__map">
-              <Suspense fallback={<p className="vk-page__state" role="status">{t('Harita yükleniyor…')}</p>}>
-                <RouteMap
-                  points={[
-                    ...r.stops.map((s) => ({ id: s.monument_id, name: nameOf(s, lang), lat: s.latitude, lng: s.longitude, status: s.state, order: s.order, next: s.monument_id === r.next })),
-                  ]}
-                  path={[[r.start.latitude, r.start.longitude], ...r.stops.map((s) => [s.latitude, s.longitude] as [number, number])]}
-                  start={{ lat: r.start.latitude, lng: r.start.longitude, label: t(START_LABEL[r.start.source]) }}
-                  onSelect={(id) => navigate(gamePath.monument(id))}
-                />
-              </Suspense>
-              <div className="vk-route__geo">
-                <button type="button" className="vk-btn vk-btn--ghost" onClick={locate}>{t('Konumumu kullan')}</button>
-                {geoNote && <p role="status">{geoNote}</p>}
-              </div>
+        <div className="vk-routepage__grid">
+          <div className="vk-routepage__map">
+            <Suspense fallback={<p className="vk-page__state" role="status">{t('Harita yükleniyor…')}</p>}>
+              <RouteMap
+                points={r.stops.map((s) => ({ id: s.monument_id, name: nameOf(s, lang), lat: s.latitude, lng: s.longitude, status: s.state, order: s.order, next: s.monument_id === r.next }))}
+                path={[[r.start.latitude, r.start.longitude], ...r.stops.map((s) => [s.latitude, s.longitude] as [number, number])]}
+                start={{ lat: r.start.latitude, lng: r.start.longitude, label: t(START_LABEL[r.start.source]) }}
+                onSelect={(id) => navigate(gamePath.monument(id))}
+              />
+            </Suspense>
+            <div className="vk-routepage__geo">
+              <button type="button" className="vk-btn vk-btn--ghost" onClick={locate}>{t('Konumumu kullan')}</button>
+              {geoNote && <p role="status">{geoNote}</p>}
             </div>
-
-            <ol className="vk-stops" aria-label={t('Rota durakları')}>
-              {r.stops.map((s) => (
-                <li key={s.monument_id} className={`vk-stop vk-stop--${s.state}${s.monument_id === r.next ? ' vk-stop--next' : ''}`}>
-                  <span className="vk-stop__order" aria-hidden="true">{s.order}</span>
-                  <Link to={gamePath.monument(s.monument_id)} className="vk-stop__link">
-                    <span className="vk-stop__name">{nameOf(s, lang)}</span>
-                    <span className="vk-stop__meta">{typeLabel(s.type)} · {formatDistance(s.distance_m)}</span>
-                  </Link>
-                  <StatusBadge status={s.state} />
-                </li>
-              ))}
-            </ol>
           </div>
 
-          {r.completed.length > 0 && (
-            <section className="vk-done" aria-labelledby="tamamlanan">
-              <h2 id="tamamlanan">{t('Bulunan parçalar')}</h2>
-              <ul>
-                {r.completed.map((c) => (
-                  <li key={c.monument_id}>
-                    <Link to={gamePath.monument(c.monument_id)}>{nameOf(c, lang)}</Link>
-                    <StatusBadge status={c.visit ? 'gold' : 'completed'} />
-                  </li>
-                ))}
-              </ul>
+          <article className="vk-folio vk-routepage__folio">
+            {next ? (
+              <section className="vk-routepage__next" aria-labelledby="siradaki">
+                <p id="siradaki" className="vk-folio__eyebrow">{t('Sıradaki durak')}</p>
+                <h2 className="vk-folio__h">{nameOf(next, lang)}</h2>
+                <p className="vk-routepage__meta">{typeLabel(next.type)} · {t(START_FROM[r.start.source], { d: formatDistance(next.distance_m) })}</p>
+                <div className="vk-routepage__actions">
+                  <Link to={gamePath.monument(next.monument_id)} className="vk-waxbtn">{t('Göreve Başla')}</Link>
+                  <Link to={`/eser/${encodeURIComponent(next.monument_id)}`} className="vk-routepage__link">{t('Eseri aç')}</Link>
+                </div>
+              </section>
+            ) : (
+              r.completed_count === r.total && (
+                <section className="vk-routepage__next">
+                  <h2 className="vk-folio__h">{t('Kayıp Vakfiye tamamlandı')}</h2>
+                  <p>{t('Bu şehirdeki bütün vakfiye parçalarını buldun.')}</p>
+                </section>
+              )
+            )}
+            <section className="vk-routepage__ledger" aria-labelledby="duraklar">
+              <h2 id="duraklar" className="vk-folio__h">{t('Rota defteri')}</h2>
+              <p className="vk-folio__note">
+                {t('Bütün eserler açık. Önerilen sıra en yakın eserden başlar; dilediğin eserle başlayabilirsin.')}
+              </p>
+              <RouteLedger route={r} label={t('Rota durakları')} />
             </section>
-          )}
-        </>
+            <section className="vk-routepage__seals" aria-labelledby="muhurler-r">
+              <h2 id="muhurler-r" className="vk-folio__h">{t('Mühür Defteri')}</h2>
+              <SealTally knowledge={r.completed_count} gold={r.completed.filter((c) => c.visit).length} total={r.total} />
+            </section>
+          </article>
+        </div>
       )}
     </main>
   )

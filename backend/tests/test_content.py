@@ -282,7 +282,7 @@ MONUMENT = {"name": "Test Çeşmesi", "alternative_names": ["Test Sebili"], "typ
 
 def test_new_monument_draft_publish_route_and_withdraw(c):
     login_admin(c)
-    user = "ziyaretci-00000000-0000-4000-8000-000000000001"
+    user = c.get("/auth/me").json()["user_id"]  # R6.2: oyun rotası yalnızca hesapla (yöneticinin kendi hesabı)
     m = c.post("/admin/content/monuments", json=MONUMENT).json()
     assert m["monument_id"] == "BUR-5001" and m["status"] == "draft" and m["origin"] == "content"
     assert c.get("/monuments/BUR-5001").status_code == 404

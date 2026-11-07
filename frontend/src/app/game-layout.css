@@ -1,25 +1,74 @@
-/* Oyun paneli: katalogdan ayrılan bölge. Aynı palet A; ayrım çerçeve, ince indigo ışıma ve kendi menüsüyle yapılır. */
+/* ══ R6.5 Oyun bölgesi: arşiv odası ════════════════════════════════════════════════════════════════════════════════
+   Arka plan ana sayfanın son sahnesidir (arşiv odası: fenerler, vakfiye parçaları, mühürler), koyu bir perdeyle
+   kısılmıştır; içerik onun önünde parşömen yapraklarda durur. Üstte ince bir oyun şeridi: ad, metin menü (etkin bölüm
+   altın çizgiyle), kâşifin portresi ve seviyesi. Gösterge paneli, hap düğme yığını yok. Palet A; yeşil yok. */
+
 .vk-gamezone {
+  position: relative;
+  isolation: isolate;
   min-height: 100%;
-  background:
-    radial-gradient(90% 60% at 50% 0%, rgb(74 91 255 / 0.12), transparent 70%),
-    linear-gradient(180deg, rgb(9 12 34 / 0.55), transparent 22rem);
+  background: #0a0d24;
 }
+.vk-gamezone__room {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(9 12 34 / 0.82) 0%, rgb(9 12 34 / 0.9) 45%, rgb(9 12 34 / 0.97) 100%),
+    var(--room, none) 72% 40% / cover no-repeat,
+    #0a0d24;
+}
+.vk-gamezone__room::after {
+  /* fener ışığı: sağ üstte kısık, sıcak bir hale */
+  content: '';
+  position: absolute;
+  right: -10%;
+  top: -20%;
+  width: 70%;
+  height: 80%;
+  background: radial-gradient(closest-side, rgb(233 200 116 / 0.1), transparent 70%);
+}
+.vk-gamezone__dust {
+  position: absolute;
+  width: var(--z, 2px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #ffe7a8;
+  box-shadow: 0 0 6px 1px rgb(233 200 116 / 0.5);
+  opacity: 0;
+  animation: vk-room-dust 22s linear var(--d, 0s) infinite;
+}
+@keyframes vk-room-dust {
+  0% { opacity: 0; transform: translate3d(0, 0, 0); }
+  20% { opacity: 0.55; }
+  80% { opacity: 0.35; }
+  100% { opacity: 0; transform: translate3d(10px, -90px, 0); }
+}
+@media (max-width: 640px) {
+  .vk-gamezone__dust:nth-child(2n) {
+    display: none;
+  }
+}
+
+/* ── Oyun şeridi ───────────────────────────────────────────────────────────────────────────────────────────────── */
 .vk-gamebar {
-  border-bottom: 1px solid rgb(201 162 75 / 0.28);
-  background: linear-gradient(180deg, rgb(35 43 102 / 0.55), rgb(15 19 48 / 0.35));
+  border-bottom: 1px solid rgb(201 162 75 / 0.3);
+  background: linear-gradient(180deg, rgb(9 12 34 / 0.92), rgb(9 12 34 / 0.7));
+  backdrop-filter: blur(4px);
 }
 .vk-gamebar__inner {
-  max-width: 76rem;
+  max-width: 78rem;
   margin: 0 auto;
-  padding: var(--vk-space-3) var(--vk-space-4);
+  padding: var(--vk-space-2) var(--vk-space-4);
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
-    'id exit'
+    'id hero'
     'nav nav';
   align-items: center;
-  gap: var(--vk-space-3);
+  gap: var(--vk-space-2) var(--vk-space-3);
 }
 .vk-gamebar__id {
   grid-area: id;
@@ -33,66 +82,41 @@
   display: grid;
   place-items: center;
   flex: none;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
   border: 1px solid rgb(201 162 75 / 0.6);
-  background: radial-gradient(circle at 35% 30%, rgb(233 200 116 / 0.22), rgb(15 19 48 / 0.9));
+  background: radial-gradient(circle at 35% 30%, rgb(233 200 116 / 0.2), rgb(15 19 48 / 0.9));
   color: var(--vk-gold-bright);
 }
 .vk-gamebar__eyebrow {
   display: block;
   color: var(--vk-gold);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 .vk-gamebar__title {
   display: block;
-  font: 600 1.35rem/1.1 var(--vk-font-display);
+  font: 600 1.25rem/1.1 var(--vk-font-display);
   color: var(--vk-ivory);
 }
-.vk-gamebar__exit {
-  grid-area: exit;
-  justify-self: end;
-  padding: var(--vk-space-2) var(--vk-space-3);
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  border: 1px solid rgb(201 162 75 / 0.45);
-  color: var(--vk-ivory) !important;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.vk-gamebar__exit:hover {
-  border-color: var(--vk-gold);
-}
-/* Oyun menüsü: mobilde tam genişlik bölmeli seçici, masaüstünde başlığın yanında. */
+/* Menü: metin bağlantılar; etkin bölümün altında altın çizgi. Telefonda yatay kayar. */
 .vk-gamebar__nav {
   grid-area: nav;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  gap: 2px;
-  padding: 3px;
-  border-radius: 999px;
-  background: rgb(9 12 34 / 0.6);
-  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.2);
+  display: flex;
+  gap: var(--vk-space-4);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 .vk-gamebar__link {
-  display: grid;
-  place-items: center;
-  min-height: 40px;
-  padding: 0 var(--vk-space-3);
-  border-radius: 999px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--vk-ivory-dim) !important;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-align: center;
+  font: 500 1rem var(--vk-font-display);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -100,21 +124,175 @@
   color: var(--vk-ivory) !important;
 }
 .vk-gamebar__link.is-active {
-  background: var(--vk-gold-gradient);
-  color: var(--vk-night) !important;
+  color: var(--vk-ivory) !important;
 }
-@media (min-width: 900px) {
+.vk-gamebar__link.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--vk-gold-gradient);
+}
+.vk-gamebar__exit {
+  grid-area: exit;
+  display: none;
+}
+
+/* Kâşif: portre (kemerli küçük niş), ad, seviye ve XP; tıklanınca karakter seçimi. */
+.vk-gamebar__hero {
+  grid-area: hero;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-3);
+  min-width: 0;
+}
+.vk-gamebar__hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  color: var(--vk-ivory);
+  text-decoration: none;
+}
+.vk-gamebar__face {
+  position: relative;
+  display: block;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #2d377e, #10153a);
+  box-shadow: inset 0 0 0 1.5px var(--vk-gold-bright), 0 0 0 3px rgb(9 12 34 / 0.8), 0 0 0 4px rgb(201 162 75 / 0.4);
+}
+.vk-gamebar__portrait {
+  position: absolute;
+  inset: 8% 0 0;
+  width: 100%;
+  height: 100%;
+}
+.vk-gamebar__who {
+  display: grid;
+  line-height: 1.15;
+}
+.vk-gamebar__hero-label {
+  color: var(--vk-gold);
+  font: 700 0.62rem var(--vk-font-ui);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.vk-gamebar__hero-name {
+  font: 600 1rem var(--vk-font-display);
+}
+.vk-gamebar__hero-link:hover .vk-gamebar__hero-name,
+.vk-gamebar__hero-link:focus-visible .vk-gamebar__hero-name {
+  color: var(--vk-gold-bright);
+}
+.vk-gamebar__level {
+  display: grid;
+  grid-template-columns: auto;
+  row-gap: 0.15rem;
+  padding-left: var(--vk-space-3);
+  border-left: 1px solid rgb(201 162 75 / 0.3);
+  font-size: 0.8rem;
+}
+.vk-gamebar__level-text {
+  font: 600 0.92rem var(--vk-font-display);
+  color: var(--vk-ivory);
+}
+.vk-gamebar__xp {
+  color: var(--vk-ivory-dim);
+  font-variant-numeric: tabular-nums;
+}
+.vk-gamebar__meter {
+  width: 6.5rem;
+  height: 3px;
+  border: 0;
+  border-radius: 2px;
+  background: rgb(201 162 75 / 0.22);
+  appearance: none;
+}
+.vk-gamebar__meter::-webkit-progress-bar { background: rgb(201 162 75 / 0.22); border-radius: 2px; }
+.vk-gamebar__meter::-webkit-progress-value { background: var(--vk-gold-bright); border-radius: 2px; }
+.vk-gamebar__meter::-moz-progress-bar { background: var(--vk-gold-bright); border-radius: 2px; }
+
+@media (min-width: 960px) {
   .vk-gamebar__inner {
     grid-template-columns: auto 1fr auto;
-    grid-template-areas: 'id nav exit';
-    padding: var(--vk-space-3) var(--vk-space-5);
+    grid-template-areas: 'id nav hero';
+    padding: var(--vk-space-2) var(--vk-space-5);
     gap: var(--vk-space-5);
   }
   .vk-gamebar__nav {
     justify-self: center;
-    grid-auto-columns: auto;
   }
-  .vk-gamebar__link {
-    padding: 0 var(--vk-space-4);
+}
+@media (max-width: 560px) {
+  .vk-gamebar__level {
+    display: none;
+  }
+  .vk-gamebar__title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Ödül notu: oyun şeridinin altında, kısa süre görünür (role="status"); gösterişli efekt yok. */
+.vk-xptoast {
+  position: fixed;
+  left: 50%;
+  top: 5.25rem;
+  z-index: 40;
+  translate: -50% 0;
+  margin: 0;
+  max-width: calc(100vw - 2rem);
+  padding: 0.55rem 1.1rem;
+  border: 1px solid rgb(233 200 116 / 0.6);
+  border-radius: 999px;
+  background: rgb(15 19 48 / 0.95);
+  box-shadow: 0 12px 30px -16px rgb(0 0 0 / 0.9);
+  color: var(--vk-ivory);
+  font-size: 0.95rem;
+  animation: vk-xptoast-in 260ms var(--vk-ease) both;
+}
+.vk-xptoast[hidden] {
+  display: none;
+}
+.vk-xptoast strong {
+  color: var(--vk-gold-bright);
+  font-family: var(--vk-font-display);
+}
+@keyframes vk-xptoast-in {
+  from { opacity: 0; transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vk-xptoast {
+    animation: none;
+  }
+  .vk-gamezone__dust {
+    display: none;
+  }
+}
+
+/* R6.5 Şehir seçimi oyun bölgesinde: kart değil, kemerli şehir kapıları (açık şehir altın çerçeveli). */
+.vk-gamezone .vk-city__card {
+  border-radius: 999px 999px 4px 4px;
+  min-height: 11rem;
+  padding: var(--vk-space-5) var(--vk-space-4) var(--vk-space-4);
+  justify-items: center;
+  text-align: center;
+  background: linear-gradient(180deg, rgb(22 28 71 / 0.75), rgb(9 12 34 / 0.92));
+  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.3), inset 0 0 0 6px rgb(9 12 34 / 0.5);
+}
+.vk-gamezone .vk-city__card--open {
+  box-shadow: inset 0 0 0 1.5px var(--vk-gold-bright), inset 0 0 0 6px rgb(9 12 34 / 0.4),
+    inset 0 0 0 7px rgb(201 162 75 / 0.4), 0 0 40px -14px rgb(233 200 116 / 0.5);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vk-gamezone .vk-city__card--open:hover {
+    transform: none;
   }
 }

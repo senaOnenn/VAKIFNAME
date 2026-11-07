@@ -64,9 +64,18 @@ describe('arayüz dili', () => {
     expect(window.localStorage.getItem('vakifname.lang')).toBe('en')
     expect(document.documentElement.lang).toBe('en')
 
-    await userEvent.click(screen.getByRole('link', { name: 'Enter the app' }))
+    // R6.2: final ekranı yok; halka açık bölüme üst menüden geçilir.
+    await userEvent.click(within(screen.getAllByRole('navigation', { name: 'Main menu' })[0]).getByRole('link', { name: 'Map' }))
+    expect(window.location.pathname).toBe('/harita')
+    // R6.12: bölüm ekranı ayrı parçadan yüklenir; kabuğun menüsü (Keşfet = /eserler) gelince ona basılır.
+    const explore = await vi.waitFor(() => {
+      const a = screen.getAllByRole('link', { name: 'Explore' }).find((x) => x.getAttribute('href') === '/eserler')
+      if (!a) throw new Error('kabuk henüz yok')
+      return a
+    })
+    await userEvent.click(explore)
     expect(window.location.pathname).toBe('/eserler')
-    expect(await screen.findByRole('heading', { level: 1, name: 'Monuments' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'In the Footsteps of the Monuments' })).toBeInTheDocument()
     const nav = screen.getByRole('navigation', { name: 'Main menu' })
     expect(within(nav).getByRole('link', { name: 'Explore' })).toBeInTheDocument()
     expect(within(nav).getByRole('link', { name: 'Seals' })).toBeInTheDocument()

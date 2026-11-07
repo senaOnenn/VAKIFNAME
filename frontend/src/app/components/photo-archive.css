@@ -1,0 +1,326 @@
+/* ══ R3.8 Fotoğraf Arşivi — editoryal müze koleksiyonu: çerçevesiz fotoğraflar, oranlar korunur, ince atıf satırları ══ */
+
+.vk-archive {
+  display: grid;
+  gap: var(--vk-space-4);
+  min-width: 0;
+}
+.vk-archive__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--vk-space-2) var(--vk-space-4);
+}
+.vk-archive__head h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.6vw, 1.9rem);
+  color: var(--vk-ivory);
+}
+.vk-archive__count {
+  margin: 0;
+  font-family: var(--vk-font-display);
+  font-style: italic;
+  color: var(--vk-ivory-dim);
+}
+.vk-archive__empty {
+  margin: 0;
+  padding: var(--vk-space-5) 0;
+  font-family: var(--vk-font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--vk-ivory-dim);
+}
+/* R3.10 mozaik: masaüstünde 4 sütun; öne çıkan fotoğraf 2×2, yanında 4 küçük (ilk ekranda 5 fotoğraf). Önizleme alanı
+   doldurur ve kırpılabilir (bozulmaz, gerilmez); inceleyicide fotoğrafın tamamı görünür. Dikey yükseklik sınırlı. */
+.vk-archive__mosaic {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: clamp(8rem, 11vw, 10.5rem);
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vk-archive__mosaic > li:first-child {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+/* Az fotoğrafta boş hücre kalmaz. */
+.vk-archive__mosaic[data-count='1'] {
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: clamp(14rem, 30vw, 22rem);
+}
+.vk-archive__mosaic[data-count='1'] > li:first-child {
+  grid-column: auto;
+  grid-row: auto;
+}
+.vk-archive__mosaic[data-count='2'] > li:nth-child(2) {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.vk-archive__mosaic[data-count='3'] > li:nth-child(n + 2) {
+  grid-column: span 2;
+}
+.vk-archive__mosaic[data-count='4'] > li:nth-child(4) {
+  grid-column: span 2;
+}
+.vk-archive__item {
+  min-width: 0;
+  min-height: 0;
+}
+.vk-archive__open {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgb(9 12 34 / 0.6);
+  cursor: zoom-in;
+}
+.vk-archive__open img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms var(--vk-ease), filter var(--vk-dur-fast) var(--vk-ease);
+}
+.vk-archive__open:hover img {
+  transform: scale(1.03);
+  filter: brightness(1.06);
+}
+.vk-archive__open:focus-visible {
+  outline: 2px solid var(--vk-gold-bright);
+  outline-offset: 3px;
+}
+/* Son küçük karede kalan fotoğraf sayısı (görsel ipucu; erişilebilir ad ve "Bütün fotoğrafları göster" ayrıca var). */
+.vk-archive__more-badge {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(9 12 34 / 0.62);
+  color: var(--vk-ivory);
+  font-family: var(--vk-font-display);
+  font-size: 1.6rem;
+}
+.vk-archive__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vk-space-2) var(--vk-space-4);
+}
+.vk-archive__toggle {
+  min-height: 44px;
+}
+.vk-archive__credits summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-sm);
+  cursor: pointer;
+}
+.vk-archive__credits ol {
+  display: grid;
+  gap: 0.3rem;
+  margin: var(--vk-space-2) 0 0;
+  padding-left: 1.3rem;
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-xs);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.vk-archive__credits a {
+  color: var(--vk-gold-bright);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vk-archive__open img {
+    transition: none;
+  }
+  .vk-archive__open:hover img {
+    transform: none;
+  }
+}
+
+/* ── İnceleme penceresi ─────────────────────────────────────────────────────────────────────────────────────── */
+.vk-viewer {
+  width: min(96vw, 80rem);
+  max-width: none;
+  max-height: 92vh;
+  padding: 0;
+  border: 1px solid rgb(201 162 75 / 0.35);
+  border-radius: 6px;
+  background: #0b0f2a;
+  color: var(--vk-ivory);
+}
+.vk-viewer::backdrop {
+  background: rgb(5 7 20 / 0.86);
+}
+.vk-viewer__body {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20rem;
+  max-height: 92vh;
+}
+.vk-viewer__stage {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding: var(--vk-space-4);
+  background: #070a1f;
+}
+.vk-viewer__stage img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(92vh - 2 * var(--vk-space-4));
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.vk-viewer__info {
+  display: grid;
+  align-content: start;
+  gap: var(--vk-space-3);
+  padding: 3.5rem var(--vk-space-5) var(--vk-space-5);
+  overflow-y: auto;
+  border-left: 1px solid rgb(201 162 75 / 0.18);
+}
+.vk-viewer__count {
+  margin: 0;
+  font-family: var(--vk-font-display);
+  font-style: italic;
+  color: var(--vk-gold);
+}
+.vk-viewer__title {
+  margin: 0;
+  font-family: var(--vk-font-display);
+  font-size: 1.3rem;
+  line-height: 1.3;
+}
+.vk-viewer__meta {
+  display: grid;
+  gap: var(--vk-space-3);
+  margin: 0;
+}
+.vk-viewer__meta div {
+  display: grid;
+  gap: 0.15rem;
+}
+.vk-viewer__meta dt {
+  font-family: var(--vk-font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--vk-gold);
+}
+.vk-viewer__meta dd {
+  margin: 0;
+  font-size: var(--vk-text-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.vk-viewer__meta a {
+  color: var(--vk-gold-bright);
+}
+.vk-viewer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-2);
+  margin-top: var(--vk-space-2);
+}
+.vk-viewer__btn {
+  flex: 1 1 8rem;
+  min-height: 44px;
+  padding: 0 var(--vk-space-3);
+  border: 1px solid rgb(201 162 75 / 0.45);
+  border-radius: var(--vk-radius-pill);
+  background: none;
+  color: var(--vk-ivory);
+  font-family: var(--vk-font-display);
+  font-size: 1.02rem;
+  cursor: pointer;
+}
+.vk-viewer__btn:hover {
+  border-color: var(--vk-gold-bright);
+  color: var(--vk-gold-bright);
+}
+.vk-viewer__close {
+  position: absolute;
+  top: var(--vk-space-2);
+  right: var(--vk-space-2);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(9 12 34 / 0.7);
+  color: var(--vk-ivory);
+  cursor: pointer;
+}
+.vk-viewer__close svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.vk-viewer__close:hover {
+  color: var(--vk-gold-bright);
+}
+
+@media (max-width: 760px) {
+  /* Telefon: 2 sütun; öne çıkan tam genişlik, küçükler ikişer. */
+  .vk-archive__mosaic {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: clamp(7rem, 30vw, 9.5rem);
+  }
+  .vk-archive__mosaic[data-count='4'] > li:nth-child(4) {
+    grid-column: span 2;
+  }
+  .vk-viewer {
+    width: 100vw;
+    max-height: 100dvh;
+    height: 100dvh;
+    border-radius: 0;
+    border: 0;
+  }
+  .vk-viewer__body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    max-height: 100dvh;
+    height: 100%;
+  }
+  .vk-viewer__stage {
+    padding: 3.5rem var(--vk-space-2) var(--vk-space-2);
+  }
+  .vk-viewer__stage img {
+    max-height: 56dvh;
+  }
+  .vk-viewer__info {
+    padding: var(--vk-space-4);
+    border-left: 0;
+    border-top: 1px solid rgb(201 162 75 / 0.18);
+  }
+}
+
+/* R6.15.2: karonun altında kaynak yazısı (yerel önizleme fotoğrafları). Fotoğrafın alt kenarında, okunur koyu şeritte. */
+.vk-archive__caption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 1.1rem 0.6rem 0.4rem;
+  background: linear-gradient(180deg, transparent, rgb(7 10 32 / 0.88) 55%);
+  color: var(--vk-ivory);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  text-align: left;
+  pointer-events: none;
+}
+.vk-archive__permission {
+  color: var(--vk-ivory-dim);
+}
+

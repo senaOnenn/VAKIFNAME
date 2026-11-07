@@ -1,34 +1,31 @@
+/* Tarihî kişiler (bâni, burada yatan, yeniden yaptıran): kart yerine editoryal bilgi bloğu. Solda ince altın şerit, küçük
+   baş harf madalyonu; metin ve kaynak okunur kalır. Kişi adına konuşulmaz (CLAUDE.md §2.4). */
 .vk-people {
   display: grid;
-  gap: var(--vk-space-3);
+  gap: var(--vk-space-4);
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
 }
 .vk-person {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--vk-space-4);
+  gap: var(--vk-space-3) var(--vk-space-4);
   align-items: start;
-  padding: var(--vk-space-4);
-  border-radius: var(--vk-radius-lg);
-  background: linear-gradient(150deg, rgb(35 43 102 / 0.75), rgb(15 19 48 / 0.9));
-  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.3);
+  padding: var(--vk-space-1) 0 var(--vk-space-1) var(--vk-space-4);
+  border-left: 2px solid var(--vk-gold);
 }
 .vk-person__medal {
   display: grid;
   place-items: center;
-  width: 76px;
-  height: 76px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #2d3478, var(--vk-night) 70%);
-  box-shadow: 0 0 0 2px var(--vk-gold), 0 0 0 6px rgb(201 162 75 / 0.2), 0 0 0 7px rgb(201 162 75 / 0.6);
+  background: var(--vk-night);
+  box-shadow: 0 0 0 1px rgb(201 162 75 / 0.7);
 }
 .vk-person__medal span {
-  font: 600 1.7rem var(--vk-font-display);
+  font: 600 1.15rem var(--vk-font-display);
   letter-spacing: 0.04em;
-  background: var(--vk-gold-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--vk-gold-bright);
 }
 .vk-person__body {
   display: grid;
@@ -41,12 +38,13 @@
   font-size: 0.72rem;
 }
 .vk-person__name {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: var(--vk-ivory);
 }
 .vk-person__text {
   color: var(--vk-ivory-dim);
-  font-size: 0.92rem;
+  font-size: 0.95rem;
+  max-width: 44rem;
 }
 .vk-person__src {
   display: flex;
@@ -55,4 +53,43 @@
   align-items: center;
   color: rgb(201 194 174 / 0.75);
   font-size: 0.75rem;
+}
+/* Telefonda: madalyon + rol + ad üst sırada; açıklama ve kaynak altta tam genişlik (dar sütuna sıkışmaz).
+   Gövde kabı `display: contents` ile ızgaraya açılır; işaretleme ve okuma sırası değişmez. */
+@media (max-width: 640px) {
+  .vk-person {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'medal role'
+      'medal name'
+      'text text'
+      'src src';
+    gap: var(--vk-space-1) var(--vk-space-3);
+    padding-left: var(--vk-space-3);
+  }
+  .vk-person__body {
+    display: contents;
+  }
+  .vk-person__medal {
+    grid-area: medal;
+    align-self: center;
+    width: 44px;
+    height: 44px;
+  }
+  .vk-person__role {
+    grid-area: role;
+    align-self: end;
+  }
+  .vk-person__name {
+    grid-area: name;
+    font-size: 1.2rem;
+  }
+  .vk-person__text {
+    grid-area: text;
+    margin-top: var(--vk-space-2);
+    max-width: none;
+  }
+  .vk-person__src {
+    grid-area: src;
+  }
 }

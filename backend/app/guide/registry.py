@@ -12,7 +12,8 @@ import os
 from typing import Callable, Optional
 
 from .claude_cli import DEFAULT_CLAUDE_MODEL, ClaudeCliProvider
-from .provider import DEFAULT_BASE_URL, ChatProvider, ChatResult, OpenRouterProvider, ProviderError
+from .evren_provider import DEFAULT_EVREN_BASE_URL, DEFAULT_EVREN_MODEL, EvrenProvider
+from .provider import DEFAULT_BASE_URL, DEFAULT_MODEL as OPENROUTER_DEFAULT_MODEL, ChatProvider, ChatResult, OpenRouterProvider, ProviderError
 
 logger = logging.getLogger("vakifname.guide")
 
@@ -23,10 +24,14 @@ PROVIDERS: dict[str, Callable[[], ChatProvider]] = {
     "openrouter": lambda: OpenRouterProvider(os.environ.get("VAKIFNAME_GUIDE_BASE_URL", DEFAULT_BASE_URL),
                                              allow_paid=os.environ.get("VAKIFNAME_GUIDE_ALLOW_PAID_MODEL") == "1",
                                              reasoning=os.environ.get("VAKIFNAME_GUIDE_REASONING", "off")),
+    # Evren LLM API (Anthropic Messages uyumlu). Anahtar: VAKIFNAME_EVREN_KEY_FILE (OpenRouter anahtarından ayrı).
+    "evren": lambda: EvrenProvider(os.environ.get("VAKIFNAME_EVREN_BASE_URL") or DEFAULT_EVREN_BASE_URL,
+                                   models=(os.environ.get("VAKIFNAME_GUIDE_MODEL", "").strip() or DEFAULT_EVREN_MODEL,
+                                           os.environ.get("VAKIFNAME_CONTENT_MODEL", "").strip())),
 }
 # Planlanan ama kodu henüz yazılmamış adlar: seçilirse açık hata verilir.
 PLANNED = {"claude-api", "codex", "gemini-cli"}
-DEFAULT_MODELS = {"claude-cli": DEFAULT_CLAUDE_MODEL}  # model env'de verilmediyse sağlayıcıya göre varsayılan
+DEFAULT_MODELS = {"claude-cli": DEFAULT_CLAUDE_MODEL, "evren": DEFAULT_EVREN_MODEL}  # model env'de verilmediyse sağlayıcıya göre varsayılan
 # Yedeğe geçişi tetikleyen hata türleri: yapılandırma/kota sorunları. İçerik reddi (moderation) ve kötü istek geçmez.
 FALLBACK_KINDS = {"no_key", "auth", "not_logged_in", "not_subscription", "quota", "unavailable", "timeout"}
 
@@ -44,7 +49,10 @@ def _make(name: str, var: str) -> ChatProvider:
         raise ProviderConfigError(f"{var}={name}: bu sağlayıcı henüz yazılmadı. Çalışanlar: {', '.join(sorted(PROVIDERS))}")
     if name not in PROVIDERS:
         raise ProviderConfigError(f"{var}={name}: bilinmeyen sağlayıcı. Geçerli değerler: {', '.join(sorted(PROVIDERS))}")
-    return PROVIDERS[name]()
+    try:
+        return PROVIDERS[name]()
+    except ValueError as e:  # ör. VAKIFNAME_EVREN_BASE_URL https değil: açılışta açık hata
+        raise ProviderConfigError(f"{var}={name}: {e}") from e
 
 
 class FallbackProvider:
@@ -61,6 +69,11 @@ class FallbackProvider:
     def describe(self) -> dict:
         d = getattr(self.primary, "describe", lambda: {})()
         return {**d, "fallback": self.fallback.name, "fallback_model": self.fallback_model}
+
+    def cached_models(self) -> Optional[list[dict]]:
+        """Ağa çıkmadan bilinen modeller; iki sağlayıcıdan biri bilinmiyorsa None."""
+        lists = [known_models(p) for p in (self.primary, self.fallback)]
+        return None if any(x is None for x in lists) else [m for x in lists for m in x]
 
     def models(self) -> list[dict]:
         out = list(self.primary.models())
@@ -95,6 +108,37 @@ def build_provider() -> tuple[ChatProvider, str, Optional[str]]:
     if not fb_model:
         raise ProviderConfigError("VAKIFNAME_GUIDE_FALLBACK için VAKIFNAME_GUIDE_FALLBACK_MODEL de yazılmalı.")
     return FallbackProvider(provider, _make(fb_name, "VAKIFNAME_GUIDE_FALLBACK"), fb_model), name, fb_model
+
+
+# Görsel sağlayıcı (R5.3): fotoğraf gözlemi metin sağlayıcısından ayrı bir sağlayıcıyla yapılabilir. Yalnızca görsel
+# girdiyi doğrulanmış biçimde destekleyen sağlayıcılar seçilebilir. Varsayılan model sağlayıcıya göre.
+VISION_PROVIDERS = {"openrouter"}
+DEFAULT_VISION_MODELS = {"openrouter": OPENROUTER_DEFAULT_MODEL}
+
+
+def build_vision_provider() -> tuple[Optional[ChatProvider], Optional[str]]:
+    """`VAKIFNAME_GUIDE_VISION_PROVIDER`: boşsa (None, None) — fotoğraf gözlemi metin sağlayıcısıyla yapılır (eski
+    davranış). `openrouter`: ayrı OpenRouter sağlayıcısı (yalnızca `:free` modeller; anahtar dosyadan). Geçersiz ad
+    açılışta hata verir; sessizce metin sağlayıcısına düşülmez."""
+    name = os.environ.get("VAKIFNAME_GUIDE_VISION_PROVIDER", "").strip().lower()
+    if not name:
+        return None, None
+    if name not in VISION_PROVIDERS:
+        raise ProviderConfigError(f"VAKIFNAME_GUIDE_VISION_PROVIDER={name}: geçerli değerler: {', '.join(sorted(VISION_PROVIDERS))} "
+                                  "(boş: metin sağlayıcısı)")
+    return _make(name, "VAKIFNAME_GUIDE_VISION_PROVIDER"), name
+
+
+def known_models(provider: ChatProvider) -> Optional[list[dict]]:
+    """Ağa çıkmadan bilinen model listesi; bilinmiyorsa None. Ağ gerektiren sağlayıcı `cached_models()` sunar; diğerleri
+    (Evren, Claude CLI, sahte sağlayıcı) listeyi yerelde bildirir."""
+    cached = getattr(provider, "cached_models", None)
+    if cached is not None:
+        return cached()
+    try:
+        return provider.models()
+    except ProviderError:
+        return None
 
 
 def log_selection(provider: ChatProvider, model: str) -> None:

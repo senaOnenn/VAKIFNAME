@@ -1,0 +1,419 @@
+/* ══ R6.13 Keşfet: dijital müze koleksiyonu ═══════════════════════════════════════════════════════════════════════
+   Kompakt koleksiyon girişi (büyük kapak yok) → tek keşif çubuğu → eşit boylu koleksiyon kartları. Kartlar müze
+   duvarındaki çerçeveli eserler gibi: lacivert yüzey, ince altın kenar, fotoğrafın çevresinde paspartu çizgisi, serif ad.
+   Arka plan yalnızca geniş ekranda ve yalnızca üst bölümde: ana sayfanın mevcut avlu illüstrasyonu, çok koyu ve düşük
+   kontrastlı (yeni dosya yok; telefonda hiç indirilmez). Sürekli animasyon yok; etkileşim yalnızca üzerine gelince. */
+
+.vk-coll {
+  --vk-coll-max: 74rem;
+  --vk-coll-ink: #0c1030;
+  --vk-coll-line: rgb(201 162 75 / 0.22);
+  position: relative;
+  max-width: none;
+  padding: 0 0 var(--vk-space-7);
+  gap: 0;
+  /* Tek sütun, içerikten geniş olamaz (tür düğmeleri telefonda yatay kayar; sayfa taşmaz). */
+  grid-template-columns: minmax(0, 1fr);
+  isolation: isolate;
+}
+.vk-coll > * {
+  width: min(var(--vk-coll-max), calc(100% - 2 * var(--vk-space-4)));
+  margin-inline: auto;
+}
+@media (min-width: 700px) {
+  .vk-coll::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 560px;
+    z-index: -1;
+    background:
+      linear-gradient(180deg, rgb(15 19 48 / 0.62) 0%, rgb(15 19 48 / 0.8) 100%),
+      var(--vk-coll-bg, none) center 40% / cover no-repeat;
+    /* Alt kenar zemine erir (sert çizgi kalmaz). */
+    -webkit-mask-image: linear-gradient(180deg, #000 45%, transparent);
+    mask-image: linear-gradient(180deg, #000 45%, transparent);
+    pointer-events: none;
+  }
+}
+
+/* ── Koleksiyon girişi ─────────────────────────────────────────────────────────────────────────────────────── */
+.vk-coll__head {
+  padding: clamp(1.75rem, 4vw, 3rem) 0 var(--vk-space-5);
+  display: grid;
+  gap: var(--vk-space-2);
+}
+.vk-coll__eyebrow {
+  margin: 0;
+  font-size: var(--vk-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--vk-gold-bright);
+}
+.vk-coll__head h1 {
+  margin: 0;
+  font: 600 clamp(2.2rem, 4.2vw, 3.4rem) / 1.05 var(--vk-font-display);
+  color: var(--vk-ivory);
+}
+.vk-coll__lead {
+  margin: var(--vk-space-1) 0 0;
+  max-width: 38rem;
+  font: 500 clamp(1.05rem, 1.4vw, 1.2rem) / 1.5 var(--vk-font-display);
+  color: var(--vk-ivory);
+}
+.vk-coll__meta {
+  margin: 0;
+  font-size: var(--vk-text-sm);
+  color: var(--vk-ivory-dim);
+}
+
+/* ── Keşif çubuğu ──────────────────────────────────────────────────────────────────────────────────────────── */
+.vk-coll__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vk-space-2) var(--vk-space-3);
+  padding: var(--vk-space-2);
+  border: 1px solid var(--vk-coll-line);
+  border-radius: 12px;
+  background: rgb(10 13 38 / 0.82);
+}
+.vk-coll__search {
+  flex: 1 1 15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border-radius: 8px;
+  background: rgb(243 234 211 / 0.06);
+  color: var(--vk-ivory-dim);
+}
+.vk-coll__search:focus-within {
+  outline: 2px solid var(--vk-gold-bright);
+  outline-offset: 1px;
+}
+.vk-coll__search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 42px;
+  border: 0;
+  background: none;
+  color: var(--vk-ivory);
+  font: inherit;
+  font-size: 1rem;
+  outline: none;
+}
+.vk-coll__search input::placeholder {
+  color: rgb(201 194 174 / 0.75);
+}
+.vk-coll__city select {
+  min-height: 44px;
+  padding: 0 2rem 0 0.85rem;
+  border: 1px solid var(--vk-coll-line);
+  border-radius: 8px;
+  background: var(--vk-coll-ink);
+  color: var(--vk-ivory);
+  font: inherit;
+  font-size: 0.92rem;
+}
+.vk-coll__types,
+.vk-coll__view {
+  display: flex;
+  gap: 0.25rem;
+}
+.vk-coll__view {
+  margin-left: auto;
+  padding-left: var(--vk-space-2);
+  border-left: 1px solid var(--vk-coll-line);
+}
+.vk-coll__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 40px;
+  padding: 0 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--vk-ivory-dim);
+  font: inherit;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.vk-coll__chip:hover {
+  color: var(--vk-ivory);
+}
+.vk-coll__chip[aria-pressed='true'] {
+  border-color: rgb(233 200 116 / 0.6);
+  background: rgb(201 162 75 / 0.14);
+  color: var(--vk-ivory);
+  font-weight: 600;
+}
+.vk-coll__chip svg {
+  width: 16px;
+  height: 16px;
+}
+.vk-coll__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--vk-space-4);
+  padding: var(--vk-space-4) 0 var(--vk-space-3);
+}
+.vk-coll__status .vk-page__count {
+  margin: 0;
+}
+.vk-coll__active {
+  margin-left: 0.6rem;
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--vk-coll-line);
+  color: var(--vk-ivory);
+}
+.vk-coll__clear {
+  min-height: 44px;
+}
+.vk-coll > .vk-state,
+.vk-coll > .vk-xmap {
+  margin-top: var(--vk-space-4);
+}
+
+/* ── Koleksiyon ızgarası ve kart ───────────────────────────────────────────────────────────────────────────── */
+.vk-coll__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.2vw, 2rem);
+}
+.vk-ccard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--vk-coll-line);
+  border-radius: 4px;
+  background: linear-gradient(180deg, #151b45, #10153a);
+  box-shadow: 0 18px 36px -24px rgb(0 0 0 / 0.9);
+  transition: transform 180ms var(--vk-ease), border-color 180ms var(--vk-ease);
+}
+/* Paspartu: fotoğraf kartın içinde, çevresinde ince altın çizgiyle (arşiv levhası). */
+.vk-ccard__frame {
+  position: relative;
+  margin: 10px 10px 0;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: #070a20;
+  outline: 1px solid rgb(233 200 116 / 0.2);
+  outline-offset: 4px;
+}
+.vk-ccard__frame img,
+.vk-ccard__noimg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 260ms var(--vk-ease);
+}
+.vk-ccard__noimg {
+  background: repeating-linear-gradient(135deg, rgb(243 234 211 / 0.04) 0 8px, transparent 8px 16px), #0b0f2c;
+}
+/* Kazanılmış mühür: köşede küçük madalyon (yalnızca kazanılmışsa). */
+.vk-ccard__seal {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.55), inset 0 0 0 1.5px rgb(255 255 255 / 0.35);
+}
+.vk-ccard__seal--completed {
+  background: radial-gradient(circle at 35% 30%, #8fa2ff, #4a5bff 60%, #2b3399);
+}
+.vk-ccard__seal--gold {
+  background: radial-gradient(circle at 35% 30%, #f6dd94, #c9a24b 60%, #8a6a22);
+}
+.vk-ccard__seal-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.85);
+}
+.vk-ccard__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 1.25rem 1rem;
+}
+.vk-ccard__type {
+  margin: 0;
+  font: italic 500 0.95rem / 1.3 var(--vk-font-display);
+  color: var(--vk-gold);
+}
+.vk-ccard__name {
+  margin: 0;
+  font: 600 1.45rem / 1.2 var(--vk-font-display);
+}
+.vk-app .vk-ccard__link {
+  color: var(--vk-ivory);
+  text-decoration: none;
+}
+/* Kartın tamamı bağlantının tıklama alanı (atıf satırı hariç: o metin seçilebilir kalır). */
+.vk-ccard__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.vk-ccard__link:focus-visible {
+  outline: none;
+}
+.vk-ccard:has(.vk-ccard__link:focus-visible) {
+  outline: 3px solid var(--vk-gold-bright);
+  outline-offset: 3px;
+}
+.vk-ccard__lead {
+  margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  color: #d9d2bf;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  /* Bütün kartlar aynı boyda: tanıtım alanı her zaman 3 satır yer kaplar (kısa metinde de). */
+  min-height: calc(1.55em * 3);
+}
+.vk-ccard__go {
+  margin: auto 0 0;
+  padding-top: 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--vk-gold-bright);
+}
+.vk-ccard__go svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 180ms var(--vk-ease);
+}
+.vk-ccard__credit {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding: 0.55rem 1.25rem 0.7rem;
+  border-top: 1px solid rgb(201 162 75 / 0.14);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: rgb(201 194 174 / 0.85);
+  overflow-wrap: anywhere;
+  /* Atıf kısaltılmaz; iki satırlık sabit alan kart boylarını eşitler (daha uzun atıf yine tam görünür). */
+  min-height: calc(1.4em * 2 + 1.25rem);
+}
+@media (hover: hover) {
+  .vk-ccard:hover {
+    transform: translateY(-3px);
+    border-color: rgb(233 200 116 / 0.5);
+  }
+  .vk-ccard:hover .vk-ccard__frame img {
+    transform: scale(1.03);
+  }
+  .vk-ccard:hover .vk-ccard__go svg {
+    transform: translateX(4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vk-ccard,
+  .vk-ccard__frame img,
+  .vk-ccard__go svg {
+    transition: none;
+  }
+  .vk-ccard:hover,
+  .vk-ccard:hover .vk-ccard__frame img,
+  .vk-ccard:hover .vk-ccard__go svg {
+    transform: none;
+  }
+}
+
+/* ── Tablet ve telefon ─────────────────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 1079px) {
+  .vk-coll__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 899px) {
+  .vk-coll__view {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+@media (max-width: 639px) {
+  .vk-coll__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vk-coll__bar {
+    gap: var(--vk-space-2);
+  }
+  /* İki satır: 1) arama + görünüm (simge), 2) şehir + kayan tür düğmeleri. */
+  .vk-coll__search {
+    /* İlk satırı arama ve iki görünüm düğmesi (2 × 44 px + aralıklar) doldurur; şehir ve türler ikinci satıra iner. */
+    flex: 1 1 calc(100% - 112px);
+    min-width: 0;
+  }
+  .vk-coll__city {
+    flex: 0 0 auto;
+  }
+  /* Türler tek satırda yatay kayar (sayfa taşmaz); dokunmatik hedefler 44 px. */
+  .vk-coll__types {
+    flex: 1 1 8rem;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .vk-coll__chip {
+    min-height: 44px;
+  }
+  .vk-coll__view {
+    order: 0;
+    flex: 0 0 auto;
+  }
+  .vk-coll__search {
+    order: -1;
+  }
+  .vk-coll__city,
+  .vk-coll__types {
+    order: 1;
+  }
+  .vk-coll__view .vk-coll__chip {
+    width: 44px;
+    justify-content: center;
+    padding: 0;
+  }
+  .vk-coll__view .vk-coll__chip svg {
+    width: 18px;
+    height: 18px;
+  }
+  /* Görünüm düğmelerinin adı ekran okuyucuda kalır; telefonda yalnızca simge. */
+  .vk-coll__vlabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .vk-ccard__name {
+    font-size: 1.35rem;
+  }
+}

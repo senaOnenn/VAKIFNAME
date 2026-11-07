@@ -18,7 +18,7 @@ from app.guide.claims import PHOTO_ID, Checker, parse
 from app.guide.privacy import DEFAULT_MODEL_DIR, FaceScreen
 from app.guide.provider import DEFAULT_MODEL, MockProvider, OpenRouterProvider, ProviderError
 from app.guide.secret import KeyStatus, load_key
-from app.guide.service import GuideService, GuideSettings
+from app.guide.service import NOT_MATCHED as NOT_MATCHED_MESSAGE, GuideService, GuideSettings
 from app.main import create_app
 from app.public_catalog import PublicCatalogRepository
 
@@ -56,13 +56,23 @@ def make_service(responder, models=None, fail=None, budget=None, settings=None, 
 
 # --- Anahtar ------------------------------------------------------------------------------------------------------
 
+def _readable_by_others(f, on: bool):
+    """POSIX: izin bitleri. Windows: izin bitleri erişimi göstermez; Everyone (SID S-1-1-0) okuma girdisi eklenir/kaldırılır."""
+    if os.name == "nt":
+        import subprocess
+        args = ["/grant", "*S-1-1-0:(R)"] if on else ["/remove:g", "*S-1-1-0"]
+        subprocess.run(["icacls", str(f), *args], check=True, capture_output=True)
+    else:
+        os.chmod(f, 0o644 if on else 0o600)
+
+
 def test_key_is_read_only_from_private_file(tmp_path):
     f = tmp_path / "k"
     assert load_key(f) == (None, KeyStatus.MISSING)
     f.write_text("gizli-anahtar-123\n")
-    os.chmod(f, 0o644)
+    _readable_by_others(f, True)
     assert load_key(f) == (None, KeyStatus.INSECURE)
-    os.chmod(f, 0o600)
+    _readable_by_others(f, False)
     assert load_key(f) == ("gizli-anahtar-123", KeyStatus.OK)
     f.write_text("iki parça\n")
     assert load_key(f)[1] == KeyStatus.INVALID
@@ -73,7 +83,7 @@ def test_key_file_must_be_owned_by_root_or_service_account(tmp_path):
     f.write_text("gizli-anahtar-123\n")
     os.chmod(f, 0o600)
     assert load_key(f)[1] == KeyStatus.OK
-    if os.geteuid() == 0:
+    if hasattr(os, "geteuid") and os.geteuid() == 0:  # Windows'ta geteuid yoktur
         os.chown(f, 65534, 65534)  # nobody
         assert load_key(f) == (None, KeyStatus.INSECURE)
 
@@ -735,7 +745,7 @@ def _vlm(obs, calls=None):
 
 def _assert_not_matched(r, named=()):
     assert r["status"] == "photo_not_matched" and r["mode"] == "generative"
-    assert r["message"] == "Bu görsel kayıtlı eserlerle güvenilir şekilde eşleştirilemedi."
+    assert r["message"] == NOT_MATCHED_MESSAGE
     assert [o["monument_id"] for o in r["options"]] == list(named)  # en yakın eser önerilmez
     assert [o["monument_id"] for o in r["manual_options"]] == CATALOG_ORDER  # tarafsız, katalog sırası
     assert r["actions"] == ["explain_architecture", "upload_another", "choose_manually"]

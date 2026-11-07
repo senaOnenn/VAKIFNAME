@@ -177,6 +177,12 @@ class OpenRouterProvider:
             self._models, self._models_at = data, time.monotonic()
         return data
 
+    def cached_models(self) -> Optional[list[dict]]:
+        """Ağa çıkmadan bilinen model listesi (son `models()` sonucu, süresi geçmediyse); yoksa None."""
+        with self._lock:
+            fresh = self._models is not None and time.monotonic() - self._models_at < MODELS_TTL_S
+            return list(self._models) if fresh else None
+
     def key_info(self) -> dict:
         """`GET /key`: anahtarın kullanım ve sınır bilgisi (token harcamaz)."""
         body, _ = self._request("GET", "/key", 20.0)

@@ -284,18 +284,30 @@ def image_action(request: Request, response: Response,
     return _call(_store(request).set_image_status, image_id, action, actor)
 
 
+class QuestEnBody(_Body):
+    """Sorunun İngilizcesi: şıklar Türkçe soruyla aynı sırada; doğru cevap gönderilmez (Türkçe sorudaki kalır)."""
+    question: Annotated[str, StringConstraints(strip_whitespace=True, min_length=5, max_length=300)]
+    choices: list[Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]] = Field(
+        min_length=2, max_length=4)
+    explanation: Annotated[str, StringConstraints(strip_whitespace=True, min_length=5, max_length=600)]
+
+
 class TranslationBody(_Body):
     title_en: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=120)]
     text_en: LongText
     quote_en: Annotated[str, StringConstraints(strip_whitespace=True, max_length=1500)] = ""
     source_id: SourceId
     page: int = Field(ge=1, le=10000)
+    quest_en: Optional[QuestEnBody] = None
+    note: Optional[Annotated[str, StringConstraints(strip_whitespace=True, max_length=1200)]] = None
     publish: bool = False
 
 
 class MonumentEnBody(_Body):
     name_en: Line
     site_notice_en: Optional[Annotated[str, StringConstraints(strip_whitespace=True, max_length=600)]] = None
+    alternative_names_en: list[Line] = Field(default_factory=list, max_length=10)
+    address_en: Optional[Annotated[str, StringConstraints(strip_whitespace=True, max_length=300)]] = None
     publish: bool = False
 
 
@@ -323,7 +335,8 @@ def translation_action(request: Request, response: Response, fact_id: FactId,
 @router.put("/monuments/{monument_id}/en")
 def put_monument_en(body: MonumentEnBody, request: Request, response: Response, monument_id: MonumentId):
     actor = _admin(request, response)
-    data = {"name_en": body.name_en, "site_notice_en": body.site_notice_en or None}
+    data = {"name_en": body.name_en, "site_notice_en": body.site_notice_en or None,
+            "alternative_names_en": body.alternative_names_en, "address_en": body.address_en or None}
     return _call(_store(request).set_monument_en, monument_id, data, body.publish, actor)
 
 

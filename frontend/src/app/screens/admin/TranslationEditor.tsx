@@ -10,6 +10,7 @@ import {
   type ContentOverview,
   type ContentTranslation,
   type MonumentEdit,
+  type QuestText,
   type TranslationInput,
 } from '../../api'
 import { GoldRule } from '../../components/Ornament'
@@ -21,7 +22,7 @@ import '../discover.css'
 import '../admin.css'
 import './content.css'
 
-type Form = Omit<TranslationInput, 'publish' | 'page'> & { page: string }
+type Form = Omit<TranslationInput, 'publish' | 'page' | 'quest_en' | 'note'> & { page: string; quest: QuestText | null }
 type Msg = { text: string; error: boolean } | null
 
 /** Türkçe kayıt: eserin yayındaki kayıtlarından (katalog dahil) ya da depodaki (henüz yayında olmayan) kayıtlardan. */
@@ -35,9 +36,10 @@ function trRecord(edit: MonumentEdit, factId: string) {
 
 function initialForm(t: ContentTranslation | null, overview: ContentOverview, sourceId?: string, page?: number): Form {
   return t
-    ? { title_en: t.title_en, text_en: t.text_en, quote_en: t.quote_en, source_id: t.source_id, page: String(t.page) }
+    ? { title_en: t.title_en, text_en: t.text_en, quote_en: t.quote_en, source_id: t.source_id, page: String(t.page),
+        quest: t.quest_en ?? null }
     : {
-        title_en: '', text_en: '', quote_en: '',
+        title_en: '', text_en: '', quote_en: '', quest: null,
         source_id: sourceId && overview.sources.some((s) => s.source_id === sourceId) ? sourceId : overview.sources[0]?.source_id ?? '',
         page: String(page ?? 1),
       }
@@ -110,13 +112,21 @@ function Editor({ factId, overview, edit, tr, translation, onSaved }: {
     if (f.text_en.trim().length < 10) return 'İngilizce metin en az 10 karakter olmalı.'
     if (!source) return 'Kaynak kitap seçin.'
     if (!Number.isInteger(pageNum) || pageNum < 1 || pageNum > source.page_count) return `Sayfa 1 ile ${source.page_count} arasında olmalı.`
+    if (f.quest) {
+      if (f.quest.question.trim().length < 5 || f.quest.explanation.trim().length < 5) return 'İngilizce soru ve açıklama en az 5 karakter olmalı.'
+      if (f.quest.choices.some((c) => !c.trim())) return 'İngilizce şıkların hepsi doldurulmalı.'
+    }
     return null
   }
 
   const body = (publish: boolean): TranslationInput => ({
     title_en: f.title_en.trim(), text_en: f.text_en.trim(), quote_en: f.quote_en.trim(), source_id: f.source_id,
-    page: pageNum, publish,
+    page: pageNum, publish, note: translation?.note ?? null,
+    quest_en: f.quest ? { question: f.quest.question.trim(), choices: f.quest.choices.map((c) => c.trim()), explanation: f.quest.explanation.trim() } : null,
   })
+  const trQuest = translation?.fact_quest ?? null
+  const setQuest = (patch: Partial<QuestText>) =>
+    setF((p) => ({ ...p, quest: { ...(p.quest ?? { question: '', choices: (trQuest?.choices ?? []).map(() => ''), explanation: '' }), ...patch } }))
 
   async function run(kind: 'draft' | 'publish' | 'reject' | 'withdraw') {
     if (kind === 'draft' || kind === 'publish') {
@@ -186,6 +196,9 @@ function Editor({ factId, overview, edit, tr, translation, onSaved }: {
               <dd>{translation.decision ? `${translation.decision.by} · ${formatWhen(translation.decision.at)}` : 'Henüz onaylanmadı'}</dd>
             </dl>
           )}
+          {translation?.note && (
+            <p className="vk-cform__warn" role="note"><strong>Taslak notu:</strong> {translation.note}</p>
+          )}
           {status !== 'published' && <p className="vk-admin__note vk-factedit__draft">{DRAFT_NOTE}</p>}
           {status === 'published' && (
             <p className="vk-admin__note">Yayındaki çeviri taslak olarak kaydedilirse yayından çekilir; "Kaydet ve yayımla" yeniden onaydır.</p>
@@ -208,6 +221,27 @@ function Editor({ factId, overview, edit, tr, translation, onSaved }: {
             <input id={`${id}-page`} type="number" min={1} max={source?.page_count} value={f.page} onChange={(e) => set('page', e.target.value)} />
             <label htmlFor={`${id}-quote`}>Kitabın İngilizce bölümünden birebir alıntı (isteğe bağlı; yazılırsa sayfada bulunmalı)</label>
             <textarea id={`${id}-quote`} lang="en" rows={3} value={f.quote_en} onChange={(e) => set('quote_en', e.target.value)} />
+
+            {trQuest && (
+              <fieldset className="vk-cform__wide">
+                <legend>Soru (R6.17)</legend>
+                <p className="vk-admin__note">
+                  Türkçe: {trQuest.question} — {trQuest.choices.join(' / ')}. Şıklar aynı sırada çevrilir; doğru cevap Türkçe
+                  sorudaki şıktır ve değişmez.
+                </p>
+                <label htmlFor={`${id}-q`}>İngilizce soru</label>
+                <input id={`${id}-q`} lang="en" value={f.quest?.question ?? ''} onChange={(e) => setQuest({ question: e.target.value })} />
+                {trQuest.choices.map((c, i) => (
+                  <div key={i}>
+                    <label htmlFor={`${id}-c${i}`}>Şık {i + 1} ({c})</label>
+                    <input id={`${id}-c${i}`} lang="en" value={f.quest?.choices[i] ?? ''}
+                      onChange={(e) => setQuest({ choices: trQuest.choices.map((_, j) => (j === i ? e.target.value : f.quest?.choices[j] ?? '')) })} />
+                  </div>
+                ))}
+                <label htmlFor={`${id}-x`}>İngilizce açıklama</label>
+                <textarea id={`${id}-x`} lang="en" rows={2} value={f.quest?.explanation ?? ''} onChange={(e) => setQuest({ explanation: e.target.value })} />
+              </fieldset>
+            )}
 
             <div className="vk-cform__actions">
               {(!translation || status !== 'published' || dirty) && (

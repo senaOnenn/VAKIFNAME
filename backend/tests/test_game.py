@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
+from tests.players import PlayerClient as TestClient, new_player
 
 from app import game
 from app.game import NameIndex, compose_quiz, fold, public_question
@@ -29,11 +29,17 @@ OPEN, LOCKED = "BUR-0019", "BUR-0005"
 PASSWORD = "Gizli-Parola-42"
 DEC = "DEC-" + "b" * 16
 M_PER_DEG_LAT = 6_371_000 * 3.141592653589793 / 180
-STATE_KEYS = {"monument_id", "locked", "listened", "asked", "guide_required", "ready_for_quiz", "quiz_size", "pass_mark",
+STATE_KEYS = {"monument_id", "locked", "listened", "asked", "started", "guide_required", "quiz_available", "ready_for_quiz", "quiz_size", "pass_mark",
               "knowledge", "visit", "visit_radius_m", "simulated_visit_allowed", "site_notice"}
 
 
-def visitor() -> str:
+def visitor(c) -> str:
+    """Yeni oyuncu: R6.2'den beri oyun yalnızca hesapla oynanır (bkz. tests/players.py)."""
+    return new_player(c)
+
+
+def guest_id() -> str:
+    """Tarayıcıda üretilen misafir kimliği (artık oyun uçlarına erişemez; eski kayıtları girişte hesaba taşınır)."""
     return f"ziyaretci-{uuid.uuid4()}"
 
 
@@ -162,16 +168,16 @@ class FakeProvider:
 # --- Durum ve kademe 1 -------------------------------------------------------------------------------------------
 
 def test_game_state_shape_for_a_new_visitor(c):
-    s = state(c, visitor())
+    s = state(c, visitor(c))
     assert set(s) == STATE_KEYS
-    assert s == {"monument_id": OPEN, "locked": False, "listened": False, "asked": False, "guide_required": False,
-                 "ready_for_quiz": False, "quiz_size": 5, "pass_mark": 4, "knowledge": None, "visit": None,
+    assert s == {"monument_id": OPEN, "locked": False, "listened": False, "asked": False, "started": False, "guide_required": False,
+                 "ready_for_quiz": True, "quiz_available": True, "quiz_size": 5, "pass_mark": 4, "knowledge": None, "visit": None,
                  "visit_radius_m": 50, "simulated_visit_allowed": False, "site_notice": BY_ID[OPEN].site_notice}
     assert s["site_notice"]  # türbe uyarısı oyun adımından önce gösterilebilsin
 
 
 def test_engagement_is_idempotent_and_returns_the_state(c):
-    user = visitor()
+    user = visitor(c)
     first = engage(c, user, OPEN, "listened")
     assert set(first) == STATE_KEYS and first["listened"] and not first["asked"] and first["ready_for_quiz"]
     again = engage(c, user, OPEN, "listened", "asked", "asked")
@@ -185,81 +191,49 @@ def test_engagement_is_idempotent_and_returns_the_state(c):
     assert c.post(f"/monuments/{OPEN}/engagement", json={"user_id": user, "event": "asked", "x": 1}).status_code == 422
 
 
-def test_quiz_requires_listening_first(c):
-    user = visitor()
-    r = start(c, user)
-    assert r.status_code == 409 and r.json()["detail"] == "Rozet için önce anlatımı sonuna kadar dinleyin."
-    engage(c, user, OPEN, "asked")  # soru tek başına yetmez
-    assert start(c, user).status_code == 409
-    engage(c, user, OPEN, "listened")
-    assert start(c, user).status_code == 201
-
-
-def test_asked_is_required_only_when_the_guide_is_open_and_configured(c):
+def test_quiz_starts_without_listening_or_asking_r6_7(c):
+    """R6.7: dinleme ve rehbere soru isteğe bağlı; bilgi görevi doğrudan başlar (rehber açık ve yapılandırılmış olsa da)."""
     c.app.state.guide_mode = "on"
     c.app.state.guide.provider = FakeProvider(ok=True)
-    user = visitor()
-    s = engage(c, user, OPEN, "listened")
-    assert s["guide_required"] is True and s["ready_for_quiz"] is False
-    r = start(c, user)
-    assert r.status_code == 409 and "en az bir soru" in r.json()["detail"]
-    assert engage(c, user, OPEN, "asked")["ready_for_quiz"] is True
+    user = visitor(c)
+    s = state(c, user)
+    assert s["listened"] is False and s["asked"] is False and s["guide_required"] is False and s["ready_for_quiz"] is True
     assert start(c, user).status_code == 201
-
-    # Sağlayıcı girişi/anahtarı yoksa ya da rehber herkese açık değilse soru şartı aranmaz.
-    c.app.state.guide.provider = FakeProvider(ok=False)
-    assert state(c, visitor())["guide_required"] is False
-    c.app.state.guide.provider = None
-    assert state(c, visitor())["guide_required"] is False
-    c.app.state.guide.provider = FakeProvider(ok=True)
-    for mode in ("off", "testers"):
-        c.app.state.guide_mode = mode
-        other = visitor()
-        assert engage(c, other, OPEN, "listened")["guide_required"] is False
-        assert start(c, other).status_code == 201
+    # Dinleme ve soru yine kaydedilir (öğrenme deneyimi), sınavı etkilemez.
+    s = engage(c, user, OPEN, "listened", "asked")
+    assert s["listened"] is True and s["asked"] is True and s["guide_required"] is False
 
 
 # --- Rota kilidi -------------------------------------------------------------------------------------------------
 
-def test_game_initialises_the_frontier_like_the_route_endpoint(c):
-    user = visitor()
-    assert state(c, user, LOCKED)["locked"] is True
-    assert c.app.state.monument_progress.unlocked(user) == INITIAL_FRONTIER
+def test_no_monument_is_locked_r6_7(c):
+    """R6.7: yayımlanmış eserlerin hepsi baştan seçilebilir; eski kilit kayıtları silinmez ama erişimi kısıtlamaz."""
+    user = visitor(c)
+    store = c.app.state.monument_progress
+    store.plan_unlocks(user, lambda done, unlocked: (None, ["BUR-0019"]))  # R6.7 öncesinden kalmış bir kilit kaydı
+    for mid in BY_ID:
+        if BY_ID[mid].location is None:
+            continue
+        s = state(c, user, mid)
+        assert s["locked"] is False, mid
     route = c.get("/route", params={"city": "bursa", "user_id": user}).json()
-    assert {s["monument_id"] for s in route["stops"] if s["state"] == "unlocked"} == INITIAL_FRONTIER
-    assert all(state(c, user, mid)["locked"] is False for mid in INITIAL_FRONTIER)
-
-    # Rotayı konumla açmış kullanıcıda sınır yeniden kurulmaz: Muradiye'den açılan rota geçerlidir.
-    walker = visitor()
-    lat, lng = location("BUR-0003")
-    c.get("/route", params={"city": "bursa", "user_id": walker, "lat": lat, "lng": lng})
-    opened = c.app.state.monument_progress.unlocked(walker)
-    assert LOCKED in opened and OPEN not in opened
-    assert state(c, walker, OPEN)["locked"] is True and state(c, walker, LOCKED)["locked"] is False
-    assert c.app.state.monument_progress.unlocked(walker) == opened
+    assert route["stops"] and all(x["state"] == "unlocked" for x in route["stops"])
+    assert "BUR-0019" in store.unlocked(user)  # eski kayıt yerinde
+    assert start(c, user, LOCKED).status_code == 201  # eskiden kilitli olan eserde görev doğrudan başlar
 
 
-def test_locked_monument_rejects_quiz_and_legacy_answers(c):
-    user = visitor()
-    s = engage(c, user, LOCKED, "listened")  # anlatım ve sohbet kilitli eserde de açıktır
-    assert s["locked"] is True and s["listened"] is True and s["ready_for_quiz"] is False
-    r = start(c, user, LOCKED)
-    assert r.status_code == 403 and "kilitli" in r.json()["detail"]
+def test_formerly_locked_monument_accepts_quiz_and_legacy_answers_r6_7(c):
+    user = visitor(c)
+    s = state(c, user, LOCKED)
+    assert s["locked"] is False and s["ready_for_quiz"] is True
     fact = next(f for f in BY_ID[LOCKED].facts if f.quest)
     legacy = c.post(f"/monuments/{LOCKED}/quests/{fact.fact_id}/answer",
                     json={"user_id": user, "choice_index": fact.quest.answer_index})
-    assert legacy.status_code == 403
-    assert c.app.state.monument_progress.solved(user) == set()
-    assert c.get(f"/monuments/{LOCKED}/quests", params={"user_id": user}).status_code == 200  # okumak serbest
-    # Açık eserde eski akış çalışmaya devam eder.
-    fact = next(f for f in BY_ID[OPEN].facts if f.quest)
-    ok = c.post(f"/monuments/{OPEN}/quests/{fact.fact_id}/answer",
-                json={"user_id": user, "choice_index": fact.quest.answer_index})
-    assert ok.status_code == 200 and ok.json()["correct"] is True
+    assert legacy.status_code == 200 and legacy.json()["correct"] is True
 
 
 def test_completed_monument_is_never_reported_locked(c):
-    user = visitor()
+    user = visitor(c)
     state(c, user, OPEN)  # sınır kurulur
     c.app.state.monument_progress.add_seal(user, LOCKED, BY_ID[LOCKED].name, "knowledge")
     s = state(c, user, LOCKED)
@@ -276,7 +250,7 @@ FILE_RE = re.compile(r"^[0-9a-f]{64}\.jpe?g$")
 
 @pytest.mark.parametrize("mid", sorted(BY_ID))
 def test_every_monument_gets_five_mixed_questions_without_answers(c, mid):
-    user = visitor()
+    user = visitor(c)
     quiz = ready_quiz(c, user, mid)
     assert set(quiz) == {"quiz_id", "expires_at", "lang", "questions"} and quiz["lang"] == "tr" and re.fullmatch(r"[0-9a-f]{32}", quiz["quiz_id"])
     qs = quiz["questions"]
@@ -414,7 +388,7 @@ def test_image_options_do_not_reveal_the_name(c):
     names = NameIndex(CATALOG.monuments)
     for seed in range(20):
         c.app.state.game_rng = random.Random(seed)
-        quiz = ready_quiz(c, visitor(), "BUR-0009")
+        quiz = ready_quiz(c, visitor(c), "BUR-0009")
         for q in quiz["questions"]:
             if q["kind"] != "image_pick":
                 continue
@@ -455,9 +429,10 @@ def test_monument_that_cannot_build_five_questions_is_not_offered(tmp_path):
     # Tek eserli katalogda Sultan II. Murad Türbesi: 2 soru, adı geçmeyen ifadesi yok, başka eser (çeldirici) yok.
     path = write_catalog(tmp_path, [raw_monument("BUR-0007")])
     with make_client(path) as c:
-        user = visitor()
+        user = visitor(c)
         s = engage(c, user, "BUR-0007")
         assert s["locked"] is False and s["listened"] is True and s["ready_for_quiz"] is False
+        assert s["quiz_available"] is False  # R6.8: içerik yetersizliği açıkça bildirilir
         r = start(c, user, "BUR-0007")
         assert r.status_code == 409 and "yeterli" in r.json()["detail"]
         assert c.app.state.monument_progress._db.execute("SELECT COUNT(*) FROM quizzes").fetchone()[0] == 0
@@ -466,7 +441,7 @@ def test_monument_that_cannot_build_five_questions_is_not_offered(tmp_path):
 # --- Gönderim ve puanlama ----------------------------------------------------------------------------------------
 
 def test_four_of_five_passes_and_awards_the_knowledge_seal_once(c):
-    user = visitor()
+    user = visitor(c)
     quiz = ready_quiz(c, user)
     r = submit(c, user, quiz["quiz_id"], answers_with(c, quiz["quiz_id"], 4))
     assert r.status_code == 200 and r.headers["cache-control"] == "no-store"
@@ -496,7 +471,7 @@ def test_four_of_five_passes_and_awards_the_knowledge_seal_once(c):
 
 
 def test_three_of_five_fails_and_a_new_quiz_can_be_started(c):
-    user = visitor()
+    user = visitor(c)
     quiz = ready_quiz(c, user, "BUR-0001")
     body = submit(c, user, quiz["quiz_id"], answers_with(c, quiz["quiz_id"], 3)).json()
     assert (body["score"], body["passed"], body["knowledge_seal"]) == (3, False, None)
@@ -522,7 +497,7 @@ def test_three_of_five_fails_and_a_new_quiz_can_be_started(c):
 
 
 def test_a_quiz_is_submitted_only_once(c):
-    user = visitor()
+    user = visitor(c)
     quiz = ready_quiz(c, user)
     answers = answers_with(c, quiz["quiz_id"], 0)
     assert submit(c, user, quiz["quiz_id"], answers).status_code == 200
@@ -532,7 +507,7 @@ def test_a_quiz_is_submitted_only_once(c):
 
 
 def test_expired_quiz_is_rejected(c):
-    user = visitor()
+    user = visitor(c)
     now = datetime.now(timezone.utc)
     c.app.state.game_clock = lambda: now
     quiz = ready_quiz(c, user)
@@ -546,7 +521,7 @@ def test_expired_quiz_is_rejected(c):
 
 
 def test_someone_elses_quiz_is_forbidden(c):
-    owner, other = visitor(), visitor()
+    owner, other = visitor(c), visitor(c)
     quiz = ready_quiz(c, owner)
     r = submit(c, other, quiz["quiz_id"], answers_with(c, quiz["quiz_id"], 5))
     assert r.status_code == 403
@@ -555,7 +530,7 @@ def test_someone_elses_quiz_is_forbidden(c):
 
 
 def test_submission_is_validated_before_the_quiz_is_used(c):
-    user = visitor()
+    user = visitor(c)
     quiz = ready_quiz(c, user)
     qid = quiz["quiz_id"]
     good = answers_with(c, qid, 5)
@@ -577,7 +552,7 @@ def test_submission_is_validated_before_the_quiz_is_used(c):
 
 
 def test_unknown_monument_is_404_everywhere(c):
-    user = visitor()
+    user = visitor(c)
     assert c.get("/monuments/BUR-0999/game", params={"user_id": user}).status_code == 404
     assert c.post("/monuments/BUR-0999/engagement", json={"user_id": user, "event": "listened"}).status_code == 404
     assert c.post("/monuments/BUR-0999/quiz", json={"user_id": user}).status_code == 404
@@ -609,14 +584,14 @@ def test_account_progress_needs_its_own_session(c):
 # --- Ziyaret ------------------------------------------------------------------------------------------------------
 
 def test_visit_needs_the_knowledge_seal_first(c):
-    user = visitor()
+    user = visitor(c)
     r = visit(c, user, at=location(OPEN))
     assert r == {"status": "needs_knowledge", "distance_m": None, "radius_m": 50, "visit_seal": None}
     assert c.get(f"/users/{user}/seals").json()["visit_seals"] == []
 
 
 def test_visit_inside_and_outside_the_radius(c):
-    user = visitor()
+    user = visitor(c)
     earn_knowledge(c, user)
     far = visit(c, user, at=north_of(OPEN, 60))
     assert far["status"] == "out_of_range" and 59 <= far["distance_m"] <= 61 and far["visit_seal"] is None
@@ -632,7 +607,7 @@ def test_visit_inside_and_outside_the_radius(c):
 
 
 def test_visit_body_is_strict(c):
-    user = visitor()
+    user = visitor(c)
     earn_knowledge(c, user)
     for body in ({"user_id": user}, {"user_id": user, "latitude": 40.18},
                  {"user_id": user, "latitude": 40.18, "longitude": 29.05, "simulate": "yes"},
@@ -644,7 +619,7 @@ def test_visit_body_is_strict(c):
 def test_visit_radius_comes_from_the_environment(monkeypatch):
     monkeypatch.setenv("VAKIFNAME_VISIT_RADIUS_M", "100")
     with make_client() as c:
-        user = visitor()
+        user = visitor(c)
         assert state(c, user)["visit_radius_m"] == 100
         earn_knowledge(c, user)
         r = visit(c, user, at=north_of(OPEN, 60))
@@ -663,7 +638,7 @@ def test_catalog_checkin_point_and_radius_win(tmp_path):
                       "decision_id": DEC}
     path = write_catalog(tmp_path, [raw if m["monument_id"] == OPEN else m for m in RAW["monuments"]])
     with make_client(path) as c:
-        user = visitor()
+        user = visitor(c)
         assert state(c, user)["visit_radius_m"] == 80
         earn_knowledge(c, user)
         # Yarıçap onaylı giriş noktasına göredir: harita konumu o noktaya 100 m (dışarıda), 170 m kuzey 70 m (içeride).
@@ -676,7 +651,7 @@ def test_catalog_checkin_point_and_radius_win(tmp_path):
 
 def test_simulated_visit_is_off_by_default_and_labelled_when_on(monkeypatch):
     with make_client() as c:
-        user = visitor()
+        user = visitor(c)
         assert state(c, user)["simulated_visit_allowed"] is False
         earn_knowledge(c, user)
         r = visit(c, user, simulate=True)
@@ -685,7 +660,7 @@ def test_simulated_visit_is_off_by_default_and_labelled_when_on(monkeypatch):
 
     monkeypatch.setenv("VAKIFNAME_VISIT_SIMULATION", "on")
     with make_client() as c:
-        user = visitor()
+        user = visitor(c)
         assert visit(c, user, simulate=True)["status"] == "needs_knowledge"  # simülasyon kademe atlatmaz
         earn_knowledge(c, user)
         assert state(c, user)["simulated_visit_allowed"] is True
@@ -711,7 +686,7 @@ def test_game_responses_never_use_the_word_demo(monkeypatch):
     # Genel arayüz paketinin derleme denetimi /\bdemo\b/i sözcüğünü yasaklar; API alan ve durum adları da onu kullanmaz.
     monkeypatch.setenv("VAKIFNAME_VISIT_SIMULATION", "on")
     with make_client() as c:
-        user = visitor()
+        user = visitor(c)
         bodies = [state(c, user)]
         quiz = ready_quiz(c, user)
         bodies.append(quiz)
@@ -719,7 +694,7 @@ def test_game_responses_never_use_the_word_demo(monkeypatch):
         bodies.append(visit(c, user, simulate=True))
         bodies.append(state(c, user))
         bodies.append(c.get(f"/users/{user}/seals").json())
-        other = visitor()
+        other = visitor(c)
         earn_knowledge(c, other, "BUR-0020")
         c.app.state.game_settings = game.GameSettings(visit_simulation=False)
         bodies.append(visit(c, other, "BUR-0020", simulate=True))
@@ -731,7 +706,7 @@ def test_game_responses_never_use_the_word_demo(monkeypatch):
 def test_visited_coordinates_are_never_stored(tmp_path):
     db_path = tmp_path / "progress.sqlite3"
     with TestClient(create_app(public_catalog_file=SNAPSHOT, demo_api=False, progress_db=db_path)) as c:
-        user = visitor()
+        user = visitor(c)
         earn_knowledge(c, user)
         far, near = north_of(OPEN, 400.123), north_of(OPEN, 12.345)
         assert visit(c, user, at=far)["status"] == "out_of_range"
@@ -749,29 +724,70 @@ def test_visited_coordinates_are_never_stored(tmp_path):
 
 # --- Hesaplar: birleştirme ve silme ------------------------------------------------------------------------------
 
-def test_guest_game_progress_moves_to_the_account(monkeypatch):
-    monkeypatch.setenv("VAKIFNAME_VISIT_SIMULATION", "on")
+def test_guest_game_progress_moves_to_the_account():
+    # R6.2'den önce misafir kimliğiyle kaydedilmiş ilerleme silinmez: girişte hesaba taşınır.
     with make_client() as c:
-        guest = visitor()
-        earn_knowledge(c, guest, OPEN)
-        visit(c, guest, OPEN, simulate=True)
-        engage(c, guest, "BUR-0020", "listened", "asked")
-        open_quiz = ready_quiz(c, guest, "BUR-0013")
+        guest = guest_id()
+        store = c.app.state.monument_progress
+        store.add_seal(guest, OPEN, BY_ID[OPEN].name, "knowledge")
+        store.add_seal(guest, OPEN, BY_ID[OPEN].name, "visit", simulated=True)
+        store.record_engagement(guest, "BUR-0020", "listened")
+        store.record_engagement(guest, "BUR-0020", "asked")
         user_id = register(c, visitor_id=guest)
 
         s = state(c, user_id, OPEN)
         assert s["knowledge"] and s["visit"]["simulated"] is True
         assert state(c, user_id, "BUR-0020")["asked"] is True
-        # Misafirken açılan sınav girişten sonra hesap kimliğiyle gönderilir.
-        r = submit(c, user_id, open_quiz["quiz_id"], answers_with(c, open_quiz["quiz_id"], 5))
-        assert r.status_code == 200 and r.json()["passed"] is True
-        db = c.app.state.monument_progress._db
+        db = store._db
         for table in ("engagement", "quizzes", "seals", "unlocks"):
             assert db.execute(f"SELECT COUNT(*) FROM {table} WHERE user_id=?", (guest,)).fetchone()[0] == 0, table
 
         assert c.delete("/auth/me").status_code == 204
         for table in ("engagement", "quizzes", "seals", "unlocks", "quest_answers"):
             assert db.execute(f"SELECT COUNT(*) FROM {table} WHERE user_id=?", (user_id,)).fetchone()[0] == 0, table
+
+
+def test_game_requires_an_account_session_r6_2():
+    """R6.2: oyunun bütün uçları oturum ister; misafir kimliği ve başkasının hesabı reddedilir; ilerleme hesaba bağlıdır."""
+    with make_client() as c:
+        guest = guest_id()
+        calls = [
+            lambda u: c.get(f"/monuments/{OPEN}/game", params={"user_id": u}),
+            lambda u: c.post(f"/monuments/{OPEN}/engagement", json={"user_id": u, "event": "listened"}),
+            lambda u: c.post(f"/monuments/{OPEN}/quiz", json={"user_id": u}),
+            lambda u: c.post("/quiz/" + "a" * 32 + "/submit", json={"user_id": u, "answers": []}),
+            lambda u: c.post(f"/monuments/{OPEN}/visit", json={"user_id": u, "simulate": True}),
+            lambda u: c.get("/route", params={"city": "bursa", "user_id": u}),
+            lambda u: c.get(f"/users/{u}/seals"),
+            lambda u: c.get(f"/users/{u}/monument-passport"),
+            lambda u: c.get(f"/monuments/{OPEN}/quests", params={"user_id": u}),
+        ]
+        for call in calls:
+            r = call(guest)
+            assert r.status_code in (401, 422), r.text
+            if r.status_code == 401:
+                assert "giriş yapmalısın" in r.json()["detail"]
+        db = c.app.state.monument_progress._db
+        for table in ("engagement", "quizzes", "seals", "unlocks"):
+            assert db.execute(f"SELECT COUNT(*) FROM {table} WHERE user_id=?", (guest,)).fetchone()[0] == 0, table
+        # Kimlik verilmeyen halka açık okuma etkilenmez.
+        assert c.get(f"/monuments/{OPEN}/quests").status_code == 200
+
+        # A'nın ilerlemesi: kendi oturumuyla okunur, B'nin oturumuyla okunamaz, oturumsuz okunamaz.
+        a = register(c, email="a@example.com")
+        earn_knowledge(c, a, OPEN)
+        b = TestClient(c.app)
+        b_id = register(b, email="b@example.com")
+        assert b.get(f"/users/{a}/seals").status_code == 403
+        assert b.get(f"/monuments/{OPEN}/game", params={"user_id": a}).status_code == 403
+        assert b.get(f"/users/{b_id}/seals").json()["knowledge_seals"] == []
+        # Çıkış yapınca hesabın ilerlemesine erişilemez; aynı hesapla yeniden girince ilerleme yerindedir.
+        assert c.post("/auth/logout").status_code in (200, 204)
+        assert c.get(f"/users/{a}/seals").status_code == 401
+        r = c.post("/auth/login", json={"email": "a@example.com", "password": PASSWORD})
+        assert r.status_code == 200, r.text
+        seals = c.get(f"/users/{a}/seals").json()["knowledge_seals"]
+        assert [x["monument_id"] for x in seals] == [OPEN]
 
 
 def test_merge_keeps_account_rows_but_a_real_visit_beats_a_simulated_one():
@@ -838,7 +854,7 @@ def english_catalog(tmp_path: Path, monuments_with_en: set[str]) -> Path:
 def test_english_round_uses_only_approved_english_records(tmp_path):
     every = {m["monument_id"] for m in RAW["monuments"]}
     with make_client(english_catalog(tmp_path, every)) as c:
-        user = visitor()
+        user = visitor(c)
         unlock(c, user, OPEN)
         engage(c, user, OPEN)
         quiz = c.post(f"/monuments/{OPEN}/quiz", json={"user_id": user, "lang": "en"}).json()
@@ -854,7 +870,7 @@ def test_english_round_uses_only_approved_english_records(tmp_path):
 
 def test_english_falls_back_to_turkish_when_not_enough_english(tmp_path):
     with make_client(english_catalog(tmp_path, set())) as c:
-        user = visitor()
+        user = visitor(c)
         unlock(c, user, OPEN)
         engage(c, user, OPEN)
         quiz = c.post(f"/monuments/{OPEN}/quiz", json={"user_id": user, "lang": "en"}).json()

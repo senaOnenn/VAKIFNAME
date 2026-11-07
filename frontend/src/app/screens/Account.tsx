@@ -1,12 +1,19 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../api/client'
+import { getMonuments, getSealBook, useLoad } from '../api'
+import { PlayerCrest, SealTally } from '../components/GameParts'
 import { useLang } from '../i18n'
+import { loadPlayerProfile, PlayerLoadError } from '../player'
 import { deleteAccount, endGuest, logout, resendVerification, useAuth } from '../session'
 import './city.css'
 import './account.css'
+import '../game-layout.css'
 
-/** Hesap: kim olarak girildiği, çıkış ve (KVKK) hesabı ve ilerlemeyi kalıcı silme. */
+/**
+ * Hesap: kim olarak girildiği, oyuncu profili (R6.5: kâşif, seviye, XP, görünüm aşaması, mühürler ve vakfiye parçaları),
+ * çıkış ve (KVKK) hesabı ve ilerlemeyi kalıcı silme.
+ */
 export default function Account() {
   const auth = useAuth()
   const navigate = useNavigate()
@@ -17,13 +24,17 @@ export default function Account() {
   const [resend, setResend] = useState<{ state: 'idle' | 'busy' | 'sent' | 'error'; message?: string }>({ state: 'idle' })
 
   const leave = () => navigate('/giris', { replace: true })
+  const uid = auth.status === 'user' ? auth.user.user_id : null
+  const player = useLoad((s) => (uid ? loadPlayerProfile(s) : Promise.resolve(null)), [uid])
+  const book = useLoad((s) => (uid ? getSealBook(uid, s).catch(() => null) : Promise.resolve(null)), [uid])
+  const catalog = useLoad((s) => (uid ? getMonuments(s).catch(() => null) : Promise.resolve(null)), [uid])
 
   if (auth.status !== 'user') {
     return (
       <main className="vk-city">
         <section className="vk-city__intro">
           <h1>{t('Hesap')}</h1>
-          <p>{t('Misafir olarak keşfediyorsun. İlerlemen bu cihazda tutulur; hesap açınca hesabına taşınır.')}</p>
+          <p>{t('Misafir olarak eserleri, haritayı ve rehberi kullanabilirsin. Oyun, kâşif ve ilerleme için hesap gerekir.')}</p>
           <div className="vk-account__actions">
             <Link to="/giris" className="vk-btn" onClick={() => endGuest()}>{t('Hesap aç veya giriş yap')}</Link>
             <button type="button" className="vk-btn vk-btn--ghost" onClick={() => { endGuest(); leave() }}>
@@ -94,6 +105,24 @@ export default function Account() {
             </p>
           </div>
         )}
+        <section className="vk-account__player" aria-labelledby="oyuncu">
+          <h2 id="oyuncu">{t('Oyuncu profili')}</h2>
+          {player.data?.fail && <PlayerLoadError fail={player.data.fail} onRetry={player.reload} className="vk-account__hint" />}
+          {player.loading && !player.data && <p className="vk-account__hint" role="status">{t('Oyuncu profili yükleniyor…')}</p>}
+          {player.data?.profile && (player.data.profile.character ? (
+            <>
+              <PlayerCrest profile={player.data.profile} size="profile" headingLevel={3} />
+              {book.data && catalog.data && (
+                <SealTally knowledge={book.data.knowledge_seals.length} gold={book.data.visit_seals.length} total={catalog.data.monuments.length} />
+              )}
+              <Link to="/oyun/karakter?sonra=%2Foyun" className="vk-account__change">{t('Kâşifini değiştir')}</Link>
+            </>
+          ) : (
+            <p className="vk-account__hint">
+              {t('Henüz kâşifini seçmedin.')} <Link to="/oyun/karakter?sonra=%2Foyun">{t('Kâşifini seç')}</Link>
+            </p>
+          ))}
+        </section>
         <div className="vk-account__actions">
           <button type="button" className="vk-btn vk-btn--ghost" onClick={() => void logout().finally(leave)}>
             {t('Çıkış')}

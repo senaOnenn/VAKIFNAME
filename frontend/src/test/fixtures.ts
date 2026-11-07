@@ -18,3 +18,12 @@ export function stubFetch(routes: Routes) {
   vi.stubGlobal('fetch', fetchMock)
   return fetchMock
 }
+
+/** R6.2: oyun yalnızca hesapla oynanır. Oyun ve ilerleme testlerinde oturumu açık oyuncu (`/auth/me` yanıtı). */
+export const PLAYER = { user_id: 'u-oyuncu', email: 'oyuncu@example.com', display_name: null, provider: 'password' as const }
+export const SIGNED_IN = { body: PLAYER }
+/** R6.3: karakterini seçmiş oyuncunun profili (oyun ekranları karakter seçilmeden açılmaz). */
+/** R6.4: sunucunun hesapladığı ilerleme (testlerde sabit). */
+export const progressOf = (xp: number, level = 1, levelXp = 0, next: number | null = 50, stage = 'baslangic', recent: unknown[] = []) =>
+  ({ xp, level, level_xp: levelXp, next_level_xp: next, stage, max_level: 8, recent })
+export const PROFILE = { body: { character: { id: 'gezgin', chosen_at: '2026-11-01T10:00:00+00:00' }, progress: progressOf(0) } }

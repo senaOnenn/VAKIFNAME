@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState, type RefObject } from 'react'
+import { Link } from 'react-router-dom'
 import type { MonumentSummary } from '../api'
 import type { City } from '../cities'
 import { Seal } from '../components/Seal'
@@ -6,7 +7,7 @@ import { useLang } from '../i18n'
 import { prefersReducedMotion, StoryBar, useReveal } from './common'
 import { boxFor, camera, clamp01, coverScale, flowVisibility, mapPoint, MATCH, matchMove, ramp, SCENES, sceneMix, smoothRange, stopsOf, textIn, textOut, type Box, type StopModel } from './engine'
 import { useSceneNavigator } from './navigator'
-import { Scene1Welcome, Scene2Journey, Scene3Map, Scene4City, Scene5Monuments, Scene6Guide, Scene7Game, StoryFinal, type Pilot } from './scenes'
+import { Scene1Welcome, Scene2Map, Scene3City, Scene4Monuments, Scene5Guide, Scene6Game, type Pilot } from './scenes'
 import './story.css'
 
 const BASE = import.meta.env.BASE_URL
@@ -20,8 +21,8 @@ function Art({ i }: { i: number }) {
   return (
     <img
       className="vk-layer__img"
-      src={art(i + 1, s.w)}
-      srcSet={`${art(i + 1, 1280)} 1280w, ${art(i + 1, s.w)} ${s.w}w`}
+      src={art(s.art, s.w)}
+      srcSet={`${art(s.art, 1280)} 1280w, ${art(s.art, s.w)} ${s.w}w`}
       // Dikey telefonda görsel ekrandan geniş gösterilir (kırpma ya da odak penceresi).
       sizes="(max-aspect-ratio: 4/5) 200vw, 100vw"
       alt=""
@@ -43,7 +44,7 @@ function Decor({ i }: { i: number }) {
         <span className="vk-glow vk-glow--slow" style={{ left: '71.5%', top: '40%', ['--s' as string]: '16%' }} />
       </>
     )
-  if (i === 2)
+  if (i === 1)
     // Haritadaki boyalı fenerler süs: gerçek şehir işaretleriyle karışmasın diye kısılır (yerleri görselden ölçüldü).
     return (
       <>
@@ -52,7 +53,7 @@ function Decor({ i }: { i: number }) {
         ))}
       </>
     )
-  if (i === 5)
+  if (i === 4)
     return (
       <>
         <span className="vk-sheen" style={{ left: '58%', top: '10%', width: '36%', height: '52%' }} />
@@ -61,12 +62,22 @@ function Decor({ i }: { i: number }) {
         ))}
       </>
     )
-  if (i === 6)
+  if (i === 5)
+    // Arşiv odası (R6.1): fener ışıkları, masadaki belgelerin üstünde nefes alan sıcak ışık, mühürlerde ara sıra geçen
+    // altın yansıma ve belgelerin çevresinde yükselen zerrecikler. Yerler görselden ölçüldü; parçaların kendisi kopyalanmaz.
     return (
       <>
+        <span className="vk-glow vk-glow--slow" style={{ left: '40%', top: '31%', ['--s' as string]: '9%' }} />
+        <span className="vk-glow vk-glow--slow vk-glow--late" style={{ left: '95.5%', top: '60%', ['--s' as string]: '11%' }} />
+        <span className="vk-warm" style={{ left: '71%', top: '67%' }} />
         <span className="vk-glow vk-glow--seal" style={{ left: '74%', top: '83.5%', ['--s' as string]: '6%' }} />
-        {PARTICLES.slice(0, 8).map(([x, y, d], k) => (
-          <span key={k} className="vk-mote" style={{ left: `${x - 4}%`, top: `${y + 4}%`, ['--d' as string]: `${d}s` }} />
+        {SEALS.map(([x, y, w, ar], k) => (
+          <span key={k} className="vk-glint"
+            style={{ left: `${x}%`, top: `${y}%`, ['--s' as string]: `${w}%`, ['--ar' as string]: ar, ['--d' as string]: `${k * 2.2}s` }} />
+        ))}
+        {DUST.map(([x, y, t, d, z, dx], k) => (
+          <span key={k} className={k % 2 ? 'vk-dust vk-dust--extra' : 'vk-dust'}
+            style={{ left: `${x}%`, top: `${y}%`, ['--t' as string]: `${t}s`, ['--d' as string]: `${-d}s`, ['--z' as string]: `${z}px`, ['--dx' as string]: `${dx}px` }} />
         ))}
       </>
     )
@@ -78,7 +89,15 @@ const PARTICLES: [number, number, number][] = [
   [62, 30, 7], [66, 48, 9], [70, 22, 8], [74, 40, 10], [78, 28, 7.5], [82, 52, 9.5], [86, 34, 8.5],
   [64, 56, 10.5], [72, 58, 8], [80, 18, 9], [88, 46, 7], [68, 36, 11], [76, 50, 9], [84, 24, 10],
 ]
-// Mühür birleşmesi (6 → 7): parçacıkların başlangıç yönleri (ekranın yüzdesi).
+// Oyun sahnesindeki mühürler: [x %, y %, genişlik %, en/boy] (perspektifte elips; scene-7 görselinden ölçüldü).
+const SEALS: [number, number, number, number][] = [[54.3, 74.9, 8.3, 1.93], [64.45, 78.75, 7, 1.84], [73.75, 83.05, 6.9, 1.7]]
+// Zerrecikler: [x %, y %, süre s, faz s, boyut px, yatay sapma px] (havada süzülen parçaların ve masadaki belgelerin çevresi).
+const DUST: [number, number, number, number, number, number][] = [
+  [60, 48, 19, 2, 3, 10], [64, 36, 23, 9, 2, -8], [68, 56, 17, 5, 3, 6], [71, 30, 21, 14, 2, 12], [74, 50, 25, 7, 4, -10],
+  [77, 40, 18, 11, 2, 8], [80, 60, 22, 3, 3, -6], [83, 28, 20, 16, 2, 10], [86, 46, 24, 1, 3, -12], [62, 66, 21, 12, 2, 7],
+  [79, 70, 19, 6, 3, -8], [69, 22, 26, 18, 2, 9], [88, 34, 18, 8, 2, -7], [57, 58, 23, 15, 3, 11],
+]
+// Mühür birleşmesi (5 → 6): parçacıkların başlangıç yönleri (ekranın yüzdesi).
 const MERGE: [number, number][] = [
   [-38, -22], [-30, 18], [-18, -34], [-8, 30], [6, -36], [16, 28], [28, -20], [36, 14],
   [-42, 4], [42, -4], [-24, -8], [24, 6], [-12, 16], [12, -18], [0, 34], [0, -30],
@@ -98,15 +117,10 @@ function Stage({ loadUpTo }: { loadUpTo: number }) {
             </div>
             <div className={`vk-veil vk-veil--${i + 1}`} />
           </div>
-          {/* 1 → 2 ve 2 → 3 geçişlerinin ara katmanları: iki görselin üstünde, haritanın altında */}
-          {i === 1 && (
-            <>
-              <div className="vk-shade" />
-              <div className="vk-stars" />
-            </>
-          )}
-          {/* 3 → 4: Bursa'nın altın ışığı (harita ve panoramanın üstünde) */}
-          {i === 3 && <div className="vk-bloom" />}
+          {/* 1 → 2 geçişinin ara katmanı (yıldızlar): karşılama görselinin üstünde, haritanın altında */}
+          {i === 0 && <div className="vk-stars" />}
+          {/* 2 → 3: Bursa'nın altın ışığı (harita ve panoramanın üstünde) */}
+          {i === 2 && <div className="vk-bloom" />}
         </Fragment>
       ))}
       <div className="vk-merge">
@@ -134,10 +148,23 @@ function useStoryEngine(root: RefObject<HTMLElement | null>, bar: RefObject<HTML
     const cams = SCENES.map((_, i) => [...el.querySelectorAll<HTMLElement>(`[data-cam="${i}"]`)])
     const boxes = SCENES.map((_, i) => [...el.querySelectorAll<HTMLElement>(`[data-box="${i}"]`)])
     const merge = el.querySelector<HTMLElement>('.vk-merge')
-    const shade = el.querySelector<HTMLElement>('.vk-shade')
     const stars = el.querySelector<HTMLElement>('.vk-stars')
     const bloom = el.querySelector<HTMLElement>('.vk-bloom')
     const frames = sections.map((s) => s.querySelector<HTMLElement>('.vk-ch__frame'))
+    const sheens = [...el.querySelectorAll<HTMLElement>('.vk-sheen')]
+    // R6.12: stil yazımları önbellekli. Değer değişmediyse dokunulmaz; özellikle kökteki (`--m`, `--map`) ve bölümlerdeki
+    // (`--tv`, `--tvo`) değişkenler her karede yeniden yazılınca bütün alt ağacın stili yeniden hesaplanıyordu
+    // (ölçüm: 80 karelik kaydırmada 1,9 sn stil hesabı). Görüntü aynıdır; yalnızca gereksiz iş kalkar.
+    const written = new WeakMap<HTMLElement, Map<string, string>>()
+    const put = (n: HTMLElement | null | undefined, prop: string, v: string) => {
+      if (!n) return
+      let m = written.get(n)
+      if (!m) written.set(n, (m = new Map()))
+      if (m.get(prop) === v) return
+      m.set(prop, v)
+      if (prop.startsWith('--')) n.style.setProperty(prop, v)
+      else n.style.setProperty(prop.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`), v)
+    }
     const veils = layers.map((L) => L.querySelector<HTMLElement>('.vk-veil'))
     const marks = sections.map((s) => s.querySelector<HTMLElement>('.vk-snapmark'))
     const contents = sections.map((s) => s.querySelector<HTMLElement>('[data-content]'))
@@ -149,7 +176,7 @@ function useStoryEngine(root: RefObject<HTMLElement | null>, bar: RefObject<HTML
     let heights: number[] = []
     let rest: Box[] = []
     let frame = 0
-    let need = 2
+    let need = 1
     // Panolar ve testler için: sahnenin dinlenme anı (sabit aralığın ortası) ve geçiş bölgesi.
     const w = window as unknown as { __vkRest?: (i: number) => number | null; __vkZone?: number; __vkStops?: () => number[] }
     w.__vkZone = 0.45
@@ -221,13 +248,14 @@ function useStoryEngine(root: RefObject<HTMLElement | null>, bar: RefObject<HTML
         } else {
           p = (window.scrollY - tops[i]) / Math.max(1, heights[i] - vh)
           inn = textIn(p, i === 0)
-          out = Math.min(textOut(p), nextOut)
+          // Son sahne hikâyenin sonudur: metni sayfanın sonunda da ekranda kalır (çekilmez).
+          out = i === sections.length - 1 ? nextOut : Math.min(textOut(p), nextOut)
         }
         if (reduced) inn = out = 1
         const tv = Math.min(inn, out)
         tvs[i] = tv
-        s.style.setProperty('--tv', tv.toFixed(3))
-        s.style.setProperty('--tvo', out.toFixed(3))
+        put(s, '--tv', tv.toFixed(3))
+        put(s, '--tvo', out.toFixed(3))
         // Giriş eşiği çift yönlü: sahneye girerken bir kez tetiklenir, sahnenin önüne geri çıkınca sıfırlanır.
         if (!entered[i] && inn >= 0.6 && out > 0.5) entered[i] = true
         else if (entered[i] && inn <= 0.05) entered[i] = false
@@ -236,21 +264,26 @@ function useStoryEngine(root: RefObject<HTMLElement | null>, bar: RefObject<HTML
         return p === null ? null : clamp01(p)
       })
       el.dataset.scene = String(mix.active + 1)
-      const m = mix.b[6] ?? 0
-      el.style.setProperty('--m', m.toFixed(4))
-      if (merge) merge.style.visibility = !reduced && m > 0 && m < 1 ? 'visible' : 'hidden'
+      const m = mix.b[5] ?? 0
+      put(el, '--m', m.toFixed(4))
+      const merging = !reduced && m > 0 && m < 1
+      put(merge, 'visibility', merging ? 'visible' : 'hidden')
+      // Gizli birleşme katmanındaki altın mührün parıltısı (karıştırma modlu, her karede boyanır) durur.
+      merge?.toggleAttribute('data-idle', !merging)
       let bloomOn = 0
       let sheenOn = 0
-      // Harita işaretleri haritanın görünürlüğünü izler (4. sahne üstüne binince solar).
-      el.style.setProperty('--map', (mix.b[2] * (1 - mix.b[3])).toFixed(4))
+      // Harita işaretleri haritanın görünürlüğünü izler (3. sahne üstüne binince solar).
+      put(el, '--map', (mix.b[1] * (1 - mix.b[2])).toFixed(4))
       const doc = document.documentElement
-      bar.current?.style.setProperty('--story', clamp01(window.scrollY / Math.max(1, doc.scrollHeight - vh)).toFixed(4))
+      put(bar.current, '--story', clamp01(window.scrollY / Math.max(1, doc.scrollHeight - vh)).toFixed(4))
       bar.current?.toggleAttribute('data-solid', window.scrollY > 24)
-      let shadeOn = 0
       let starsOn = 0
       layers.forEach((L, i) => {
         const vis = mix.visible[i]
-        L.style.visibility = vis ? 'visible' : 'hidden'
+        put(L, 'visibility', vis ? 'visible' : 'hidden')
+        // R6.12: görünmeyen katmanın süs animasyonları (ışık, zerrecik, parıltı) duraklar; katman görününce kaldığı yerden
+        // sürer. Ölçüm: 41 sonsuz animasyon gizli katmanlarda da çalışıyor, boştayken ana iş parçacığını dolduruyordu.
+        L.toggleAttribute('data-idle', !vis)
         if (!vis) return
         const bIn = mix.b[i]
         const bOut = mix.b[i + 1] ?? 0
@@ -270,11 +303,6 @@ function useStoryEngine(root: RefObject<HTMLElement | null>, bar: RefObject<HTML
           origin = `${mm.ox}% ${mm.oy}%`
           feather = mm.scale < 1 ? clamp01((1 - mm.scale) / 0.25) : 0
           const bump = Math.sin(Math.PI * bIn)
-          if (mIn.shade) {
-            // Gölge, iki figürün birlikte görünebileceği karışım penceresini tümüyle örter (hayalet figür olmasın).
-            shadeOn = mIn.shade * Math.min(smoothRange(bIn, mIn.fade[0] - 0.16, mIn.fade[0] - 0.02), 1 - smoothRange(bIn, mIn.fade[1] + 0.02, mIn.fade[1] + 0.16))
-            shade?.style.setProperty('transform', `translate3d(${mm.mx.toFixed(1)}px, ${mm.my.toFixed(1)}px, 0)`)
-          }
           if (mIn.stars) starsOn = bump
           const at = `translate3d(${mm.mx.toFixed(1)}px, ${mm.my.toFixed(1)}px, 0)`
           if (mIn.bloom) {
@@ -296,11 +324,11 @@ function useStoryEngine(root: RefObject<HTMLElement | null>, bar: RefObject<HTML
         } else if (!reduced && mOut && bOut > 0 && bOut < 1) {
           // Bu sahne eşleştirmeli geçişle çıkıyor (altta tam opak kalır)
           const mm = matchMove(mOut, bOut, anchor(i, mOut.out), anchor(i + 1, mOut.in), 'out')
-          // Genişleyerek çıkan görsel ötelense de ekranı kaplar (kenarda ince şerit kalmasın); geri çekilen (2 → 3) kaplamaz.
+          // Genişleyerek çıkan görsel ötelense de ekranı kaplar (kenarda ince şerit kalmasın); geri çekilen (1 → 2) kaplamaz.
           const sc = rest[i].window || mOut.outScale < 1 ? mm.scale : coverScale(rest[i], mm.ox / 100, mm.oy / 100, mm.scale, mm.dx, mm.dy, window.innerWidth, vh)
           tf = `translate3d(${mm.dx.toFixed(1)}px, ${mm.dy.toFixed(1)}px, 0) scale(${sc.toFixed(4)})`
           origin = `${mm.ox}% ${mm.oy}%`
-          // Belirgin biçimde geri çekilen görselin (2 → 3) kenarı geçişin başında erir; oval bir çerçeve gibi okunmasın.
+          // Belirgin biçimde geri çekilen görselin (1 → 2) kenarı geçişin başında erir; oval bir çerçeve gibi okunmasın.
           feather = mOut.outScale < 0.9 ? smoothRange(bOut, 0, 0.3) : 0
         } else {
           // Sahnede dururken hafif kayma; sabitlenen bölümde ilerlemeye, diğerlerinde konuma göre
@@ -309,24 +337,25 @@ function useStoryEngine(root: RefObject<HTMLElement | null>, bar: RefObject<HTML
           tf = reduced ? 'none' : `translate3d(${c.tx}%, ${c.ty.toFixed(3)}%, 0) scale(${c.scale.toFixed(4)})`
           origin = `${c.ox}% ${c.oy}%`
         }
-        L.style.opacity = opacity.toFixed(4)
+        put(L, 'opacity', opacity.toFixed(4))
         // Okunurluk perdesi yalnızca metin ekrandayken: geçiş anında görüntü gereksiz kararmaz.
-        const veil = veils[i]
-        if (veil) veil.style.opacity = (reduced ? 1 : tvs[i]).toFixed(3)
+        put(veils[i], 'opacity', (reduced ? 1 : tvs[i]).toFixed(3))
         if (!(mIn?.iris && bIn > 0 && bIn < 1)) for (const n of cams[i]) n.classList.remove('is-iris')
         for (const n of cams[i]) {
-          n.style.transform = reduced ? 'none' : tf
-          n.style.transformOrigin = origin
-          n.style.setProperty('--fe', feather.toFixed(3))
+          put(n, 'transform', reduced ? 'none' : tf)
+          put(n, 'transformOrigin', origin)
+          put(n, '--fe', feather.toFixed(3))
           n.classList.toggle('is-feather', feather > 0.001)
         }
       })
-      if (shade) shade.style.opacity = shadeOn.toFixed(3)
-      if (stars) stars.style.opacity = starsOn.toFixed(3)
-      if (bloom) bloom.style.opacity = bloomOn.toFixed(3)
-      el.style.setProperty('--sheen', sheenOn.toFixed(3))
-      if (mix.active + 2 > need) {
-        need = Math.min(SCENES.length, mix.active + 2)
+      put(stars, 'opacity', starsOn.toFixed(3))
+      put(bloom, 'opacity', bloomOn.toFixed(3))
+      // `--sheen` yalnızca parıltı öğelerine yazılır (kökte bütün ağacı etkiliyordu).
+      for (const n of sheens) put(n, '--sheen', sheenOn.toFixed(3))
+      // Görseller sahne yaklaşınca yüklenir: kullanıcı kaydırmaya başlayınca bir sonraki sahne de hazırlanır.
+      const want = Math.min(SCENES.length, mix.active + (window.scrollY > 0 ? 2 : 1))
+      if (want > need) {
+        need = want
         onNeed(need)
       }
     }
@@ -359,7 +388,7 @@ function useStoryEngine(root: RefObject<HTMLElement | null>, bar: RefObject<HTML
 }
 
 /**
- * Ana sayfanın 7 sahnelik hikâyesi: karşılama → yolculuk → Türkiye haritası → şehir → eserler → rehber → oyun ve final.
+ * Ana sayfanın 6 sahnelik hikâyesi: karşılama → Türkiye haritası → şehir → eserler → rehber → oyun (son sahne; final ekranı yok).
  * Kaydırma kilitlenmez; sahneler arasında sert kesme yoktur. Hareket azaltılmışsa yalnızca yumuşak geçiş kalır.
  */
 export function StoryExperience({ cities, pilot, monuments, loading, error, reload, hasFilm, onFilm }: {
@@ -369,8 +398,15 @@ export function StoryExperience({ cities, pilot, monuments, loading, error, relo
   const { t } = useLang()
   const root = useRef<HTMLDivElement>(null)
   const bar = useRef<HTMLElement>(null)
-  const [loadUpTo, setLoadUpTo] = useState(2)
+  // R6.12: ilk açılışta yalnızca ilk sahnenin görseli iner (LCP öğesi; bant genişliğini paylaşmasın). İkinci sahne
+  // görseli ilk sahne çizildikten sonra boşta yüklenir; kullanıcı daha önce kaydırırsa motor onu hemen ister (`onNeed`).
+  const [loadUpTo, setLoadUpTo] = useState(1)
   const onNeed = useRef((n: number) => setLoadUpTo((v) => Math.max(v, n))).current
+  useEffect(() => {
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }
+    const id = window.setTimeout(() => (w.requestIdleCallback ? w.requestIdleCallback(() => onNeed(2), { timeout: 2000 }) : onNeed(2)), 1500)
+    return () => window.clearTimeout(id)
+  }, [onNeed])
   const model = useRef<StopModel>({ tops: [], heights: [], pinned: [], vh: 0, docEnd: 0 }).current
   useStoryEngine(root, bar, onNeed, model)
   useSceneNavigator(root, model)
@@ -381,13 +417,14 @@ export function StoryExperience({ cities, pilot, monuments, loading, error, relo
       <StoryBar barRef={bar} />
       <main className="vk-x__main" aria-label={t('VAKIFNAME tanıtım hikâyesi')}>
         <Scene1Welcome hasFilm={hasFilm} onFilm={onFilm} />
-        <Scene2Journey />
-        <Scene3Map cities={cities} pilot={pilot} />
-        <Scene4City pilot={pilot} />
-        <Scene5Monuments pilot={pilot} monuments={monuments} loading={loading} error={error} reload={reload} />
-        <Scene6Guide />
-        <Scene7Game pilot={pilot} />
-        <StoryFinal />
+        <Scene2Map cities={cities} pilot={pilot} />
+        <Scene3City pilot={pilot} />
+        <Scene4Monuments pilot={pilot} monuments={monuments} loading={loading} error={error} reload={reload} />
+        <Scene5Guide />
+        <Scene6Game pilot={pilot} />
+        {/* R6.2: final ekranı yok; hikâye oyun tanıtımıyla biter. Aydınlatma metni son ekranın altında kalır (ek
+            kaydırma alanı oluşturmaz). */}
+        <p className="vk-x__legal"><Link to="/gizlilik">{t('Aydınlatma metni')}</Link></p>
       </main>
     </div>
   )

@@ -1,0 +1,110 @@
+/* ══ R6.5 Şehir rotası: harita ve parşömen rota defteri yan yana (telefonda alt alta). ═════════════════════════════ */
+
+.vk-routepage {
+  width: min(78rem, 100%);
+  margin: 0 auto;
+  padding: var(--vk-space-6) var(--vk-space-4) var(--vk-space-7);
+  display: grid;
+  gap: var(--vk-space-5);
+  color: var(--vk-ivory);
+}
+.vk-routepage__head {
+  display: grid;
+  gap: var(--vk-space-1);
+}
+.vk-routepage__eyebrow {
+  margin: 0;
+  color: var(--vk-gold-bright);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.vk-routepage__head h1 {
+  margin: 0;
+  font: 600 clamp(2.2rem, 4.6vw, 3.4rem) / 1.04 var(--vk-font-display);
+}
+.vk-routepage__count {
+  margin: 0;
+  color: var(--vk-ivory-dim);
+  font: italic 500 1.05rem var(--vk-font-display);
+}
+.vk-routepage__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: start;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+.vk-routepage__map {
+  position: sticky;
+  top: var(--vk-space-4);
+  display: grid;
+  gap: var(--vk-space-3);
+}
+.vk-routepage__map .vk-routemap,
+.vk-routepage__map > div:first-child {
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgb(201 162 75 / 0.45), 0 24px 40px -26px rgb(0 0 0 / 0.9);
+}
+.vk-routepage__geo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vk-space-2) var(--vk-space-3);
+}
+.vk-routepage__geo p {
+  margin: 0;
+  color: var(--vk-ivory-dim);
+  font-size: 0.9rem;
+}
+.vk-routepage__folio {
+  display: grid;
+  gap: var(--vk-space-5);
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+}
+.vk-routepage__next {
+  display: grid;
+  gap: var(--vk-space-1);
+}
+.vk-routepage__meta {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: 0.92rem;
+}
+.vk-routepage__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vk-space-2) var(--vk-space-4);
+}
+.vk-routepage__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font: 500 1rem var(--vk-font-display);
+  text-decoration: underline;
+  text-decoration-color: rgb(122 90 22 / 0.5);
+  text-underline-offset: 0.22em;
+}
+.vk-routepage__ledger,
+.vk-routepage__seals {
+  display: grid;
+  gap: var(--vk-space-2);
+  padding-top: var(--vk-space-4);
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 900px) {
+  .vk-routepage__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vk-routepage__map {
+    position: static;
+  }
+}
+@media (max-width: 640px) {
+  .vk-routepage {
+    padding: var(--vk-space-5) var(--vk-space-3) var(--vk-space-6);
+  }
+}

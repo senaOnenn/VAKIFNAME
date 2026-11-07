@@ -1,7 +1,11 @@
 import '@testing-library/jest-dom/vitest'
-import { cleanup } from '@testing-library/react'
+import { cleanup, configure } from '@testing-library/react'
 import { afterEach } from 'vitest'
 import { resetLangForTests } from '../app/i18n'
+
+// R6.12: ekranlar ayrı parçalardan yüklenir (React.lazy); Vitest bir modülü ilk kullanımda derlediği için yük altında
+// ilk görünüm 1 sn'yi aşabiliyor. `findBy…`/`waitFor` için bekleme üst sınırı 3 sn (başarılı test yine hemen biter).
+configure({ asyncUtilTimeout: 3000 })
 
 // Node 25'in deneysel global `localStorage`'ı (--localstorage-file yolu verilmeden) jsdom'unkini gölgeler ve metotları
 // çalışmaz. Depolama kullanılamıyorsa testlere bellek içi bir Storage verilir.

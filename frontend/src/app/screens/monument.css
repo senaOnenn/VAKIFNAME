@@ -1,3 +1,7 @@
+/* Eser sayfasının ortak sütunu: kapak başlığı ve gövde aynı genişlikte hizalanır (masaüstünde dengeli kenar boşluğu). */
+.vk-mon {
+  --vk-mon-max: 64rem;
+}
 .vk-mon__hero {
   position: relative;
   min-height: min(62vh, 560px);
@@ -25,7 +29,7 @@
   display: grid;
   gap: var(--vk-space-2);
   justify-items: start;
-  max-width: 76rem;
+  max-width: var(--vk-mon-max);
   width: 100%;
   margin: 0 auto;
   padding: var(--vk-space-6) var(--vk-space-4) var(--vk-space-5);
@@ -43,16 +47,27 @@
   max-width: 60%;
   padding: 2px 8px;
   border-radius: 6px;
-  background: rgb(9 12 34 / 0.6);
+  background: rgb(9 12 34 / 0.82); /* beyaz fotoğraf üstünde de ≥ 4.5:1 (R3) */
   color: var(--vk-ivory-dim);
   font-size: 0.7rem;
 }
 .vk-mon__body {
-  max-width: 60rem;
+  max-width: var(--vk-mon-max);
   margin: 0 auto;
   padding: var(--vk-space-5) var(--vk-space-4) var(--vk-space-6);
   display: grid;
   gap: var(--vk-space-6);
+}
+/* Telefonda kapak ilk ekranı kaplamasın: 360–420 px (görsel "cover" ile kırpılır; dar ekranda yükseklik azaldıkça yanlardan
+   daha az kesilir, mimari daha çok görünür). Başlık, konum ve fotoğraf atfı aynı yerde kalır. */
+@media (max-width: 640px) {
+  .vk-mon__hero {
+    min-height: clamp(360px, 50vh, 420px);
+  }
+  .vk-mon__title {
+    padding-top: var(--vk-space-5);
+    padding-bottom: var(--vk-space-4);
+  }
 }
 .vk-narrator--soon {
   position: relative;
@@ -96,11 +111,9 @@
   gap: var(--vk-space-3);
 }
 .vk-facts h2,
-.vk-gallery h2 {
+.vk-mon__gallery h2,
+.vk-mon__visit h2 {
   font-size: 1.9rem;
-}
-.vk-facts__lead {
-  color: var(--vk-ivory-dim);
 }
 .vk-facts ol {
   margin: 0;
@@ -120,6 +133,16 @@
 .vk-fact h3 {
   font-size: 1.3rem;
   color: var(--vk-gold-bright);
+}
+/* Geniş sütunda bile kayıt metni okunur satır uzunluğunda kalır. */
+.vk-fact > p:not(.vk-fact__meta) {
+  max-width: 48rem;
+}
+/* "Tüm tarihî kayıtları gör": ilk üç kayıttan sonra; açılınca hepsi aynı listede, aynı sırada. */
+.vk-facts__more {
+  justify-self: start;
+  min-height: 44px;
+  font-size: 0.95rem;
 }
 .vk-fact__tr {
   margin-top: calc(-1 * var(--vk-space-2));
@@ -147,28 +170,155 @@
   border-color: rgb(233 200 116 / 0.6);
   color: var(--vk-gold-bright);
 }
-.vk-gallery ul {
-  list-style: none;
-  margin: var(--vk-space-3) 0 0;
-  padding: 0;
+/* ── R3: giriş (künye + ziyaret uyarısı | kısa giriş + bâni) ─────────────────────────────────────────────────────
+   DOM'da yan sütun önce gelir: telefonda künye ve ziyaret uyarısı en üstte. Geniş ekranda ana sütun solda. */
+.vk-mon__intro {
   display: grid;
-  gap: var(--vk-space-4);
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: var(--vk-space-6);
 }
-.vk-gallery figure {
-  margin: 0;
+.vk-mon__side,
+.vk-mon__about {
+  display: grid;
+  align-content: start;
+  gap: var(--vk-space-5);
+  min-width: 0;
+}
+@media (min-width: 900px) {
+  .vk-mon__intro {
+    grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 1fr);
+    grid-template-areas: 'about side';
+    gap: var(--vk-space-7);
+  }
+  .vk-mon__side {
+    grid-area: side;
+  }
+  .vk-mon__about {
+    grid-area: about;
+  }
+}
+.vk-mon__lead {
+  max-width: var(--vk-measure);
+  font: 500 clamp(1.2rem, 2.2vw, 1.45rem) / 1.5 var(--vk-font-display);
+  color: var(--vk-ivory);
+}
+/* Künye: kutu yok; ince ayraçlı terim–değer satırları. */
+.vk-sheet {
   display: grid;
   gap: var(--vk-space-2);
 }
-.vk-gallery img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: var(--vk-radius);
+.vk-sheet__h {
+  color: var(--vk-gold);
+  font: 600 var(--vk-text-xs) var(--vk-font-ui);
+  letter-spacing: var(--vk-tracking-eyebrow);
+  text-transform: uppercase;
 }
-.vk-gallery figcaption {
+.vk-sheet__list {
+  margin: 0;
+  border-top: 1px solid var(--vk-line);
+}
+.vk-sheet__row {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 38%) minmax(0, 1fr);
+  gap: var(--vk-space-3);
+  padding: var(--vk-space-2) 0;
+  border-bottom: 1px solid var(--vk-line-faint);
+}
+.vk-sheet__row dt {
   color: var(--vk-ivory-dim);
-  font-size: 0.75rem;
+  font-size: var(--vk-text-sm);
+}
+.vk-sheet__row dd {
+  margin: 0;
+  color: var(--vk-ivory);
+  font-size: var(--vk-text-md);
+  overflow-wrap: anywhere;
+}
+
+/* ── R3: galeri (PhotoGallery) ──────────────────────────────────────────────────────────────────────────────────
+   Bileşenin eski tema değişkenleri yalnızca burada palet A'ya eşlenir (yeşil yok); dahili envanter görünümü değişmez.
+   Fotoğraflar kırpılmaz ve özgün boyutundan büyütülmez (bileşen kuralı). */
+.vk-mon__gallery {
+  --green-950: var(--vk-night-deep);
+  --green-900: rgb(9 12 34 / 0.92);
+  --paper: var(--vk-ivory);
+  --gold-300: var(--vk-gold-bright);
+  --copper: var(--vk-gold-bright);
+  --radius-sm: var(--vk-radius);
+  display: grid;
+  gap: var(--vk-space-4);
+}
+.vk-mon__gallery .photo-gallery__main {
+  border-radius: var(--vk-radius-lg);
+  box-shadow: inset 0 0 0 1px var(--vk-line-faint);
+}
+.vk-mon__gallery .photo-gallery__stage {
+  min-height: clamp(16rem, 42vw, 34rem);
+}
+.vk-mon__gallery .photo-gallery__main figcaption {
+  padding: var(--vk-space-2) var(--vk-space-4);
+  color: var(--vk-ivory-dim);
+}
+.vk-mon__gallery .photo-gallery__nav,
+.vk-mon__gallery .photo-gallery__close {
+  background: rgb(9 12 34 / 0.7);
+  color: var(--vk-ivory);
+}
+.vk-mon__gallery .photo-gallery__lightbox {
+  background: rgb(9 12 34 / 0.97);
+}
+.vk-mon__gallery .photo-gallery__thumbs button {
+  opacity: 0.8;
+}
+.vk-mon__gallery .photo-gallery__thumbs button.is-active,
+.vk-mon__gallery .photo-gallery__thumbs button:hover {
+  opacity: 1;
+}
+@media (max-width: 640px) {
+  .vk-mon__gallery .photo-gallery__nav {
+    width: 2.75rem; /* dokunma hedefi ≥ 44 px */
+    height: 2.75rem;
+  }
+}
+/* "Fotoğraf bilgileri": bütün fotoğrafların atıf ve lisansı, açılır bölümde (özet satırı klavyeyle açılır). */
+.vk-mon__credits {
+  color: var(--vk-ivory-dim);
+  font-size: 0.8rem;
+}
+.vk-mon__credits summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* dokunma hedefi */
+  color: var(--vk-gold-bright);
+  font-weight: 600;
+  cursor: pointer;
+}
+.vk-mon__credits summary:focus-visible {
+  border-radius: var(--vk-radius-sm);
+}
+.vk-mon__credits ol {
+  margin: var(--vk-space-2) 0 0;
+  padding-left: 1.4rem;
+  display: grid;
+  gap: var(--vk-space-1);
+}
+.vk-mon__credits a {
+  color: var(--vk-gold-bright);
+}
+
+/* ── R3: konum ve rota ───────────────────────────────────────────────────────────────────────────────────────── */
+.vk-mon__visit {
+  display: grid;
+  gap: var(--vk-space-3);
+  padding-top: var(--vk-space-5);
+  border-top: 1px solid var(--vk-line-faint);
+}
+.vk-mon__address {
+  color: var(--vk-ivory-dim);
+}
+.vk-mon__visit-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-3);
 }
 @keyframes vk-kenburns {
   from {
@@ -185,15 +335,16 @@
 }
 
 /* Oyun paneline bağlantı: katalog sayfasında yalnızca durum + geçiş (oyun kontrolleri panelde). */
+/* Oyun bağlantısı: sayfanın sonunda, ikincil; düz ve ince kenarlı (ana çağrı eser ve hikâyesidir). */
 .vk-gamelink {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
   gap: var(--vk-space-3) var(--vk-space-4);
-  padding: var(--vk-space-4) var(--vk-space-5);
-  border-radius: var(--vk-radius-lg);
-  border: 1px solid rgb(201 162 75 / 0.35);
-  background: linear-gradient(160deg, rgb(35 43 102 / 0.6), rgb(15 19 48 / 0.8));
+  padding: var(--vk-space-3) var(--vk-space-4);
+  border-radius: var(--vk-radius);
+  border: 1px solid var(--vk-line-faint);
+  background: rgb(9 12 34 / 0.35);
 }
 .vk-gamelink__text {
   display: grid;
@@ -201,7 +352,7 @@
   min-width: 0;
 }
 .vk-gamelink h2 {
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   color: var(--vk-ivory);
 }
 .vk-gamelink p:not(.vk-page__eyebrow) {
@@ -219,4 +370,215 @@
   .vk-gamelink .vk-btn {
     grid-column: auto;
   }
+}
+
+/* ══ R3.1: galeriden sonrası — sergi dili ═══════════════════════════════════════════════════════════════════════
+   Kapak, künye ve bâni değişmez. Kurallar `.vk-mon` kapsamındadır: aynı bileşenleri kullanan /rehber ve yönetim
+   ekranları etkilenmez. Yeni gölge, parlama veya çerçeve yok; bölümler ince ayraç ve tutarlı başlıkla ayrılır. */
+
+/* Bölümler arası ritim: kutu yerine ince ayraç; boşluk 3rem (gap + üst boşluk). */
+.vk-mon .vk-mon__body {
+  gap: var(--vk-space-5);
+}
+.vk-mon .vk-mon__gallery,
+.vk-mon .vk-narr,
+.vk-mon .vk-facts,
+.vk-mon .vk-mon__visit {
+  padding-top: var(--vk-space-5);
+  border-top: 1px solid var(--vk-line-faint);
+}
+/* Tek başlık dili: serif, fildişi, altında kısa altın çizgi. */
+.vk-mon .vk-mon__gallery > h2,
+.vk-mon .vk-narr__head h2,
+.vk-mon .vk-facts > h2,
+.vk-mon .vk-mon__visit > h2 {
+  font-size: clamp(1.6rem, 2.6vw, 1.9rem);
+  color: var(--vk-ivory);
+}
+.vk-mon .vk-mon__gallery > h2::after,
+.vk-mon .vk-narr__head h2::after,
+.vk-mon .vk-facts > h2::after,
+.vk-mon .vk-mon__visit > h2::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 2px;
+  margin-top: var(--vk-space-2);
+  background: var(--vk-gold);
+}
+
+/* ── Galeri: koyu sahnede büyük fotoğraf (oranı korunur), altında etkin fotoğrafın atfı, düzenli küçük resimler ── */
+.vk-mon .vk-mon__gallery {
+  gap: var(--vk-space-3);
+}
+.vk-mon .vk-mon__gallery .photo-gallery {
+  gap: var(--vk-space-3);
+}
+.vk-mon .vk-mon__gallery .photo-gallery__main {
+  overflow: visible;
+  background: none;
+  box-shadow: none;
+}
+.vk-mon .vk-mon__gallery .photo-gallery__stage {
+  border-radius: var(--vk-radius-lg);
+  overflow: hidden;
+  background: var(--vk-night-deep);
+  min-height: clamp(15rem, 40vw, 32rem);
+}
+.vk-mon .vk-mon__gallery .photo-gallery__zoom img {
+  max-height: min(70vh, 34rem);
+}
+.vk-mon .vk-mon__gallery .photo-gallery__main figcaption {
+  padding: var(--vk-space-2) 0 0;
+  background: none;
+  color: var(--vk-ivory-dim);
+  font-size: 0.8rem;
+}
+.vk-mon .vk-mon__gallery .photo-gallery__count {
+  color: var(--vk-gold-bright);
+  opacity: 1;
+}
+.vk-mon .vk-mon__gallery .photo-gallery__thumbs {
+  gap: var(--vk-space-2);
+  padding-bottom: var(--vk-space-1);
+}
+.vk-mon .vk-mon__gallery .photo-gallery__thumbs li {
+  flex-basis: 96px;
+}
+.vk-mon .vk-mon__gallery .photo-gallery__thumbs button {
+  width: 96px;
+  height: 72px; /* 4:3 küçük resim; ana fotoğraf kırpılmaz */
+  border-radius: var(--vk-radius-sm);
+  border-width: 2px;
+}
+@media (max-width: 640px) {
+  .vk-mon .vk-mon__gallery .photo-gallery__thumbs li {
+    flex-basis: 72px;
+  }
+  .vk-mon .vk-mon__gallery .photo-gallery__thumbs button {
+    width: 72px;
+    height: 54px;
+  }
+}
+
+/* ── Tarihçe ve kaynaklar: numaralı arşiv listesi (kart tekrarı yok) ───────────────────────────────────────── */
+.vk-mon .vk-facts ol {
+  counter-reset: vk-fact;
+  gap: 0;
+  border-top: 1px solid var(--vk-line);
+}
+.vk-mon .vk-fact {
+  counter-increment: vk-fact;
+  position: relative;
+  gap: var(--vk-space-2);
+  padding: var(--vk-space-4) 0 var(--vk-space-4) 4rem;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border-bottom: 1px solid var(--vk-line-faint);
+}
+/* Sıra numarası süstür (liste zaten sıralı): ekran okuyucuya okunmaz. */
+.vk-mon .vk-fact::before {
+  content: counter(vk-fact, decimal-leading-zero);
+  content: counter(vk-fact, decimal-leading-zero) / '';
+  position: absolute;
+  left: 0;
+  top: var(--vk-space-4);
+  font: 600 1.6rem/1.1 var(--vk-font-display);
+  color: var(--vk-gold);
+}
+.vk-mon .vk-fact h3 {
+  font-size: 1.3rem;
+  color: var(--vk-ivory);
+}
+.vk-mon .vk-fact > p:not(.vk-fact__meta):not(.vk-fact__tr) {
+  color: var(--vk-ivory-dim);
+}
+.vk-mon .vk-fact__meta {
+  gap: var(--vk-space-2) var(--vk-space-3);
+}
+.vk-mon .vk-fact__meta a {
+  overflow-wrap: anywhere;
+}
+.vk-mon .vk-facts__more {
+  margin-top: var(--vk-space-2);
+}
+@media (max-width: 640px) {
+  .vk-mon .vk-fact {
+    padding-left: 2.75rem;
+  }
+  .vk-mon .vk-fact::before {
+    font-size: 1.25rem;
+  }
+}
+
+/* ── Anlatım: konuşma balonu yerine editoryal alıntı (sola hizalı, altın kenar), kutu yok ──────────────────── */
+.vk-mon .vk-narr {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  background: none;
+}
+.vk-mon .vk-narr__head {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.vk-mon .vk-narr__sub {
+  min-height: 5rem;
+  text-align: left;
+  justify-items: start;
+  padding: var(--vk-space-1) 0 var(--vk-space-1) var(--vk-space-4);
+  border-radius: 0;
+  background: none;
+  border-left: 2px solid var(--vk-gold);
+}
+.vk-mon .vk-narr__sub::before {
+  content: none; /* konuşma balonu oku */
+}
+.vk-mon .vk-narr__line {
+  font: 500 clamp(1.15rem, 2vw, 1.35rem) / 1.55 var(--vk-font-display);
+  color: var(--vk-ivory);
+}
+.vk-mon .vk-narr__src {
+  justify-content: flex-start;
+}
+.vk-mon .vk-narr__controls {
+  justify-content: flex-start;
+}
+.vk-mon .vk-narr__char::before {
+  opacity: 0; /* konuşurken arkadaki parlama yok */
+}
+@media (max-width: 640px) {
+  .vk-mon .vk-narr__who {
+    justify-content: flex-start;
+  }
+}
+
+/* Soru-cevap: sohbet balonu yerine soru satırı + kaynaklı cevap (altın kenar). */
+.vk-mon .vk-chat__turn {
+  gap: var(--vk-space-2);
+  padding-bottom: var(--vk-space-3);
+  border-bottom: 1px solid var(--vk-line-faint);
+}
+.vk-mon .vk-chat__q {
+  justify-self: start;
+  max-width: none;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--vk-gold-bright);
+  font-weight: 600;
+}
+.vk-mon .vk-chat__a {
+  justify-self: stretch;
+  max-width: var(--vk-measure);
+  padding: 0 0 0 var(--vk-space-4);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border-left: 2px solid var(--vk-line-strong);
 }

@@ -25,6 +25,12 @@ export function factIn(
   return { title: f.title, text: f.text, page: f.source.pdf_physical_page, turkishOnly: lang === 'en' }
 }
 
+/** R6.17: künyedeki diğer adlar ve adres. Yer adları özgündür; İngilizce açıklaması onaylıysa o gösterilir. */
+export const altNamesIn = (m: { alternative_names?: string[]; alternative_names_en?: string[] }, lang: Lang) =>
+  lang === 'en' && m.alternative_names_en?.length ? m.alternative_names_en : m.alternative_names ?? []
+export const addressIn = (m: { address: string; address_en?: string | null }, lang: Lang) =>
+  lang === 'en' && m.address_en ? m.address_en : m.address
+
 export const textIn = (tr: string | null | undefined, en: string | null | undefined, lang: Lang) =>
   lang === 'en' && en ? { text: en, turkishOnly: false } : { text: tr ?? '', turkishOnly: lang === 'en' && !!tr }
 

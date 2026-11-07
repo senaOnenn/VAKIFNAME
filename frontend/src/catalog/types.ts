@@ -143,6 +143,9 @@ export interface MonumentDetail {
   name_en?: string | null
   site_notice_en?: string | null
   alternative_names: string[]
+  /** R6.17: diğer adların ve adresin onaylı İngilizcesi (yoksa boş/null; Türkçe gösterilir). */
+  alternative_names_en?: string[]
+  address_en?: string | null
   type: string
   city: string
   district: string
@@ -267,6 +270,8 @@ export interface GuidePhoto {
   /** Yalnızca güvenilir (yüksek) katalog eşleşmeleri. */
   candidates: { monument_id: string; name: string; likelihood: 'high' | 'medium' | 'low' }[]
   metadata_removed: string[]
+  /** R5.7: denetimden geçmiş bir görsel betimleme var mı (yoksa arayüz "Fotoğrafta görülenler" göstermez). */
+  observed?: boolean
 }
 
 export type GuideAction =

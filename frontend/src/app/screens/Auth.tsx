@@ -1,9 +1,10 @@
 import { useCallback, useId, useState, type FormEvent } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { GoogleButton } from '../components/GoogleButton'
 import { GoldRule, Ornament } from '../components/Ornament'
 import { LangSwitch, useLang } from '../i18n'
+import { NEXT_PARAM, safeNext } from '../RequireAccount'
 import { googleSignIn, login, register, startGuest, useAuth } from '../session'
 import './auth.css'
 
@@ -11,18 +12,33 @@ type Tab = 'giris' | 'kayit'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
-function messageOf(e: unknown): string {
-  if (e instanceof ApiError) {
-    if (e.status === 422) return 'Bilgileri kontrol et: geçerli bir e-posta ve 8–128 karakterlik bir parola gerekli.'
-    return e.message
+/**
+ * Kayıt/giriş hatası → kısa, anlaşılır mesaj (R6.4.2). Sunucunun teknik ayrıntısı (HTTP kodu, iç hata) gösterilmez;
+ * sunucunun kendi güvenli mesajları (yanlış parola, çok fazla deneme) olduğu gibi kalır.
+ */
+function messageOf(e: unknown, action: 'register' | 'login' | 'google' = 'login'): string {
+  if (!(e instanceof ApiError)) return 'Beklenmeyen bir hata oluştu.'
+  if (e.kind === 'network' || e.kind === 'timeout') return 'Sunucuya bağlanılamıyor. Bağlantını kontrol edip yeniden dene.'
+  if (e.status === 422) return 'Bilgileri kontrol et: geçerli bir e-posta ve 8–128 karakterlik bir parola gerekli.'
+  if (e.status === 409) return action === 'google'
+    ? e.message
+    : 'Bu e-posta adresiyle kayıtlı bir hesap var. “Giriş yap” sekmesinden gir ya da parolanı yenile.'
+  if (e.status === 401 || e.status === 429) return e.message
+  if (e.kind === 'http' && (e.status ?? 0) >= 500) {
+    return action === 'register' ? 'Kayıt şu anda tamamlanamıyor. Biraz sonra yeniden dene.' : 'Giriş şu anda tamamlanamıyor. Biraz sonra yeniden dene.'
   }
-  return 'Beklenmeyen bir hata oluştu.'
+  return e.message
 }
 
 /** Giriş / Kayıt: Google ile devam, e-posta + parola, üye olmadan keşfet. */
 export default function Auth() {
   const navigate = useNavigate()
   const auth = useAuth()
+  // R6.2: oyuna giriş yapmadan gelen kullanıcı girişten sonra istediği oyun adresine döner (yalnızca site içi yol).
+  const [params] = useSearchParams()
+  const asked = params.get(NEXT_PARAM)
+  const next = safeNext(asked, '/oyun/sehir')
+  const forGame = asked !== null && (next.startsWith('/oyun') || next.startsWith('/pasaport'))
   const { t, lang } = useLang()
   const uid = useId()
   const [tab, setTab] = useState<Tab>('giris')
@@ -55,13 +71,13 @@ export default function Auth() {
       if (register_) {
         const user = await register(email.trim(), password)
         // Şehir ekranında "doğrulama bağlantısı gönderildi" bildirimi çıkar (bkz. AppShell).
-        navigate('/oyun/sehir', { replace: true, state: { verifySent: user.email } })
+        navigate(next, { replace: true, state: { verifySent: user.email } })
       } else {
         await login(email.trim(), password)
-        navigate('/oyun/sehir')
+        navigate(next, { replace: true })
       }
     } catch (e) {
-      setFormError(messageOf(e))
+      setFormError(messageOf(e, register_ ? 'register' : 'login'))
     } finally {
       setBusy(false)
     }
@@ -72,20 +88,21 @@ export default function Auth() {
       setGoogleNote('')
       try {
         await googleSignIn(idToken)
-        navigate('/oyun/sehir')
+        navigate(next, { replace: true })
       } catch (e) {
-        setGoogleNote(messageOf(e))
+        setGoogleNote(messageOf(e, 'google'))
       }
     },
-    [navigate],
+    [navigate, next],
   )
 
+  // Üye olmadan yalnızca halka açık bölümler gezilir (oyun hesap ister).
   function guest() {
     startGuest()
-    navigate('/oyun/sehir')
+    navigate('/eserler')
   }
 
-  if (auth.status === 'user') return <Navigate to="/oyun/sehir" replace />
+  if (auth.status === 'user') return <Navigate to={next} replace />
 
   const fieldId = (n: string) => `${uid}-${n}`
 
@@ -99,12 +116,12 @@ export default function Auth() {
           <h1 className="vk-auth__title">VAKIFNAME</h1>
           <GoldRule className="vk-auth__rule" />
           <p className="vk-auth__lead">
-            {t('Vakıf eserlerinin hikâyesini dinle, bilgini sına, mühürleri topla. Eserin önüne gidince mührün altına dönüşsün.')}
+            {t('Bir vakıf eseri seç, bilgi görevini oyna, mührünü ve vakfiyenin parçasını kazan. Eserin önüne gidince mührün altına dönüşsün.')}
           </p>
           <ul className="vk-auth__steps" aria-label={t('Nasıl çalışır')}>
-            <li><span aria-hidden="true">I</span> {t('Dinle ve sor')}</li>
-            <li><span aria-hidden="true">II</span> {t('Bilgini sına')}</li>
-            <li><span aria-hidden="true">III</span> {t('Ziyaret et, altın mühür al')}</li>
+            <li><span aria-hidden="true">I</span> {t('Eseri seç')}</li>
+            <li><span aria-hidden="true">II</span> {t('Bilgi görevini oyna')}</li>
+            <li><span aria-hidden="true">III</span> {t('Mührü ve parçayı kazan')}</li>
           </ul>
         </div>
       </section>
@@ -112,6 +129,11 @@ export default function Auth() {
       <section className="vk-auth__panel" aria-labelledby={fieldId('h')}>
         <div className="vk-auth__card">
           <h2 id={fieldId('h')} className="vk-auth__heading">{t('Maceraya katıl')}</h2>
+          {forGame && (
+            <p className="vk-auth__note vk-auth__gate" role="status">
+              {t('Oyunu oynamak ve ilerlemeni hesabına kaydetmek için giriş yap ya da hesap oluştur.')}
+            </p>
+          )}
 
           <GoogleButton onCredential={onGoogle} onError={setGoogleNote} />
           {googleNote && (

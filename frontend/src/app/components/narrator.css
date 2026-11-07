@@ -1,22 +1,81 @@
+/* "Önce eser": anlatım ve soru-cevap sakin, editoryal bir yüzeyde; ışıma ve altın gölge yok. */
 .vk-narr {
   display: grid;
   gap: var(--vk-space-4);
-  padding: var(--vk-space-4);
+  padding: var(--vk-space-4) var(--vk-space-5) var(--vk-space-5);
   border-radius: var(--vk-radius-lg);
-  background: radial-gradient(110% 120% at 50% 0%, rgb(74 91 255 / 0.2), transparent 60%), var(--vk-surface);
-  box-shadow: var(--vk-shadow-gold);
+  background: var(--vk-surface);
+  border: 1px solid var(--vk-line-faint);
 }
-/* Sahne: karakter çerçevesiz, kartın üst kenarından taşarak sayfada belirir; altyazı ona bakan bir konuşma balonudur. */
+.vk-narr__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vk-space-3);
+  padding-bottom: var(--vk-space-3);
+  border-bottom: 1px solid var(--vk-line-faint);
+}
+.vk-narr__head h2 {
+  font-size: 1.5rem;
+  color: var(--vk-ivory);
+}
+.vk-narr__tabs {
+  display: inline-flex;
+  gap: var(--vk-space-1);
+  padding: 3px;
+  border-radius: var(--vk-radius-pill);
+  border: 1px solid var(--vk-line);
+}
+.vk-narr__tab {
+  min-height: 40px;
+  padding: 0 var(--vk-space-4);
+  border: 0;
+  border-radius: var(--vk-radius-pill);
+  background: transparent;
+  color: var(--vk-ivory-dim);
+  font: 600 0.9rem var(--vk-font-ui);
+  cursor: pointer;
+  transition: background-color var(--vk-dur-fast) var(--vk-ease), color var(--vk-dur-fast) var(--vk-ease);
+}
+.vk-narr__tab:hover {
+  color: var(--vk-ivory);
+}
+.vk-narr__tab[aria-selected='true'] {
+  background: var(--vk-gold-gradient);
+  color: var(--vk-night);
+}
+.vk-narr__tab:focus-visible {
+  border-radius: var(--vk-radius-pill);
+}
+.vk-narr__panel {
+  display: grid;
+  gap: var(--vk-space-4);
+}
+.vk-narr__panel[hidden] {
+  display: none;
+}
+@media (max-width: 640px) {
+  .vk-narr {
+    padding: var(--vk-space-4);
+  }
+  .vk-narr__tabs {
+    width: 100%;
+  }
+  .vk-narr__tab {
+    flex: 1;
+  }
+}
+/* Sahne: karakter çerçevesiz ve küçük; altyazı ona bakan bir konuşma balonudur. Karakter eserin önüne geçmez. */
 .vk-narr__scene {
   display: grid;
-  grid-template-columns: minmax(104px, 32%) 1fr;
+  grid-template-columns: minmax(76px, 18%) 1fr;
   align-items: end;
   gap: var(--vk-space-3);
 }
 .vk-narr__char {
   position: relative;
   align-self: end;
-  margin-top: -56px;
   animation: vk-narr-char-in 700ms var(--vk-ease) both;
 }
 .vk-narr__char::before {
@@ -44,9 +103,9 @@
   align-items: baseline;
   gap: var(--vk-space-2);
 }
-.vk-narr__who h2 {
+.vk-narr__who h3 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   color: var(--vk-gold-bright);
 }
 .vk-narr__who span {
@@ -59,15 +118,26 @@
     transform: translateY(28px);
   }
 }
+/* R3.3 portresi: büst portre küçük sütunda okunmaz; sütun genişler, figür altyazının dibine oturur. */
+.vk-narr__scene:has(.vk-gchar--portrait) {
+  grid-template-columns: minmax(128px, 24%) 1fr;
+  gap: var(--vk-space-4);
+}
+.vk-narr__char:has(.vk-gchar--portrait) {
+  max-width: 240px;
+}
 @media (max-width: 640px) {
-  .vk-narr__scene {
+  .vk-narr__scene,
+  .vk-narr__scene:has(.vk-gchar--portrait) {
     grid-template-columns: 1fr;
     gap: var(--vk-space-2);
   }
   .vk-narr__char {
     justify-self: center;
-    width: min(190px, 52vw);
-    margin-top: -64px;
+    width: min(104px, 30vw);
+  }
+  .vk-narr__char:has(.vk-gchar--portrait) {
+    width: min(168px, 46vw);
   }
   .vk-narr__who {
     justify-content: center;
@@ -166,6 +236,10 @@
   font-size: 0.85rem;
   text-align: center;
 }
+.vk-narr__live:empty {
+  /* Boşken panel ızgarasına fazladan boşluk eklemez; gizlenmez ki canlı bölge duyurusu kaçmasın (display:none yok). */
+  margin-top: calc(-1 * var(--vk-space-4));
+}
 .vk-narr__done {
   text-align: center;
   color: var(--vk-gold-bright);
@@ -191,12 +265,15 @@
 .vk-chat {
   display: grid;
   gap: var(--vk-space-3);
-  border-top: 1px solid rgb(201 162 75 / 0.25);
-  padding-top: var(--vk-space-4);
 }
 .vk-chat h3 {
-  font-size: 1.35rem;
-  color: var(--vk-gold-bright);
+  font-size: 1.25rem;
+  color: var(--vk-ivory);
+}
+.vk-chat__intro {
+  max-width: var(--vk-measure);
+  color: var(--vk-ivory-dim);
+  font-size: 0.88rem;
 }
 .vk-chat__log {
   list-style: none;
@@ -238,6 +315,72 @@
 .vk-chat__src {
   color: var(--vk-ivory-dim);
   font-size: 0.78rem;
+}
+/* Kaynaklar (rehber cevabı): her kayıt ince altın şeritli küçük bir kart; başlık, kesinlik ve bağlantılar ayrı satırda.
+   Kesinlik renk dışında metinle de yazılıdır. */
+.vk-chat__refs-wrap {
+  display: grid;
+  gap: var(--vk-space-2);
+  padding-top: var(--vk-space-2);
+  border-top: 1px solid var(--vk-line-faint);
+}
+.vk-chat__refs-h {
+  color: var(--vk-gold);
+  font-size: 0.72rem;
+  letter-spacing: var(--vk-tracking-eyebrow);
+  text-transform: uppercase;
+}
+.vk-chat__refs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--vk-space-2);
+}
+.vk-chat__ref {
+  display: grid;
+  gap: var(--vk-space-1);
+  padding: var(--vk-space-2) var(--vk-space-3);
+  border-left: 2px solid var(--vk-gold);
+  border-radius: 0 var(--vk-radius-sm) var(--vk-radius-sm) 0;
+  background: rgb(243 234 211 / 0.04);
+}
+.vk-chat__ref-title {
+  color: var(--vk-ivory);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.vk-chat__ref-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--vk-ivory-dim);
+}
+.vk-chat__ref-meta a {
+  color: var(--vk-gold-bright);
+  overflow-wrap: anywhere;
+}
+.vk-chat__cert {
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgb(201 162 75 / 0.45);
+  color: var(--vk-gold-bright);
+  font-size: 0.75rem;
+}
+.vk-chat__cert--uncertain,
+.vk-chat__cert--reported {
+  border-color: rgb(143 162 255 / 0.55);
+  color: var(--vk-indigo-soft);
+}
+.vk-chat__found {
+  overflow-wrap: anywhere;
+}
+/* Yetersiz kanıt / bulunamadı: hata değil, dürüst bilgi. */
+.vk-chat__a--note {
+  color: var(--vk-ivory-dim);
+  box-shadow: inset 0 0 0 1px rgb(143 162 255 / 0.35);
 }
 .vk-chat__form {
   display: grid;
@@ -323,4 +466,188 @@
   max-width: 100%;
   margin-bottom: var(--vk-space-2);
   border-radius: 10px;
+}
+
+/* ── Rehberle Konuş (R3.2): yerel rehberle konuşma; müze dili, balon/panel yok ─────────────────────────────────── */
+.vk-talk {
+  display: grid;
+  gap: var(--vk-space-4);
+}
+.vk-talk__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--vk-space-1) var(--vk-space-3);
+}
+.vk-talk__head h3 {
+  font-size: 1.45rem;
+  color: var(--vk-ivory);
+}
+.vk-talk__label {
+  color: var(--vk-gold);
+  font-size: var(--vk-text-xs);
+  letter-spacing: var(--vk-tracking-eyebrow);
+  text-transform: uppercase;
+}
+/* Kurallar: canlandırma ve kaynak ilkesi her zaman görünür (CLAUDE.md §4). */
+.vk-talk__rules {
+  max-width: var(--vk-measure);
+  padding-left: var(--vk-space-3);
+  border-left: 2px solid rgb(143 162 255 / 0.55);
+  color: var(--vk-ivory-dim);
+  font-size: 0.88rem;
+}
+/* Mod seçici: gerçek radyo düğmeleri (ok tuşları, ekran okuyucu); seçili olan altın kenarlı. */
+.vk-talk__modes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--vk-space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.vk-talk__mode {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding: var(--vk-space-3) var(--vk-space-4) var(--vk-space-3) 2.6rem;
+  border-radius: var(--vk-radius);
+  border: 1px solid var(--vk-line);
+  cursor: pointer;
+  transition: border-color var(--vk-dur-fast) var(--vk-ease), background-color var(--vk-dur-fast) var(--vk-ease);
+}
+.vk-talk__mode:hover {
+  border-color: var(--vk-gold-bright);
+}
+.vk-talk__mode:has(input:checked) {
+  border-color: var(--vk-gold-bright);
+  background: rgb(201 162 75 / 0.1);
+}
+.vk-talk__mode:has(input:focus-visible) {
+  outline: 3px solid var(--vk-indigo-soft);
+  outline-offset: 3px;
+}
+.vk-talk__mode input {
+  position: absolute;
+  left: var(--vk-space-4);
+  top: calc(var(--vk-space-3) + 0.2rem);
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  accent-color: var(--vk-gold-bright);
+}
+.vk-talk__mode input:focus-visible {
+  outline: none; /* halka etiketin tamamında */
+}
+.vk-talk__mode-name {
+  color: var(--vk-ivory);
+  font-weight: 600;
+}
+.vk-talk__mode-hint {
+  color: var(--vk-ivory-dim);
+  font-size: 0.8rem;
+}
+/* Konuşmada kimin cevap verdiği: yerel karşılık mı, kaynaklı cevap mı. */
+.vk-chat__who {
+  color: var(--vk-gold);
+  font-size: var(--vk-text-xs);
+  letter-spacing: var(--vk-tracking-eyebrow);
+  text-transform: uppercase;
+}
+.vk-chat__a--local {
+  color: var(--vk-ivory);
+}
+
+/* R5.3: fotoğraf analizi kapalıyken gelen fotoğrafın notu; eşleşmeyen fotoğraf için önerilen eserler. */
+.vk-chat__photo-off {
+  margin: 0;
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-sm);
+}
+.vk-chat__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-2);
+  margin: var(--vk-space-2) 0;
+  padding: 0;
+  list-style: none;
+}
+.vk-chat__options a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--vk-space-3);
+  border: 1px solid var(--vk-line);
+  border-radius: var(--vk-radius-pill);
+  color: var(--vk-gold-bright);
+}
+
+/* R5.7: "Fotoğrafta görülenler" — görsel yorum (indigo, teknoloji dili); kaynaklı tarihî cevap (altın) bundan ayrıdır. */
+.vk-chat__seen {
+  display: grid;
+  gap: var(--vk-space-2);
+  margin-bottom: var(--vk-space-2);
+  padding: var(--vk-space-3) var(--vk-space-3) var(--vk-space-3) var(--vk-space-4);
+  border-left: 3px solid var(--vk-indigo-soft);
+  border-radius: var(--vk-radius-sm);
+  background: rgb(143 162 255 / 0.07);
+}
+.vk-chat__seen h4 {
+  margin: 0;
+  color: var(--vk-ivory);
+  font: 600 var(--vk-text-sm) var(--vk-font-ui);
+  letter-spacing: var(--vk-tracking-eyebrow);
+  text-transform: uppercase;
+}
+.vk-chat__seen p {
+  margin: 0;
+}
+.vk-chat__seen-note {
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-xs);
+}
+.vk-chat__seen-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vk-chat__seen-tags li {
+  padding: 0.15rem 0.6rem;
+  border: 1px solid rgb(143 162 255 / 0.35);
+  border-radius: var(--vk-radius-pill);
+  font-size: var(--vk-text-xs);
+}
+/* Betimlemenin ardından gelen eşleşmeme bilgisi ikincildir. */
+.vk-chat__a--secondary {
+  font-size: var(--vk-text-sm);
+  color: var(--vk-ivory-dim);
+}
+.vk-chat__manual summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--vk-gold-bright);
+  cursor: pointer;
+}
+
+/* R6.10: bekleme ve hata balonları; "Durdur" / "Tekrar dene" eylemleri balonun içinde, sola yaslı. */
+.vk-chat__a--wait p,
+.vk-chat__a--err p {
+  margin: 0;
+}
+.vk-chat__a--wait .vk-link-btn,
+.vk-chat__a--err .vk-link-btn {
+  justify-self: start;
+  font-style: normal;
+  color: var(--vk-gold-bright);
+}
+.vk-chat__slow {
+  font-size: 0.85rem;
+}
+.vk-chat__offline .vk-link-btn {
+  color: var(--vk-gold-bright);
 }

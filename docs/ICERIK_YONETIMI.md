@@ -94,3 +94,21 @@ type Translation = { fact_id: string; monument_id: string; fact_title: string; f
 `GET /admin/content/monuments/{id}` ayrıca `translations`, `monument_en` ve `tr_facts: {fact_id, title, text}[]` (yayındaki
 Türkçe kayıtlar, katalog dahil) döner; `overview` `translation_drafts` sayısını verir. Genel katalogda kayıtlar
 `title_en`, `text_en`, `en_page`; eserler `name_en`, `site_notice_en` (özet: `name_en`, `lead_en`) taşır.
+
+### R6.17: soru çevirisi, diğer adlar ve adres
+- Çeviri gövdesi isteğe bağlı `quest_en: {question, choices[], explanation}` ve `note` (taslağı hazırlayanın notu) alır.
+  Şıklar Türkçe soruyla **aynı sayıda ve aynı sırada** olmalıdır; doğru cevap gönderilmez, Türkçe sorudaki `answer_index`
+  kalır (doğrulama sunucuda değişmez). Türkçe sorusu olmayan kayda İngilizce soru eklenemez (400). Çeviri yanıtı
+  `fact_quest` (Türkçe soru, doğru cevapsız), `quest_en` ve `note` taşır. Yayımlanınca katalogda `quest.question_en`,
+  `choices_en`, `explanation_en` dolar; İngilizce oyun yalnızca bunları kullanır.
+- Eser gövdesi ayrıca `alternative_names_en: string[]` ve `address_en` alır; genel katalogda aynı adla görünür.
+- **İngilizce taslaklar:** `backend/content_drafts/bursa_en_r617.json` (10 eser, 75 kayıt, 34 soru; 1 kayıt kitabın
+  İngilizce bölümünde karşılığı bulunmadığı için gerekçesiyle atlandı). Her kayıt kitabın İngilizce bölümünden birebir
+  alıntı ve PDF sayfası taşır; Türkçe kayıtla kitap arasındaki farklar `note` alanındadır. Depoya aktarma:
+  `python scripts/import_english_drafts.py --content-dir <VAKIFNAME_CONTENT_DIR> --catalog <katalog>` (kitaplar
+  depoda SHA-256 ile eşlenir; yoksa `--pdf cilt-1=<yol> --pdf cilt-2=<yol>`). Varsayılan olarak **hiçbir şey
+  yayımlanmaz**: taslaklar `/yonetim/icerik` → eser → "Kayıtların İngilizcesi" listesinde yönetici onayını bekler.
+  `--publish-local-test` yalnızca ayrı bir yerel deneme deposu içindir (onay aktörü "yerel-test").
+- **Kapsam raporu:** `python scripts/report_en_coverage.py --catalog <katalog> [--content-dir <depo>]` (eser başına
+  onaylı İngilizce, taslak sayısı, kamuya görünen sunucu mesajlarının sözlükteki karşılığı); arayüz katmanı için
+  `npm run check:i18n` (frontend).

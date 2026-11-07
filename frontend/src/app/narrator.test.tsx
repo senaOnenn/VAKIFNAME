@@ -119,15 +119,84 @@ describe('anlatıcı bileşeni', () => {
     delete window.speechSynthesis
   })
 
-  it('rehber çerçevesiz bir karakter olarak görünür (video paneli yok); konuşurken "konuşuyor" durumuna geçer', async () => {
+  it('rehber çerçevesiz Osmanlı portresi olarak görünür (video paneli yok); konuşurken "konuşuyor" durumuna geçer', async () => {
     render(<Narrator monument={MON} />)
-    const char = document.querySelector('svg.vk-gchar')!
+    const char = document.querySelector('.vk-gchar--portrait')!
     expect(char).toBeInTheDocument()
-    expect(char.getAttribute('aria-hidden')).toBe('true')
+    expect(char.getAttribute('aria-hidden')).toBe('true')  // süs; ad ve rol metin olarak verilir
+    const img = char.querySelector('img')!
+    expect(img).toHaveAttribute('alt', '')
+    expect(img.getAttribute('srcset')).toMatch(/320w.*480w.*640w/)
+    expect(document.querySelector('svg.vk-gchar')).toBeNull()
     expect(document.querySelector('video')).toBeNull()
     expect(screen.getByRole('heading', { name: 'Rehber' })).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Dinle' }))
-    expect(document.querySelector('svg.vk-gchar')!.getAttribute('class')).toContain('is-speaking')
+    expect(document.querySelector('.vk-gchar--portrait')!.getAttribute('class')).toContain('is-speaking')
+  })
+
+  it('portre durağandır: ağız varyantı yokken sahte ağız katmanı çizilmez; eski SVG karakter geri dönüş için durur', async () => {
+    const { GuidePortrait, MOUTH_FRAMES, PORTRAIT_LIP_SYNC } = await import('./components/GuidePortrait')
+    const { FIGURE_LIP_SYNC } = await import('./components/GuideFigure')
+    expect(Object.keys(MOUTH_FRAMES)).toHaveLength(0)
+    expect(PORTRAIT_LIP_SYNC).toBe(false)
+    expect(FIGURE_LIP_SYNC).toBe(false)  // anlatıcı ağız senkronunu hesaplamaz
+    const { container, rerender } = render(<GuidePortrait mouth="X" />)
+    const src = container.querySelector('img')!.getAttribute('src')
+    rerender(<GuidePortrait mouth="D" speaking />)
+    expect(container.querySelectorAll('img')).toHaveLength(1)
+    expect(container.querySelector('.vk-gchar__mouth')).toBeNull()
+    expect(container.querySelector('img')!.getAttribute('src')).toBe(src)
+    expect(container.firstElementChild).toHaveAttribute('data-lip-sync', 'off')
+    const { GuideCharacter } = await import('./components/GuideCharacter')
+    const legacy = render(<GuideCharacter mouth="D" />)
+    expect(legacy.container.querySelector('svg.vk-gchar')).toBeInTheDocument()
+  })
+
+  it('sunucu sesi bu cümlede yoksa ve tarayıcı sesi de yoksa: "Bu cümlenin sesi şu anda yok" ekran okuyucuya duyurulur; altyazı ve tam metin sürer', async () => {
+    resetSpeechStatusForTests()
+    stubFetch({
+      '/guide/status': { body: { enabled: false } },
+      '/speech/status': { body: { enabled: true, provider: 'files', voice: 'zulal-1' } },
+      '/monuments/BUR-1001/speech': { status: 404, body: { detail: 'Bu cümlenin sesi henüz hazır değil.' } },
+    })
+    vi.stubGlobal('Audio', class {})
+    render(<Narrator monument={MON} />)
+    const live = screen.getByRole('status')
+    expect(live).toBeEmptyDOMElement()  // canlı bölge baştan bağlı ve boş
+    await userEvent.click(screen.getByRole('button', { name: 'Dinle' }))
+    expect(await within(live).findByText('Bu cümlenin sesi şu anda yok; altyazıyla ilerliyor.')).toBeInTheDocument()
+    expect(screen.queryByText(/Tarayıcında Türkçe ses bulunamadı/)).not.toBeInTheDocument()  // sunucu sesi açık: genel not yok
+    expect(document.querySelector('.vk-narr__line')!.textContent).toMatch(/^Hoş geldin!/)  // altyazı sürer
+    expect(screen.getByRole('button', { name: 'Duraklat' })).toBeInTheDocument()
+    expect(screen.getByRole('combobox', { name: 'Hız' })).toBeEnabled()
+    expect(screen.getByText('Anlatımın tam metni')).toBeInTheDocument()
+    // Sessiz moda geçilince bilgi kalkar (ses zaten istenmiyor).
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Sessiz (yalnızca altyazı)' }))
+    expect(live).toBeEmptyDOMElement()
+    resetSpeechStatusForTests()
+  })
+
+  it('sunucu sesi çalınabiliyorsa "sesi yok" bilgisi görünmez', async () => {
+    resetSpeechStatusForTests()
+    stubFetch({
+      '/guide/status': { body: { enabled: false } },
+      '/speech/status': { body: { enabled: true, provider: 'files', voice: 'zulal-1' } },
+      '/monuments/BUR-1001/speech': { body: { url: `/speech/audio/${'a'.repeat(64)}.mp3` } },
+    })
+    const played: string[] = []
+    vi.stubGlobal('Audio', class {
+      playbackRate = 1; currentTime = 0; duration = 1; paused = true
+      onended: (() => void) | null = null; onerror: (() => void) | null = null
+      src: string
+      constructor(src: string) { this.src = src }
+      play() { played.push(this.src); this.paused = false; return Promise.resolve() }
+      pause() { this.paused = true }
+    })
+    render(<Narrator monument={MON} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Dinle' }))
+    await vi.waitFor(() => expect(played).toHaveLength(1))
+    expect(screen.getByRole('status')).toBeEmptyDOMElement()
+    resetSpeechStatusForTests()
   })
 
   it('sunucu seslendirmesi açıksa her cümlenin ses dosyası çalınır; seslendirilen metin anlatımın kendisidir', async () => {
@@ -188,10 +257,41 @@ describe('anlatıcı bileşeni', () => {
     expect(within(t).getAllByRole('listitem')).toHaveLength(5)
   })
 
-  it('rehber kapalıysa soru kutusu yerine dürüst bilgi verir', async () => {
+  it('rehbere ulaşılamazsa dürüst bilgi ve yeniden deneme; kutu kullanılabilir, selam yerelde cevaplanır', async () => {
+    const fetchMock = vi.fn((_input: RequestInfo | URL) => Promise.reject(new TypeError('Failed to fetch')))
+    vi.stubGlobal('fetch', fetchMock)
     render(<Narrator monument={MON} />)
-    expect(await screen.findByText(/Rehber şu anda soru alamıyor/)).toBeInTheDocument()
-    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('tab', { name: 'Rehberle Konuş' }))
+    expect(await screen.findByText(/Rehbere şu anda ulaşılamıyor/)).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Bağlantıyı yeniden dene' })).toBeInTheDocument()
+    const box = screen.getByRole('textbox')
+    expect(box).toBeEnabled()
+    await userEvent.type(box, 'Selam{Enter}')
+    expect(await screen.findByText(/Merhaba! Ben bu eserin yerel rehberiyim/)).toBeInTheDocument()
+    expect(screen.queryByText('Kaynaklar taranıyor…')).not.toBeInTheDocument()
+    expect(fetchMock.mock.calls.some(([u]) => String(u).includes('/guide/ask'))).toBe(false)
+  })
+
+  it('anlatım ve soru sorma iki sekmededir: varsayılan anlatım; ok tuşlarıyla geçilir; canlandırma etiketi korunur', async () => {
+    render(<Narrator monument={MON} />)
+    expect(screen.getByRole('heading', { level: 2, name: 'Eserin hikâyesi' })).toBeInTheDocument()
+    const listen = screen.getByRole('tab', { name: 'Anlatım' })
+    const ask = screen.getByRole('tab', { name: 'Rehberle Konuş' })
+    expect(listen).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('tabpanel', { name: 'Anlatım' })).toBeVisible()
+    expect(screen.getByText('Yerel rehber · canlandırma')).toBeVisible()  // anlatım bir canlandırmadır (CLAUDE.md §4)
+    expect(screen.getByRole('button', { name: 'Dinle' })).toBeVisible()
+    expect(screen.queryByRole('heading', { name: 'Rehberle Konuş' })).not.toBeInTheDocument()  // gizli panel
+    listen.focus()
+    await userEvent.keyboard('{ArrowRight}')
+    expect(ask).toHaveAttribute('aria-selected', 'true')
+    expect(ask).toHaveFocus()
+    expect(screen.getByRole('heading', { name: 'Rehberle Konuş' })).toBeVisible()
+    expect(screen.getByText(/tarihî kişiler adına konuşmaz/)).toBeVisible()
+    expect(screen.queryByRole('button', { name: 'Dinle' })).not.toBeInTheDocument()
+    await userEvent.keyboard('{Home}')
+    expect(listen).toHaveAttribute('aria-selected', 'true')
+    expect(listen).toHaveFocus()
   })
 
   it('rehbere soru sorulur; cevap dayandığı kayıtlarla gösterilir', async () => {
@@ -209,11 +309,12 @@ describe('anlatıcı bileşeni', () => {
       },
     })
     render(<Narrator monument={MON} onAsked={onAsked} />)
-    const box = await screen.findByRole('textbox', { name: 'Rehbere sorun' })
+    await userEvent.click(screen.getByRole('tab', { name: 'Rehberle Konuş' }))
+    const box = await screen.findByRole('textbox', { name: 'Sorunu yaz' })
     await userEvent.type(box, 'Kim yaptırdı?')
     await userEvent.click(screen.getByRole('button', { name: 'Sor' }))
     expect(await screen.findByText('Yapıyı Yıldırım Bayezid yaptırmıştır.')).toBeInTheDocument()
-    expect(screen.getByText(/Dayandığı kayıtlar: Yıldırım Bayezid'in camisi/)).toBeInTheDocument()
+    expect(within(screen.getByRole('list', { name: 'Kaynaklar' })).getByText("Yıldırım Bayezid'in camisi")).toBeInTheDocument()
     expect(onAsked).toHaveBeenCalledTimes(1)
     const ask = fetchMock.mock.calls.find(([u]) => String(u).includes('/guide/ask'))!
     expect(JSON.parse(String(ask[1]!.body))).toMatchObject({ question: 'Kim yaptırdı?', monument_id: 'BUR-1001' })

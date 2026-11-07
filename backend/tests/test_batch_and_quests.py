@@ -5,6 +5,8 @@ import json
 
 from fastapi.testclient import TestClient
 
+from tests.players import PlayerClient, new_player
+
 from app.internal.publish import build_snapshot, write_snapshot
 from app.main import create_app
 from app.progress import MonumentProgressStore
@@ -279,7 +281,8 @@ def test_commons_image_published_with_attribution_and_card(env, tmp_path):
 def test_quests_hide_answer_and_knowledge_seal_is_awarded_once(env, tmp_path):
     out = publish_all(env, Clock(), tmp_path)
     progress_db = tmp_path / "progress" / "p.sqlite3"
-    with TestClient(create_app(public_catalog_file=out, demo_api=False, progress_db=progress_db)) as c:
+    with PlayerClient(create_app(public_catalog_file=out, demo_api=False, progress_db=progress_db)) as c:
+        u1 = new_player(c)  # R6.2: oyun yalnızca hesapla
         summary = c.get("/monuments").json()["monuments"][0]
         assert summary["quest_count"] == 1 and summary["cover"]["file"]
         detail = c.get("/monuments/BUR-9001").json()
@@ -287,22 +290,23 @@ def test_quests_hide_answer_and_knowledge_seal_is_awarded_once(env, tmp_path):
         quests = c.get("/monuments/BUR-9001/quests").json()["quests"]
         assert quests[0]["choices"] == QUIZ["choices"] and "answer_index" not in quests[0]
 
-        wrong = c.post("/monuments/BUR-9001/quests/BUR-9001-F001/answer", json={"user_id": "u-1", "choice_index": 1}).json()
+        wrong = c.post("/monuments/BUR-9001/quests/BUR-9001-F001/answer", json={"user_id": u1, "choice_index": 1}).json()
         assert wrong["correct"] is False and wrong["explanation"] is None and wrong["knowledge_seal"] is None
-        right = c.post("/monuments/BUR-9001/quests/BUR-9001-F001/answer", json={"user_id": "u-1", "choice_index": 0}).json()
+        right = c.post("/monuments/BUR-9001/quests/BUR-9001-F001/answer", json={"user_id": u1, "choice_index": 0}).json()
         assert right["correct"] is True and right["knowledge_seal"]["new"] is True
-        again = c.post("/monuments/BUR-9001/quests/BUR-9001-F001/answer", json={"user_id": "u-1", "choice_index": 0}).json()
+        again = c.post("/monuments/BUR-9001/quests/BUR-9001-F001/answer", json={"user_id": u1, "choice_index": 0}).json()
         assert again["already_solved"] is True and again["knowledge_seal"]["new"] is False
-        seals = c.get("/users/u-1/seals").json()
+        seals = c.get(f"/users/{u1}/seals").json()
         assert [s["kind"] for s in seals["knowledge_seals"]] == ["knowledge"] and seals["visit_seals"] == []
 
-        assert c.get("/users/u-1/seals").json()["visit_seals"] == []
+        assert c.get(f"/users/{u1}/seals").json()["visit_seals"] == []
         assert c.post("/monuments/BUR-9001/quests/BUR-9001-F999/answer",
-                      json={"user_id": "u-1", "choice_index": 0}).status_code == 404
+                      json={"user_id": u1, "choice_index": 0}).status_code == 404
 
     # İlerleme yeniden başlatmada korunur.
     with TestClient(create_app(public_catalog_file=out, demo_api=False, progress_db=progress_db)) as c:
-        assert len(c.get("/users/u-1/seals").json()["knowledge_seals"]) == 1
+        # (Hesap deposu bu testte bellek içidir; ilerleme deposu diskte kalıcıdır.)
+        assert [x["kind"] for x in c.app.state.monument_progress.seals(u1)] == ["knowledge"]
 
 
 def test_progress_store_never_duplicates_seals(tmp_path):

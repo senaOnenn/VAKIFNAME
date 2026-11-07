@@ -1,145 +1,124 @@
 import { Link } from 'react-router-dom'
-import { citySlug, getGame, getMonuments, getRoute, progressId, typeLabel, useLoad, type GameState } from '../api'
+import { citySlug, getMonuments, getRoute, getVakfiyeLayout, progressId, useLoad } from '../api'
 import { CITIES, withCatalog } from '../cities'
-import { GoldRule } from '../components/Ornament'
+import { PlayerCrest, RouteLedger } from '../components/GameParts'
 import { Seal } from '../components/Seal'
+import { VakfiyePuzzle } from '../components/VakfiyePuzzle'
 import { nameOf } from '../contentLang'
 import { gamePath, lastGameCity } from '../gameCity'
+import { vakfiyeBoard } from '../vakfiye'
 import { useLang } from '../i18n'
+import { usePlayer } from '../player'
 import { useAuth } from '../session'
-import './discover.css'
 import './game-home.css'
 
-/** Eserin mühür yolunda sıradaki adım (kurallar sunucudadır; burada yalnızca durum okunur). */
-function stepOf(g: GameState): { n: string; label: string } {
-  if (g.visit) return { n: '✓', label: 'Altın mühür alındı' }
-  if (g.knowledge) return { n: 'III', label: 'Eseri ziyaret et, altın mühür al' }
-  if (g.ready_for_quiz) return { n: 'II', label: 'Rozeti Al soruları seni bekliyor' }
-  return { n: 'I', label: 'Rehberin anlatımını dinle ve bir soru sor' }
-}
-
 /**
- * Oyun girişi: oyunun ne olduğu, devam eden görev, Kayıp Vakfiye ilerlemesi ve mevcut oyunlara erişim. Yeni kural
- * yoktur; rota, mühür yolu ve sorular aynen kullanılır.
+ * R6.7 Vakfiye Odası (oyun girişi). Döngü: eser seç → bilgi görevini oyna → mühür ve XP kazan → vakfiye parçasını topla
+ * → sonraki eseri seç. Ekranda: kâşif (seviye, XP), Kayıp Vakfiye yapbozu ve tamamlanan eserler, tek ana eylem
+ * ("Sonraki keşif") ve şehrin bütün eserleri (hepsi seçilebilir; her satır doğrudan görev ekranına gider). Kurallar
+ * sunucudadır.
  */
 export default function GameHome() {
   const auth = useAuth()
   const { t, lang } = useLang()
+  const { profile } = usePlayer()
   const uid = progressId(auth)
   const catalog = useLoad((s) => getMonuments(s), [])
   const cities = withCatalog(CITIES, catalog.data ? catalog.data.monuments.map((m) => m.city) : null, citySlug).filter((c) => c.open)
   const remembered = lastGameCity()
-  const city = catalog.data ? (cities.find((c) => c.slug === remembered) ?? cities[0])?.slug ?? '' : ''
+  const cityInfo = catalog.data ? (cities.find((c) => c.slug === remembered) ?? cities[0]) : undefined
+  const city = cityInfo?.slug ?? ''
   const route = useLoad((s) => (city ? getRoute(city, uid, null, s) : Promise.resolve(null)), [city, uid])
   const r = route.data
-  const next = r?.stops.find((s) => s.monument_id === r.next)
-  const game = useLoad((s) => (next ? getGame(next.monument_id, uid, s).catch(() => null) : Promise.resolve(null)), [next?.monument_id, uid])
-  const cityName = cities.find((c) => c.slug === city)?.name ?? city
-  const started = !!r && (r.completed_count > 0 || remembered === city)
-  const step = game.data ? stepOf(game.data) : null
+  // Yerleşim yalnızca bu şehir için yüklendiğinde kullanılır (iki ekran geçici olarak farklı sıra göstermesin).
+  const layout = useLoad((s) => (city ? getVakfiyeLayout(city, s).then((slots) => ({ city, slots }), () => ({ city, slots: null })) : Promise.resolve(null)), [city])
+  const layoutReady = !!city && layout.data?.city === city
+  // Sonraki keşif: önce yarım kalan görev, yoksa önerilen sıradaki eser.
+  // R6.8: yalnızca görevi hazır eserler önerilir (onaylı kayıtlardan 5 soru kurulabilen).
+  const playable = r ? r.stops.filter((s) => s.quest_ready !== false) : []
+  const next = playable.find((s) => s.progress === 'started') ?? playable.find((s) => s.monument_id === r?.next) ?? playable[0]
+  const cityName = cityInfo?.name ?? city
+  // R6.9: tek ve sabit vakfiye yerleşimi (Mühür Defteri ile aynı): her eserin belgedeki yuvası sabittir.
+  const pieces = r
+    ? vakfiyeBoard(layout.data?.slots, [...r.stops, ...r.completed], new Set(r.completed.map((c) => c.monument_id)),
+      new Set(r.completed.filter((c) => c.visit).map((c) => c.monument_id)))
+    : null
+  const done = r ? [...r.completed] : []
 
   return (
-    <main className="vk-page vk-ghome">
-      <header className="vk-page__head">
-        <h1>{t('Kayıp Vakfiye')}</h1>
-        <GoldRule className="vk-page__rule" />
-        <p>{t('Vakfiyenin kayıp parçaları eserlerde saklı. Eseri dinle, soruları yanıtla, yerinde ziyaret et; her mühür bir parçayı yerine oturtur.')}</p>
+    <main className="vk-desk">
+      <header className="vk-desk__head">
+        <div className="vk-desk__title">
+          <p className="vk-desk__eyebrow">{cityName ? t('{city} · Kayıp Vakfiye', { city: cityName }) : t('Kayıp Vakfiye')}</p>
+          <h1>{t('Vakfiye Odası')}</h1>
+          <p className="vk-desk__lead">
+            {t('Bir eser seç, bilgi görevini oyna, mührünü ve vakfiyenin parçasını kazan. Sıra sende.')}
+          </p>
+        </div>
+        {profile && <PlayerCrest profile={profile} />}
       </header>
 
-      {(catalog.loading || route.loading) && !r && <p className="vk-page__state" role="status">{t('Oyun hazırlanıyor…')}</p>}
+      {(catalog.loading || route.loading) && !r && <p className="vk-desk__state" role="status">{t('Oyun hazırlanıyor…')}</p>}
       {(catalog.error || route.error) && (
-        <p className="vk-page__state vk-page__state--error" role="alert">
+        <p className="vk-desk__state vk-desk__state--error" role="alert">
           {t('Oyun bilgisi yüklenemedi.')}{' '}
           <button type="button" className="vk-link-btn" onClick={catalog.error ? catalog.reload : route.reload}>{t('Tekrar dene')}</button>
         </p>
       )}
 
-      {r && (
-        <section className="vk-ghome__current" aria-labelledby="devam-eden">
-          <div className="vk-ghome__current-head">
-            <p id="devam-eden" className="vk-ghome__label">{started ? t('Devam eden görev') : t('İlk görevin')}</p>
-            <p className="vk-ghome__city">{t('{city} rotası', { city: cityName })}</p>
-          </div>
-          {next ? (
-            <>
-              <h2>{nameOf(next, lang)}</h2>
-              <p className="vk-ghome__meta">{typeLabel(next.type)}</p>
-              {step && (
-                <p className="vk-ghome__step">
-                  <span className="vk-ghome__step-n" aria-hidden="true">{step.n}</span>
-                  <span><span className="vk-sr-only">{t('Sıradaki adım:')} </span>{t(step.label)}</span>
-                </p>
-              )}
-              <div className="vk-ghome__actions">
-                <Link to={gamePath.monument(next.monument_id)} className="vk-btn">{started ? t('Göreve devam et') : t('Göreve başla')}</Link>
-                <Link to={gamePath.route(city)} className="vk-btn vk-btn--ghost">{t('Rotayı gör')}</Link>
-              </div>
-            </>
-          ) : (
-            <>
-              <h2>{t('Kayıp Vakfiye tamamlandı')}</h2>
-              <p className="vk-ghome__meta">{t('Bu şehirdeki bütün vakfiye parçalarını buldun.')}</p>
-              <div className="vk-ghome__actions">
-                <Link to={gamePath.route(city)} className="vk-btn vk-btn--ghost">{t('Rotayı gör')}</Link>
-              </div>
-            </>
-          )}
-        </section>
+      {r && pieces && layoutReady && (
+        <article className="vk-folio vk-desk__folio">
+          <section className="vk-desk__vakfiye" aria-labelledby="vakfiye-h">
+            <p className="vk-folio__eyebrow">{t('{found} / {total} parça', { found: r.completed_count, total: r.total })}</p>
+            <h2 id="vakfiye-h" className="vk-folio__h">{t('Kayıp Vakfiye')}</h2>
+            <VakfiyePuzzle pieces={pieces.states} labels={pieces.monuments.map((m) => nameOf(m, lang))} />
+          </section>
+
+          <section className="vk-desk__next" aria-labelledby="sonraki">
+            <p id="sonraki" className="vk-folio__eyebrow">{t('Sonraki keşif')}</p>
+            {next ? (
+              <>
+                <h2 className="vk-folio__h">{nameOf(next, lang)}</h2>
+                <Link to={gamePath.monument(next.monument_id)} className="vk-waxbtn">
+                  {next.progress === 'started' ? t('Göreve Devam Et') : t('Göreve Başla')}
+                </Link>
+                <p className="vk-folio__note">{t('Ya da aşağıdan dilediğin eseri seç; hepsi açık.')}</p>
+              </>
+            ) : (
+              <>
+                <h2 className="vk-folio__h">{t('Kayıp Vakfiye tamamlandı')}</h2>
+                <p className="vk-folio__note">{t('Bu şehirdeki bütün vakfiye parçalarını buldun. Eserleri yerinde ziyaret ettikçe parçalar altınlaşır.')}</p>
+              </>
+            )}
+          </section>
+
+          <section className="vk-desk__done" aria-labelledby="tamamlanan">
+            <h2 id="tamamlanan" className="vk-folio__h">{t('Tamamlanan eserler')}</h2>
+            {done.length ? (
+              <ul className="vk-desk__donelist">
+                {done.map((c) => (
+                  <li key={c.monument_id}>
+                    <span aria-hidden="true"><Seal kind={c.visit ? 'gold' : 'knowledge'} label="" size={36} /></span>
+                    <Link to={gamePath.monument(c.monument_id)}>{nameOf(c, lang)}</Link>
+                    <span className="vk-desk__donemeta">{t(c.visit ? 'Altın mühür' : 'Bilgi mührü')}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="vk-folio__note">{t('İlk bilgi mührünü kazandığında eser burada mührüyle durur.')}</p>
+            )}
+            <Link to="/pasaport" className="vk-desk__maplink">{t('Mühür Defteri’ni aç')}</Link>
+          </section>
+
+          <section className="vk-desk__route" aria-labelledby="eserler-h">
+            <div className="vk-desk__route-head">
+              <h2 id="eserler-h" className="vk-folio__h">{t('{city} eserleri', { city: cityName })}</h2>
+              <Link to={gamePath.route(city)} className="vk-desk__maplink">{t('Haritada gör')}</Link>
+            </div>
+            <RouteLedger route={r} label={t('Rota durakları')} />
+          </section>
+        </article>
       )}
-
-      {r && (
-        <Link to="/pasaport" className="vk-ghome__progress">
-          <span className="vk-ghome__label">{t('Rozet ilerlemen')}</span>
-          <span className="vk-ghome__pieces" aria-hidden="true">
-            {Array.from({ length: r.total }, (_, i) => (
-              <span key={i} className={i < r.completed_count ? 'is-found' : ''} />
-            ))}
-          </span>
-          <span className="vk-ghome__progress-text">
-            {t('{found} / {total} vakfiye parçası', { found: r.completed_count, total: r.total })}
-            <span className="vk-ghome__more">{t('Rozetlerime bak')} →</span>
-          </span>
-        </Link>
-      )}
-
-      <section aria-labelledby="oyunlar">
-        <h2 id="oyunlar" className="vk-ghome__h">{t('Oyunlar')}</h2>
-        <ul className="vk-ghome__games">
-          <li>
-            <Link to={city ? gamePath.route(city) : gamePath.cities} className="vk-ghome__game">
-              <span className="vk-ghome__game-n" aria-hidden="true">I</span>
-              <span className="vk-ghome__game-title">{t('Şehir rotası')}</span>
-              <span className="vk-ghome__game-text">{t('En yakın açık eserden başla. Başta 3 eser açık; her bilgi mührü yeni bir eserin kilidini açar.')}</span>
-            </Link>
-          </li>
-          <li>
-            <Link to={next ? gamePath.monument(next.monument_id) : gamePath.cities} className="vk-ghome__game">
-              <span className="vk-ghome__game-n" aria-hidden="true">II</span>
-              <span className="vk-ghome__game-title">{t('Mühür yolu ve Rozeti Al')}</span>
-              <span className="vk-ghome__game-text">{t('Rehberi dinle, bir soru sor; ardından 5 kısa soru. En az 4 doğruyla bilgi mührü senin.')}</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/pasaport" className="vk-ghome__game">
-              <span className="vk-ghome__game-n" aria-hidden="true">III</span>
-              <span className="vk-ghome__game-title">{t('Kayıp Vakfiye yapbozu')}</span>
-              <span className="vk-ghome__game-text">{t('Her bilgi mührü bir parça getirir. Eseri yerinde ziyaret edince parça altınlaşır.')}</span>
-            </Link>
-          </li>
-        </ul>
-      </section>
-
-      <section className="vk-ghome__seals" aria-label={t('Mühürler')}>
-        <Seal kind="knowledge" label={t('Bilgi mührü')} size={56} />
-        <p><strong>{t('Bilgi mührü')}</strong> {t('sorularla kazanılır.')}</p>
-        <Seal kind="gold" label={t('Altın mühür')} size={56} />
-        <p><strong>{t('Altın mühür')}</strong> {t('eseri yerinde ziyaret edince gelir.')}</p>
-      </section>
-
-      <nav className="vk-ghome__exit" aria-label={t('Oyundan çık')}>
-        <Link to="/eserler" className="vk-btn vk-btn--ghost">{t('Keşfe dön')}</Link>
-        <Link to="/harita" className="vk-btn vk-btn--ghost">{t('Haritaya dön')}</Link>
-      </nav>
     </main>
   )
 }

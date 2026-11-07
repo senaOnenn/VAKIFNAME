@@ -188,6 +188,9 @@ class PublicMonument(_Public):
     # İngilizce ad ve ziyaret uyarısı (Faz 11, yönetici onaylı).
     name_en: Optional[Text] = None
     site_notice_en: Optional[Text] = None
+    # R6.17: diğer adlar ve adresin İngilizcesi (yönetici onaylı). Yer adları özgün kalır; yalnızca açıklama çevrilir.
+    alternative_names_en: tuple[Text, ...] = ()
+    address_en: Optional[Text] = None
     # Onaylı fotoğraf yoksa arayüz, açıkça temsilî diye etiketlenmiş çizim gösterir.
     illustration: Literal["representative_drawing"] = "representative_drawing"
 
@@ -247,11 +250,16 @@ def apply_overlay(base: PublicCatalog, overlay: dict) -> PublicCatalog:
         f = facts.get(t["fact_id"])
         if f is not None:
             f.update(title_en=t["title_en"], text_en=t["text_en"], en_page=t.get("en_page"), en_decision_id=t["decision_id"])
+            q, qe = f.get("quest"), t.get("quest_en")
+            # Soru çevirisi yalnızca şık sayısı tutuyorsa uygulanır; doğru cevap (`answer_index`) Türkçe sorudan gelir.
+            if q and qe and len(qe["choices"]) == len(q["choices"]):
+                q.update(question_en=qe["question"], choices_en=list(qe["choices"]), explanation_en=qe["explanation"])
     names = {m["monument_id"]: m for m in data["monuments"]}
     for t in overlay.get("monument_en", ()):
         m = names.get(t["monument_id"])
         if m is not None:
-            m.update(name_en=t.get("name_en"), site_notice_en=t.get("site_notice_en"))
+            m.update(name_en=t.get("name_en"), site_notice_en=t.get("site_notice_en"),
+                     alternative_names_en=list(t.get("alternative_names_en") or ()), address_en=t.get("address_en"))
     return PublicCatalog.model_validate(data)
 
 

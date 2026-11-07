@@ -629,11 +629,15 @@ class ContentStore:
         if base is not None:
             f = next((x for x in base.facts if x.fact_id == fact_id), None)
             if f is not None:
-                return {"monument_id": mid, "title": f.title, "text": f.text, "origin": "catalog"}
+                quest = f.quest.model_dump(mode="json", include={"question", "choices", "explanation"}) if f.quest else None
+                return {"monument_id": mid, "title": f.title, "text": f.text, "quest": quest, "origin": "catalog"}
         r = self._one("SELECT * FROM facts WHERE fact_id=?", (fact_id,))
         if r is not None:
             d = json.loads(r["data"])
-            return {"monument_id": r["monument_id"], "title": d["title"], "text": d["text"], "origin": "content"}
+            q = d.get("quest")
+            quest = {k: q[k] for k in ("question", "choices", "explanation")} if q else None
+            return {"monument_id": r["monument_id"], "title": d["title"], "text": d["text"], "quest": quest,
+                    "origin": "content"}
         return None
 
     def _translation_view(self, r: sqlite3.Row) -> dict:
@@ -641,7 +645,7 @@ class ContentStore:
         tr = self.tr_fact(r["fact_id"]) or {}
         check = self._quote_check({"quote": data.get("quote_en", ""), "source_id": data["source_id"], "page": data["page"]})
         return {"fact_id": r["fact_id"], "monument_id": r["monument_id"], "fact_title": tr.get("title"),
-                "fact_text": tr.get("text"), **data, "origin": r["origin"], "status": r["status"], "quote_check": check,
+                "fact_text": tr.get("text"), "fact_quest": tr.get("quest"), "quest_en": None, "note": None, **data, "origin": r["origin"], "status": r["status"], "quote_check": check,
                 "updated_at": r["updated_at"], "decision": self._decision(r["decision_id"])}
 
     def translation(self, fact_id: str) -> Optional[dict]:
@@ -663,6 +667,7 @@ class ContentStore:
         src = self.source(data["source_id"])
         if not 1 <= data["page"] <= src["page_count"]:
             raise ContentError(f"Sayfa 1–{src['page_count']} aralığında olmalı.", 400)
+        self._check_quest_en(tr, data.get("quest_en"))
         old = self._one("SELECT origin FROM translations WHERE fact_id=?", (fact_id,))
         origin = old["origin"] if old else origin
         if publish:
@@ -678,6 +683,21 @@ class ContentStore:
                  "published" if publish else "draft", actor, now, now, decision and decision["decision_id"]))
         self.write_overlay()
         return self.translation(fact_id)
+
+    @staticmethod
+    def _check_quest_en(tr: dict, quest_en: Optional[dict]):
+        """R6.17: sorunun İngilizcesi Türkçe sorunun kimliğine (kayıt kimliği) bağlıdır. Şık sırası ve sayısı Türkçe ile
+        aynıdır; doğru cevap Türkçe sorudaki `answer_index`tir ve çeviride yer almaz (doğrulama sunucuda değişmeden kalır)."""
+        if quest_en is None:
+            return
+        q = tr.get("quest")
+        if q is None:
+            raise ContentError("Bu kaydın Türkçe sorusu yok; İngilizce soru eklenemez.", 400)
+        choices = quest_en.get("choices") or []
+        if len(choices) != len(q["choices"]):
+            raise ContentError("İngilizce şıkların sayısı Türkçe soruyla aynı olmalı.", 400)
+        if len({pdftext.squash(c) for c in choices}) != len(choices):
+            raise ContentError("Soru seçenekleri birbirinden farklı olmalı.", 400)
 
     def translation_action(self, fact_id: str, action: str, actor: str) -> dict:
         r = self._one("SELECT * FROM translations WHERE fact_id=?", (fact_id,))
@@ -817,8 +837,11 @@ class ContentStore:
         translations = []
         for r in self._all("SELECT * FROM translations WHERE status='published' ORDER BY fact_id"):
             d = json.loads(r["data"])
-            translations.append({"fact_id": r["fact_id"], "title_en": d["title_en"], "text_en": d["text_en"],
-                                 "en_page": d["page"], "decision_id": r["decision_id"]})
+            t = {"fact_id": r["fact_id"], "title_en": d["title_en"], "text_en": d["text_en"], "en_page": d["page"],
+                 "decision_id": r["decision_id"]}
+            if d.get("quest_en"):
+                t["quest_en"] = {k: d["quest_en"][k] for k in ("question", "choices", "explanation")}
+            translations.append(t)
         monument_en = [{"monument_id": r["monument_id"], **json.loads(r["data"]), "decision_id": r["decision_id"]}
                        for r in self._all("SELECT * FROM monument_en WHERE status='published' ORDER BY monument_id")]
         return {"schema": OVERLAY_SCHEMA, "generated_at": self._clock(), "monuments": monuments,

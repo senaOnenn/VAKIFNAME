@@ -1,0 +1,140 @@
+/* Ortak iç sayfa düzeni: sayfa kabı, başlık bloğu, üst başlık, altın çizgi, durum ve sayaç satırları.
+   Görev 49 / A1: bu kurallar screens/discover.css'in başından AYNEN taşındı (seçici adları ve değerler aynı; sabitler
+   aynı değerli token'larla yazıldı). discover.css bu dosyayı en başta @import eder; böylece derlenmiş CSS'teki sıra ve
+   cascade taşımadan önceki ile birebir aynıdır. Kullanan ekranlar: eserler, eser, rehber, oyun, pasaport, rota, sorular,
+   yönetim ve uygulama düzeyindeki yükleniyor yer tutucusu (VakifnameApp). */
+/* Bilgi panelleri (vk-callout). @import en başta olmak zorunda; yalnızca yeni sınıflar tanımlar, aşağıdaki sırayı etkilemez. */
+@import './surfaces.css';
+
+.vk-page {
+  max-width: var(--vk-page-max);
+  margin: 0 auto;
+  padding: var(--vk-page-pad-top) var(--vk-page-gutter) var(--vk-page-pad-bottom);
+  display: grid;
+  gap: var(--vk-page-gap);
+}
+.vk-page__head {
+  display: grid;
+  justify-items: center;
+  gap: var(--vk-space-3);
+  text-align: center;
+}
+.vk-page__head h1 {
+  font-size: var(--vk-text-page-title);
+}
+.vk-page__head p {
+  color: var(--vk-ivory-dim);
+  max-width: var(--vk-measure);
+}
+.vk-page__eyebrow {
+  color: var(--vk-gold) !important;
+  letter-spacing: var(--vk-tracking-eyebrow);
+  text-transform: uppercase;
+  font-size: var(--vk-text-xs);
+}
+.vk-page__rule {
+  width: var(--vk-rule-width);
+}
+.vk-page__state {
+  text-align: center;
+  color: var(--vk-ivory-dim);
+}
+.vk-page__state--error {
+  color: var(--vk-danger);
+}
+.vk-page__count {
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-md);
+}
+
+/* ── Ortak durum kutusu (Görev 50 / A2, components/PageState.tsx) ──────────────────────────────────────────────
+   Gece laciverdi yüzey, hafif parşömen ışıltısı ve el yazması kenar süsü gibi ince iç altın çerçeve. Sürekli animasyon
+   yoktur (yükleniyor simgesi de durağandır); bu yüzden hareket azaltma tercihi için ayrı kural gerekmez. */
+.vk-state {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 34rem);
+  display: grid;
+  justify-items: center;
+  gap: var(--vk-space-3);
+  padding: var(--vk-space-6) var(--vk-space-5);
+  text-align: center;
+  border: 1px solid var(--vk-line);
+  border-radius: var(--vk-radius-lg);
+  background:
+    linear-gradient(180deg, rgb(241 230 200 / 0.07), rgb(241 230 200 / 0.015) 60%),
+    var(--vk-surface-raised);
+  box-shadow: var(--vk-shadow-card);
+}
+.vk-state::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--vk-line-faint);
+  border-radius: calc(var(--vk-radius-lg) - 6px);
+  pointer-events: none;
+}
+.vk-state__icon {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  border: 1px solid var(--vk-line-strong);
+  background: rgb(9 12 34 / 0.45);
+  color: var(--vk-gold-bright);
+}
+.vk-state__title {
+  font: 600 var(--vk-text-xl) / var(--vk-leading-snug) var(--vk-font-display);
+  letter-spacing: var(--vk-tracking-display);
+  color: var(--vk-ivory);
+  overflow-wrap: anywhere;
+}
+.vk-state__detail {
+  max-width: var(--vk-measure);
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-md);
+  overflow-wrap: anywhere; /* uzun sunucu hata iletisi dar ekranda taşmasın */
+}
+.vk-state__action {
+  position: relative; /* iç çerçevenin üstünde kalsın */
+  margin-top: var(--vk-space-2);
+  max-width: 100%;
+}
+/* Yükleniyor: kutu çerçevesiz ve sade; kısa süren bir durum için büyük bir kart sayfada yanıp sönmesin. */
+.vk-state--loading {
+  border-color: transparent;
+  background: none;
+  box-shadow: none;
+  padding-block: var(--vk-space-5);
+}
+.vk-state--loading::before {
+  content: none;
+}
+.vk-state--loading .vk-state__title {
+  font: 600 var(--vk-text-md) / var(--vk-leading-body) var(--vk-font-ui);
+  letter-spacing: 0;
+  color: var(--vk-ivory-dim);
+}
+.vk-state--error {
+  border-color: rgb(255 138 155 / 0.45);
+}
+.vk-state--error .vk-state__icon {
+  color: var(--vk-danger);
+  border-color: rgb(255 138 155 / 0.55);
+}
+.vk-state--error .vk-state__title {
+  color: var(--vk-danger);
+}
+.vk-state--info .vk-state__icon {
+  color: var(--vk-info);
+  border-color: rgb(143 162 255 / 0.55);
+}
+@media (max-width: 640px) {
+  .vk-state {
+    padding: var(--vk-space-5) var(--vk-space-4);
+  }
+  .vk-state__title {
+    font-size: 1.25rem;
+  }
+}

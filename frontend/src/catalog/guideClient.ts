@@ -111,7 +111,9 @@ export async function preparePhoto(file: File, maxSide = 1600): Promise<{ image:
     if (!url.startsWith('data:image/jpeg')) throw new Error('encode')
     return { image: { data: url.split(',', 2)[1], mime: 'image/jpeg' }, previewUrl: url }
   } catch {
-    // Tarayıcı yeniden kodlayamıyorsa özgün dosya gönderilir; üst veri sunucuda ayrıca silinir.
+    // Tarayıcı yeniden kodlayamıyorsa özgün dosya gönderilir; üst veri sunucuda ayrıca silinir. Sunucunun kabul etmediği
+    // biçim (ör. bu tarayıcının çözemediği HEIC) ham hâliyle gönderilmez.
+    if (file.type && !['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) throw new Error('unsupported')
     const url = await readRaw()
     const mime = file.type === 'image/png' || file.type === 'image/webp' ? file.type : 'image/jpeg'
     return { image: { data: url.split(',', 2)[1], mime }, previewUrl: url }

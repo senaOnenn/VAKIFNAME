@@ -65,6 +65,25 @@
   background: var(--vk-gold);
   border: 2px solid var(--vk-night);
 }
+/* R4 keşif rotası: plandaki eser numaralı (renk tek başına anlam taşımaz); seçili eser altın halkalı ve büyük. */
+.vk-pin--planned .vk-pin__body {
+  background: var(--vk-gold-gradient);
+  color: var(--vk-night);
+  border: 2px solid var(--vk-ivory);
+}
+.vk-rmap__halo {
+  stroke: var(--vk-ivory);
+  stroke-width: 3;
+  fill: rgb(233 200 116 / 0.18);
+}
+/* Leaflet işaretleri klavyeyle odaklanabilir (Tab, Enter); odak görünür olmalı. */
+.vk-rmap .leaflet-marker-icon:focus-visible {
+  outline: none;
+}
+.vk-rmap .leaflet-marker-icon:focus-visible .vk-pin__body {
+  outline: 3px solid var(--vk-indigo-soft);
+  outline-offset: 3px;
+}
 .vk-pin--start .vk-pin__body {
   background: var(--vk-indigo-soft);
   border: 3px solid #fff;

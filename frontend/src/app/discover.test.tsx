@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { stubFetch } from '../test/fixtures'
+import { stubFetch, SIGNED_IN, PROFILE } from '../test/fixtures'
 import VakifnameApp from './VakifnameApp'
 import type { RouteResult } from './api'
 import { INTRO_SEEN_KEY } from './screens/Intro'
@@ -63,7 +63,8 @@ const DETAIL = {
 
 function routes(overrides: Record<string, unknown> = {}) {
   return stubFetch({
-    '/auth/me': { status: 401, body: { detail: 'Oturum açık değil.' } },
+    '/auth/me': SIGNED_IN,
+    '/player/profile': PROFILE,
     '/monuments': { body: CATALOG },
     '/monuments/BUR-1001': { body: DETAIL },
     '/route': { body: ROUTE },
@@ -85,25 +86,29 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals())
 
 describe('Eserler sayfası', () => {
-  it('eserleri durum rozetleri ve görsel atfıyla listeler; türe göre süzer', async () => {
+  it('eserleri mühür rozeti ve görsel atfıyla listeler (rota kilidi gösterilmez); türe göre süzer', async () => {
     routes()
     open('/eserler')
     expect(await screen.findByRole('heading', { name: 'Koza Han' })).toBeInTheDocument()
     expect(screen.getByText('3 eser')).toBeInTheDocument()
     expect(screen.getByText('Fotoğraf: Koza Han çekeni, CC BY-SA')).toBeInTheDocument()
     expect(await screen.findByText('Bilgi mührü')).toBeInTheDocument()
-    expect(screen.getByText('Kilitli')).toBeInTheDocument()
+    // R1: rotada kilitli olan Osman Gazi Türbesi de kilit etiketi veya karartma olmadan keşfedilir.
+    expect(screen.queryByText('Kilitli')).not.toBeInTheDocument()
+    expect(document.querySelector('.vk-mcard--locked')).toBeNull()
     await userEvent.click(within(screen.getByRole('group', { name: 'Eser türü' })).getByRole('button', { name: 'Türbe' }))
     expect(screen.getByText('1 eser')).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Koza Han' })).not.toBeInTheDocument()
   })
 
-  it('harita görünümüne geçer; haritadaki esere dokununca eser sayfası açılır', async () => {
+  it('harita görünümüne geçer; haritadaki esere dokununca eser kartı açılır, karttan eser sayfasına gidilir (R4)', async () => {
     routes()
     open('/eserler')
     await screen.findByRole('heading', { name: 'Koza Han' })
     await userEvent.click(screen.getByRole('button', { name: 'Harita' }))
     await userEvent.click(await screen.findByRole('button', { name: /Harita: Bursa Ulu Camii/ }))
+    const card = (await screen.findByRole('heading', { level: 2, name: 'Bursa Ulu Camii' })).closest('section')!
+    await userEvent.click(within(card).getByRole('link', { name: 'Eseri aç' }))
     expect(await screen.findByRole('heading', { level: 1, name: 'Bursa Ulu Camii' })).toBeInTheDocument()
   })
 
@@ -113,14 +118,15 @@ describe('Eserler sayfası', () => {
     expect(await screen.findByRole('heading', { name: 'Koza Han' })).toBeInTheDocument()
     expect(screen.queryByText('Kilitli')).not.toBeInTheDocument()
   })
-  it('birden çok şehirde her şehrin kilidi kendi rotasından gelir', async () => {
+  it('birden çok şehirde her şehrin mühür durumu kendi rotasından gelir', async () => {
     const kut = { ...summary('KUT-1001', 'Kurşunlu Camii', 'cami', 39.42, 29.98), city: 'Kütahya' }
     const fetchMock = routes({ '/monuments': { body: { ...CATALOG, published_count: 4, monuments: [...CATALOG.monuments, kut] } } })
     open('/eserler')
     expect(await screen.findByRole('heading', { name: 'Kurşunlu Camii' })).toBeInTheDocument()
-    await screen.findByText('Kilitli')
+    await screen.findByText('Bilgi mührü')
     const cities = fetchMock.mock.calls.map(([u]) => new URL(String(u)).searchParams.get('city')).filter(Boolean)
     expect(new Set(cities)).toEqual(new Set(['bursa', 'kutahya']))
+    expect(screen.queryByText('Kilitli')).not.toBeInTheDocument()
   })
 })
 
@@ -144,13 +150,15 @@ describe('Rota sayfası', () => {
     expect(within(next).getByRole('heading', { name: 'Koza Han' })).toBeInTheDocument()
     expect(within(next).getByText(/şehir merkezi noktasından 510 m/)).toBeInTheDocument()
     const stops = screen.getByRole('list', { name: 'Rota durakları' })
-    expect(within(stops).getAllByRole('listitem').map((li) => li.textContent)).toEqual([
-      expect.stringContaining('Koza Han'), expect.stringContaining('Osman Gazi Türbesi'),
+    const rows = within(stops).getAllByRole('listitem')
+    expect(rows.map((li) => li.textContent)).toEqual([
+      expect.stringContaining('Koza Han'), expect.stringContaining('Osman Gazi Türbesi'), expect.stringContaining('Bursa Ulu Camii'),
     ])
-    expect(within(screen.getByRole('region', { name: 'Bulunan parçalar' })).getByText('Bursa Ulu Camii')).toBeInTheDocument()
+    // Bulunan parça rota defterinde mührüyle durur.
+    expect(within(rows[2]).getByText('Bilgi mührü kazanıldı')).toBeInTheDocument()
     const url = new URL(String(fetchMock.mock.calls.find(([u]) => String(u).includes('/route'))![0]))
     expect(url.searchParams.get('city')).toBe('bursa')
-    expect(url.searchParams.get('user_id')).toMatch(/^ziyaretci-/)
+    expect(url.searchParams.get('user_id')).toMatch(/^u-oyuncu$/)
   })
 
   it('"Konumumu kullan" rotayı kullanıcının konumuyla yeniden ister', async () => {
@@ -191,10 +199,14 @@ describe('Eser sayfası', () => {
     open('/eser/BUR-1001')
     expect(await screen.findByRole('heading', { level: 1, name: 'Bursa Ulu Camii' })).toBeInTheDocument()
     expect(screen.getByText('Aktif ibadet mekânıdır; sessiz olun.')).toBeInTheDocument()
-    const facts = screen.getByRole('region', { name: 'Tarihçe ve kaynaklar' })
-    expect(within(facts).getByText('Kaynaklarda belgelenmiş')).toBeInTheDocument()
-    expect(within(facts).getByText('Aktarılan bilgi (rivayet)')).toBeInTheDocument()
-    expect(within(facts).getByText(/Kaynak: Bursa Vakıf Eserleri, Cilt I, s\. 21/)).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /Tarih Defteri/ }))  // R3.7: yan şeritten sahnede açılır
+    const facts = screen.getByRole('dialog', { name: 'Tarih Defteri' })
+    const source = within(facts).getByRole('complementary', { name: 'Kaynak bilgisi' })
+    expect(within(source).getByText('Kaynaklarda belgelenmiş')).toBeInTheDocument()
+    expect(within(source).getByText('Bursa Vakıf Eserleri')).toBeInTheDocument()
+    expect(within(source).getByText('Cilt I, s. 21')).toBeInTheDocument()
+    await userEvent.click(within(facts).getByRole('button', { name: 'Sonraki kayıt' }))
+    expect(within(within(facts).getByRole('complementary', { name: 'Kaynak bilgisi' })).getByText('Aktarılan bilgi (rivayet)')).toBeInTheDocument()
     expect(screen.getAllByText(/Fotoğraf: Ali Veli/).length).toBeGreaterThan(0)
     expect(await screen.findByText('Bilgi mührü')).toBeInTheDocument()
   })
@@ -209,36 +221,42 @@ describe('Eser sayfası', () => {
 
 describe('Oyun paneli ve gezinme', () => {
   const GAME = {
-    monument_id: 'BUR-1009', locked: false, listened: true, asked: false, guide_required: true, ready_for_quiz: false,
+    monument_id: 'BUR-1009', locked: false, listened: true, asked: false, guide_required: false, ready_for_quiz: true, quiz_available: true,
     quiz_size: 5, pass_mark: 4, knowledge: null, visit: null, visit_radius_m: 50, simulated_visit_allowed: false, site_notice: null,
   }
   const mainNav = () => screen.getByRole('navigation', { name: 'Ana menü' })
 
-  it('oyun girişi: devam eden görev, sıradaki adım, rozet ilerlemesi, oyunlara erişim ve keşfe dönüş', async () => {
-    routes({ '/monuments/BUR-1009/game': { body: GAME } })
+  it('Vakfiye Odası (R6.7): kâşif, vakfiye, tek "sonraki keşif" eylemi, tamamlananlar ve bütün eserler (hepsi açık)', async () => {
+    routes()
     open('/oyun')
-    expect(await screen.findByRole('heading', { level: 1, name: 'Kayıp Vakfiye' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Vakfiye Odası' })).toBeInTheDocument()
     expect(within(mainNav()).getByRole('link', { name: 'Oyun' })).toHaveAttribute('aria-current', 'page')
     const gameNav = screen.getByRole('navigation', { name: 'Oyun menüsü' })
-    expect(within(gameNav).getByRole('link', { name: 'Oyun girişi' })).toHaveAttribute('aria-current', 'page')
-    const quest = await screen.findByRole('region', { name: 'Devam eden görev' })
-    expect(within(quest).getByRole('heading', { name: 'Koza Han' })).toBeInTheDocument()
-    expect(await within(quest).findByText('Rehberin anlatımını dinle ve bir soru sor')).toBeInTheDocument()
-    expect(within(quest).getByRole('link', { name: 'Göreve devam et' })).toHaveAttribute('href', '/oyun/eser/BUR-1009')
-    expect(within(quest).getByRole('link', { name: 'Rotayı gör' })).toHaveAttribute('href', '/oyun/rota/bursa')
-    expect(screen.getByRole('link', { name: /1 \/ 10 vakfiye parçası/ })).toHaveAttribute('href', '/pasaport')
-    const games = within(screen.getByRole('region', { name: 'Oyunlar' })).getAllByRole('link')
-    expect(games.map((a) => a.getAttribute('href'))).toEqual(['/oyun/rota/bursa', '/oyun/eser/BUR-1009', '/pasaport'])
-    const exit = within(screen.getByRole('navigation', { name: 'Oyundan çık' }))
-    expect(exit.getByRole('link', { name: 'Keşfe dön' })).toHaveAttribute('href', '/eserler')
-    expect(exit.getByRole('link', { name: 'Haritaya dön' })).toHaveAttribute('href', '/harita')
+    expect(within(gameNav).getByRole('link', { name: 'Vakfiye Odası' })).toHaveAttribute('aria-current', 'page')
+    const crest = screen.getByRole('region', { name: 'Kâşifin' })
+    expect(within(crest).getByRole('heading', { name: 'Gezgin' })).toBeInTheDocument()
+    expect(crest.querySelector('svg[data-character="gezgin"]')).not.toBeNull()
+    // Tek ana eylem: sonraki keşif.
+    const next = await screen.findByRole('region', { name: 'Sonraki keşif' })
+    expect(within(next).getByRole('heading', { name: 'Koza Han' })).toBeInTheDocument()
+    expect(within(next).getByRole('link', { name: 'Göreve Başla' })).toHaveAttribute('href', '/oyun/eser/BUR-1009')
+    expect(document.querySelectorAll('.vk-waxbtn')).toHaveLength(1)
+    // Bütün eserler seçilebilir; her satır görev ekranına gider (kilit yok).
+    const rows = within(screen.getByRole('list', { name: 'Rota durakları' })).getAllByRole('listitem')
+    expect(rows.map((li) => li.querySelector('a')!.getAttribute('href'))).toEqual(['/oyun/eser/BUR-1009', '/oyun/eser/BUR-1019', '/oyun/eser/BUR-1001'])
+    expect(screen.queryByText(/Kilitli|kilitli eser/)).not.toBeInTheDocument()
+    expect(within(rows[2]).getByText('Bilgi mührü kazanıldı')).toBeInTheDocument()
+    // Tamamlanan eserler ve vakfiye.
+    const done = screen.getByRole('region', { name: 'Tamamlanan eserler' })
+    expect(within(done).getByRole('link', { name: 'Bursa Ulu Camii' })).toHaveAttribute('href', '/oyun/eser/BUR-1001')
+    expect(screen.getByRole('img', { name: /Kayıp Vakfiye: 3 parçadan 1 parça bulundu, 0 parça altın/ })).toBeInTheDocument()
   })
 
   it('rota oyun panelindedir; duraklar eserin mühür yoluna gider, oyun menüsünde "Rotam" etkin', async () => {
     routes()
     open('/oyun/rota/bursa')
     const next = await screen.findByRole('region', { name: 'Sıradaki durak' })
-    expect(within(next).getByRole('link', { name: 'Mühür yoluna git' })).toHaveAttribute('href', '/oyun/eser/BUR-1009')
+    expect(within(next).getByRole('link', { name: 'Göreve Başla' })).toHaveAttribute('href', '/oyun/eser/BUR-1009')
     expect(within(next).getByRole('link', { name: 'Eseri aç' })).toHaveAttribute('href', '/eser/BUR-1009')
     const stops = screen.getByRole('list', { name: 'Rota durakları' })
     expect(within(stops).getByRole('link', { name: /Koza Han/ })).toHaveAttribute('href', '/oyun/eser/BUR-1009')
@@ -262,8 +280,7 @@ describe('Oyun paneli ve gezinme', () => {
     open('/eser/BUR-1001')
     expect(await screen.findByRole('heading', { level: 1, name: 'Bursa Ulu Camii' })).toBeInTheDocument()
     expect(within(mainNav()).getByRole('link', { name: 'Keşfet' })).toHaveAttribute('aria-current', 'page')
-    const link = await screen.findByRole('region', { name: 'Bu eserin mühür yolu' })
-    expect(within(link).getByText(/Bilgi mührünü aldın/)).toBeInTheDocument()
+    expect(await screen.findByRole('link', { name: 'Bilgi Görevine Başla' })).toHaveAttribute('href', '/oyun/eser/BUR-1001')
     expect(screen.queryByRole('button', { name: 'Konumumu doğrula' })).not.toBeInTheDocument()
     expect(screen.queryByRole('navigation', { name: 'Oyun menüsü' })).not.toBeInTheDocument()
   })
@@ -272,10 +289,11 @@ describe('Oyun paneli ve gezinme', () => {
     routes({ '/monuments/BUR-1001/game': { body: { ...GAME, monument_id: 'BUR-1001' } } })
     open('/oyun/eser/BUR-1001')
     expect(await screen.findByRole('heading', { level: 1, name: 'Bursa Ulu Camii' })).toBeInTheDocument()
+    // Ziyaret uyarısı görev eyleminden önce (CLAUDE.md §5); kaynaklı bilgiler görev ekranında (Tarih Defteri).
     const notice = screen.getByRole('complementary', { name: 'Ziyaret uyarısı' })
-    const steps = await screen.findByRole('region', { name: 'Mühür yolu' })
-    expect(notice.compareDocumentPosition(steps) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(screen.getByRole('link', { name: /Eserin hikâyesini ve kaynaklarını aç/ })).toHaveAttribute('href', '/eser/BUR-1001')
+    const go = await screen.findByRole('link', { name: 'Göreve Başla' })
+    expect(notice.compareDocumentPosition(go) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Tarih Defteri' })).toBeInTheDocument()
   })
 
   it('Keşfet ↔ Harita ↔ Oyun arasında gezinme; tarayıcının geri ve ileri tuşu çalışır', async () => {
@@ -287,12 +305,12 @@ describe('Oyun paneli ve gezinme', () => {
     expect(await screen.findByRole('heading', { level: 1, name: 'Eser haritası' })).toBeInTheDocument()
     expect(within(mainNav()).getByRole('link', { name: 'Harita' })).toHaveAttribute('aria-current', 'page')
     await userEvent.click(within(mainNav()).getByRole('link', { name: 'Oyun' }))
-    expect(await screen.findByRole('heading', { level: 1, name: 'Kayıp Vakfiye' })).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('link', { name: '← Keşfe dön' }))
+    expect(await screen.findByRole('heading', { level: 1, name: 'Vakfiye Odası' })).toBeInTheDocument()
+    await userEvent.click(within(mainNav()).getByRole('link', { name: 'Keşfet' }))
     expect(window.location.pathname).toBe('/eserler')
     await act(async () => window.history.back())
     await waitFor(() => expect(window.location.pathname).toBe('/oyun'))
-    expect(await screen.findByRole('heading', { level: 1, name: 'Kayıp Vakfiye' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Vakfiye Odası' })).toBeInTheDocument()
     await act(async () => window.history.back())
     await waitFor(() => expect(window.location.pathname).toBe('/harita'))
     await act(async () => window.history.forward())
@@ -312,7 +330,8 @@ describe('Oyun paneli ve gezinme', () => {
     })
     open('/rehber')
     expect(await screen.findByRole('heading', { level: 1, name: 'Rehbere sor' })).toBeInTheDocument()
-    expect(within(mainNav()).getByRole('link', { name: 'Rehber' })).toHaveAttribute('aria-current', 'page')
+    // R6.10: Rehber üst menüde değil; eski /rehber bağlantısı yine bu sayfayı açar.
+    expect(within(mainNav()).queryByRole('link', { name: 'Rehber' })).not.toBeInTheDocument()
     const box = await screen.findByRole('textbox')
     await waitFor(() => expect(box).toBeEnabled())
     await userEvent.type(box, 'Külliye nedir?')

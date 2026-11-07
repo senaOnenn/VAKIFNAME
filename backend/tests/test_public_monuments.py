@@ -91,7 +91,7 @@ def test_legacy_checkin_endpoint_is_gone(public):
         assert detail["checkin_available"] is True and "latitude" not in detail["checkin"]
         r = c.post("/monuments/BUR-9001/check-in", json={"user_id": "u", "latitude": 40.1801, "longitude": 29.0601})
         assert r.status_code in (404, 405)
-        assert c.get("/users/u/monument-passport").json()["total_stamps"] == 0
+        assert c.get("/users/u/monument-passport").status_code == 401  # R6.2: ilerleme yalnızca hesap oturumuyla
 
 
 def test_demo_endpoints_unchanged(public):

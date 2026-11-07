@@ -14,6 +14,8 @@ export function EnglishCard({ edit, onChange }: { edit: MonumentEdit; onChange: 
   const en = edit.monument_en ?? null
   const [name, setName] = useState(en?.name_en ?? '')
   const [notice, setNotice] = useState(en?.site_notice_en ?? '')
+  const [alt, setAlt] = useState((en?.alternative_names_en ?? []).join(', '))
+  const [address, setAddress] = useState(en?.address_en ?? '')
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ text: string; error: boolean } | null>(null)
   const byFact = new Map((edit.translations ?? []).map((t) => [t.fact_id, t]))
@@ -28,9 +30,14 @@ export function EnglishCard({ edit, onChange }: { edit: MonumentEdit; onChange: 
     setMsg(null)
     try {
       // Kart yeniden kurulmaz (onay mesajı kalır); alanlar sunucunun kaydettiği değerle güncellenir.
-      const saved = await putMonumentEn(m.monument_id, { name_en: name.trim(), site_notice_en: notice.trim() || null, publish })
+      const saved = await putMonumentEn(m.monument_id, {
+        name_en: name.trim(), site_notice_en: notice.trim() || null, publish,
+        alternative_names_en: alt.split(',').map((s) => s.trim()).filter(Boolean), address_en: address.trim() || null,
+      })
       setName(saved.name_en)
       setNotice(saved.site_notice_en ?? '')
+      setAlt((saved.alternative_names_en ?? []).join(', '))
+      setAddress(saved.address_en ?? '')
       setMsg({ text: publish ? 'İngilizce ad yayımlandı.' : 'İngilizce ad taslak olarak kaydedildi.', error: false })
       onChange()
     } catch (e) {
@@ -64,6 +71,10 @@ export function EnglishCard({ edit, onChange }: { edit: MonumentEdit; onChange: 
         <input id={`${id}-name`} lang="en" value={name} onChange={(e) => setName(e.target.value)} placeholder="ör. Grand Mosque of Bursa" />
         <label htmlFor={`${id}-notice`}>İngilizce ziyaret uyarısı (isteğe bağlı)</label>
         <textarea id={`${id}-notice`} lang="en" rows={2} value={notice} onChange={(e) => setNotice(e.target.value)} />
+        <label htmlFor={`${id}-alt`}>Diğer adların İngilizcesi (virgülle; isteğe bağlı)</label>
+        <input id={`${id}-alt`} lang="en" value={alt} onChange={(e) => setAlt(e.target.value)} />
+        <label htmlFor={`${id}-addr`}>Adresin İngilizcesi (isteğe bağlı; sokak adları özgün kalır)</label>
+        <input id={`${id}-addr`} lang="en" value={address} onChange={(e) => setAddress(e.target.value)} />
         {en?.status !== 'published' && <p className="vk-admin__note">{DRAFT_NOTE}</p>}
         <div className="vk-cform__actions">
           <button type="submit" className="vk-btn vk-btn--ghost" disabled={busy}>Taslak olarak kaydet</button>

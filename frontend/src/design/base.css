@@ -1,5 +1,7 @@
-/* Yeni arayüz sayfayı kaplar: tarayıcı varsayılan kenar boşluğu ve beyaz zemin kalkar (eski arayüzü etkilemez). */
-body:has(.vk-app) {
+/* Yeni arayüz sayfayı kaplar: tarayıcı varsayılan kenar boşluğu ve beyaz zemin kalkar (eski arayüzü etkilemez).
+   R6.12: `body:has(.vk-app)` yerine uygulamanın koyduğu sınıf. Ölçüm: `:has()` belgede her değişimde body'yi yeniden
+   değerlendirtiyor, kaydırma sırasında zaman zaman bütün belgenin (400+ öğe) stilini yeniden hesaplatıyordu. */
+body.vk-body {
   margin: 0;
   background: var(--vk-night-deep);
 }
@@ -89,6 +91,66 @@ body:has(.vk-app) {
 }
 .vk-btn--block {
   width: 100%;
+}
+
+/* ── A3.1 (Görev 52): yontulmuş düğmede görünür klavye odağı ─────────────────────────────────────────────────
+   clip-path dış çizgiyi (outline) ve gölgeyi de keser; bu yüzden genel :focus-visible halkası sekizgen düğmede
+   görünmüyordu. Halka düğmenin İÇİNE, kendi sekizgeni ile 3 px içerideki paralel sekizgen arasına çizilir
+   (polygon evenodd): biçim korunur, kesilmez. Koyu lacivert halka altın, açık ve kırmızı dolguların hepsinden ayrışır;
+   tehlike düğmesinde fildişi. ::before kullanılır; ::after ana sayfa düğmesinin ışık geçişine aittir (story.css).
+   Hap biçimli ikincil düğme (clip-path yok) genel indigo halkayı kullanır. */
+.vk-btn:not(.vk-btn--ghost):focus-visible {
+  outline: none;
+}
+.vk-btn:not(.vk-btn--ghost):focus-visible::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--vk-btn-ring, var(--vk-night-deep));
+  clip-path: polygon(
+    evenodd,
+    var(--notch) 0, calc(100% - var(--notch)) 0, 100% 50%, calc(100% - var(--notch)) 100%, var(--notch) 100%, 0 50%, var(--notch) 0,
+    calc(var(--notch) + 1.5px) 3px, 3px 50%, calc(var(--notch) + 1.5px) calc(100% - 3px),
+    calc(100% - var(--notch) - 1.5px) calc(100% - 3px), calc(100% - 3px) 50%, calc(100% - var(--notch) - 1.5px) 3px,
+    calc(var(--notch) + 1.5px) 3px
+  );
+}
+.vk-btn--danger {
+  --vk-btn-ring: var(--vk-ivory);
+}
+
+/* ── A3.2 (Görev 52): ikincil düğme hover'ı, basılma ve devre dışı ─────────────────────────────────────────────
+   Süreler token'dan gelir; hareket azaltılmışsa geçişler anında olur. Büyüme, titreşim ya da sürekli parlama yoktur. */
+.vk-btn--ghost {
+  transition: filter var(--vk-dur-fast) var(--vk-ease), transform var(--vk-dur-fast) var(--vk-ease),
+    background-color var(--vk-dur-fast) var(--vk-ease), box-shadow var(--vk-dur-fast) var(--vk-ease);
+}
+/* İkincil düğmede parlaklık filtresi saydam zeminde fark yaratmıyordu: hafif altın zemin ve parlak kenar. */
+.vk-btn--ghost:hover:not(:disabled) {
+  background-color: rgb(201 162 75 / 0.14);
+  box-shadow: inset 0 0 0 1.5px var(--vk-gold-bright);
+}
+/* Basılma: yükselme geri alınır, düğme 1 px iner ve hafifçe koyulaşır. */
+.vk-btn:active:not(:disabled) {
+  transform: translateY(1px);
+  filter: brightness(0.95);
+}
+.vk-btn--ghost:active:not(:disabled) {
+  background-color: rgb(201 162 75 / 0.22);
+}
+/* Devre dışı: soluk ve renksizleşmiş; ikincil düğmenin altın kenarı griye döner. İmleç "izin yok". */
+.vk-btn:disabled {
+  opacity: 0.5;
+  filter: saturate(0.35);
+}
+.vk-btn--ghost:disabled {
+  color: var(--vk-ivory-dim);
+  box-shadow: inset 0 0 0 1.5px rgb(201 194 174 / 0.55);
+}
+/* Genel :focus-visible kuralı köşeleri 6 px yapıyordu; hap biçimli ikincil düğme odakta da hap kalsın. */
+.vk-btn--ghost:focus-visible {
+  border-radius: var(--vk-radius-pill);
 }
 .vk-link-btn {
   background: none;

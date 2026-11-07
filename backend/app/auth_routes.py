@@ -8,7 +8,8 @@
   kayıtlı olup olmadığı girişten anlaşılmaz.
 - Google kimlik belirteci yalnızca sunucuda doğrulanır (bkz. `google_auth.py`).
 - Misafir ilerlemesi (`visitor_id`, tarayıcıda üretilen `ziyaretci-<uuid>`) giriş/kayıt anında hesaba taşınır (K8).
-- Hesap kimliğiyle (`u-…`) tutulan ilerleme yalnızca o hesabın oturumuyla okunur ve yazılır (`require_progress_access`).
+- Oyun ilerlemesi yalnızca hesapla ve o hesabın oturumuyla okunur ve yazılır (`require_progress_access`, R6.2);
+  misafir kimliğiyle oyun oynanmaz.
 - Parola, oturum belirteci ve Google belirteci loglanmaz; yanıtta geri yazılmaz (422 hatalarında da girdi gösterilmez).
 - **E-posta doğrulama ve parola yenileme** (29 Ekim kararı): bağlantı e-postayla gider (`app/mailer.py`), belirteç
   adresin `#t=` parçasındadır. Gönderim arka plan görevidir; parola yenileme isteği hesap olsa da olmasa da aynı 204
@@ -19,13 +20,13 @@
 import logging
 import os
 import re
-from typing import Annotated, Optional
+from typing import Annotated, Literal, Optional
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request, Response
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field, StringConstraints
 
 from .admin import is_admin
-from .accounts import SESSION_TTL, AccountStore, EmailTaken, GoogleAccountConflict, Provider, is_account_id, normalize_email
+from .accounts import SESSION_TTL, AccountStore, EmailTaken, GoogleAccountConflict, Provider, normalize_email
 from .google_auth import GoogleUnavailable, InvalidGoogleToken
 from .mailer import deliver, reset_mail, verification_mail
 
@@ -67,6 +68,8 @@ class RegisterRequest(BaseModel):
     password: str = Field(min_length=8, max_length=128)
     display_name: Annotated[Optional[str], Field(max_length=60), AfterValidator(_display_name)] = None
     visitor_id: Optional[VisitorId] = None
+    # Arayüz dili (R6.17): yalnızca e-postanın dilini seçer; hesapta saklanmaz.
+    lang: Literal["tr", "en"] = "tr"
 
 
 class LoginRequest(BaseModel):
@@ -89,6 +92,12 @@ class VerifyEmailRequest(BaseModel):
 class PasswordResetRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     email: Email
+    lang: Literal["tr", "en"] = "tr"
+
+
+class ResendRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    lang: Literal["tr", "en"] = "tr"
 
 
 class PasswordResetConfirm(BaseModel):
@@ -131,20 +140,20 @@ def _mail_allowed(request: Request, key: str) -> bool:
     return request.app.state.mail_limiter.check(key) is None
 
 
-def _send_verification(app, user_id: str, email: str):
+def _send_verification(app, user_id: str, email: str, lang: str = "tr"):
     token = app.state.accounts.issue_email_token(user_id, "verify")
     hours = int(app.state.accounts.token_ttls["verify"].total_seconds() // 3600)
-    deliver(app.state.mailer, email, verification_mail(app.state.public_base_url, token, hours))
+    deliver(app.state.mailer, email, verification_mail(app.state.public_base_url, token, hours, lang))
 
 
-def _send_reset(app, email: str):
+def _send_reset(app, email: str, lang: str = "tr"):
     # Hesap araması da burada (yanıttan sonra) yapılır: yanıt süresi hesabın varlığına göre değişmez.
     user = app.state.accounts.get_user_by_email(email)
     if user is None:
         return
     token = app.state.accounts.issue_email_token(user["id"], "reset")
     minutes = int(app.state.accounts.token_ttls["reset"].total_seconds() // 60)
-    deliver(app.state.mailer, user["email"], reset_mail(app.state.public_base_url, token, minutes))
+    deliver(app.state.mailer, user["email"], reset_mail(app.state.public_base_url, token, minutes, lang))
 
 
 def _signed_in(request: Request, response: Response, user: dict, provider: Provider, visitor_id: Optional[str]) -> dict:
@@ -166,17 +175,23 @@ def current_user(request: Request) -> Optional[dict]:
     return _accounts(request).session_user(request.cookies.get(SESSION_COOKIE))
 
 
-def require_progress_access(request: Request, user_id: Optional[str]):
-    """Hesap kimliğiyle (`u-<uuid>`) tutulan ilerleme yalnızca aynı hesabın oturumuyla okunur/yazılır.
+GAME_SIGN_IN = "Oyunu oynamak ve ilerlemeni görmek için giriş yapmalısın."
 
-    Misafir kimlikleri (`ziyaretci-…`) ve hesap biçiminde olmayan diğer kimlikler eskisi gibi çalışır; hiçbir hesap bu
-    biçim dışında bir kimlik almadığı için onlar üzerinden hesap verisine erişilemez.
+
+def require_progress_access(request: Request, user_id: Optional[str]):
+    """Oyun ilerlemesi (R6.2 ürün kararı) yalnızca hesapla okunur ve yazılır: oturum açık olmalı ve istenen kimlik
+    oturumun hesabı olmalıdır (`u-<uuid>`).
+
+    Oyun durumu, rota, Rozeti Al soruları, mühür ve ziyaret, rehber etkileşimi, mühür defteri ve eser görevleri bu
+    kapıdan geçer. Misafir kimliğiyle (`ziyaretci-…`) ilerleme artık okunmaz ve yazılmaz; daha önce kaydedilmiş misafir
+    ilerlemesi silinmez, giriş/kayıt anında (`visitor_id`) hesaba taşınır. Kimlik verilmeyen halka açık okumalar
+    (ör. görev listesi) etkilenmez.
     """
-    if not user_id or not is_account_id(user_id):
+    if not user_id:
         return
     user = current_user(request)
     if user is None:
-        raise HTTPException(status_code=401, detail="Bu hesabın ilerlemesi için oturum açmanız gerekir.")
+        raise HTTPException(status_code=401, detail=GAME_SIGN_IN)
     if user["id"] != user_id:
         raise HTTPException(status_code=403, detail="Bu ilerleme kaydına erişim izniniz yok.")
 
@@ -189,12 +204,12 @@ def register(body: RegisterRequest, request: Request, response: Response, backgr
     except EmailTaken:
         raise HTTPException(status_code=409, detail="Bu e-posta adresiyle kayıtlı bir hesap zaten var.") from None
     if _mail_allowed(request, f"verify:{user['id']}"):
-        background.add_task(_send_verification, request.app, user["id"], user["email"])
+        background.add_task(_send_verification, request.app, user["id"], user["email"], body.lang)
     return _signed_in(request, response, user, "password", body.visitor_id)
 
 
 @router.post("/auth/verify-email/resend", status_code=204)
-def resend_verification(request: Request, background: BackgroundTasks):
+def resend_verification(request: Request, background: BackgroundTasks, body: Optional[ResendRequest] = None):
     _limit(request)
     user = current_user(request)
     if user is None:
@@ -204,7 +219,7 @@ def resend_verification(request: Request, background: BackgroundTasks):
     if not _mail_allowed(request, f"verify:{user['id']}"):
         raise HTTPException(status_code=429, detail="Bağlantı kısa süre önce gönderildi; lütfen biraz sonra tekrar "
                                                     "deneyin.", headers={"Retry-After": "60"})
-    background.add_task(_send_verification, request.app, user["id"], user["email"])
+    background.add_task(_send_verification, request.app, user["id"], user["email"], body.lang if body else "tr")
 
 
 @router.post("/auth/verify-email")
@@ -222,7 +237,7 @@ def verify_email(body: VerifyEmailRequest, request: Request, response: Response)
 def password_reset_request(body: PasswordResetRequest, request: Request, background: BackgroundTasks):
     _limit(request)
     if _mail_allowed(request, f"reset:{body.email}"):
-        background.add_task(_send_reset, request.app, body.email)
+        background.add_task(_send_reset, request.app, body.email, body.lang)
 
 
 @router.post("/auth/password-reset/confirm")

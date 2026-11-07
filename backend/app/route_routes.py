@@ -1,6 +1,11 @@
-"""Rota API'si: şehirdeki onaylı eserlerin yürüyüş önerisi ve kilit durumu (kurallar için bkz. `route_engine.py`).
+"""Rota API'si: şehirdeki onaylı eserlerin yürüyüş önerisi ve oyuncunun her eserdeki durumu.
 
-Rota yönlendirmedir, ziyaret kilidi değildir. Eksik kilitler bu uçta, okuma sırasında açılır ve kalıcı yazılır; bilgi
+**R6.7 ürün kararı: kilit yok.** Yayımlanmış eserlerin hepsi baştan seçilebilir (`state: "unlocked"`); yürüyüş sırası
+yalnızca öneridir. Her eserin oyuncu durumu `progress` alanındadır: `new` (henüz keşfedilmedi), `started` (göreve
+başlandı: anlatım dinlendi, rehbere soruldu ya da sınav açıldı); bilgi ve altın mühür kazanılan eserler `completed`
+listesindedir. Eski kilit kayıtları (`unlocks`) silinmez; yalnızca artık erişimi kısıtlamaz.
+
+(Eski kural, kayıt için:) Rota yönlendirmedir, ziyaret kilidi değildir. Eksik kilitler bu uçta, okuma sırasında açılır ve kalıcı yazılır; bilgi
 mührü kazanıldıktan sonraki ilk çağrı sınırı yeniden doldurur. Tek istisna: rotayı hiç açmamış kullanıcı doğrudan bir
 eserin oyun ucuna gelirse ilk sınır orada, bu uçla aynı kuralla doldurulur (`monument_locked`). Koordinatı olmayan eser
 rotaya girmez. İlerleme uçlarındaki gibi hesap kimliğiyle (`u-…`) yalnızca o hesabın oturumuyla okunur
@@ -12,6 +17,7 @@ from typing import Annotated, Optional
 from fastapi import APIRouter, HTTPException, Query, Request, Response
 
 from . import route_engine
+from . import game, vakfiye
 from .auth_routes import require_progress_access
 from .models import Latitude, Longitude, UserId
 from .progress import MonumentProgressStore
@@ -41,7 +47,14 @@ def plan_city(points: list[Point], completions: list[dict], unlocked: set[str],
 
 
 def monument_locked(request: Request, monument, user_id: str) -> bool:
-    """Eser bu kullanıcı için kilitli mi (sınav ve soru cevaplama kapısı)?
+    """R6.7: hiçbir eser kilitli değildir (ürün kararı); sınav ve soru cevaplama her yayımlanmış eserde açıktır.
+    İşlev, çağıranlar ve eski kayıtlar için durur ve her zaman False döner.
+    """
+    return False
+
+
+def _legacy_monument_locked(request: Request, monument, user_id: str) -> bool:
+    """(R6.7 öncesi) Eser bu kullanıcı için kilitli mi (sınav ve soru cevaplama kapısı)?
 
     Açık sayılır: bilgi mührü kazanılmış (tamamlanmış) ya da rotada kilidi açılmış eser. Kullanıcının o şehirde hiç açık
     eseri yoksa (rotayı henüz hiç açmamışsa) sınır, `GET /route`'un konumsuz çağrısıyla aynı biçimde burada ilk kez
@@ -70,9 +83,9 @@ def monument_locked(request: Request, monument, user_id: str) -> bool:
 @router.get("/route")
 def get_route(request: Request, response: Response, city: Annotated[str, Query(max_length=64)], user_id: UserId,
               lat: Optional[Latitude] = None, lng: Optional[Longitude] = None):
-    require_progress_access(request, user_id)
     if (lat is None) != (lng is None):
         raise HTTPException(status_code=422, detail=LOCATION_PAIR)
+    require_progress_access(request, user_id)
     slug = route_engine.city_slug(city)
     points = _city_points(request, slug) if slug else []
     if not points:
@@ -85,6 +98,10 @@ def get_route(request: Request, response: Response, city: Annotated[str, Query(m
 
     store: MonumentProgressStore = request.app.state.monument_progress
     plan = store.plan_unlocks(user_id, planner)
+    started = store.started(user_id)
+    catalog = request.app.state.monuments.catalog
+    ready = {m.monument_id: game.quiz_capacity(catalog, m) >= game.QUIZ_SIZE
+             for m in catalog.monuments if m.monument_id in {s.point.monument_id for s in plan.stops}}
     response.headers["Cache-Control"] = "no-store"
     # Onaylı İngilizce ad (Faz 11); yoksa None, arayüz Türkçe adı gösterir.
     name_en = {m.monument_id: m.name_en for m in request.app.state.monuments.catalog.monuments if m.name_en}
@@ -94,13 +111,29 @@ def get_route(request: Request, response: Response, city: Annotated[str, Query(m
         "completed_count": len(plan.completed),
         "start": {"source": plan.start.source, "latitude": round(plan.start.latitude, 6),
                   "longitude": round(plan.start.longitude, 6)},
-        "next": plan.next,
+        # Öneri: tamamlanmamış eserler arasında en yakın komşu turunun ilk durağı (kilit yok).
+        "next": plan.stops[0].point.monument_id if plan.stops else None,
         "stops": [{"monument_id": s.point.monument_id, "name": s.point.name,
                    "name_en": name_en.get(s.point.monument_id), "type": s.point.type,
                    "latitude": s.point.latitude, "longitude": s.point.longitude,
-                   "state": "unlocked" if s.unlocked else "locked", "distance_m": round(s.distance_m), "order": s.order}
+                   "state": "unlocked", "progress": "started" if s.point.monument_id in started else "new",
+                   # R6.8: onaylı kayıtlardan 5 soruluk bilgi görevi kurulabiliyor mu (arayüz hazır göreve yönlendirir).
+                   "quest_ready": ready.get(s.point.monument_id, False),
+                   "distance_m": round(s.distance_m), "order": s.order}
                   for s in plan.stops],
         "completed": [{"monument_id": p.monument_id, "name": p.name,
                        "name_en": name_en.get(p.monument_id), "earned_at": c.earned_at, "visit": c.visit}
                       for p, c in plan.completed],
     }
+
+
+@router.get("/vakfiye/layout")
+def get_vakfiye_layout(request: Request, response: Response, city: Annotated[str, Query(max_length=64)]):
+    """R6.9: Kayıp Vakfiye belgesinin sabit yuva yerleşimi (bkz. `vakfiye.py`). Herkese açık ve kullanıcıya bağlı değildir:
+    yalnızca şehrin rotadaki (yayımlanmış, konumlu) eserlerinin yuva sırası. Bütün ekranlar aynı yerleşimi kullanır."""
+    slug = route_engine.city_slug(city)
+    points = _city_points(request, slug) if slug else []
+    if not points:
+        raise HTTPException(status_code=404, detail=CITY_NOT_FOUND)
+    response.headers["Cache-Control"] = "no-store"
+    return {"city": slug, "slots": vakfiye.slots(slug, (p.monument_id for p in points))}

@@ -1,7 +1,7 @@
 import { useEffect, useSyncExternalStore } from 'react'
 import { apiGet, apiPost, ApiError } from '../api/client'
 import { getVisitorId } from '../visitor'
-import { t } from './i18n'
+import { getLang, t } from './i18n'
 
 /**
  * Oturum durumu. Hesaplar sunucudadır (`/auth/*`, HttpOnly `vk_session` çerezi); tarayıcı yalnızca "misafir" tercihini
@@ -63,18 +63,36 @@ function visitor(): { visitor_id?: string } {
   return VISITOR_ID.test(id) ? { visitor_id: id } : {}
 }
 
-export async function refreshAuth(): Promise<void> {
+let retryTimer: ReturnType<typeof setTimeout> | null = null
+
+/**
+ * Oturumu sunucudan okur. Yalnızca sunucu "oturum yok" derse (401 ya da başka bir HTTP cevabı) çıkış durumuna geçilir.
+ * R6.9: sunucuya ulaşılamıyorsa (ör. backend yeniden başlatılıyor) oturum düşürülmez: giriş yapmış kullanıcı öyle kalır,
+ * açılıştaysa durum "yükleniyor" kalır ve artan aralıklarla (en çok 10 sn) yeniden denenir; sunucu dönünce aynı çerezle
+ * kullanıcı geri gelir (oturum sunucuda kalıcıdır).
+ */
+export async function refreshAuth(attempt = 0): Promise<void> {
+  if (retryTimer) {
+    clearTimeout(retryTimer)
+    retryTimer = null
+  }
   try {
     const me = await apiGet('/auth/me', undefined, AUTH)
     if (isUser(me)) return set({ status: 'user', user: me })
-  } catch {
-    /* 401 (oturum yok) veya sunucuya ulaşılamadı: misafir tercihi varsa misafir olarak sürer */
+  } catch (e) {
+    if (e instanceof ApiError && (e.kind === 'network' || e.kind === 'timeout')) {
+      if (state.status === 'loading') {
+        retryTimer = setTimeout(() => void refreshAuth(attempt + 1), Math.min(1000 * 2 ** attempt, 10_000))
+      }
+      return
+    }
+    /* 401 (oturum yok) ya da beklenmeyen cevap: misafir tercihi varsa misafir olarak sürer */
   }
   set(guestFlag() ? { status: 'guest' } : { status: 'none' })
 }
 
 export const register = (email: string, password: string) =>
-  apiPost('/auth/register', { email, password, ...visitor() }, undefined, AUTH).then(signedIn)
+  apiPost('/auth/register', { email, password, ...visitor(), lang: getLang() }, undefined, AUTH).then(signedIn)
 
 export const login = (email: string, password: string) =>
   apiPost('/auth/login', { email, password, ...visitor() }, undefined, AUTH).then(signedIn)
@@ -84,7 +102,7 @@ export const googleSignIn = (idToken: string) =>
 
 /** Doğrulama bağlantısını yeniden gönderir (oturum gerekir; aynı hesaba dakikada bir). */
 export async function resendVerification(): Promise<void> {
-  await apiPost('/auth/verify-email/resend', {}, undefined, AUTH)
+  await apiPost('/auth/verify-email/resend', { lang: getLang() }, undefined, AUTH)
 }
 
 // Aynı bağlantı aynı sayfada iki kez gönderilmesin (StrictMode efektleri iki kez çalıştırır; belirteç tek kullanımlık).
@@ -102,7 +120,7 @@ export function verifyEmail(token: string): Promise<void> {
 
 /** Parola yenileme bağlantısı ister. Sunucu hesap olsa da olmasa da aynı cevabı verir. */
 export async function requestPasswordReset(email: string): Promise<void> {
-  await apiPost('/auth/password-reset/request', { email }, undefined, AUTH)
+  await apiPost('/auth/password-reset/request', { email, lang: getLang() }, undefined, AUTH)
 }
 
 /** Bağlantıdaki belirteçle yeni parolayı kaydeder; sunucu eski oturumları kapatır ve bu cihazda oturum açar. */
@@ -169,6 +187,8 @@ export function useAuth(): AuthState {
 
 /** Yalnızca testler: depoyu başlangıç durumuna döndürür. */
 export function resetAuthForTests(): void {
+  if (retryTimer) clearTimeout(retryTimer)
+  retryTimer = null
   started = false
   verifying.clear()
   guestFlag(false)

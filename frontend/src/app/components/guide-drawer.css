@@ -1,0 +1,321 @@
+/* ══ R3.9 Rehber paneli (sağdan açılır) ve sağ kenardaki rehber düğmesi ═════════════════════════════════════════════
+   Gece laciverdi panel, ince altın kenar; içerik mevcut anlatıcı ve sohbet. Kart veya kutu kalabalığı yok. */
+
+/* R3.10 / R3.11: portre + "Rehbere Sor" etiketi tek düğme; site genelinde sağ alt köşede (ince altın kenarlı lacivert hap). */
+.vk-guidefab {
+  position: fixed;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 60px;
+  padding: 4px 4px 4px 1rem;
+  border: 1px solid rgb(201 162 75 / 0.7);
+  border-radius: 999px;
+  background: rgb(13 18 54 / 0.94);
+  box-shadow: 0 10px 26px -10px rgb(0 0 0 / 0.8);
+  color: var(--vk-ivory);
+  cursor: pointer;
+  transition: border-color var(--vk-dur-fast) var(--vk-ease), color var(--vk-dur-fast) var(--vk-ease);
+}
+.vk-guidefab__label {
+  font-family: var(--vk-font-display);
+  font-size: 1.05rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+.vk-guidefab img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 18%;
+  box-shadow: 0 0 0 1px rgb(201 162 75 / 0.6);
+}
+.vk-guidefab:hover {
+  border-color: var(--vk-gold-bright);
+  color: var(--vk-gold-bright);
+}
+/* Panel açıkken düğme panelin altında kalır; görünmez ve tıklanmaz (panelin kendi kapatma düğmesi var). */
+.vk-guidefab[aria-expanded='true'] {
+  visibility: hidden;
+}
+.vk-guidefab:focus-visible {
+  outline: 3px solid var(--vk-indigo-soft);
+  outline-offset: 4px;
+}
+
+.vk-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(420px, 100vw);
+  background: #0d1236;
+  border-left: 1px solid rgb(201 162 75 / 0.35);
+  box-shadow: -24px 0 48px -24px rgb(0 0 0 / 0.85);
+  color: var(--vk-ivory);
+  animation: vk-drawer-in 220ms var(--vk-ease) both;
+}
+.vk-drawer[hidden] {
+  display: none;
+}
+@keyframes vk-drawer-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vk-drawer {
+    animation: none;
+  }
+}
+.vk-drawer__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 0.85rem 0.85rem 1rem;
+  border-bottom: 1px solid rgb(201 162 75 / 0.22);
+}
+.vk-drawer__portrait {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 18%;
+  box-shadow: 0 0 0 1px rgb(201 162 75 / 0.6);
+}
+.vk-drawer__who h2 {
+  margin: 0;
+  font-family: var(--vk-font-display);
+  font-size: 1.3rem;
+  color: var(--vk-ivory);
+}
+.vk-drawer__who h2:focus {
+  outline: none;
+}
+.vk-drawer__who h2:focus-visible {
+  outline: 2px solid var(--vk-gold-bright);
+  outline-offset: 4px;
+}
+.vk-drawer__who p {
+  margin: 0;
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-xs);
+}
+.vk-drawer__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--vk-ivory);
+  cursor: pointer;
+}
+.vk-drawer__close svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.vk-drawer__close:hover {
+  color: var(--vk-gold-bright);
+}
+/* Gövde kayar; soru formu altta sabit kalır (sticky). */
+.vk-drawer__body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Dar panelde anlatıcı ve sohbet: kutu yok, tek sütun, sıkı boşluk. */
+.vk-drawer .vk-narr,
+.vk-mon .vk-drawer .vk-narr {
+  gap: var(--vk-space-3);
+  padding: var(--vk-space-3) var(--vk-space-4) 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+.vk-drawer .vk-narr__head {
+  padding-bottom: var(--vk-space-2);
+}
+.vk-drawer .vk-narr__tabs {
+  width: 100%;
+}
+.vk-drawer .vk-narr__tab {
+  flex: 1;
+}
+.vk-drawer .vk-narr__scene {
+  grid-template-columns: 1fr;
+}
+.vk-drawer .vk-narr__char {
+  justify-self: center;
+  width: 120px;
+  max-width: 120px;
+}
+.vk-drawer__slot--general {
+  padding: var(--vk-space-3) var(--vk-space-4) 0;
+}
+.vk-drawer .vk-chat__form {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  padding: var(--vk-space-3) 0 max(var(--vk-space-3), env(safe-area-inset-bottom));
+  background: #0d1236;
+  border-top: 1px solid rgb(201 162 75 / 0.18);
+}
+
+/* Telefon: panel tam ekran; düğme alt menünün üstünde. */
+@media (max-width: 640px) {
+  .vk-drawer {
+    width: 100vw;
+    height: 100dvh;
+    bottom: auto;
+    border-left: 0;
+  }
+  /* Telefon: kompakt hap; kabuk sayfalarında alt menünün üstünde, ana sayfada güvenli alanın üstünde. */
+  .vk-guidefab {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+    right: 12px;
+    min-height: 48px;
+    gap: 0.45rem;
+    padding: 3px 3px 3px 0.8rem;
+  }
+  .vk-guidefab--home {
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+  .vk-guidefab__label {
+    font-size: 0.95rem;
+  }
+  .vk-guidefab img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ══ R6.8 Rehber paneli: dengeli genişlik, okunur anlatım, kompakt denetimler ═══════════════════════════════════════
+   Masaüstünde ekranın üçte biri (400–500 px): oyun ekranı sıkışmaz, satır 45–60 karakter. Anlatımda Osmanlı portresi
+   altyazının yanında küçük bir madalyon olur (başlıkta zaten büyük portre ve ad var; tekrar yok). Altyazı sola yaslı,
+   sabit yükseklik yok; tam metin kendi içinde kayar. Ses, hız, sessiz mod, büyük altyazı, sohbet ve fotoğraf aynen. */
+.vk-drawer {
+  width: clamp(400px, 32vw, 500px);
+  background:
+    radial-gradient(120% 40% at 100% 0%, rgb(201 162 75 / 0.08), transparent 60%),
+    #0d1236;
+}
+.vk-drawer__head {
+  background: linear-gradient(180deg, rgb(26 32 80 / 0.6), transparent);
+}
+.vk-drawer .vk-narr .vk-narr__scene,
+.vk-drawer .vk-narr .vk-narr__scene:has(.vk-gchar--portrait) {
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--vk-space-3);
+}
+.vk-drawer .vk-narr .vk-narr__char,
+.vk-drawer .vk-narr .vk-narr__char:has(.vk-gchar--portrait) {
+  justify-self: start;
+  width: 76px;
+  max-width: 76px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgb(233 200 116 / 0.6);
+}
+.vk-drawer .vk-narr .vk-narr__who {
+  display: none; /* panel başlığında ad ve rol yazılı */
+}
+.vk-drawer .vk-narr .vk-narr__sub {
+  min-height: 0;
+  text-align: left;
+  justify-items: start;
+  padding: var(--vk-space-3) var(--vk-space-3) var(--vk-space-2);
+  border-left: 2px solid rgb(201 162 75 / 0.55);
+  border-radius: 0 6px 6px 0;
+  background: rgb(9 12 34 / 0.5);
+}
+.vk-drawer .vk-narr .vk-narr__sub::before {
+  display: none;
+}
+.vk-drawer .vk-narr .vk-narr__line {
+  max-width: 34em;
+  font: 500 1.06rem / 1.62 var(--vk-font-display);
+}
+.vk-drawer .vk-narr .vk-narr__sub--large .vk-narr__line {
+  font-size: 1.28rem;
+}
+.vk-drawer .vk-narr .vk-narr__src {
+  justify-content: flex-start;
+}
+/* Denetimler: önce oynatma sırası (‹ Dinle ›), altında ayarlar küçük ve tek satır. */
+.vk-drawer .vk-narr .vk-narr__controls {
+  justify-content: flex-start;
+  gap: 0.5rem 0.9rem;
+}
+.vk-drawer .vk-narr .vk-narr__btn {
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+}
+.vk-drawer .vk-narr .vk-narr__controls .vk-btn {
+  min-height: 40px;
+  padding: 0 1.1rem;
+}
+.vk-drawer .vk-narr .vk-narr__opt {
+  font-size: 0.82rem;
+  min-height: 40px;
+}
+.vk-drawer .vk-narr .vk-narr__note {
+  text-align: left;
+}
+.vk-drawer .vk-narr .vk-narr__transcript ol {
+  max-height: 38vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: var(--vk-space-2);
+}
+@media (max-width: 900px) {
+  .vk-drawer {
+    width: min(440px, 100vw);
+  }
+}
+@media (max-width: 640px) {
+  .vk-drawer {
+    width: 100vw;
+  }
+  .vk-drawer .vk-narr .vk-narr__scene,
+  .vk-drawer .vk-narr .vk-narr__scene:has(.vk-gchar--portrait) {
+    grid-template-columns: 60px minmax(0, 1fr);
+  }
+  .vk-drawer .vk-narr .vk-narr__char,
+  .vk-drawer .vk-narr .vk-narr__char:has(.vk-gchar--portrait) {
+    width: 60px;
+    max-width: 60px;
+  }
+}
+
+/* R6.12: panel içeriği ilk açılışta yüklenirken */
+.vk-drawer__loading {
+  margin: 0;
+  padding: var(--vk-space-5) var(--vk-space-4);
+  color: var(--vk-ivory-dim);
+  font-style: italic;
+}
+
+/* R6.13: alt menü 900 px'e kadar görünür (app-shell.css); tablette de düğme alt menünün üstünde durur ("Rozetler"i örtmez). */
+@media (min-width: 641px) and (max-width: 899px) {
+  .vk-guidefab:not(.vk-guidefab--home) {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+}

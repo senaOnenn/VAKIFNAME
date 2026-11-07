@@ -1,0 +1,261 @@
+/* ══ R4 keşif haritası ve ziyaret rotası: gece laciverdi yüzey, altın ayraç, serif başlıklar (ana sayfa dili). ══════
+   Oyun rotası ekranı (`RoutePage`, `discover.css`) bu dosyayı kullanmaz. */
+
+.vk-xmap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 22rem);
+  gap: var(--vk-space-5);
+  align-items: start;
+}
+.vk-xmap__stage {
+  display: grid;
+  gap: var(--vk-space-3);
+  min-width: 0;
+}
+.vk-xmap .vk-rmap.vk-xmap__map {
+  height: clamp(420px, 68vh, 640px);
+  border: 1px solid var(--vk-line);
+  box-shadow: var(--vk-shadow-card);
+}
+
+/* Açıklama: renk tek başına anlam taşımaz (numara ve ✓ da yazar). */
+.vk-xmap__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-2) var(--vk-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-sm);
+}
+.vk-xmap__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vk-space-2);
+}
+.vk-xmap__key {
+  display: inline-grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  font: 700 0.7rem var(--vk-font-ui);
+  color: var(--vk-night);
+}
+.vk-xmap__key--plain {
+  background: var(--vk-gold);
+  border: 2px solid var(--vk-night);
+}
+.vk-xmap__key--planned {
+  background: var(--vk-gold-gradient);
+  border: 2px solid var(--vk-ivory);
+}
+.vk-xmap__key--seal {
+  background: var(--vk-indigo);
+  border: 2px solid var(--vk-indigo-soft);
+  color: #fff;
+}
+
+/* Yan panel: seçili eser, ziyaret rotam, liste. Kutu yerine ince altın ayraçlar. */
+.vk-xmap__side {
+  display: grid;
+  gap: var(--vk-space-5);
+  min-width: 0;
+}
+.vk-xmap__hint {
+  margin: 0;
+  color: var(--vk-ivory-dim);
+  line-height: var(--vk-leading-body);
+}
+.vk-xmap__card {
+  display: grid;
+  gap: var(--vk-space-2);
+}
+.vk-xmap__photo {
+  margin: 0 0 var(--vk-space-2);
+}
+.vk-xmap__photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--vk-radius);
+  border: 1px solid var(--vk-line-faint);
+}
+.vk-xmap__photo figcaption {
+  margin-top: var(--vk-space-1);
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-xs);
+}
+.vk-xmap__eyebrow {
+  margin: 0;
+  color: var(--vk-gold);
+  font: 600 var(--vk-text-xs) var(--vk-font-ui);
+  letter-spacing: var(--vk-tracking-eyebrow);
+  text-transform: uppercase;
+}
+.vk-xmap__card h2,
+.vk-plan h2 {
+  margin: 0;
+  font-family: var(--vk-font-display);
+  font-size: var(--vk-text-xl);
+  color: var(--vk-ivory);
+}
+.vk-plan h2::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 2px;
+  margin-top: var(--vk-space-2);
+  background: var(--vk-gold);
+}
+.vk-xmap__note {
+  margin: 0;
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-sm);
+}
+.vk-xmap__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vk-space-2) var(--vk-space-3);
+  margin-top: var(--vk-space-2);
+}
+
+/* Ziyaret rotam */
+.vk-plan {
+  display: grid;
+  gap: var(--vk-space-3);
+  padding-top: var(--vk-space-4);
+  border-top: 1px solid var(--vk-line-faint);
+}
+.vk-plan__lead,
+.vk-plan__empty,
+.vk-plan__note {
+  margin: 0;
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-sm);
+  line-height: var(--vk-leading-body);
+}
+.vk-plan__list {
+  display: grid;
+  gap: var(--vk-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vk-plan__stop {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--vk-space-3);
+  padding: var(--vk-space-2) 0;
+  border-bottom: 1px solid var(--vk-line-faint);
+}
+.vk-plan__n {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--vk-gold-gradient);
+  color: var(--vk-night);
+  font: 700 0.8rem var(--vk-font-ui);
+}
+.vk-plan__body {
+  display: grid;
+  min-width: 0;
+}
+.vk-plan__name {
+  color: var(--vk-ivory);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.vk-plan__meta {
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-xs);
+}
+.vk-plan__btns {
+  display: inline-flex;
+  gap: var(--vk-space-1);
+}
+/* Dokunma hedefi en az 44 px. */
+.vk-plan__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--vk-line);
+  border-radius: var(--vk-radius-sm);
+  background: transparent;
+  color: var(--vk-gold-bright);
+  font: 600 1.05rem var(--vk-font-ui);
+  cursor: pointer;
+}
+.vk-plan__btn:hover:not(:disabled) {
+  background: var(--vk-surface-2);
+}
+.vk-plan__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.vk-plan__reset {
+  justify-self: start;
+}
+
+/* Haritaya erişemeyenler için aynı seçim listeden. */
+.vk-xmap__list {
+  padding-top: var(--vk-space-4);
+  border-top: 1px solid var(--vk-line-faint);
+}
+.vk-xmap__list summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--vk-gold-bright);
+  font-weight: 600;
+  cursor: pointer;
+}
+.vk-xmap__list ul {
+  display: grid;
+  gap: var(--vk-space-1);
+  max-height: 22rem;
+  overflow-y: auto;
+  margin: var(--vk-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.vk-xmap__pick {
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-2);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--vk-space-1) var(--vk-space-2);
+  border: 0;
+  border-radius: var(--vk-radius-sm);
+  background: transparent;
+  color: var(--vk-ivory);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.vk-xmap__pick:hover {
+  background: var(--vk-surface-2);
+}
+.vk-xmap__pick[aria-current='true'] {
+  background: var(--vk-surface-2);
+  box-shadow: inset 3px 0 0 var(--vk-gold);
+}
+
+/* Tablet ve telefon: harita üstte, panel altta; harita ekranı kaplamaz (sayfa kaydırılabilir kalır). */
+@media (max-width: 900px) {
+  .vk-xmap {
+    grid-template-columns: 1fr;
+  }
+  .vk-xmap .vk-rmap.vk-xmap__map {
+    height: clamp(320px, 55vh, 460px);
+  }
+}

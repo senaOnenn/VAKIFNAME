@@ -73,6 +73,7 @@ en az 10 dolar alınmışsa 1000 istek/gün (UTC günü). `status` komutu `GET /
 | `VAKIFNAME_GUIDE_COOKIE_SECURE` | otomatik | Test oturumu çerezinin `Secure` bayrağı; HTTPS isteklerinde kendiliğinden, TLS vekilde sonlanıyorsa `1` |
 | `VAKIFNAME_OPENROUTER_KEY_FILE` | `/etc/vakifname/secrets/openrouter_api_key` | API anahtarı dosyası |
 | `VAKIFNAME_GUIDE_MODEL` | `nvidia/nemotron-3.5-super-vl:free` | Metin modeli |
+| `VAKIFNAME_GUIDE_VISION_PROVIDER` | (boş) | R5.3: fotoğraf gözlemi için ayrı sağlayıcı. Boş: metin sağlayıcısı (eski davranış). `openrouter`: metin başka sağlayıcıdayken (ör. Evren) görsel OpenRouter'dan; ayrı devre kesici, model verilmezse `nvidia/nemotron-3.5-super-vl:free`. `/guide/status` `photo` yalnızca yüz denetimi yüklü, görsel anahtar geçerli ve model metin-yalnız bildirilmemişse `true` |
 | `VAKIFNAME_GUIDE_VISION_MODEL` | (metin modeli) | Görsel model; OpenRouter `/models` listesinde görsel girdi desteklemiyorsa fotoğraf analizi yapılmaz |
 | `VAKIFNAME_GUIDE_REASONING` | `off` | `off` / `low` / `default` — Nemotron akıl yürütme modudur; kapalıyken token ve süre azalır |
 | `VAKIFNAME_GUIDE_ALLOW_PAID_MODEL` | — | `1` verilmedikçe ücretli model çağrılmaz |

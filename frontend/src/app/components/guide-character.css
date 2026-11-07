@@ -47,3 +47,23 @@
     animation: none;
   }
 }
+
+/* ── R3.3: Osmanlı portresi (tek şeffaf görsel). Durağan: tek portreden ağız/baş hareketi üretilmez. Konuşma, anlatıcının
+   arkadaki altın ışığıyla (narrator.css) belirtilir. Portrenin alt kenarı kadrajda kesik: yumuşak geçişle zemine karışır. */
+.vk-gchar--portrait {
+  position: relative;
+  aspect-ratio: 640 / 644;
+  -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+}
+.vk-gchar--portrait .vk-gchar__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+/* Ağız varyantı (eklendiğinde): portreyle aynı kadraj; tam örtüşür. */
+.vk-gchar--portrait .vk-gchar__mouth {
+  position: absolute;
+  inset: 0;
+}

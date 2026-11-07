@@ -127,32 +127,57 @@ def public_base_url() -> str:
 
 # --- E-posta metinleri --------------------------------------------------------------------------------------------
 
-def _html(before: list[str], link: str, button: str, after: list[str]) -> str:
+_PASTE = {"tr": "Bağlantı açılmazsa bu adresi tarayıcınıza yapıştırın:",
+          "en": "If the link does not open, paste this address into your browser:"}
+
+
+def _html(before: list[str], link: str, button: str, after: list[str], lang: str = "tr") -> str:
     body = "".join(f"<p>{html.escape(p)}</p>" for p in before)
     rest = "".join(f"<p>{html.escape(p)}</p>" for p in after)
     href = html.escape(link, quote=True)
-    return ("<!doctype html><html lang=\"tr\"><body style=\"font-family:Georgia,serif;line-height:1.6;max-width:560px\">"
+    return (f"<!doctype html><html lang=\"{lang}\"><body style=\"font-family:Georgia,serif;line-height:1.6;max-width:560px\">"
             f"{body}<p><a href=\"{href}\">{html.escape(button)}</a></p>"
-            f"<p style=\"font-size:13px\">Bağlantı açılmazsa bu adresi tarayıcınıza yapıştırın:<br>{html.escape(link)}</p>"
+            f"<p style=\"font-size:13px\">{_PASTE[lang]}<br>{html.escape(link)}</p>"
             f"{rest}<p>VAKIFNAME</p></body></html>")
 
 
-def verification_mail(base_url: str, token: str, ttl_hours: int) -> tuple[str, str, str]:
+def _lang(lang: str) -> str:
+    return "en" if lang == "en" else "tr"
+
+
+def verification_mail(base_url: str, token: str, ttl_hours: int, lang: str = "tr") -> tuple[str, str, str]:
+    """Doğrulama e-postası. `lang`: kullanıcının arayüz dili (R6.17); bağlantı ve belirteç dilden bağımsızdır."""
+    lang = _lang(lang)
     link = f"{base_url}/dogrula#t={token}"
-    intro = "VAKIFNAME hesabınızı tamamlamak için bu e-posta adresinin size ait olduğunu doğrulamanız gerekiyor."
-    note = (f"Bağlantı {ttl_hours} saat geçerlidir ve yalnızca bir kez kullanılabilir. Bu hesabı siz açmadıysanız "
-            "bu e-postayı yok sayabilirsiniz.")
-    text = f"Merhaba,\n\n{intro}\n\n{link}\n\n{note}\n\nVAKIFNAME\n"
-    return "VAKIFNAME: e-posta adresinizi doğrulayın", text, _html(["Merhaba,", intro], link, "E-postamı doğrula", [note])
+    if lang == "en":
+        hello, button, subject = "Hello,", "Verify my email", "VAKIFNAME: verify your email address"
+        intro = "To complete your VAKIFNAME account, please confirm that this email address belongs to you."
+        note = (f"The link is valid for {ttl_hours} hours and can be used only once. If you did not create this account, "
+                "you can ignore this email.")
+    else:
+        hello, button, subject = "Merhaba,", "E-postamı doğrula", "VAKIFNAME: e-posta adresinizi doğrulayın"
+        intro = "VAKIFNAME hesabınızı tamamlamak için bu e-posta adresinin size ait olduğunu doğrulamanız gerekiyor."
+        note = (f"Bağlantı {ttl_hours} saat geçerlidir ve yalnızca bir kez kullanılabilir. Bu hesabı siz açmadıysanız "
+                "bu e-postayı yok sayabilirsiniz.")
+    text = f"{hello}\n\n{intro}\n\n{link}\n\n{note}\n\nVAKIFNAME\n"
+    return subject, text, _html([hello, intro], link, button, [note], lang)
 
 
-def reset_mail(base_url: str, token: str, ttl_minutes: int) -> tuple[str, str, str]:
+def reset_mail(base_url: str, token: str, ttl_minutes: int, lang: str = "tr") -> tuple[str, str, str]:
+    lang = _lang(lang)
     link = f"{base_url}/sifre-yenile#t={token}"
-    intro = "VAKIFNAME hesabınız için parola yenileme isteği aldık. Yeni parolanızı aşağıdaki bağlantıdan belirleyin."
-    note = (f"Bağlantı {ttl_minutes} dakika geçerlidir ve yalnızca bir kez kullanılabilir. İsteği siz yapmadıysanız "
-            "bu e-postayı yok sayın; parolanız değişmez.")
-    text = f"Merhaba,\n\n{intro}\n\n{link}\n\n{note}\n\nVAKIFNAME\n"
-    return "VAKIFNAME: parola yenileme", text, _html(["Merhaba,", intro], link, "Yeni parola belirle", [note])
+    if lang == "en":
+        hello, button, subject = "Hello,", "Set a new password", "VAKIFNAME: password reset"
+        intro = "We received a request to reset the password of your VAKIFNAME account. Set your new password using the link below."
+        note = (f"The link is valid for {ttl_minutes} minutes and can be used only once. If you did not make this request, "
+                "ignore this email; your password will not change.")
+    else:
+        hello, button, subject = "Merhaba,", "Yeni parola belirle", "VAKIFNAME: parola yenileme"
+        intro = "VAKIFNAME hesabınız için parola yenileme isteği aldık. Yeni parolanızı aşağıdaki bağlantıdan belirleyin."
+        note = (f"Bağlantı {ttl_minutes} dakika geçerlidir ve yalnızca bir kez kullanılabilir. İsteği siz yapmadıysanız "
+                "bu e-postayı yok sayın; parolanız değişmez.")
+    text = f"{hello}\n\n{intro}\n\n{link}\n\n{note}\n\nVAKIFNAME\n"
+    return subject, text, _html([hello, intro], link, button, [note], lang)
 
 
 def deliver(mailer: Mailer, to: str, mail: tuple[str, str, str]) -> None:

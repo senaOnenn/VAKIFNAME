@@ -42,8 +42,13 @@ VISION_SYSTEM = """Sen bir mimari fotoğraf gözlemcisisin. İki aşamada çalı
 AŞAMA 1 — BAĞIMSIZ GÖZLEM (katalogu hiç düşünmeden)
 - "building_type": görülen yapı türü; şunlardan biri: cami, külliye, medrese, türbe, han, bedesten, kilise, saray,
   konut, köprü, kale, diğer, belirsiz.
-- "description": 2-3 cümle; yalnızca GÖRDÜĞÜN fiziksel özellikler (kubbe, minare, kemer, revak, avlu, şadırvan, renk ve
-  doku, cephe düzeni, pencere, kapı, yazı vb.).
+- "description": 3-5 cümle, doğal ve akıcı Türkçe; yalnızca GÖRDÜĞÜN şeyler: yapılar ve mimari öğeler (kubbe, minare,
+  kemer, revak, avlu, şadırvan, cephe düzeni, pencere, kapı, yazı vb.), renkler ve doku, çevre (gökyüzü, ağaçlar, sokak,
+  çevredeki diğer yapılar, su, tepe) ve kompozisyon (bakış açısı, ön plan/arka plan, yakın/uzak çekim, ışık). Ziyaretçinin
+  sorusu belirli bir ayrıntıyı soruyorsa (ör. kapı, kubbe, iç mekân) önce o ayrıntıyı anlat. Görmediğin hiçbir şeyi ekleme;
+  emin olmadığın öğeyi "… gibi görünüyor" diye yaz. İnsanları kimlikleriyle değil, yalnızca "birkaç kişi" gibi genel
+  olarak an. Malzeme adı (taş, tuğla, kiremit, mermer, ahşap, kurşun vb.) kullanma: rengi ve dokuyu anlat ("kırmızı
+  çatılar", "açık renkli düzgün sıralı cephe"); malzeme izlenimi yalnızca "material_guess" alanına yazılır.
 - "features": kısa özellik listesi.
 - "architecture_explanation": YALNIZCA bu fotoğrafta gördüğün mimari öğelerin ne olduğu ve genel işlevi, 2-4 cümle
   (ör. kubbe görüyorsan "Kubbe, altındaki mekânı örten yarım küre biçimli örtüdür."). Fotoğrafta görünmeyen öğeyi

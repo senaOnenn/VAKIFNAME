@@ -15,6 +15,16 @@ Rotada açılan eserler (`unlocks`, bkz. `route_engine.py`) kalıcıdır; bir ke
 Kullanıcı kimliği tarayıcıda üretilen takma bir misafir kimliği (`ziyaretci-…`) ya da hesap kimliğidir (`u-…`, bkz.
 `accounts.py`); bu depoda kişisel veri tutulmaz. Misafir ilerlemesi girişte hesaba taşınır (`merge_user`), hesap
 silinince ilerlemesi de silinir (`delete_user`).
+
+**Oyuncu profili (`player_profiles`, R6.3)**: hesabın seçtiği karakter (yalnızca görünüş; oyunda avantaj sağlamaz).
+Yalnızca hesap kimliğiyle yazılır (misafir karakter seçemez); seçim yapılmadan satır yoktur ve varsayılan karakter
+atanmaz. Mühür, vakfiye ve rota tablolarından ayrıdır: tablo eklenirken mevcut ilerleme değişmez.
+
+**XP (`xp_events`, R6.4)**: her satır bir kazanımdır ve nedenini taşır (kaynak, eser, zaman, `origin`). XP yalnızca bu
+depodaki doğrulanmış kayıtlardan türetilir (dinleme/soru olayı, bilgi mührü, gerçek ziyaret mührü; bkz. `xp.py`);
+istemci XP yazamaz. Birincil anahtar (kullanıcı, kaynak, kapsam) aynı ödülün ikinci kez verilmesini engeller. Olay
+anında `live`, eski kayıtlardan geriye dönük türetilen satırlar `backfill` olarak işaretlenir (eski oyuncular sıfıra
+düşmez; türetme kuralı aynıdır). Mühür ve vakfiye tabloları XP'den ayrıdır ve XP onları değiştirmez.
 """
 
 import json
@@ -25,6 +35,7 @@ from pathlib import Path
 from typing import Callable, Iterable, Literal, Optional, TypeVar
 
 from .models import Stamp
+from .xp import XP_RULES
 
 SealKind = Literal["knowledge", "visit"]
 EngagementEvent = Literal["listened", "asked"]
@@ -71,9 +82,51 @@ CREATE TABLE IF NOT EXISTS quizzes (
     score INTEGER
 );
 CREATE INDEX IF NOT EXISTS quizzes_by_user ON quizzes (user_id, monument_id);
+CREATE TABLE IF NOT EXISTS xp_events (
+    user_id TEXT NOT NULL,
+    source TEXT NOT NULL CHECK (source IN ('first_discovery', 'listened', 'listen_and_ask', 'knowledge', 'visit')),
+    scope TEXT NOT NULL,
+    monument_id TEXT,
+    amount INTEGER NOT NULL CHECK (amount > 0),
+    earned_at TEXT NOT NULL,
+    origin TEXT NOT NULL CHECK (origin IN ('live', 'backfill')),
+    PRIMARY KEY (user_id, source, scope)
+);
+CREATE TABLE IF NOT EXISTS player_profiles (
+    user_id TEXT PRIMARY KEY,
+    character_id TEXT NOT NULL,
+    chosen_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 """
 
 T = TypeVar("T")
+
+# XP türetme (bkz. xp.py). Her ifade yalnızca doğrulanmış kayıtlardan okur; INSERT OR IGNORE ve birincil anahtar
+# sayesinde kaç kez çalışırsa çalışsın aynı ödül bir kez verilir. Parametreler: ?1 = origin, ?2 = user_id.
+_XP_SYNC = [
+    "INSERT OR IGNORE INTO xp_events (user_id, source, scope, monument_id, amount, earned_at, origin) "
+    f"SELECT user_id, 'listened', monument_id, monument_id, {XP_RULES['listened']}, recorded_at, ?1 "
+    "FROM engagement WHERE user_id=?2 AND event='listened'",
+    # R6.7: `listen_and_ask` artık "rehbere soru sordu" ödülüdür (isteğe bağlı; sınavın şartı değil): eserde kaydedilmiş
+    # bir `asked` olayı, eser başına bir kez. R6.4 kuralıyla (dinledi ve sordu / dinledi ve sınavı geçti) daha önce verilmiş
+    # satırlar olduğu gibi kalır; aynı anahtar ikinci kez verilmez.
+    "INSERT OR IGNORE INTO xp_events (user_id, source, scope, monument_id, amount, earned_at, origin) "
+    f"SELECT user_id, 'listen_and_ask', monument_id, monument_id, {XP_RULES['listen_and_ask']}, recorded_at, ?1 "
+    "FROM engagement WHERE user_id=?2 AND event='asked'",
+    "INSERT OR IGNORE INTO xp_events (user_id, source, scope, monument_id, amount, earned_at, origin) "
+    f"SELECT user_id, 'knowledge', monument_id, monument_id, {XP_RULES['knowledge']}, earned_at, ?1 "
+    "FROM seals WHERE user_id=?2 AND kind='knowledge'",
+    # Yalnızca gerçek ziyaret: simülasyon (sunum modu) ziyaret mührü XP vermez; gerçeğe çevrilince verilir.
+    "INSERT OR IGNORE INTO xp_events (user_id, source, scope, monument_id, amount, earned_at, origin) "
+    f"SELECT user_id, 'visit', monument_id, monument_id, {XP_RULES['visit']}, earned_at, ?1 "
+    "FROM seals WHERE user_id=?2 AND kind='visit' AND simulated=0",
+    # Hesap başına bir kez: ilk dinleme ya da (eski oyuncularda) ilk mühür.
+    "INSERT OR IGNORE INTO xp_events (user_id, source, scope, monument_id, amount, earned_at, origin) "
+    f"SELECT ?2, 'first_discovery', 'hesap', monument_id, {XP_RULES['first_discovery']}, t, ?1 FROM ("
+    "SELECT monument_id, recorded_at AS t FROM engagement WHERE user_id=?2 AND event='listened' "
+    "UNION ALL SELECT monument_id, earned_at AS t FROM seals WHERE user_id=?2) ORDER BY t, monument_id LIMIT 1",
+]
 
 
 def _now() -> str:
@@ -143,6 +196,8 @@ class MonumentProgressStore:
                 (user_id, monument_id, kind, monument_name, _now(), int(simulated)))
             row = self._db.execute("SELECT * FROM seals WHERE user_id=? AND monument_id=? AND kind=?",
                                    (user_id, monument_id, kind)).fetchone()
+            if cur.rowcount == 1:
+                self._sync_xp_locked(user_id, "live")
             return dict(row), cur.rowcount == 1
 
     def seal(self, user_id: str, monument_id: str, kind: SealKind) -> Optional[dict]:
@@ -204,7 +259,16 @@ class MonumentProgressStore:
         with self._lock:
             cur = self._db.execute("INSERT OR IGNORE INTO engagement (user_id, monument_id, event, recorded_at) "
                                    "VALUES (?,?,?,?)", (user_id, monument_id, event, _now()))
+            if cur.rowcount == 1:
+                self._sync_xp_locked(user_id, "live")
             return cur.rowcount == 1
+
+    def started(self, user_id: str) -> set[str]:
+        """R6.7 "göreve başlandı": anlatım dinlendi, rehbere soruldu ya da bilgi görevi (sınav) açıldı."""
+        with self._lock:
+            return {r[0] for r in self._db.execute(
+                "SELECT monument_id FROM engagement WHERE user_id=? UNION SELECT monument_id FROM quizzes WHERE user_id=?",
+                (user_id, user_id)).fetchall()}
 
     def engagement(self, user_id: str, monument_id: str) -> set[str]:
         with self._lock:
@@ -293,7 +357,10 @@ class MonumentProgressStore:
                 ("DELETE FROM seals WHERE user_id=?", (from_id,)),
                 ("DELETE FROM unlocks WHERE user_id=?", (from_id,)),
                 ("DELETE FROM engagement WHERE user_id=?", (from_id,)),
+                # Misafirin XP satırları taşınmaz: hesap XP'si taşınan doğrulanmış kayıtlardan yeniden türetilir.
+                ("DELETE FROM xp_events WHERE user_id=?", (from_id,)),
             ])
+            self._sync_xp_locked(to_id, "backfill")
         return {"answers": answers, "seals": seals, "unlocks": unlocks}
 
     def funnel(self) -> dict:
@@ -311,11 +378,67 @@ class MonumentProgressStore:
             }
 
     def delete_user(self, user_id: str) -> None:
-        """Kullanıcının bütün soru cevaplarını, mühürlerini, rota kilitlerini, kademe olaylarını ve sınavlarını siler
-        (hesap silme, KVKK)."""
+        """Kullanıcının bütün soru cevaplarını, mühürlerini, rota kilitlerini, kademe olaylarını, sınavlarını ve oyuncu
+        profilini siler (hesap silme, KVKK)."""
         with self._lock:
             self._transaction([(f"DELETE FROM {table} WHERE user_id=?", (user_id,))
-                               for table in ("quest_answers", "seals", "unlocks", "engagement", "quizzes")])
+                               for table in ("quest_answers", "seals", "unlocks", "engagement", "quizzes",
+                                             "player_profiles", "xp_events")])
+
+    # --- XP (R6.4) --------------------------------------------------------------------
+
+    def _sync_xp_locked(self, user_id: str, origin: str) -> int:
+        # Çağıran kilidi tutar. Tek işlem: ya hepsi ya hiçbiri.
+        return sum(self._transaction([(sql, (origin, user_id)) for sql in _XP_SYNC]))
+
+    def sync_xp(self, user_id: str, origin: str = "backfill") -> int:
+        """Doğrulanmış kayıtlardan eksik XP satırlarını türetir (eski oyuncular için geriye dönük); eklenen satır sayısı.
+        Var olan satır değişmez; aynı kayıt ikinci kez ödül vermez."""
+        with self._lock:
+            return self._sync_xp_locked(user_id, origin)
+
+    def award_xp(self, user_id: str, source: str, monument_id: str) -> bool:
+        """Olay anında verilen ödül (yalnızca sunucudaki doğrulanmış koşuldan sonra çağrılır; ör. rehber şartı yokken
+        dinlemeyle tamamlanan I. kademe). Miktar kural tablosundan gelir; ikinci çağrı etkisizdir."""
+        amount = XP_RULES[source]
+        scope = "hesap" if source == "first_discovery" else monument_id
+        with self._lock:
+            cur = self._db.execute(
+                "INSERT OR IGNORE INTO xp_events (user_id, source, scope, monument_id, amount, earned_at, origin) "
+                "VALUES (?,?,?,?,?,?, 'live')", (user_id, source, scope, monument_id, amount, _now()))
+            return cur.rowcount == 1
+
+    def xp_total(self, user_id: str) -> int:
+        with self._lock:
+            return int(self._db.execute("SELECT COALESCE(SUM(amount), 0) FROM xp_events WHERE user_id=?",
+                                        (user_id,)).fetchone()[0])
+
+    def xp_events(self, user_id: str, limit: int = 100) -> list[dict]:
+        with self._lock:
+            return [dict(r) for r in self._db.execute(
+                "SELECT source, monument_id, amount, earned_at, origin FROM xp_events WHERE user_id=? "
+                "ORDER BY earned_at DESC, rowid DESC LIMIT ?", (user_id, limit)).fetchall()]
+
+    # --- Oyuncu profili (R6.3) ---------------------------------------------------------
+
+    def profile(self, user_id: str) -> Optional[dict]:
+        """Seçilmiş karakter; seçim yapılmadıysa None (varsayılan karakter yoktur)."""
+        with self._lock:
+            row = self._db.execute("SELECT character_id, chosen_at, updated_at FROM player_profiles WHERE user_id=?",
+                                   (user_id,)).fetchone()
+        return dict(row) if row else None
+
+    def set_character(self, user_id: str, character_id: str) -> dict:
+        """Karakteri kaydeder ya da değiştirir (yalnızca görünüş). İlk seçim zamanı (`chosen_at`) korunur."""
+        now = _now()
+        with self._lock:
+            self._db.execute(
+                "INSERT INTO player_profiles (user_id, character_id, chosen_at, updated_at) VALUES (?,?,?,?) "
+                "ON CONFLICT (user_id) DO UPDATE SET character_id = excluded.character_id, updated_at = excluded.updated_at",
+                (user_id, character_id, now, now))
+            row = self._db.execute("SELECT character_id, chosen_at, updated_at FROM player_profiles WHERE user_id=?",
+                                   (user_id,)).fetchone()
+        return dict(row)
 
     # --- `services.check_in` arayüzü (yalnızca ziyaret mührü) ---------------------------
 

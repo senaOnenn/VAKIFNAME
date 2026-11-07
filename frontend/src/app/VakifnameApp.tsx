@@ -1,28 +1,23 @@
-import { lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useState, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
 import '../design/tokens.css'
 import '../design/base.css'
-import AppShell from './AppShell'
-import GameLayout from './GameLayout'
 import { gamePath } from './gameCity'
-import Account from './screens/Account'
-import AdminPage from './screens/AdminPage'
-import Auth from './screens/Auth'
-import City from './screens/City'
-import { ForgotPassword, ResetPassword, VerifyEmail } from './screens/EmailLink'
-import GameHome from './screens/GameHome'
-import GameMonument from './screens/GameMonument'
-import GuidePage from './screens/GuidePage'
+import { RequireAccount } from './RequireAccount'
 import { LangProvider } from './i18n'
 import Intro, { INTRO_SEEN_KEY } from './screens/Intro'
 import Landing from './screens/Landing'
-import MonumentPage from './screens/MonumentPage'
-import Monuments from './screens/Monuments'
-import Passport from './screens/Passport'
-import Privacy from './screens/Privacy'
-import QuizPage from './screens/QuizPage'
-import RoutePage from './screens/RoutePage'
+import { PageLoading } from './PageLoading'
+import { prefetchScreens, Screen } from './screens'
 import { trackPage } from './stats'
+// E-posta bağlantısı ekranları ana pakette kalır: bağlantıdaki belirteç adres çubuğundan ilk çizimde silinir
+// (parça yüklenmesini beklemez; güvenlik davranışı R6.12 öncesiyle aynı).
+import { ForgotPassword, ResetPassword, VerifyEmail } from './screens/EmailLink'
+import { GuideProvider } from './components/GuideWidget'
+
+// R6.12: ana sayfa dışındaki ekranlar ayrı parçalarda (bkz. screens.ts); ana sayfa oturunca boşta önceden yüklenir.
+const { AppShell, CharacterSelect, GameLayout, Account, AdminPage, Auth, City,
+  GameHome, GameMonument, GuidePage, MonumentPage, Monuments, Passport, Privacy, QuizPage, RoutePage } = Screen
 
 // İçerik yönetimi yalnızca yöneticinin açtığı ekranlardır: ayrı parçada yüklenir, ziyaretçinin paketine girmez.
 const ContentHome = lazy(() => import('./screens/admin/ContentHome'))
@@ -46,6 +41,8 @@ function introSeen(): boolean {
 function Home() {
   const [seen, setSeen] = useState(introSeen)
   const done = useCallback(() => setSeen(true), [])
+  // İlk sahne çizildikten sonra olası ekranlar boşta önceden yüklenir (geçişte bekleme ve boş ekran olmasın).
+  useEffect(() => prefetchScreens(), [])
   return seen ? <Landing /> : <Intro onDone={done} />
 }
 
@@ -67,15 +64,25 @@ function OnNavigate() {
 
 /** Yeni VAKIFNAME arayüzü (web + mobil, tek kod tabanı). */
 export default function VakifnameApp() {
+  // Sayfa zemini (base.css `body.vk-body`): ilk boyamadan önce eklenir, uygulama kalkınca geri alınır.
+  useLayoutEffect(() => {
+    document.body.classList.add('vk-body')
+    return () => document.body.classList.remove('vk-body')
+  }, [])
   return (
     <div className="vk-app">
       <LangProvider>
       <BrowserRouter>
         <OnNavigate />
+        {/* R3.11: tek "Rehbere Sor" (sayfalar arasında sohbet korunur). */}
+        <GuideProvider>
+        <Suspense fallback={<PageLoading />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/giris" element={<Auth />} />
           <Route path="/gizlilik" element={<Privacy />} />
+          {/* R6.3: ilk oyunda karakter seçimi (tam ekran; yalnızca hesapla). */}
+          <Route path="/oyun/karakter" element={<RequireAccount><CharacterSelect /></RequireAccount>} />
           <Route path="/dogrula" element={<VerifyEmail />} />
           <Route path="/sifre-sifirla" element={<ForgotPassword />} />
           <Route path="/sifre-yenile" element={<ResetPassword />} />
@@ -86,7 +93,8 @@ export default function VakifnameApp() {
             <Route path="/eser/:id" element={<MonumentPage />} />
             <Route path="/rehber" element={<GuidePage />} />
             {/* Oyun paneli: kendi başlığı ve menüsüyle ayrı bölüm (kurallar ve ilerleme aynı) */}
-            <Route path="/oyun" element={<GameLayout />}>
+            {/* R6.2: oyun ve ilerleme yalnızca hesapla (sunucu da denetler). Eski adresler oyun adreslerine yönlenir. */}
+            <Route path="/oyun" element={<RequireAccount><GameLayout /></RequireAccount>}>
               <Route index element={<GameHome />} />
               <Route path="sehir" element={<City />} />
               <Route path="rota/:city" element={<RoutePage />} />
@@ -97,7 +105,7 @@ export default function VakifnameApp() {
             <Route path="/rota/:city" element={<OldGameRoute to={(p) => gamePath.route(p.city)} />} />
             <Route path="/bursa" element={<Navigate to={gamePath.route('bursa')} replace />} />
             <Route path="/eser/:id/rozet" element={<OldGameRoute to={(p) => gamePath.quiz(p.id)} />} />
-            <Route path="/pasaport" element={<Passport />} />
+            <Route path="/pasaport" element={<RequireAccount><Passport /></RequireAccount>} />
             <Route path="/hesap" element={<Account />} />
             <Route path="/yonetim" element={<AdminPage />} />
             <Route path="/yonetim/icerik" element={later(<ContentHome />)} />
@@ -108,6 +116,8 @@ export default function VakifnameApp() {
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </Suspense>
+        </GuideProvider>
       </BrowserRouter>
       </LangProvider>
     </div>

@@ -1,43 +1,6 @@
-.vk-page {
-  max-width: 76rem;
-  margin: 0 auto;
-  padding: var(--vk-space-5) var(--vk-space-4) var(--vk-space-6);
-  display: grid;
-  gap: var(--vk-space-5);
-}
-.vk-page__head {
-  display: grid;
-  justify-items: center;
-  gap: var(--vk-space-3);
-  text-align: center;
-}
-.vk-page__head h1 {
-  font-size: clamp(1.9rem, 6vw, 3rem);
-}
-.vk-page__head p {
-  color: var(--vk-ivory-dim);
-  max-width: 38rem;
-}
-.vk-page__eyebrow {
-  color: var(--vk-gold) !important;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-}
-.vk-page__rule {
-  width: 150px;
-}
-.vk-page__state {
-  text-align: center;
-  color: var(--vk-ivory-dim);
-}
-.vk-page__state--error {
-  color: var(--vk-danger);
-}
-.vk-page__count {
-  color: var(--vk-ivory-dim);
-  font-size: 0.9rem;
-}
+/* Ortak sayfa düzeni (vk-page, başlık, durum satırları) design/page.css'tedir. @import en başta kalmalı: kurallar
+   taşınmadan önceki yerinde (bu dosyanın başında) derlenir, cascade sırası değişmez. */
+@import '../../design/page.css';
 
 /* Filtreler */
 .vk-filters {
@@ -88,6 +51,49 @@
   color: #fff;
 }
 
+/* ── A3.4 (Görev 52): Eserler filtre çipleri ─────────────────────────────────────────────────────────────────────
+   Yalnızca .vk-filters içindeki çipler (yönetim ekranlarındaki .vk-chip değişmez). onClick, aria-pressed ve süzme aynı.
+   Seçili çip renk dışında ✓ işaretiyle de ayrışır; işaret ekran okuyucudan gizlidir (durumu aria-pressed bildirir).
+   Görünüm çipi (Liste/Harita) aynı altın aileye geçer: tür çipi altın dolgu, görünüm çipi altın çerçeve + açık altın zemin. */
+.vk-filters .vk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  transition: background-color var(--vk-dur-fast) var(--vk-ease), border-color var(--vk-dur-fast) var(--vk-ease),
+    color var(--vk-dur-fast) var(--vk-ease), filter var(--vk-dur-fast) var(--vk-ease);
+}
+.vk-filters .vk-chip:hover:not(:disabled):not([aria-pressed='true']) {
+  border-color: var(--vk-gold-bright);
+  background-color: rgb(201 162 75 / 0.1);
+  color: var(--vk-ivory);
+}
+.vk-filters .vk-chip[aria-pressed='true'] {
+  padding-left: var(--vk-space-3);
+  font-weight: 700;
+}
+.vk-filters .vk-chip[aria-pressed='true']::before {
+  content: '✓';
+  content: '✓' / '';
+  font-size: 0.85em;
+  line-height: 1;
+}
+.vk-filters .vk-chip[aria-pressed='true']:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+.vk-filters .vk-chips--view .vk-chip[aria-pressed='true'] {
+  background: rgb(201 162 75 / 0.16);
+  color: var(--vk-gold-bright);
+  border-color: var(--vk-gold-bright);
+}
+.vk-filters .vk-chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+/* Genel :focus-visible kuralı köşeleri 6 px yapıyordu; çip odakta da hap kalsın (indigo halka aynı). */
+.vk-filters .vk-chip:focus-visible {
+  border-radius: var(--vk-radius-pill);
+}
+
 /* Eser kartları */
 .vk-grid {
   display: grid;
@@ -106,6 +112,16 @@
   transform: translateY(-3px);
   box-shadow: var(--vk-shadow-gold);
 }
+/* A3.3 (Görev 52): klavye odağı kartın sınırında. Kart overflow:hidden olduğu için içteki bağlantının dış halkası
+   kırpılıyordu; kartın kendi gölgesi kırpılmaz. Lacivert boşluk + parlak altın çizgi, ızgara aralığına (1.5rem) sığar.
+   Yükselme yalnızca hover'da kalır; ölçü, görsel ve atıf satırı değişmez. */
+.vk-mcard:focus-within {
+  box-shadow: inset 0 0 0 1px rgb(233 200 116 / 0.6), 0 0 0 2px var(--vk-night-deep), 0 0 0 4px var(--vk-gold-bright),
+    0 12px 40px rgb(0 0 0 / 0.45);
+}
+.vk-mcard__link:focus-visible {
+  outline: none;
+}
 .vk-mcard__link {
   color: inherit !important;
   text-decoration: none;
@@ -123,9 +139,7 @@
   object-fit: cover;
   display: block;
 }
-.vk-mcard--locked .vk-mcard__media img {
-  filter: grayscale(0.85) brightness(0.6);
-}
+/* R1: eser fotoğrafları her zaman tam renk; rota kilidi kartı karartmaz (kilit yalnızca oyun panelinde). */
 .vk-mcard__media .vk-status {
   position: absolute;
   top: var(--vk-space-3);

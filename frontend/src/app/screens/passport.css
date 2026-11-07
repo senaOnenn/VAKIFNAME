@@ -1,32 +1,292 @@
-.vk-passport__h {
-  font-size: 1.7rem;
-  text-align: center;
-  margin-bottom: var(--vk-space-4);
+/* ══ R6.16 Mühür Defteri: tek ekranlık, açılmış koleksiyon defteri ═════════════════════════════════════════════════
+   Gece laciverdi oda üzerinde tek parşömen yaprak (`.vk-folio`, game-parts.css). Başlık satırında kompakt kâşif künyesi;
+   yaprakta solda Kayıp Vakfiye, sağda 10 eserin mühür kaydı; altta tek satır kural. Ayrı sayaç paneli yoktur (sayılar
+   yapbozun altında bir kez). 1440×900'de kaydırmasız; telefonda künye → yapboz → mühürler sırasıyla akar.
+   Not: önceki `.vk-book` sınıfı Tarih Defteri bileşeniyle (HistoryBook) çakışıyordu; bu ekran artık `vk-book2` kullanır. */
+
+.vk-book2 {
+  width: min(76rem, 100%);
+  margin: 0 auto;
+  padding: clamp(1rem, 2.4vh, 1.75rem) var(--vk-space-4) var(--vk-space-5);
+  display: grid;
+  gap: clamp(0.75rem, 2vh, 1.25rem);
+  color: var(--vk-ivory);
 }
-.vk-passport__seals {
-  list-style: none;
+.vk-book2__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vk-space-3) var(--vk-space-5);
+}
+.vk-book2__head h1 {
+  margin: 0;
+  font: 600 clamp(2rem, 3.4vw, 2.75rem) / 1.05 var(--vk-font-display);
+}
+
+/* Kompakt künye: portre madalyonu, ad ve aşama, seviye ve ince XP çubuğu (tek satır). */
+.vk-book2__crest {
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-3);
+}
+.vk-book2__portrait {
+  width: 60px;
+  height: 60px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #2b3678, #141a46);
+  box-shadow: inset 0 0 0 1.5px rgb(233 200 116 / 0.7);
+}
+.vk-book2__portrait svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.vk-book2__who {
+  display: grid;
+  line-height: 1.2;
+}
+.vk-book2__name {
+  font: 600 1.25rem / 1.1 var(--vk-font-display);
+}
+.vk-book2__stage {
+  font: italic 0.92rem / 1.3 var(--vk-font-display);
+  color: var(--vk-gold-bright);
+}
+.vk-book2__lv {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  column-gap: 0.6rem;
+  padding-left: var(--vk-space-3);
+  border-left: 1px solid rgb(201 162 75 / 0.35);
+  font-size: 0.9rem;
+}
+.vk-book2__lv > span:first-child {
+  font: 600 1rem / 1.2 var(--vk-font-display);
+}
+.vk-book2__xp {
+  color: var(--vk-ivory-dim);
+}
+.vk-book2__meter {
+  grid-column: 1 / -1;
+  width: 11rem;
+  height: 4px;
+  margin-top: 0.35rem;
+  appearance: none;
+  border: 0;
+  border-radius: 2px;
+  background: rgb(243 234 211 / 0.18);
+  overflow: hidden;
+}
+.vk-book2__meter::-webkit-progress-bar {
+  background: rgb(243 234 211 / 0.18);
+}
+.vk-book2__meter::-webkit-progress-value {
+  background: var(--vk-gold-gradient);
+}
+.vk-book2__meter::-moz-progress-bar {
+  background: var(--vk-gold-gradient);
+}
+
+/* Yaprak: iki sayfa (sol vakfiye, sağ mühürler), ortada ince cilt çizgisi. */
+.vk-book2__folio {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-areas:
+    'vakfiye seals'
+    'rule rule';
+  column-gap: clamp(1.5rem, 3.5vw, 3rem);
+  row-gap: var(--vk-space-3);
+  padding: clamp(1.25rem, 3vh, 2rem) clamp(1.25rem, 3vw, 2.5rem);
+}
+.vk-book2__h {
+  margin: 0;
+  font: 600 1.35rem / 1.2 var(--vk-font-display);
+  color: var(--ink);
+}
+.vk-book2__vakfiye {
+  grid-area: vakfiye;
+  display: grid;
+  /* Başlık sağdaki "Mühürler" ile aynı hizada; yapboz kalan alanın ortasında, sayılar altında. */
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  gap: var(--vk-space-3);
+  padding-right: clamp(1.25rem, 3vw, 2.5rem);
+  border-right: 1px solid var(--rule);
+}
+.vk-book2__vakfiye .vk-puzzle {
+  width: 100%;
+}
+.vk-book2__vakfiye .vk-puzzle svg {
+  max-height: 48vh;
+}
+.vk-book2__vakfiye .vk-piece__hole {
+  fill: rgb(122 90 22 / 0.08);
+  stroke: rgb(122 90 22 / 0.45);
+}
+.vk-book2__count {
+  margin: 0;
+  text-align: center;
+  font: 500 1.05rem / 1.4 var(--vk-font-display);
+  color: var(--ink);
+}
+
+.vk-book2__seals {
+  grid-area: seals;
+  display: grid;
+  align-content: start;
+  gap: var(--vk-space-2);
+  min-width: 0;
+}
+.vk-book2__seals-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--vk-space-2) var(--vk-space-4);
+}
+.vk-book2__legend {
+  margin: 0;
+  display: flex;
+  gap: var(--vk-space-3);
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+.vk-book2__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.vk-book2__list {
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: var(--vk-space-3);
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  list-style: none;
 }
-.vk-passport__seals a {
+.vk-book2__row {
   display: grid;
-  justify-items: center;
-  gap: var(--vk-space-2);
-  padding: var(--vk-space-4) var(--vk-space-3);
-  border-radius: var(--vk-radius);
-  background: var(--vk-surface);
-  text-align: center;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--vk-space-3);
+  min-height: 44px;
+  padding: 0.3rem 0;
+  border-top: 1px solid var(--rule);
+}
+.vk-book2__row:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.vk-book2__marks {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+/* Mühür işareti: kazanılmışsa dolu ve parlak, değilse sakin kesik halka. */
+.vk-sealmark {
+  display: inline-block;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px dashed rgb(94 81 64 / 0.4);
+  background: transparent;
+}
+.vk-sealmark--knowledge.is-on {
+  border: 0;
+  background: radial-gradient(circle at 35% 30%, #8fa2ff, #4a5bff 60%, #2b3399);
+  box-shadow: 0 1px 3px rgb(43 51 153 / 0.5), inset 0 0 0 1.5px rgb(255 255 255 / 0.35);
+}
+.vk-sealmark--gold.is-on {
+  border: 0;
+  background: radial-gradient(circle at 35% 30%, #fff3cf, #e9c874 45%, #8a6a22);
+  box-shadow: 0 1px 3px rgb(138 106 34 / 0.6), inset 0 0 0 1.5px rgb(255 255 255 / 0.4);
+}
+.vk-app a.vk-book2__mname {
+  font: 600 1.05rem / 1.25 var(--vk-font-display);
+  color: var(--ink);
   text-decoration: none;
-  color: inherit !important;
-  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.18);
+  overflow-wrap: anywhere;
 }
-.vk-passport__name {
-  font: 600 1.1rem var(--vk-font-display);
+.vk-app a.vk-book2__mname:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
-.vk-passport__meta {
-  color: var(--vk-ivory-dim);
-  font-size: 0.8rem;
+.vk-app a.vk-book2__mname:focus-visible {
+  outline: 2px solid var(--ink-gold);
+  outline-offset: 2px;
+}
+.vk-app .vk-book2__row--empty a.vk-book2__mname {
+  color: var(--ink-dim);
+  font-weight: 500;
+}
+.vk-book2__meta {
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+  text-align: right;
+  white-space: nowrap;
+}
+.vk-book2__row--gold .vk-book2__meta {
+  color: var(--ink-gold);
+}
+.vk-book2__rule {
+  grid-area: rule;
+  margin: 0;
+  padding-top: var(--vk-space-3);
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  font-size: 0.86rem;
+  color: var(--ink-dim);
+}
+/* Balmumu kırmızısı yalnızca küçük bir mühür lekesi olarak: kural notunun başında. */
+.vk-book2__rule::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #c2455a, #8e2a3a 70%);
+  vertical-align: -1px;
+}
+
+@media (max-width: 900px) {
+  .vk-book2__folio {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'vakfiye' 'seals' 'rule';
+    row-gap: var(--vk-space-5);
+  }
+  .vk-book2__vakfiye {
+    padding-right: 0;
+    padding-bottom: var(--vk-space-4);
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .vk-book2__vakfiye .vk-puzzle svg {
+    max-height: none;
+  }
+}
+@media (max-width: 640px) {
+  .vk-book2 {
+    padding: var(--vk-space-4) var(--vk-space-3) var(--vk-space-6);
+  }
+  .vk-book2__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .vk-book2__row {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'marks name' 'marks meta';
+    row-gap: 0.1rem;
+    padding: 0.45rem 0;
+  }
+  .vk-book2__marks { grid-area: marks; }
+  .vk-app a.vk-book2__mname { grid-area: name; }
+  .vk-book2__meta {
+    grid-area: meta;
+    text-align: left;
+    white-space: normal;
+  }
+  .vk-book2__meter {
+    width: 9rem;
+  }
 }

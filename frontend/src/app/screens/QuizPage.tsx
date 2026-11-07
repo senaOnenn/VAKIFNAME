@@ -6,6 +6,7 @@ import { Seal } from '../components/Seal'
 import { creditIn, nameOf } from '../contentLang'
 import { gamePath } from '../gameCity'
 import { useLang } from '../i18n'
+import { usePlayer } from '../player'
 import { useAuth } from '../session'
 import './discover.css'
 import './monument.css'
@@ -54,6 +55,7 @@ function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: number |
 export default function QuizPage() {
   const { id = '' } = useParams()
   const { t, lang } = useLang()
+  const player = usePlayer()
   const auth = useAuth()
   const uid = progressId(auth)
   const monument = useLoad((s) => getMonument(id, s), [id])
@@ -82,6 +84,7 @@ export default function QuizPage() {
     setBusy(true)
     try {
       setResult(await submitQuiz(quiz.quiz_id, uid, quiz.questions.map((q) => ({ qid: q.qid, choice: answers[q.qid] }))))
+      player.refresh() // R6.4: XP sunucuda verildiyse bildirim çıkar
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t('Cevaplar gönderilemedi.'))
     } finally {
@@ -91,7 +94,7 @@ export default function QuizPage() {
 
   const name = monument.data ? nameOf(monument.data, lang) : t('Eser')
   const turkishOnly = lang === 'en' && quiz?.lang === 'tr'
-  const back = <Link to={gamePath.monument(id)} className="vk-btn vk-btn--ghost">← {t('Mühür yoluna dön')}</Link>
+  const back = <Link to={gamePath.monument(id)} className="vk-btn vk-btn--ghost">← {t('Göreve dön')}</Link>
 
   if (error)
     return (

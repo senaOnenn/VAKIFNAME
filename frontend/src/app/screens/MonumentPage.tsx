@@ -1,99 +1,73 @@
+import { useEffect, useId, useRef, useState, type MouseEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { citySlug, getGame, getMonument, getPeople, getRoute, mediaUrl, progressId, sendEngagement, statusMap, typeLabel, useLoad, type GameState, type MonumentFact } from '../api'
-import { PeopleCards } from '../components/PeopleCards'
-import { Seal } from '../components/Seal'
-import { Narrator } from '../components/Narrator'
-import { GoldRule } from '../components/Ornament'
-import { StatusBadge } from '../components/StatusBadge'
-import { creditIn, factIn, nameOf, textIn } from '../contentLang'
+import { accountId, citySlug, getGame, getLocalPhotos, getMonument, getPeople, getRoute, localMediaUrl, mediaUrl, statusMap, useLoad } from '../api'
+import { ExhibitDialog } from '../components/ExhibitDialog'
+import { useGuide } from '../components/GuideWidget'
+import { HistoryBook } from '../components/HistoryBook'
+import { ExhibitHero, ExhibitHighlights, ExhibitRecord, highlightFacts, leadFact, sourceIndex } from '../components/MonumentDetail'
+import { PhotoArchive, type ArchivePhoto } from '../components/PhotoArchive'
+import { VisitPlanner } from '../components/VisitPlanner'
 import { gamePath } from '../gameCity'
+import { sealOnly, StatusBadge } from '../components/StatusBadge'
+import { creditIn, nameOf, textIn } from '../contentLang'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
 import './discover.css'
 import './monument.css'
-
-/** Doğrulanmamış içerik kesin bilgi gibi sunulmaz (şartname 5.1.3): kesinlik her bilgide görünür. */
-const CERTAINTY: Record<string, string> = {
-  documented: 'Kaynaklarda belgelenmiş',
-  reported: 'Aktarılan bilgi (rivayet)',
-  uncertain: 'Kesin değil',
-}
-
-function FactItem({ f }: { f: MonumentFact }) {
-  const { t, lang } = useLang()
-  const c = factIn(f, lang)
-  return (
-    <li className="vk-fact">
-      <h3 lang={c.turkishOnly ? 'tr' : undefined}>{c.title}</h3>
-      <p lang={c.turkishOnly ? 'tr' : undefined}>{c.text}</p>
-      {c.turkishOnly && <p className="vk-fact__tr">{t('Bu bilginin onaylı İngilizcesi henüz yok; kaynaktaki Türkçesi gösteriliyor.')}</p>}
-      <p className="vk-fact__meta">
-        <span className={`vk-cert vk-cert--${f.certainty}`}>{CERTAINTY[f.certainty] ? t(CERTAINTY[f.certainty]) : f.certainty}</span>
-        <span>
-          {t('Kaynak: {title}, s. {page}', { title: f.source.title, page: c.page })}
-          {f.sources?.map((s) => (
-            <span key={s.url}>
-              {' · '}
-              <a href={s.url} target="_blank" rel="noreferrer">{s.publisher || s.title}</a>
-            </span>
-          ))}
-        </span>
-      </p>
-    </li>
-  )
-}
-
-/** Eserin oyundaki durumu ve sıradaki adım (Türkçe anahtar; ekranda çevrilir). */
-function gameNote(g: GameState): string {
-  if (g.locked) return 'Bu eser rotanda henüz kilitli; açık eserlerin mührünü aldıkça kilidi açılır.'
-  if (g.visit) return 'Bu eserin altın mührü sende.'
-  if (g.knowledge) return 'Bilgi mührünü aldın. Eseri yerinde ziyaret edersen mührün altına dönüşür.'
-  if (g.ready_for_quiz) return 'Anlatımı dinledin. Rozeti Al soruları seni bekliyor.'
-  return g.guide_required
-    ? 'Yukarıdaki anlatımı sonuna kadar dinle ve rehbere bir soru sor; Rozeti Al soruları açılır.'
-    : 'Yukarıdaki anlatımı sonuna kadar dinle; Rozeti Al soruları açılır.'
-}
+import './monument-layout.css'
+import './monument-exhibit.css'
 
 /**
- * Oyuna bağlantı: eser sayfası katalogdur, oyun kontrolleri (sorular, ziyaret doğrulaması) oyun panelindedir. Burada
- * yalnızca mühür durumu ve panele geçiş görünür; I. kademe (dinle ve sor) bu sayfadaki anlatımla sayılır.
- */
-function GameLink({ id, game }: { id: string; game: GameState }) {
-  const { t } = useLang()
-  const seal = game.visit ? 'gold' : game.knowledge ? 'knowledge' : 'empty'
-  return (
-    <section className="vk-gamelink" aria-labelledby="oyun-baglanti">
-      <Seal kind={seal} size={56} label={t(seal === 'gold' ? 'Altın mühür' : seal === 'knowledge' ? 'Bilgi mührü' : 'Mühür henüz yok')} />
-      <div className="vk-gamelink__text">
-        <p className="vk-page__eyebrow">{t('Oyun')}</p>
-        <h2 id="oyun-baglanti">{t('Bu eserin mühür yolu')}</h2>
-        <p>{t(gameNote(game))}</p>
-      </div>
-      <Link to={gamePath.monument(id)} className="vk-btn">{t('Mühür yoluna git')}</Link>
-    </section>
-  )
-}
-
-/**
- * Eser sayfası. Sıra: görsel ve kimlik → karakter anlatımı ve sohbet → ziyaret uyarısı → kaynaklı ayrıntı (ikinci
- * katman, gizlenmez) → galeri (her görselde atıf).
+ * Eser sayfası (R6.11): bütün eserler için TEK sergi şablonu (components/MonumentDetail.tsx). İlk ekranda eserin adı,
+ * kaynaklı kısa girişi, temel bilgileri, ziyaret notu, bilgi görevi ve harita; yanında kemerli nişte iki arşiv nesnesi
+ * (Tarih Defteri, Fotoğraf Arşivi) üst katmanda açılan pencerelere girer. Altta öne çıkan 2–3 kayıt ve duvar etiketi
+ * (ziyaret, ayrıntılı künye, kaynak yayın). Büyük kapak fotoğrafı yoktur. Rehber site genelindeki sağ alt düğmededir.
  */
 export default function MonumentPage() {
   const { id = '' } = useParams()
   const auth = useAuth()
-  const uid = progressId(auth)
+  // R6.2: mühür durumu ve oyun bağlantısı yalnızca hesapla; misafir ilerleme isteği göndermez.
+  const uid = accountId(auth)
   const { t, lang } = useLang()
   const m = useLoad((s) => getMonument(id, s), [id])
   const city = m.data ? citySlug(m.data.city) : ''
-  const route = useLoad((s) => (city ? getRoute(city, uid, null, s).catch(() => null) : Promise.resolve(null)), [city, uid])
+  const route = useLoad((s) => (city && uid ? getRoute(city, uid, null, s).catch(() => null) : Promise.resolve(null)), [city, uid])
   const status = statusMap(route.data)[id]
-  // Oyun durumu (Faz 5). Uç yoksa veya hata verirse panel gösterilmez; eser bilgisi yine okunur.
-  const game = useLoad((s) => getGame(id, uid, s), [id, uid])
-  // Tarihî kişiler kartla görünür; anlatıcı yerel rehberdir (K4). Yüklenemezse kart gösterilmez.
+  // Oyun durumu (Faz 5). Uç yoksa veya hata verirse görev çağrısı gösterilmez; eser bilgisi yine okunur.
+  const game = useLoad((s) => (uid ? getGame(id, uid, s) : Promise.resolve(null)), [id, uid])
+  // Tarihî kişiler (bâni, burada yatan, yeniden yaptıran): onaylı kayda bağlı eşleme. Yüklenemezse gösterilmez.
   const people = useLoad((s) => getPeople(id, s).catch(() => []), [id])
-  const engage = (event: 'listened' | 'asked') => {
-    sendEngagement(id, uid, event).then(game.reload, () => undefined)
+  const hlId = useId()
+  const recId = useId()
+  const visitId = useId()
+  const bookH = useId()
+  const photosH = useId()
+  // Aynı anda tek pencere: Tarih Defteri ya da Fotoğraf Arşivi (rehber paneli de kapanır). Odak açan nesneye döner.
+  const [dlg, setDlg] = useState<'book' | 'photos' | null>(null)
+  const opener = useRef<HTMLElement | null>(null)
+  const bookBtn = useRef<HTMLButtonElement>(null)
+  const photosBtn = useRef<HTMLButtonElement>(null)
+  useEffect(() => setDlg(null), [id])
+  // R6.15.2: yerel önizleme fotoğrafları yalnızca Fotoğraf Arşivi ilk açıldığında istenir (ilk sayfa yüklemesine girmez);
+  // canlı sunucuda uç yoktur (404) ve liste boş kalır.
+  const [wantLocal, setWantLocal] = useState(false)
+  useEffect(() => setWantLocal(false), [id])
+  useEffect(() => {
+    if (dlg === 'photos') setWantLocal(true)
+  }, [dlg])
+  const local = useLoad((s) => (wantLocal ? getLocalPhotos(id, s) : Promise.resolve(null)), [id, wantLocal])
+  const guide = useGuide()
+  const loaded = m.data
+  useEffect(() => {
+    if (loaded) guide.setMonument({ monument_id: loaded.monument_id, name: loaded.name, name_en: loaded.name_en, facts: loaded.facts })
+    return () => guide.setMonument(null)
+  }, [loaded, guide])
+  const show = (which: 'book' | 'photos') => (e?: MouseEvent<HTMLElement>) => {
+    opener.current = e?.currentTarget ?? (which === 'book' ? bookBtn.current : photosBtn.current)
+    guide.close()
+    setDlg(which)
   }
+  const close = () => setDlg(null)
 
   if (m.loading) return <main className="vk-page"><p className="vk-page__state" role="status">{t('Eser yükleniyor…')}</p></main>
   if (m.error || !m.data)
@@ -105,79 +79,91 @@ export default function MonumentPage() {
     )
 
   const d = m.data
-  const cover = d.images[0]
   const name = nameOf(d, lang)
-  const notice = textIn(d.site_notice, d.site_notice_en, lang)
-  // Tarihî kişi kartının metni bağlı olduğu kaydın metnidir; İngilizcesi onaylıysa o (ve İngilizce sayfası) gösterilir.
-  const enFact = new Map(d.facts.filter((f) => f.text_en).map((f) => [f.fact_id, f]))
-  const peopleIn = (people.data ?? []).map((p) => {
-    const f = lang === 'en' ? enFact.get(p.fact_id) : undefined
-    return f
-      ? { ...p, text: f.text_en!, source: `${f.source.title}, p. ${f.en_page ?? f.source.pdf_physical_page}` }
-      : { ...p, source: creditIn(p.source, lang) }
-  })
+  const notice = d.site_notice ? textIn(d.site_notice, d.site_notice_en, lang) : null
+  const factById = new Map(d.facts.map((f) => [f.fact_id, f]))
+  const peopleIn = (people.data ?? []).map((p) => ({ ...p, fact: factById.get(p.fact_id) }))
+  const lead = leadFact(d.facts)
+  const { titles, ref, numbered } = sourceIndex(d.facts)
+  const sourceRef = (f: Parameters<typeof ref>[0]) => ref(f, lang)
+  const highlights = highlightFacts(d.facts, new Set([lead?.fact_id ?? '', ...peopleIn.map((p) => p.fact_id)]))
+  // Fotoğraf Arşivi (R3.8): yalnızca katalogdaki onaylı görseller ve kayıtlı bilgileri; büyük görünüm özgün dosya,
+  // dizilimde kart dosyası. Atıf satırındaki Türkçe etiketler İngilizcede çevrilir; ad, lisans ve kaynak aynen kalır.
+  const archive: ArchivePhoto[] = d.images.map((img, i) => ({
+    key: img.image_id,
+    src: mediaUrl(img.file),
+    thumbSrc: mediaUrl(img.card_file || img.file),
+    width: img.width ?? null,
+    height: img.height ?? null,
+    alt: t('{name}, görsel {n}', { name, n: i + 1 }),
+    title: img.title ?? null,
+    rightsHolder: img.rights_holder || null,
+    attribution: img.attribution ? creditIn(img.attribution, lang) : null,
+    license: img.license || null,
+    licenseUrl: img.license_url ?? null,
+    sourceLabel: img.source_label ?? null,
+    sourceUrl: img.source_url ?? null,
+  }))
+  // Yerel önizleme: lisanslı fotoğrafların ardından, kaynağı karonun altında; yayın izni ayrı satırda (atıf ≠ izin).
+  const permission = t('Doğrulanmadı; yalnızca yerel önizleme, kamuya açık değil')
+  const localPhotos: ArchivePhoto[] = (local.data?.images ?? []).map((p, i) => ({
+    key: p.image_id,
+    src: localMediaUrl(p.file),
+    thumbSrc: localMediaUrl(p.card_file),
+    width: p.width,
+    height: p.height,
+    alt: t('{name}, envanter fotoğrafı {n}', { name, n: i + 1 }),
+    // Görüntüleyicide tam kaynak: yayın, cilt, PDF sayfası ve (doğrulandıysa) basılı sayfa. Karonun altında kısa kaynak.
+    sourceLabel: [
+      p.source,
+      ...(p.pdf_page ? [t('PDF s. {n}', { n: p.pdf_page })] : []),
+      ...(p.printed_pages?.length ? [t('basılı s. {n}', { n: p.printed_pages.join('–') })] : []),
+    ].join(', '),
+    caption: t('Kaynak: {source}', { source: p.source }),
+    permission,
+  }))
+  // Nişteki önizleme: eserin kendi katalog kapağı (ilk onaylı fotoğraf), kart boyutunda; atfı altında.
+  const cover = d.images[0]
+  const preview = cover ? {
+    src: mediaUrl(cover.card_file || cover.file),
+    alt: t('{name}, Fotoğraf Arşivi önizlemesi', { name }),
+    credit: cover.attribution ? creditIn(cover.attribution, lang) : (cover.rights_holder || null),
+  } : null
+  const quest = game.data || auth.status === 'none' || auth.status === 'guest' ? gamePath.monument(id) : null
+
   return (
-    <main className="vk-mon">
-      <header className="vk-mon__hero">
-        {cover && <img className="vk-mon__img" src={mediaUrl(cover.card_file || cover.file)} alt={t('{name} görünümü', { name })} />}
-        <div className="vk-mon__shade" aria-hidden="true" />
-        <div className="vk-mon__title">
-          <p className="vk-page__eyebrow">{typeLabel(d.type)} · {d.district}, {d.city}</p>
-          <h1>{name}</h1>
-          <StatusBadge status={status} />
-        </div>
-        {cover?.attribution && <p className="vk-mon__credit">{creditIn(cover.attribution, lang)}</p>}
-      </header>
+    <main className="vk-mon vk-exhpage">
+      <ExhibitHero monument={d} name={name} lead={lead} sourceRef={sourceRef} people={peopleIn}
+        seal={<StatusBadge status={sealOnly(status)} />} notice={notice} quest={quest}
+        onOpenBook={show('book')} onOpenPhotos={show('photos')} bookRef={bookBtn} photosRef={photosBtn}
+        photo={preview} photoCount={d.images.length} openDialog={dlg} />
 
-      <div className="vk-mon__body">
-        <PeopleCards people={peopleIn} />
-
-        <Narrator key={lang} monument={d} onListened={() => engage('listened')} onAsked={() => engage('asked')} />
-
-        {game.data && <GameLink id={id} game={game.data} />}
-
-        {d.site_notice && (
-          <aside className="vk-notice" aria-label={t('Ziyaret uyarısı')}>
-            <strong>{t('Ziyaret ederken')}</strong>
-            <p lang={notice.turkishOnly ? 'tr' : undefined}>{notice.text}</p>
-          </aside>
-        )}
-
-        <section className="vk-facts" aria-labelledby="tarihce">
-          <h2 id="tarihce">{t('Tarihçe ve kaynaklar')}</h2>
-          <GoldRule className="vk-page__rule" />
-          <p className="vk-facts__lead">{d.address}</p>
-          <ol>
-            {d.facts.map((f) => (
-              <FactItem key={f.fact_id} f={f} />
-            ))}
-          </ol>
-        </section>
-
-        {d.images.length > 0 && (
-          <section className="vk-gallery" aria-labelledby="galeri">
-            <h2 id="galeri">{t('Görseller')}</h2>
-            <ul>
-              {d.images.map((img, i) => (
-                <li key={img.image_id}>
-                  <figure>
-                    <img src={mediaUrl(img.card_file || img.file)} alt={t('{name}, görsel {n}', { name, n: i + 1 })} loading="lazy" />
-                    <figcaption>
-                      {creditIn(img.attribution ?? img.rights_holder, lang)}
-                      {img.license_url && (
-                        <>
-                          {' · '}
-                          <a href={img.license_url} target="_blank" rel="noreferrer">{img.license}</a>
-                        </>
-                      )}
-                    </figcaption>
-                  </figure>
-                </li>
-              ))}
-            </ul>
+      <div className="vk-exhpage__rest">
+        <ExhibitHighlights facts={highlights} total={d.facts.length} sourceRef={sourceRef} onOpenBook={show('book')} headingId={hlId} />
+        <div className="vk-label vk-exh-label">
+          <section className="vk-exh-visit" aria-labelledby={visitId}>
+            <h2 id={visitId} className="vk-sr-only">{t('Ziyaret')}</h2>
+            <VisitPlanner monument={{ ...d, name }} mapLink={false} />
           </section>
-        )}
+          <ExhibitRecord monument={d} people={peopleIn} sourceRef={sourceRef} titles={titles} numbered={numbered} headingId={recId} />
+        </div>
       </div>
+
+      <ExhibitDialog open={dlg === 'book'} onClose={close} labelledBy={bookH} className="vk-bookdlg" returnFocus={opener}>
+        <div className="vk-bookdlg__inner">
+          <h2 id={bookH} className="vk-sr-only">{t('Tarih Defteri')}</h2>
+          <HistoryBook key={`${id}-${lang}`} facts={d.facts} monumentName={name} headingId={bookH} startOpen onClose={close} />
+        </div>
+      </ExhibitDialog>
+      <ExhibitDialog open={dlg === 'photos'} onClose={close} labelledBy={photosH} className="vk-photodlg" returnFocus={opener}>
+        <div className="vk-photodlg__inner">
+          <div className="vk-photodlg__bar">
+            <p id={photosH} className="vk-photodlg__title">{name}</p>
+            <button type="button" className="vk-photodlg__close" onClick={close}>{t('Arşivi kapat')}</button>
+          </div>
+          <PhotoArchive photos={[...archive, ...localPhotos]} monumentName={name} publishedCount={archive.length} />
+        </div>
+      </ExhibitDialog>
     </main>
   )
 }

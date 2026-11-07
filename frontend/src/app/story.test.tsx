@@ -60,7 +60,7 @@ afterEach(() => {
 
 describe('hikâye motoru (saf hesaplar)', () => {
   it('sahne geçişi: yeni sahne öncekinin üstüne biner; önceki tamamen örtülünce gizlenir', () => {
-    const tops = [0, 1000, 2000, 3000, 4000, 5000, 6000]
+    const tops = [0, 1000, 2000, 3000, 4000, 5000]
     const at = (ym: number) => sceneMix(tops, ym, 300)
     expect(at(400).b.slice(0, 3)).toEqual([1, 0, 0])
     expect(at(400).visible.slice(0, 3)).toEqual([true, false, false])
@@ -71,7 +71,7 @@ describe('hikâye motoru (saf hesaplar)', () => {
     expect(after.b[1]).toBe(1)
     expect(after.visible.slice(0, 2)).toEqual([false, true])
     expect(after.active).toBe(1)
-    expect(at(6900).active).toBe(6)
+    expect(at(5900).active).toBe(5)
   })
 
   it('görsel kutusu oranı korur; masaüstünde ekranı kaplar, telefonda harita Ege’den Hatay’a sığar', () => {
@@ -82,7 +82,7 @@ describe('hikâye motoru (saf hesaplar)', () => {
       expect(b.height).toBeGreaterThanOrEqual(899.9)
       expect(b.left).toBeLessThanOrEqual(0)
     }
-    const map = boxFor(2, 390, 844)
+    const map = boxFor(1, 390, 844)
     expect(map.window).toBe(true)
     for (const p of [mapPoint(27.1428, 38.4237), mapPoint(36.1606, 36.2025)]) {
       const x = map.left + (p.x / 100) * map.width
@@ -113,8 +113,12 @@ describe('hikâye motoru (saf hesaplar)', () => {
     expect(hatay.y).toBeGreaterThan(konya.y) // güney aşağıda
   })
 
-  it('eşleştirmeli geçiş: ortak öğe (1 → 2 yolcu) iki görselde ekranın aynı noktasında; yeni görsel ekrandan küçülmez', () => {
+  it('eşleştirmeli geçiş: ortak öğe (1 → 2 ay) iki görselde ekranın aynı noktasında; yeni görsel ekrandan küçülmez', () => {
     const m = MATCH[1]!
+    // Karşılamadan haritaya: kamera yükselir, iki gece göğü yıldızlarla bağlanır; ay iki görselde aynı yerde.
+    expect(m.stars).toBe(true)
+    expect(m.outScale).toBeLessThan(1)
+    expect(Math.hypot(m.out[0] - m.in[0], m.out[1] - m.in[1])).toBeLessThan(0.02)
     const out = { x: 950, y: 720 }
     const inn = { x: 875, y: 720 }
     for (const t of [0.1, 0.3, 0.5, 0.7, 0.9]) {
@@ -146,6 +150,15 @@ describe('hikâye motoru (saf hesaplar)', () => {
     expect(nextStop(m, 0, -1)).toBeNull()
   })
 
+  it('R6.2: final ekranı yok; son sabit sahnenin durağı bölümün sonudur, ardında boş bir durak kalmaz', () => {
+    const vh = 800
+    const m = { tops: [0, 1200, 2600], heights: [1200, 1400, 1120], pinned: [true, true, true], vh, docEnd: 2600 + 1120 - vh }
+    const stops = stopsOf(m)
+    expect(stops).toEqual([0, 1200 + 600 * REST_P, m.docEnd])
+    expect(nextStop(m, stops[1], 1)).toBe(m.docEnd)
+    expect(nextStop(m, m.docEnd, 1)).toBeNull()
+  })
+
   it('kaplama düzeltmesi: ötelenen görsel ekranda boş şerit bırakmaz', () => {
     const b = { left: -80, top: 0, width: 1600, height: 900, window: false }
     // Sağa 200 px ötelenen kutu sol kenarda boşluk bırakırdı; düzeltilmiş ölçekle kaplar.
@@ -155,36 +168,53 @@ describe('hikâye motoru (saf hesaplar)', () => {
     expect(coverScale(b, 0.5, 0.5, 1, 0, 0, 1440, 900)).toBe(1) // zaten kaplıyorsa değişmez
   })
 
-  it('kamera: harita sahnede sabit (parallax yok); 3 → 4 geçişinde Bursa’ya yaklaşır', () => {
+  it('kamera: harita sahnede sabit (parallax yok); 2 → 3 geçişinde Bursa’ya yaklaşır', () => {
     const bursa = mapPoint(29.061, 40.1885)
-    expect(camera(2, 1, 0, 0.1, bursa).ty).toBeCloseTo(0)
-    expect(camera(2, 1, 0, 0.9, bursa).ty).toBeCloseTo(0)
-    const zoom = camera(2, 1, 1, 0.5, bursa)
+    expect(camera(1, 1, 0, 0.1, bursa).ty).toBeCloseTo(0)
+    expect(camera(1, 1, 0, 0.9, bursa).ty).toBeCloseTo(0)
+    const zoom = camera(1, 1, 1, 0.5, bursa)
     expect(zoom.scale).toBeCloseTo(1.4)
     expect([zoom.ox, zoom.oy]).toEqual([bursa.x, bursa.y])
+    // Karşılama sahnesinden çıkarken kamera yükselir (geri çekilir): haritaya geçiş.
+    expect(camera(0, 1, 1, 0.5, bursa).scale).toBeLessThan(camera(0, 1, 0, 0.5, bursa).scale)
+  })
+
+  it('yolculuk sahnesi kaldırıldı: 6 sahne, geçiş ve görsel dosyası listeleri aynı uzunlukta; scene-2 görseli kullanılmaz', () => {
+    expect(SCENES).toHaveLength(6)
+    expect(MATCH).toHaveLength(SCENES.length)
+    expect(SCENES.map((s) => s.art)).toEqual([1, 3, 4, 5, 6, 7])
   })
 })
 
-describe('yedi sahne', () => {
+describe('altı sahne', () => {
   it('sahneler sırayla ve gerçek HTML; ilk başlık slogan; uzak sahnelerin görselleri ilk açılışta yüklenmez', async () => {
     open()
     expect(await screen.findByRole('heading', { level: 1, name: 'Geçmişi Keşfet, Mirası Yaşat.' })).toBeInTheDocument()
-    expect([...document.querySelectorAll('section[data-scene]')].map((s) => s.getAttribute('data-scene'))).toEqual(['1', '2', '3', '4', '5', '6', '7'])
+    expect([...document.querySelectorAll('section[data-scene]')].map((s) => s.getAttribute('data-scene'))).toEqual(['1', '2', '3', '4', '5', '6'])
+    // R6.12: ilk açılışta yalnızca ilk sahnenin görseli iner; haritanın görseli (ikinci katman, eski 3. sahne dosyası)
+    // ilk sahne çizildikten sonra boşta gelir. Kaldırılan yolculuk görseli hiç yüklenmez.
+    expect(document.querySelector('[data-layer="1"] img')).toBeNull()
+    expect(document.querySelector('img[src*="scene-2-"]')).toBeNull()
     const img = document.querySelector('[data-layer="0"] img')!
     expect(img).toHaveAttribute('alt', '')
     expect(img.getAttribute('srcset')).toMatch(/scene-1-1280\.webp\?v=\w+ 1280w, .*scene-1-1680\.webp\?v=\w+ 1680w/)
     expect(document.querySelector('[data-layer="4"] img')).toBeNull()
+    await waitFor(() => expect(document.querySelector('[data-layer="1"] img')?.getAttribute('src')).toMatch(/scene-3-1920\.webp/), { timeout: 4000 })
   })
 
-  it('"Keşfe Başla" yolculuk sahnesine kaydırır; menüdeki Keşfet eserlere götürür', async () => {
+  it('"Keşfe Başla" doğrudan harita sahnesine kaydırır (yolculuk sahnesi yok); menüdeki Keşfet eserlere götürür', async () => {
     open()
     const link = await screen.findByRole('link', { name: /Keşfe Başla/ })
     // Ana sayfada sahne gezgini (navigator.ts) aynı durak modeliyle götürür.
     const goto = vi.spyOn(window as unknown as { __vkGoto: (id: string) => boolean }, '__vkGoto')
     await userEvent.click(link)
-    expect(goto).toHaveBeenCalledWith('yolculuk')
+    expect(goto).toHaveBeenCalledWith('sehirler')
+    expect(link).toHaveAttribute('href', '#sehirler')
+    expect(document.getElementById('yolculuk')).toBeNull()
+    expect(screen.queryByRole('heading', { name: 'Her Yolculuk Bir Adımla Başlar' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Haritaya kaydır' })).toBeInTheDocument()
     const nav = (await screen.findAllByRole('navigation', { name: 'Ana menü' }))[0]
-    expect(within(nav).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual(['#eserler', '/harita', '/rehber', '/oyun'])
+    expect(within(nav).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual(['#eserler', '/harita', '/oyun'])
   })
 
   it('harita: Bursa açık ve katalogdaki sayıyı gösterir; yakındaki şehir bilgi verir; Bursa seçilince şehir sahnesine geçer', async () => {
@@ -194,7 +224,7 @@ describe('yedi sahne', () => {
     const bursa = await legend.findByRole('button', { name: /Bursa\s*10 Eser Aktif/ })
     expect(legend.getByRole('button', { name: /Konya\s*Yakında/ })).toBeEnabled()
     await userEvent.click(legend.getByRole('button', { name: /Konya/ }))
-    expect(within(scene(3)).getByRole('status')).toHaveTextContent('Konya yakında VAKIFNAME’de. Şimdilik keşfe Bursa ile başla.')
+    expect(within(scene(2)).getByRole('status')).toHaveTextContent('Konya yakında VAKIFNAME’de. Şimdilik keşfe Bursa ile başla.')
     const goto = vi.spyOn(window as unknown as { __vkGoto: (id: string) => boolean }, '__vkGoto')
     await userEvent.click(bursa)
     await act(async () => {
@@ -208,10 +238,10 @@ describe('yedi sahne', () => {
 
   it('şehir sahnesi: başlık ve sayı veriden; doğrulanmamış tarihî iddia yok', async () => {
     open()
-    const s4 = within(scene(4))
-    expect(await s4.findByRole('heading', { name: 'Bursa’nın Vakıf Mirasını Keşfet' })).toBeInTheDocument()
-    expect(await s4.findByText('10')).toBeInTheDocument()
-    expect(scene(4).textContent).not.toMatch(/başkent/i)
+    const s3 = within(scene(3))
+    expect(await s3.findByRole('heading', { name: 'Bursa’nın Vakıf Mirasını Keşfet' })).toBeInTheDocument()
+    expect(await s3.findByText('10')).toBeInTheDocument()
+    expect(scene(3).textContent).not.toMatch(/başkent/i)
   })
 
   it('eserler sahnesi: 10 kart, kilit yok; "Tüm Eserleri Gör" eser listesine götürür', async () => {
@@ -226,69 +256,197 @@ describe('yedi sahne', () => {
 
   it('rehber kapalıyken soru formu kapalı ve bu açıkça yazılır', async () => {
     open()
-    const s6 = within(scene(6))
-    expect(await s6.findByText('Rehber şu anda kapalı; soru gönderilemez.')).toBeInTheDocument()
-    expect(s6.getByRole('textbox')).toBeDisabled()
-    expect(s6.getByLabelText(/Fotoğraf Ekle/)).toBeDisabled()
-    expect(s6.getByLabelText(/Mimariyi Analiz Et/)).toBeDisabled()
-    for (const b of within(s6.getByRole('group', { name: 'Örnek sorular' })).getAllByRole('button')) expect(b).toBeDisabled()
+    const s5 = within(scene(5))
+    expect(await s5.findByText('Rehber şu anda kapalı; soru gönderilemez.')).toBeInTheDocument()
+    expect(s5.getByRole('textbox')).toBeDisabled()
+    expect(s5.queryByLabelText(/Fotoğraf ekle/)).not.toBeInTheDocument()  // R3.13: kapalıyken fotoğraf seçeneği yok
+    expect(s5.queryByText('AI Rehberi Aç')).not.toBeInTheDocument()
+    for (const b of within(s5.getByRole('group', { name: 'Örnek sorular' })).getAllByRole('button')) expect(b).toBeDisabled()
   })
 
-  it('rehber açıkken: yazılan soru Rehber sayfasında eser seçmeden sorulur', async () => {
+  // R6.14: ana sayfadaki rehber bölümü soruyu sayfa değiştirmeden sağ alttaki "Rehbere Sor" panelinde sorar.
+  const drawer = () => screen.getByRole('dialog', { name: 'Rehber' })
+  const asks = (f: ReturnType<typeof open>) => f.mock.calls.filter(([u]) => String(u).includes('/guide/ask'))
+
+  it('R6.14 rehber açıkken: soru aynı sayfada paneli açar, panelde bir kez sorulur, cevap panelde; ana sayfa kutusu boşalır', async () => {
     const f = open({ '/guide/status': { body: { enabled: true } }, '/guide/ask': { body: ANSWER } })
-    const s6 = within(scene(6))
-    const box = s6.getByRole('textbox')
+    const s5 = within(scene(5))
+    const box = s5.getByRole('textbox')
     await waitFor(() => expect(box).toBeEnabled())
-    await userEvent.type(box, 'Külliye nedir?')
-    await userEvent.click(s6.getByRole('button', { name: 'Sor' }))
-    expect(await screen.findByRole('heading', { level: 1, name: 'Rehbere sor' })).toBeInTheDocument()
-    expect(await screen.findByText('Bunu kaynaklarımda bulamadım.')).toBeInTheDocument()
-    const body = JSON.parse(String(f.mock.calls.find(([u]) => String(u).includes('/guide/ask'))![1]!.body))
-    expect(body).toMatchObject({ question: 'Külliye nedir?' })
+    await userEvent.type(box, "Bursa Ulu Camii'ni kim yaptırdı?")
+    const send = s5.getByRole('button', { name: 'Sor' })
+    await userEvent.click(send)
+    await userEvent.click(send)  // ikinci tıklama: kutu boşaldığı için düğme kapalı, ikinci soru gitmez
+    expect(window.location.pathname).toBe('/')
+    expect(await within(drawer()).findByText('Bunu kaynaklarımda bulamadım.')).toBeInTheDocument()
+    expect(within(drawer()).getByText("Bursa Ulu Camii'ni kim yaptırdı?")).toBeInTheDocument()
+    expect(box).toHaveValue('')
+    expect(send).toBeDisabled()
+    expect(asks(f)).toHaveLength(1)
+    const body = JSON.parse(String(asks(f)[0][1]!.body))
+    expect(body).toMatchObject({ question: "Bursa Ulu Camii'ni kim yaptırdı?" })
     expect(body).not.toHaveProperty('monument_id')
+    expect(screen.queryByRole('heading', { level: 1, name: 'Rehbere sor' })).not.toBeInTheDocument()  // eski sayfa yok
   })
 
-  it('rehber açıkken: seçilen fotoğraf onay kutusu işaretlenmeden gönderilmez; onayla gönderilir', async () => {
+  it('R6.14 Enter düğmeyle aynıdır; "Selam" panelde yerel karşılık alır (API yok); boş soru gönderilmez', async () => {
     const f = open({ '/guide/status': { body: { enabled: true } }, '/guide/ask': { body: ANSWER } })
-    const input = within(scene(6)).getByLabelText(/Fotoğraf Ekle/) as HTMLInputElement
+    const s5 = within(scene(5))
+    const box = s5.getByRole('textbox')
+    await waitFor(() => expect(box).toBeEnabled())
+    await userEvent.type(box, '   {Enter}')
+    expect(screen.queryByRole('dialog', { name: 'Rehber' })).not.toBeInTheDocument()
+    await userEvent.type(box, 'Selam{Enter}')
+    expect(await within(drawer()).findByText(/Merhaba! Ben VAKIFNAME’nin yerel rehberiyim/)).toBeInTheDocument()
+    expect(box).toHaveValue('')
+    expect(asks(f)).toHaveLength(0)
+    expect(window.location.pathname).toBe('/')
+  })
+
+  it('R6.14 panel kapatılıp yeniden açılınca ya da sayfa değişince aynı soru tekrar gönderilmez', async () => {
+    const f = open({ '/guide/status': { body: { enabled: true } }, '/guide/ask': { body: ANSWER } })
+    const s5 = within(scene(5))
+    const box = s5.getByRole('textbox')
+    await waitFor(() => expect(box).toBeEnabled())
+    await userEvent.type(box, 'Külliye nedir?{Enter}')
+    await within(drawer()).findByText('Bunu kaynaklarımda bulamadım.')
+    await userEvent.keyboard('{Escape}')
+    await userEvent.click(screen.getByRole('button', { name: 'Rehbere Sor' }))
+    await userEvent.click(within(screen.getAllByRole('navigation', { name: 'Ana menü' })[0]).getByRole('link', { name: 'Harita' }))
+    await waitFor(() => expect(window.location.pathname).toBe('/harita'))
+    await new Promise((r) => setTimeout(r, 300))
+    expect(asks(f)).toHaveLength(1)
+  })
+
+  it('R6.14 panel henüz hazır değilken (durumu gelmeden) gönderilen soru kaybolmaz; durum gelince bir kez sorulur', async () => {
+    let release: () => void = () => undefined
+    const gate = new Promise<void>((r) => { release = r })
+    let calls = 0
+    const f = open({
+      // 1. istek ana sayfa bölümünün (hemen), 2. istek panelin kendi durumu (bekletilir).
+      '/guide/status': async () => (++calls > 1 ? (await gate, { body: { enabled: true } }) : { body: { enabled: true } }),
+      '/guide/ask': { body: ANSWER },
+    })
+    const s5 = within(scene(5))
+    const box = s5.getByRole('textbox')
+    await waitFor(() => expect(box).toBeEnabled())
+    await userEvent.type(box, 'Vakfiye nedir?{Enter}')
+    await within(drawer()).findByRole('textbox', { name: 'Sorunu yaz' })
+    await new Promise((r) => setTimeout(r, 200))
+    expect(asks(f)).toHaveLength(0)  // panelin durumu belli değil: istek bekliyor
+    expect(box).toHaveValue('')
+    release()
+    expect(await within(drawer()).findByText('Bunu kaynaklarımda bulamadım.')).toBeInTheDocument()
+    expect(asks(f)).toHaveLength(1)
+  })
+
+  it('rehber ve fotoğraf analizi açıkken: seçilen fotoğraf onay kutusu işaretlenmeden gönderilmez; onayla gönderilir', async () => {
+    const f = open({ '/guide/status': { body: { enabled: true, photo: true } }, '/guide/ask': { body: ANSWER } })
+    const input = (await within(scene(5)).findByLabelText(/Fotoğraf ekle/)) as HTMLInputElement
     await waitFor(() => expect(input).toBeEnabled())
     fireEvent.change(input, { target: { files: [new File([new Uint8Array([255, 216, 255, 224])], 'cami.jpg', { type: 'image/jpeg' })] } })
-    expect(await screen.findByRole('img', { name: 'Seçilen fotoğraf' })).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Sor' }))
-    expect(await screen.findByText('Fotoğrafı göndermek için onay kutusunu işaretle.')).toBeInTheDocument()
+    // R6.14: fotoğraf aynı sayfada açılan panelde önizlenir.
+    expect(await within(drawer()).findByRole('img', { name: 'Seçilen fotoğraf' })).toBeInTheDocument()
+    expect(window.location.pathname).toBe('/')
+    await userEvent.click(within(drawer()).getByRole('button', { name: 'Sor' }))
+    expect(await within(drawer()).findByText('Fotoğrafı göndermek için onay kutusunu işaretle.')).toBeInTheDocument()
     expect(f.mock.calls.some(([u]) => String(u).includes('/guide/ask'))).toBe(false)
-    await userEvent.click(screen.getByRole('checkbox', { name: /göndermeyi onaylıyorum/ }))
-    await userEvent.click(screen.getByRole('button', { name: 'Sor' }))
-    await screen.findByText('Bunu kaynaklarımda bulamadım.')
+    await userEvent.click(within(drawer()).getByRole('checkbox', { name: /göndermeyi onaylıyorum/ }))
+    await userEvent.click(within(drawer()).getByRole('button', { name: 'Sor' }))
+    await within(drawer()).findByText('Bunu kaynaklarımda bulamadım.')
     const body = JSON.parse(String(f.mock.calls.find(([u]) => String(u).includes('/guide/ask'))![1]!.body))
     expect(body.question).toBe('Bu fotoğraftaki yapı hangisi?')
     expect(body.image).toMatchObject({ consent: true, mime: 'image/jpeg' })
   })
 
-  it('rehber açıkken: örnek soru yalnızca kutuyu doldurur; "Mimariyi Analiz Et" fotoğrafı hazır soruyla taşır (onay yine istenir)', async () => {
-    const f = open({ '/guide/status': { body: { enabled: true } }, '/guide/ask': { body: ANSWER } })
-    const s6 = within(scene(6))
-    const chip = await s6.findByRole('button', { name: 'Vakfiye nedir?' })
-    await waitFor(() => expect(chip).toBeEnabled())
-    await userEvent.click(chip)
-    expect(s6.getByRole('textbox')).toHaveValue('Vakfiye nedir?')
+  it('R3.13 tek soru yolu: üç hazır soru yalnızca kutuyu doldurur; fotoğraf yazılan soruyla taşınır (onay yine istenir)', async () => {
+    const f = open({ '/guide/status': { body: { enabled: true, photo: true } }, '/guide/ask': { body: ANSWER } })
+    const s5 = within(scene(5))
+    const chips = within(s5.getByRole('group', { name: 'Örnek sorular' })).getAllByRole('button')
+    expect(chips).toHaveLength(3)
+    await waitFor(() => expect(chips[2]).toBeEnabled())
+    await userEvent.click(s5.getByRole('button', { name: 'Vakfiye nedir?' }))
+    expect(s5.getAllByRole('textbox')).toHaveLength(1)
+    expect(s5.getByRole('textbox')).toHaveValue('Vakfiye nedir?')
     expect(f.mock.calls.some(([u]) => String(u).includes('/guide/ask'))).toBe(false)
-    fireEvent.change(s6.getByLabelText(/Mimariyi Analiz Et/), { target: { files: [new File([new Uint8Array([255, 216, 255, 224])], 'kapi.jpg', { type: 'image/jpeg' })] } })
-    expect(await screen.findByRole('img', { name: 'Seçilen fotoğraf' })).toBeInTheDocument()
-    expect(screen.getByRole('textbox')).toHaveValue('Bu fotoğraftaki yapının mimari ayrıntılarını anlatır mısın?')
+    fireEvent.change(await s5.findByLabelText(/Fotoğraf ekle/), { target: { files: [new File([new Uint8Array([255, 216, 255, 224])], 'kapi.jpg', { type: 'image/jpeg' })] } })
+    expect(await within(drawer()).findByRole('img', { name: 'Seçilen fotoğraf' })).toBeInTheDocument()
+    expect(within(drawer()).getByRole('textbox', { name: 'Sorunu yaz' })).toHaveValue('Vakfiye nedir?')
     expect(f.mock.calls.some(([u]) => String(u).includes('/guide/ask'))).toBe(false)
   })
 
-  it('oyun sahnesi: gerçek mühür türleri, oyun paneline ve rotaya geçiş; final sloganı', async () => {
+  it('R5.3/R3.13: fotoğraf analizi kapalıyken sahnede fotoğraf seçeneği yok ve bu söylenir; metin sorusu çalışır', async () => {
+    const f = open({ '/guide/status': { body: { enabled: true, photo: false } }, '/guide/ask': { body: ANSWER } })
+    const s5 = within(scene(5))
+    expect(await s5.findByText(/Fotoğrafla soru şu anda kapalı/)).toBeInTheDocument()
+    expect(s5.queryByLabelText(/Fotoğraf ekle/)).not.toBeInTheDocument()
+    const box = s5.getByRole('textbox')
+    await waitFor(() => expect(box).toBeEnabled())
+    await userEvent.type(box, 'Vakfiye nedir?')
+    await userEvent.click(s5.getByRole('button', { name: 'Sor' }))
+    await within(drawer()).findByText('Bunu kaynaklarımda bulamadım.')
+    const body = JSON.parse(String(f.mock.calls.find(([u]) => String(u).includes('/guide/ask'))![1]!.body))
+    expect(body.image ?? null).toBeNull()
+  })
+
+  it('oyun tanıtımı (R6.1): sade editoryal metin, kart yok; parça sayısı katalogdan; "Maceraya Başla" girişten oyuna geçer (R6.2)', async () => {
     open()
-    const s7 = within(scene(7))
-    expect(s7.getByRole('img', { name: 'Bilgi mührü' })).toBeInTheDocument()
-    expect(s7.getByRole('img', { name: 'Altın mühür' })).toBeInTheDocument()
-    expect(s7.getByText('Örnek görünüm')).toBeInTheDocument() // örnek yapboz gerçek ilerleme gibi sunulmaz
-    expect(screen.getAllByText('Geçmişi Keşfet, Mirası Yaşat.').length).toBe(2) // açılış başlığı + final
-    expect(await s7.findByRole('link', { name: 'Rotaları Keşfet' })).toHaveAttribute('href', '/oyun/rota/bursa')
-    await userEvent.click(s7.getByRole('link', { name: 'Maceraya Başla' }))
-    expect(window.location.pathname).toBe('/oyun')
-    expect(window.localStorage.getItem('vakifname.guest')).toBe('1')
+    const s6 = within(scene(6))
+    expect(s6.getByRole('heading', { level: 2, name: 'Kayıp Vakfiyenin İzinde' })).toBeInTheDocument()
+    expect(s6.getByText(/VAKIFNAME · Kayıp Vakfiye/)).toBeInTheDocument()
+    // Bursa'da katalogda 10 eser var (her eser bir parça): sayı uydurulmaz, katalogdan gelir.
+    expect(await s6.findByText(/On tarihî eser\. On kayıp parça\./)).toBeInTheDocument()
+    expect(s6.getByText(/Geçmişin izlerini takip et, vakfiyeyi yeniden bir araya getir\./)).toBeInTheDocument()
+    expect(s6.getByText('Eserleri keşfet · Mühürleri kazan · Vakfiyeyi tamamla')).toBeInTheDocument()
+    // Eski üç bilgi kutusu ve örnek yapboz yok.
+    for (const gone of ['Mühürler ve rozetler', 'Tarihî Rotalar', 'Örnek görünüm', 'Keşfet. Çöz. Mirası Tamamla.']) {
+      expect(s6.queryByText(gone)).not.toBeInTheDocument()
+    }
+    expect(scene(6).querySelector('.vk-quest, .vk-puzzle')).toBeNull()
+    // R6.2: final ekranı yok (slogan yalnızca açılış başlığında); hikâye bu sahneyle biter.
+    expect(screen.getAllByText('Geçmişi Keşfet, Mirası Yaşat.')).toHaveLength(1)
+    expect(document.querySelector('.vk-final')).toBeNull()
+    expect(screen.getByRole('link', { name: 'Aydınlatma metni' })).toHaveAttribute('href', '/gizlilik')
+    // Oyun hesap ister: oturumsuz ziyaretçi girişe gider, dönüş adresi /oyun; misafir olarak oyuna sokulmaz.
+    await userEvent.click(s6.getByRole('link', { name: 'Maceraya Başla' }))
+    await waitFor(() => expect(window.location.pathname).toBe('/giris'))
+    expect(new URLSearchParams(window.location.search).get('sonra')).toBe('/oyun')
+    expect(window.localStorage.getItem('vakifname.guest')).toBeNull()
+  })
+
+  it('"Oyun Nasıl Oynanır?" kısa bir pencere açar: üç adım, gerçek kurallar, rota bağlantısı; Kapat ve Esc ile kapanır', async () => {
+    open()
+    const s6 = within(scene(6))
+    const how = s6.getByRole('button', { name: 'Oyun Nasıl Oynanır?' })
+    expect(how).toHaveAttribute('aria-expanded', 'false')
+    await userEvent.click(how)
+    expect(how).toHaveAttribute('aria-expanded', 'true')
+    const dlg = await screen.findByRole('dialog', { name: 'Oyun nasıl oynanır?' })
+    expect(how).toHaveAttribute('aria-controls', dlg.id)
+    const steps = within(within(dlg).getByRole('list')).getAllByRole('listitem')
+    expect(steps.map((li) => li.querySelector('strong')!.textContent)).toEqual(['Eseri seç', 'Rozeti Al', 'Ziyaret et (bonus)'])
+    expect(within(dlg).getByText(/5 kısa sorudan en az 4’ünü doğru yanıtla/)).toBeInTheDocument()
+    expect(within(dlg).getByText(/Konumun kaydedilmez/)).toBeInTheDocument()
+    expect(within(dlg).getByText(/hepsi baştan açık/)).toBeInTheDocument()  // R6.7: kilit yok
+    expect(within(dlg).getByRole('link', { name: 'Bursa rotasını gör' })).toHaveAttribute('href', '/oyun/rota/bursa')
+    await userEvent.click(within(dlg).getByRole('button', { name: 'Kapat' }))
+    expect(how).toHaveAttribute('aria-expanded', 'false')
+    expect(how).toHaveFocus()
+    // Esc (tarayıcının `cancel` olayı) da kapatır.
+    await userEvent.click(how)
+    fireEvent(dlg, new Event('cancel', { cancelable: true }))
+    await waitFor(() => expect(how).toHaveAttribute('aria-expanded', 'false'))
+  })
+
+  it('oyun sahnesinin ışıkları: zerrecik ve mühür yansıması; görseldeki parçalar kopyalanmaz, telefonda zerrecik yarıya iner', () => {
+    open()
+    const layer = document.querySelector('[data-layer="5"] [data-cam="5"]')!
+    expect(layer.querySelectorAll('.vk-glint')).toHaveLength(3)
+    const dust = layer.querySelectorAll('.vk-dust')
+    expect(dust.length).toBeGreaterThanOrEqual(10)
+    expect(layer.querySelectorAll('.vk-dust--extra').length).toBe(Math.floor(dust.length / 2))
+    // Süsler yalnızca boş (aria-hidden sahnede) ışık öğeleridir: ek görsel ya da parça kopyası yok.
+    expect(layer.querySelectorAll('img').length).toBeLessThanOrEqual(1)
+    expect(layer.closest('[aria-hidden="true"]')).not.toBeNull()
   })
 })

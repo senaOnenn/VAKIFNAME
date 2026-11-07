@@ -53,6 +53,17 @@ def earn_knowledge_seal(c, user_id: str, monument_id: str):
     assert r.json()["knowledge_seal"] is not None
 
 
+def seed_guest_seal(c, guest: str, monument_id: str):
+    """R6.2'den önce misafirken kazanılmış ilerleme (artık API'den yazılamaz; depoya doğrudan yazılır): doğru cevaplar
+    ve bilgi mührü. Girişte hesaba taşınması sınanır."""
+    store = c.app.state.monument_progress
+    unlock(c, guest, monument_id)
+    for quest_id, _ in answers(monument_id):
+        store.record_answer(guest, monument_id, quest_id, correct=True)
+    (m,) = [m for m in CATALOG["monuments"] if m["monument_id"] == monument_id]
+    store.add_seal(guest, monument_id, m["name"], "knowledge")
+
+
 def set_cookie_attrs(response) -> dict:
     (header,) = [v for k, v in response.headers.multi_items() if k == "set-cookie"]
     morsel = SimpleCookie(header)[SESSION_COOKIE]
@@ -370,7 +381,7 @@ def test_google_endpoint_with_real_verifier_end_to_end(c, rsa_keys):
 
 def test_guest_progress_is_merged_on_register(c):
     guest = visitor()
-    earn_knowledge_seal(c, guest, "BUR-0005")
+    seed_guest_seal(c, guest, "BUR-0005")
     r = register(c, visitor_id=guest)
     user_id = r.json()["user_id"]
     seals = c.get(f"/users/{user_id}/seals").json()
@@ -378,7 +389,7 @@ def test_guest_progress_is_merged_on_register(c):
     solved = {m["monument_id"]: m["solved"] for m in seals["monuments"]}
     assert solved["BUR-0005"] == len(answers("BUR-0005"))
     # Misafir satırları silinir: aynı ilerleme iki kimlikte birden görünmez.
-    assert c.get(f"/users/{guest}/seals").json()["knowledge_seals"] == []
+    assert c.app.state.monument_progress.seals(guest) == []
 
 
 def test_guest_progress_is_merged_on_login_without_duplicates(c):
@@ -388,8 +399,8 @@ def test_guest_progress_is_merged_on_login_without_duplicates(c):
     c.post("/auth/logout")
 
     guest = visitor()
-    earn_knowledge_seal(c, guest, "BUR-0005")   # hesapta da var
-    earn_knowledge_seal(c, guest, "BUR-0014")   # yalnızca misafirde
+    seed_guest_seal(c, guest, "BUR-0005")   # hesapta da var
+    seed_guest_seal(c, guest, "BUR-0014")   # yalnızca misafirde
     r = c.post("/auth/login", json={"email": "ayse@example.com", "password": PASSWORD, "visitor_id": guest})
     assert r.status_code == 200
     seals = c.get(f"/users/{user_id}/seals").json()["knowledge_seals"]
@@ -405,7 +416,7 @@ def test_guest_progress_is_merged_on_login_without_duplicates(c):
 
 def test_guest_progress_is_merged_on_google_sign_in(c):
     guest = visitor()
-    earn_knowledge_seal(c, guest, "BUR-0014")
+    seed_guest_seal(c, guest, "BUR-0014")
     c.app.state.google_verifier = FakeGoogle({"sahte-belirtec": GoogleIdentity("sub-g", "g@example.com")})
     user_id = c.post("/auth/google", json={"id_token": "sahte-belirtec", "visitor_id": guest}).json()["user_id"]
     assert len(c.get(f"/users/{user_id}/seals").json()["knowledge_seals"]) == 1
@@ -489,12 +500,18 @@ def test_account_progress_requires_own_session(c):
     assert db.execute("SELECT attempts FROM quest_answers WHERE user_id=?", (owner,)).fetchone()[0] == 1
 
 
-def test_guest_ids_keep_working_without_session(c):
+def test_guest_ids_cannot_play_or_read_progress_r6_2(c):
+    """R6.2: oyun yalnızca hesapla. Misafir kimliğiyle ilerleme okunmaz ve yazılmaz (401); kimliksiz halka açık okuma sürer."""
     guest = visitor()
-    earn_knowledge_seal(c, guest, "BUR-0005")
-    assert c.get(f"/users/{guest}/seals").status_code == 200
-    assert c.get(f"/users/{guest}/monument-passport").status_code == 200
-    assert c.get(f"/monuments/BUR-0005/quests?user_id={guest}").json()["progress"]["solved"] == len(answers("BUR-0005"))
+    unlock(c, guest, "BUR-0005")
+    quest_id, idx = answers("BUR-0005")[0]
+    r = c.post(f"/monuments/BUR-0005/quests/{quest_id}/answer", json={"user_id": guest, "choice_index": idx})
+    assert r.status_code == 401
+    assert c.app.state.monument_progress.solved(guest) == set()
+    assert c.get(f"/users/{guest}/seals").status_code == 401
+    assert c.get(f"/users/{guest}/monument-passport").status_code == 401
+    assert c.get(f"/monuments/BUR-0005/quests?user_id={guest}").status_code == 401
+    assert c.get("/monuments/BUR-0005/quests").status_code == 200
 
 
 # --- Oran sınırı ve sıkı doğrulama -------------------------------------------------------------------------------

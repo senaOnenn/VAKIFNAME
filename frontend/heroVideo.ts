@@ -198,14 +198,16 @@ export function mediaVersion(paths: string[]): string {
 }
 
 /**
- * Ana sayfa hikâyesinin 7 sahne görseli: `scripts/landing-art.sh` çıktısı, depo kardeşi
+ * Ana sayfa hikâyesinin 6 sahne görseli: `scripts/landing-art.sh` çıktısı, depo kardeşi
  * `../vakifname-assets/story-v2/web/` (veya `VAKIFNAME_LANDING_ART_DIR`). Depoya girmez. Yalnızca bu listedeki dosyalar
  * `<base>media/sahne/<ad>` adresinden sunulur ve derlemeye kopyalanır. Biri eksikse sayfa o katmanı gece zeminiyle
  * gösterir (görsel olmadan da okunur). Genişlikler özgün dosyanınkidir (büyütme yok): sahne 1 1680 px, diğerleri 1920 px.
+ * Dosya numarası sahne sırasından ayrıdır (`SCENES[i].art`, `src/app/story/engine.ts`): eski 2. sahne (yolculuk)
+ * kaldırıldı; `scene-2-*` artık sunulmaz ve kopyalanmaz (dış klasördeki dosyaya dokunulmaz).
  */
 export const DEFAULT_LANDING_ART_DIR = resolve(here, '..', '..', 'vakifname-assets', 'story-v2', 'web')
-export const SCENE_WIDTHS = [1680, 1920, 1920, 1920, 1920, 1920, 1920] as const
-export const LANDING_ART = SCENE_WIDTHS.flatMap((w, i) => [`scene-${i + 1}-1280.webp`, `scene-${i + 1}-${w}.webp`])
+export const SCENE_FILES: readonly (readonly [art: number, width: number])[] = [[1, 1680], [3, 1920], [4, 1920], [5, 1920], [6, 1920], [7, 1920]]
+export const LANDING_ART = SCENE_FILES.flatMap(([n, w]) => [`scene-${n}-1280.webp`, `scene-${n}-${w}.webp`])
 const MAX_ART_BYTES = 2 * 1024 * 1024
 
 /** Dosyanın küçük bir WebP olduğunu denetler (`RIFF....WEBP`). */

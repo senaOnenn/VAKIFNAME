@@ -1,5 +1,5 @@
 /**
- * Hikâyesel ana sayfanın (7 sahne) saf hesapları: sahne ağırlıkları, kamera hareketi, görsel kutusu ve harita izdüşümü.
+ * Hikâyesel ana sayfanın (6 sahne) saf hesapları: sahne ağırlıkları, kamera hareketi, görsel kutusu ve harita izdüşümü.
  * DOM'a dokunmaz; `useStoryEngine` bunları her karede kullanır, testler doğrudan çağırır.
  */
 
@@ -26,23 +26,26 @@ export interface SceneArt {
   mobile: Mobile
   /** Geniş ekranda yatay hizalama (0 sol, 0,5 orta, 1 sağ): ekranı kaplarken hangi kenarın kırpılacağı. */
   dfx?: number
+  /**
+   * Görsel dosyasının numarası (`scene-<art>-<genişlik>.webp`). Sahne sırasından ayrıdır: eski 2. sahne (yolculuk)
+   * kaldırıldı, dosya adları ve görseller değişmedi.
+   */
+  art: number
 }
 
 export const SCENES: SceneArt[] = [
   // 1 karşılama: telefonda cami ve yolcu üstte; görselin taş yolu metnin arkasına uzanıp erir (tek sahne)
-  { w: 1680, h: 944, parallax: 2, mobile: { mode: 'band', h: 0.8, fx: 0.69, edge: 'top', y: -0.07 } },
-  // 2 yolculuk: telefonda metin görselin gökyüzünde, yolcu altta
-  { w: 1920, h: 1080, parallax: 2, mobile: { mode: 'band', h: 0.84, fx: 0.6, edge: 'bottom' } },
-  // 3 harita: Ege'den Hatay'a; kara parçası başlığın hemen altında
-  { w: 1920, h: 1080, parallax: 0, mobile: { mode: 'map', x0: 0.05, span: 0.5, land: 0.27, under: 0.31 } },
-  // 4 şehir: Ulu Cami ve han kesilmez (han sağ kenarda); telefonda panorama üstte, metin hanların koyu çatılarında
-  { w: 1920, h: 1080, parallax: 2, mobile: { mode: 'band', h: 0.62, fx: 0.66, edge: 'top', y: 0.03 }, dfx: 1 },
-  // 5 meydan: kartların arkasında derinlik; telefonda caminin çevresi
-  { w: 1920, h: 1080, parallax: 2, mobile: { mode: 'cover', fx: 0.45 } },
-  // 6 defter ve çizimler: telefonda defter üstte, rehber paneli altında
-  { w: 1920, h: 1080, parallax: 2, mobile: { mode: 'band', h: 0.5, fx: 0.74, edge: 'top', y: 0.02 } },
-  // 7 masa, parçalar, mühür: telefonda masa üstte
-  { w: 1920, h: 1080, parallax: 2, mobile: { mode: 'band', h: 0.5, fx: 0.72, edge: 'top', y: 0.02 } },
+  { art: 1, w: 1680, h: 944, parallax: 2, mobile: { mode: 'band', h: 0.8, fx: 0.69, edge: 'top', y: -0.07 } },
+  // 2 harita: Ege'den Hatay'a; kara parçası başlığın hemen altında
+  { art: 3, w: 1920, h: 1080, parallax: 0, mobile: { mode: 'map', x0: 0.05, span: 0.5, land: 0.27, under: 0.31 } },
+  // 3 şehir: Ulu Cami ve han kesilmez (han sağ kenarda); telefonda panorama üstte, metin hanların koyu çatılarında
+  { art: 4, w: 1920, h: 1080, parallax: 2, mobile: { mode: 'band', h: 0.62, fx: 0.66, edge: 'top', y: 0.03 }, dfx: 1 },
+  // 4 meydan: kartların arkasında derinlik; telefonda caminin çevresi
+  { art: 5, w: 1920, h: 1080, parallax: 2, mobile: { mode: 'cover', fx: 0.45 } },
+  // 5 defter ve çizimler: telefonda defter üstte, rehber paneli altında
+  { art: 6, w: 1920, h: 1080, parallax: 2, mobile: { mode: 'band', h: 0.5, fx: 0.74, edge: 'top', y: 0.02 } },
+  // 6 masa, parçalar, mühür: telefonda masa üstte
+  { art: 7, w: 1920, h: 1080, parallax: 2, mobile: { mode: 'band', h: 0.5, fx: 0.72, edge: 'top', y: 0.02 } },
 ]
 
 /** Dikey telefon mu (görsel kırpma düzeni buna göre). CSS'teki `(max-aspect-ratio: 4/5)` ile aynı eşik. */
@@ -106,7 +109,7 @@ export function sceneMix(tops: number[], ym: number, z: number) {
   return { b, visible, weight, active }
 }
 
-/** Bursa'nın harita görselindeki yeri (yüzde); 3 → 4 geçişinde kamera buraya yaklaşır. */
+/** Bursa'nın harita görselindeki yeri (yüzde); 2 → 3 geçişinde kamera buraya yaklaşır. */
 export const MAP_SIZE = { w: 1920, h: 1080 }
 
 /**
@@ -124,8 +127,7 @@ export function mapPoint(lng: number, lat: number): { x: number; y: number } {
  * Eşleştirmeli geçişler (match-move). İndis: gelen sahne (1 = 1 → 2). İki görselin ortak öğesi (`out`/`in`, görsel
  * kesri) geçiş boyunca ekranda aynı noktada tutulur ve çıkıştaki yerinden girişteki yerine kayar; giden görsel o nokta
  * etrafında `outScale`'e, gelen `inScale`'den 1'e ölçeklenir. Gelen görsel `fade` aralığında belirir (giden altta tam
- * opak kalır: arada boş/düz renk an olmaz). `shade`: ortak öğenin üstüne düşen yerel gölge (iki figür birlikte
- * görünmesin); `stars`: iki gece göğünü bağlayan yıldız katmanı.
+ * opak kalır: arada boş/düz renk an olmaz). `stars`: iki gece göğünü bağlayan yıldız katmanı.
  */
 export interface Match {
   out: [number, number]
@@ -133,31 +135,28 @@ export interface Match {
   outScale: number
   inScale: number
   fade: [number, number]
-  shade: number
   stars: boolean
-  /** Gelen görsel ortak öğenin çevresinden dairesel olarak açılır (3 → 4: Bursa'nın ışığından). */
+  /** Gelen görsel ortak öğenin çevresinden dairesel olarak açılır (2 → 3: Bursa'nın ışığından). */
   iris?: boolean
-  /** Ortak öğede altın ışık (3 → 4). */
+  /** Ortak öğede altın ışık (2 → 3). */
   bloom?: boolean
-  /** Defterdeki mimari çizimlerin altın çizgileri belirginleşir (5 → 6). */
+  /** Defterdeki mimari çizimlerin altın çizgileri belirginleşir (4 → 5). */
   sheen?: boolean
-  /** Altın parçacıklar ortak öğede mühür olur (6 → 7). */
+  /** Altın parçacıklar ortak öğede mühür olur (5 → 6). */
   merge?: boolean
 }
 export const MATCH: (Match | null)[] = [
   null,
-  // 1 → 2: taş yolda yolcunun arkasından ilerleme; yalnızca yolcunun üstüne düşen kısa bir kemer gölgesi
-  { out: [0.661, 0.8], in: [0.608, 0.8], outScale: 1.16, inScale: 1.06, fade: [0.44, 0.58], shade: 0.7, stars: false },
-  // 2 → 3: kamera yükselir (sokak geri çekilir), yıldızlı gökyüzünden harita oturur; ay iki görselde aynı yerde
-  { out: [0.14, 0.17], in: [0.13, 0.17], outScale: 0.9, inScale: 1.12, fade: [0.28, 0.8], shade: 0, stars: true },
-  // 3 → 4: Bursa işaretinde altın ışık; harita geri çekilirken Bursa panoraması ışığın içinden açılır (Ulu Cami)
-  { out: [0.2118, 0.4364] /* mapPoint(Bursa) */, in: [0.62, 0.38], outScale: 0.94, inScale: 1.18, fade: [0.12, 0.42], shade: 0, stars: false, iris: true, bloom: true },
-  // 4 → 5: Ulu Cami'den meydandaki camiye iniş; panorama geride kalır, kartlar öne gelir
-  { out: [0.62, 0.38], in: [0.43, 0.53], outScale: 1.2, inScale: 1.1, fade: [0.36, 0.68], shade: 0, stars: false },
-  // 5 → 6: meydandaki camiden defterin üstündeki çizim camiye; çizgiler altınla belirginleşir
-  { out: [0.43, 0.53], in: [0.71, 0.44], outScale: 1.14, inScale: 1.12, fade: [0.36, 0.68], shade: 0, stars: false, sheen: true },
-  // 6 → 7: defterdeki bilgi parçacıkları mühürde birleşir; masadaki vakfiye parçaları belirir
-  { out: [0.73, 0.6], in: [0.71, 0.66], outScale: 1.1, inScale: 1.08, fade: [0.52, 0.8], shade: 0, stars: false, merge: true },
+  // 1 → 2: kamera yükselir (cami ve yol geri çekilir), yıldızlı gökyüzünden harita oturur; ay iki görselde aynı yerde
+  { out: [0.129, 0.18], in: [0.13, 0.17], outScale: 0.9, inScale: 1.12, fade: [0.28, 0.8], stars: true },
+  // 2 → 3: Bursa işaretinde altın ışık; harita geri çekilirken Bursa panoraması ışığın içinden açılır (Ulu Cami)
+  { out: [0.2118, 0.4364] /* mapPoint(Bursa) */, in: [0.62, 0.38], outScale: 0.94, inScale: 1.18, fade: [0.12, 0.42], stars: false, iris: true, bloom: true },
+  // 3 → 4: Ulu Cami'den meydandaki camiye iniş; panorama geride kalır, kartlar öne gelir
+  { out: [0.62, 0.38], in: [0.43, 0.53], outScale: 1.2, inScale: 1.1, fade: [0.36, 0.68], stars: false },
+  // 4 → 5: meydandaki camiden defterin üstündeki çizim camiye; çizgiler altınla belirginleşir
+  { out: [0.43, 0.53], in: [0.71, 0.44], outScale: 1.14, inScale: 1.12, fade: [0.36, 0.68], stars: false, sheen: true },
+  // 5 → 6: defterdeki bilgi parçacıkları mühürde birleşir; masadaki vakfiye parçaları belirir
+  { out: [0.73, 0.6], in: [0.71, 0.66], outScale: 1.1, inScale: 1.08, fade: [0.52, 0.8], stars: false, merge: true },
 ]
 
 export const smooth = (t: number) => t * t * (3 - 2 * t)
@@ -182,14 +181,18 @@ export function matchMove(m: Match, t: number, aOut: { x: number; y: number }, a
 export const flowVisibility = (top: number, vh: number) => ramp(vh - top, vh * 0.05, vh * 0.45)
 
 /**
- * Sabitlenen bölümün zaman çizelgesi (`p`: sabit aralıktaki ilerleme). Metin ilk %30'da girer, ortada (dinlenme anı,
- * `REST_P`) tam ve hareketsizdir; sahneden ayrılırken dinlenme anının hemen ardından başlayıp sabit aralığın sonuna dek
- * usulca çekilir (yürüyüş eğrisinin yavaş kalkışıyla ~1 sn). Geçiş bölümler arasındaki bir ekran boyunda oynar; metin
- * geçiş anında ekranda olmaz.
+ * Sabitlenen bölümün zaman çizelgesi (`p`: sabit aralıktaki ilerleme). Metin `TEXT_IN` aralığında girer (motor, %60'ı
+ * geçince öğeleri süreye bağlı olarak sırayla gösterir: kamera yerleşirken başlar, başlık varışta oturur); ortada
+ * (dinlenme anı, `REST_P`) tam ve hareketsizdir. Sahneden ayrılırken `TEXT_OUT` aralığında kaydırmaya bağlı olarak
+ * çekilir (CSS sırayı açar: önce düğmeler, sonra açıklama, en son başlık). Dinlenme anının iki yanında metnin tam
+ * okunduğu pencere geniştir (elle kaydıranlar için de). Geçiş bölümler arasındaki bir ekran boyunda oynar; metin geçiş
+ * anında ekranda olmaz.
  */
 export const REST_P = 0.5
-export const textIn = (p: number, first: boolean) => (first ? 1 : ramp(p, 0, 0.3))
-export const textOut = (p: number) => 1 - smooth(ramp(p, 0.53, 1))
+export const TEXT_IN: [number, number] = [0.08, 0.36]
+export const TEXT_OUT: [number, number] = [0.58, 1]
+export const textIn = (p: number, first: boolean) => (first ? 1 : ramp(p, TEXT_IN[0], TEXT_IN[1]))
+export const textOut = (p: number) => 1 - smooth(ramp(p, TEXT_OUT[0], TEXT_OUT[1]))
 export function textVisibility(p: number, first: boolean) {
   return Math.min(textIn(p, first), textOut(p))
 }
@@ -208,7 +211,10 @@ export interface StopModel {
   ends?: number[]
 }
 export function stopsOf(m: StopModel): number[] {
-  const stops = m.tops.map((t, i) => (i === 0 ? 0 : m.pinned[i] ? t + Math.max(0, m.heights[i] - m.vh) * REST_P : t))
+  const last = m.tops.length - 1
+  // Son sabitlenen sahnenin durağı bölümün sonudur (R6.2: final ekranı yok; sahnenin ardında boş kaydırma kalmaz).
+  const stops = m.tops.map((t, i) =>
+    i === 0 ? 0 : m.pinned[i] ? t + Math.max(0, m.heights[i] - m.vh) * (i === last ? 1 : REST_P) : t)
   if (m.docEnd > stops[stops.length - 1] + 4) stops.push(m.docEnd)
   return stops
 }
@@ -235,6 +241,86 @@ export function nextStop(m: StopModel, y: number, dir: 1 | -1): number | null {
   if (dir > 0) return stops.find((s) => s > y + 2) ?? null
   for (let k = stops.length - 1; k >= 0; k--) if (stops[k] < y - 2) return stops[k]
   return null
+}
+
+/**
+ * Düğümlerden geçen, uçlarında hızı sıfır olan monoton eğri (Fritsch–Carlson kübik Hermite). `ts`: zaman kesirleri,
+ * `ss`: mesafe kesirleri (ikisi de 0'dan 1'e artan). Hız düğümlerde süreklidir: hareket bir aşamadan ötekine sarsıntısız
+ * geçer, hiçbir aşamada geri gitmez.
+ */
+export function monotoneEase(ts: number[], ss: number[]): (x: number) => number {
+  const n = ts.length
+  const d: number[] = []
+  for (let i = 0; i < n - 1; i++) d.push((ss[i + 1] - ss[i]) / (ts[i + 1] - ts[i]))
+  const m = ts.map(() => 0)
+  for (let i = 1; i < n - 1; i++) {
+    if (d[i - 1] <= 0 || d[i] <= 0) continue
+    const h0 = ts[i] - ts[i - 1]
+    const h1 = ts[i + 1] - ts[i]
+    const w1 = 2 * h1 + h0
+    const w2 = h1 + 2 * h0
+    m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i])
+  }
+  return (x: number) => {
+    if (x <= 0) return 0
+    if (x >= 1) return 1
+    let i = 0
+    while (i < n - 2 && x >= ts[i + 1]) i++
+    const h = ts[i + 1] - ts[i]
+    const u = (x - ts[i]) / h
+    const u2 = u * u
+    const u3 = u2 * u
+    return (2 * u3 - 3 * u2 + 1) * ss[i] + (u3 - 2 * u2 + u) * h * m[i] + (-2 * u3 + 3 * u2) * ss[i + 1] + (u3 - u2) * h * m[i + 1]
+  }
+}
+
+/**
+ * Bir sahne geçişinin zaman dağılımı (süre kesirleri). Kaydırma mesafesi aşamalara eşit yayılmaz: eski sahnenin metni
+ * kademeli çekilirken kamera yavaşça kalkar (`leave`), iki görselin eşleştirmeli geçişi sakin ve okunur bir hızla oynar
+ * (`image`), yeni sahne uzun bir varışla yerine oturur (`settle`; yeni metin bu sırada belirmeye başlar).
+ */
+export const TRIP = { leave: 0.36, image: 0.4, settle: 0.24 }
+
+/**
+ * İki durak arasındaki yolculuğun eğrisi: zaman → mesafe kesri. Yolculuk tek bir sahne sınırını geçiyorsa o sınırın
+ * görsel geçiş bölgesi (`zone`: StoryExperience'taki `sceneMix` yarı genişliği, ekran oranı) ve ileri gidişte eski
+ * sahnenin metin çıkışının başladığı yer düğüm olur; böylece süre metin çıkışına, görsel geçişine ve varışa
+ * `TRIP` oranlarında dağılır. Uzak sıçramada (Home/End) ya da bölge yolculuğun dışında kalıyorsa `null` (çağıran düz
+ * bir yürüyüş eğrisi kullanır).
+ */
+export function tripEase(m: StopModel, from: number, to: number, zone = 0.45): ((x: number) => number) | null {
+  const L = to - from
+  const vh = m.vh
+  if (Math.abs(L) < 1 || !vh || m.tops.length < 2) return null
+  const s = (y: number) => (y - from) / L
+  const inside = (v: number) => v > 0.02 && v < 0.98
+  const crossed: [number, number][] = []
+  let exitAt: number | null = null
+  for (let j = 1; j < m.tops.length; j++) {
+    const a = s(m.tops[j] - (zone + 0.5) * vh)
+    const b = s(m.tops[j] + (zone - 0.5) * vh)
+    const lo = Math.min(a, b)
+    const hi = Math.max(a, b)
+    if (hi <= 0 || lo >= 1) continue
+    crossed.push([lo, hi])
+    // İleri gidişte eski sahne sabitlenmişse metninin çekilmeye başladığı yer (bkz. `TEXT_OUT`).
+    if (L > 0 && m.pinned[j - 1]) {
+      const i = j - 1
+      const ex = s(m.tops[i] + TEXT_OUT[0] * Math.max(0, m.heights[i] - vh))
+      exitAt = inside(ex) && ex < lo - 0.02 ? ex : null
+    }
+  }
+  if (crossed.length !== 1) return null
+  const [lo, hi] = crossed[0]
+  if (!inside(lo) || !inside(hi) || hi - lo < 0.05) return null
+  const t1 = TRIP.leave
+  const t2 = TRIP.leave + TRIP.image
+  if (exitAt !== null) {
+    // Durak ile metin çıkışının başı arasındaki yol kısa bir ilk adımdır; asıl ayrılış süresi metnin çekilişine kalır.
+    const pre = Math.min(0.2, Math.max(0.06, exitAt * 0.9))
+    return monotoneEase([0, pre, t1, t2, 1], [0, exitAt, lo, hi, 1])
+  }
+  return monotoneEase([0, t1, t2, 1], [0, lo, hi, 1])
 }
 
 /**
@@ -274,23 +360,20 @@ export function camera(i: number, bIn: number, bOut: number, u: number, bursa: {
   let ox = 50
   let oy = 50
   switch (i) {
-    case 0: // taş yolda ileri yürüyüş
-      scale *= 1 + 0.08 * bOut
+    case 0: // çıkarken kamera yükselir, cami ve yol uzaklaşır (haritaya geçiş)
+      scale *= 1 - 0.08 * bOut
+      ty += 5 * bOut
       oy = 75
       break
-    case 1: // yola girerken yerine oturur; çıkarken kamera yükselir, şehir uzaklaşır
-      scale *= (1.06 - 0.06 * bIn) * (1 - 0.08 * bOut)
-      ty += 5 * bOut
-      break
-    case 2: // harita yukarıdan belirir; Bursa seçilince kamera Bursa'ya yaklaşır
+    case 1: // harita yukarıdan belirir; Bursa seçilince kamera Bursa'ya yaklaşır
       scale *= (1.12 - 0.12 * bIn) * (1 + 0.4 * bOut)
       ox = bursa.x
       oy = bursa.y
       break
-    case 3:
+    case 2:
       scale *= (1.08 - 0.08 * bIn) * (1 + 0.05 * bOut)
       break
-    case 4:
+    case 3:
       scale *= 1.05 - 0.05 * bIn
       ty += 3 * (1 - bIn)
       break

@@ -24,6 +24,7 @@ from .budget import CircuitBreaker, DailyBudget
 from .claims import PHOTO_ID, Checker, Sentence, parse
 from .prompts import answer_messages, vision_messages
 from .provider import DEFAULT_MODEL, ChatProvider, ProviderError
+from .registry import known_models
 from .retrieval import gather, identity_id, identity_text
 
 logger = logging.getLogger("vakifname.guide")
@@ -113,34 +114,76 @@ def _supports_vision(m: dict) -> bool:
 class GuideService:
     def __init__(self, ask: AskService, provider: Optional[ChatProvider], budget: DailyBudget,
                  settings: Optional[GuideSettings] = None, breaker: Optional[CircuitBreaker] = None,
-                 face_screen: Optional[privacy.FaceScreen] = None, lexicon=None):
+                 face_screen: Optional[privacy.FaceScreen] = None, lexicon=None,
+                 vision_provider: Optional[ChatProvider] = None, vision_breaker: Optional[CircuitBreaker] = None):
         self.ask_service, self.provider, self.budget = ask, provider, budget
         self.settings = settings or GuideSettings()
         self.breaker = breaker or CircuitBreaker()
         self.face_screen = face_screen
+        # R5.3: fotoğraf gözlemi ayrı sağlayıcıyla yapılabilir (ör. metin Evren, görsel OpenRouter). Ayrı devre kesici:
+        # görsel sağlayıcının kota/hata durumu metin rehberini durdurmaz. Verilmezse metin sağlayıcısı ve kesicisi (eski davranış).
+        self.vision_provider = vision_provider
+        self.vision_breaker = vision_breaker or (CircuitBreaker() if vision_provider is not None else None)
         self.lexicon = lexicon  # TurkishLexicon; yoksa bozuk sözcük denetimi yapılmaz
         self._lexicon_fed = False
 
     # --- Sağlayıcı ------------------------------------------------------------------------------------------------
 
-    def _model_info(self, model_id: str) -> Optional[dict]:
+    def _vision_provider(self) -> Optional[ChatProvider]:
+        return self.vision_provider if self.vision_provider is not None else self.provider
+
+    def _vision_breaker(self) -> CircuitBreaker:
+        return self.vision_breaker if self.vision_breaker is not None else self.breaker
+
+    def _model_info(self, model_id: str, provider: Optional[ChatProvider] = None) -> Optional[dict]:
+        p = provider or self.provider
+        if p is None:
+            return None
         try:
-            return next((m for m in self.provider.models() if m.get("id") == model_id), None)
+            return next((m for m in p.models() if m.get("id") == model_id), None)
         except ProviderError:
             return None
 
     def vision_model(self) -> Optional[str]:
+        """Kullanım anında doğrulanır: model, görsel sağlayıcının listesinde görsel girdiyi destekliyor olmalı."""
         mid = self.settings.vision_model or self.settings.text_model
-        info = self._model_info(mid)
+        info = self._model_info(mid, self._vision_provider())
         return mid if info and _supports_vision(info) else None
 
-    def _json_mode(self, model_id: str) -> bool:
-        info = self._model_info(model_id)
+    def _json_mode(self, model_id: str, provider: Optional[ChatProvider] = None) -> bool:
+        info = self._model_info(model_id, provider)
         return bool(info and ("response_format" in (info.get("supported_parameters") or [])
                               or (info.get("capabilities") or {}).get("response_format")))
 
     def photo_enabled(self) -> bool:
-        return self.face_screen is not None and self.face_screen.available
+        """Fotoğraf seçeneği yalnızca hepsi hazırsa sunulur: yerel yüz denetimi yüklü, görsel sağlayıcının anahtarı geçerli
+        ve görsel model, sağlayıcının ağa çıkmadan bildirdiği listede metin-yalnız DEĞİL. Durum sorgusu ağa çıkmaz; liste
+        henüz bilinmiyorsa (OpenRouter `/models` önbelleği boş) model ilk fotoğrafta doğrulanır, desteklemiyorsa analiz
+        "başarısız" döner (başarılı gibi gösterilmez)."""
+        if self.face_screen is None or not self.face_screen.available:
+            return False
+        p = self._vision_provider()
+        if p is None or not p.available()[0]:
+            return False
+        return self._vision_declared() is not False
+
+    def _vision_declared(self) -> Optional[bool]:
+        """Görsel model ağsız bilinen listede var mı ve görsel girdi bildiriyor mu? Bilinmiyorsa None."""
+        p = self._vision_provider()
+        if p is None:
+            return None
+        mid = self.settings.vision_model or self.settings.text_model
+        info = next((m for m in known_models(p) or [] if m.get("id") == mid), None)
+        return None if info is None else _supports_vision(info)
+
+    def _vision_status(self) -> dict:
+        """Test anahtarıyla görülen ayrıntı: görsel sağlayıcı, anahtar durumu (değeri değil), yüz denetimi, kesici."""
+        p = self._vision_provider()
+        return {"provider": getattr(p, "name", None), "separate": self.vision_provider is not None,
+                "key": p.available()[1] if p is not None else "missing",
+                "model": self.settings.vision_model or self.settings.text_model, "declared": self._vision_declared(),
+                "face_screen": bool(self.face_screen is not None and self.face_screen.available),
+                "circuit": self._vision_breaker().state()}
 
     def _lexicon(self, engine):
         if self.lexicon is not None and not self._lexicon_fed:
@@ -149,15 +192,18 @@ class GuideService:
         return self.lexicon
 
     def _call(self, model: str, messages: list[dict], max_tokens: int, usage: Usage, est_tokens: int,
-              timeout_s: Optional[float] = None, stage: str = "answer") -> str:
-        if self.provider is None:
+              timeout_s: Optional[float] = None, stage: str = "answer", provider: Optional[ChatProvider] = None,
+              breaker: Optional[CircuitBreaker] = None) -> str:
+        provider = provider or self.provider
+        breaker = breaker or self.breaker
+        if provider is None:
             raise ProviderError("no_key")
-        ok, status = self.provider.available()
+        ok, status = provider.available()
         if not ok:
             raise ProviderError("no_key" if status == "missing" else status)
-        json_mode = self._json_mode(model)
+        json_mode = self._json_mode(model, provider)
         for attempt in (1, 2):
-            if not self.breaker.allow():
+            if not breaker.allow():
                 raise ProviderError("circuit_open")
             timeout = min(timeout_s or self.settings.timeout_s, usage.deadline - time.monotonic())
             if timeout < self.settings.min_call_s:
@@ -166,14 +212,14 @@ class GuideService:
                 raise ProviderError("busy" if self.budget.denied == "per_minute" else "budget")
             t0 = time.monotonic()
             try:
-                r = self.provider.chat(model, messages, max_tokens=max_tokens, temperature=self.settings.temperature,
+                r = provider.chat(model, messages, max_tokens=max_tokens, temperature=self.settings.temperature,
                                        json_mode=json_mode, timeout_s=timeout)
                 break
             except ProviderError as e:
                 ms = int((time.monotonic() - t0) * 1000)
                 # Zaman aşımı ve hatalı çağrılar da kotadan düşülür: istek sağlayıcıya ulaşmış ve sayılmış olabilir.
                 self.budget.settle(est_tokens, 0, 0, failed=True, latency_ms=ms, timed_out=e.kind == "timeout")
-                self.breaker.failure(e.kind, e.retry_after)
+                breaker.failure(e.kind, e.retry_after)
                 # Tanılama: aşama, deneme, HTTP durumu, OpenRouter hata kodu, alt sağlayıcı, süre. İçerik ve mesaj yazılmaz.
                 logger.warning("guide call stage=%s result=error kind=%s http=%s code=%s upstream=%s ms=%d attempt=%d", stage,
                                e.kind, e.status, e.code or "-", e.upstream or "-", ms, attempt)
@@ -187,7 +233,7 @@ class GuideService:
         logger.info("guide call stage=%s result=ok http=200 upstream=%s finish=%s ms=%d tokens=%d/%d", stage,
                     r.upstream or "-", r.finish_reason or "-", r.latency_ms, r.prompt_tokens, r.completion_tokens)
         self.budget.settle(est_tokens, r.prompt_tokens, r.completion_tokens, latency_ms=r.latency_ms)
-        self.breaker.success()
+        breaker.success()
         usage.calls += 1
         usage.prompt_tokens += r.prompt_tokens
         usage.completion_tokens += r.completion_tokens
@@ -223,15 +269,24 @@ class GuideService:
             clean = img.clean(image_bytes)
             privacy.screen(self.face_screen, clean.data)
         res = None
+        en = lang == "en"
         if clean is not None:
             try:
-                photo = self._observe(question, clean, engine, usage)
+                photo = self._observe(question, clean, engine, usage, lang="en" if en else "tr")
             except ProviderError as e:
                 # Görsel analiz başarısız: açık eser sayfasının kayıtları fotoğrafın cevabıymış gibi gösterilmez, katalog
                 # araması yapılmaz, fotoğrafın hangi esere ait olduğu varsayılmaz. Ziyaretçi tekrar deneyebilir, başka
                 # fotoğraf yükleyebilir veya fotoğrafsız soru sorabilir.
                 self._log_provider_error(e)
                 res = self._photo_failed(e.kind)
+        if res is None and en:
+            # R6.17 İngilizce fotoğraf: gözlem ve eşleşme Türkçe yolla aynı kurallardan geçer; tarihî cevap yalnızca
+            # eşleşen eserin onaylı İngilizce kayıtlarından gelir (Türkçe kayıt İngilizceye çevrilmez).
+            try:
+                res = self._photo_answer_en(question, monument_id, history, photo, engine, usage)
+            except ProviderError as e:
+                self._log_provider_error(e)
+                res = self._base("generative", "unavailable", EN_UNAVAILABLE, fallback_reason=e.kind)
         if res is None:
             try:
                 res = self._answer(question, monument_id, history, photo, engine, usage)
@@ -245,13 +300,22 @@ class GuideService:
             res["photo"] = {**{k: photo[k] for k in ("description", "features", "visible_text", "is_architecture",
                                                      "building_type", "architecture_explanation", "material_guess",
                                                      "identity", "synthetic_signs")},
-                            "candidates": photo["candidates_view"], "metadata_removed": list(clean.removed)}
+                            "candidates": photo["candidates_view"], "metadata_removed": list(clean.removed),
+                            # R5.7: denetimden geçen bir görsel betimleme var mı? Yoksa arayüz fotoğrafı yorumlamış gibi
+                            # davranmaz (boş/elenmiş gözlem "görülenler" olarak gösterilmez).
+                            "observed": bool(photo["description"] or photo["features"] or photo["architecture_explanation"])}
         res["usage"] = {"calls": usage.calls, "prompt_tokens": usage.prompt_tokens,
                         "completion_tokens": usage.completion_tokens, "provider_latency_ms": usage.latency_ms,
                         "cost_usd": usage.cost,
                         "total_ms": int((time.perf_counter() - t0) * 1000)}
         res["models"] = list(dict.fromkeys(usage.models))
-        res["notice"] = NOTICE + (" " + PHOTO_NOTICE if clean is not None else "")
+        if en:
+            res["message"] = EN_MESSAGES.get(res["message"], res["message"])
+            for k in ("options", "manual_options"):
+                res[k] = [{**o, "name": _name_en(engine, o["monument_id"])} for o in res.get(k) or []]
+            res["notice"] = EN_NOTICE + " " + EN_PHOTO_NOTICE
+        else:
+            res["notice"] = NOTICE + (" " + PHOTO_NOTICE if clean is not None else "")
         logger.info("guide mode=%s status=%s fallback=%s calls=%d tokens=%d/%d cost=%.6f ms=%d removed=%d", res["mode"],
                     res["status"], res.get("fallback_reason"), usage.calls, usage.prompt_tokens, usage.completion_tokens,
                     usage.cost, res["usage"]["total_ms"], res.get("removed_claims", 0))
@@ -261,6 +325,22 @@ class GuideService:
     def _log_provider_error(e: ProviderError):
         logger.warning("guide provider error kind=%s http=%s code=%s upstream=%s", e.kind, e.status, e.code or "-",
                        e.upstream or "-")
+
+    def _photo_answer_en(self, question: str, monument_id: Optional[str], history: list[dict], photo: dict, engine,
+                         usage: Usage) -> dict:
+        if not photo["is_architecture"]:
+            return self._base("generative", "monument_not_identified", EN_NOT_ARCHITECTURE,
+                              manual_options=_options(engine, engine.corpus.monuments),
+                              actions=["upload_another", "choose_manually"])
+        candidate_ids, early = self._photo_monuments(question, monument_id, photo, engine)
+        if early is not None:
+            return early
+        matched = candidate_ids[0] if candidate_ids else monument_id
+        usage.photo_monument = matched
+        res = self._answer_en(question, matched, history, usage, use_named=False)
+        if res["status"] == "monument_not_identified":
+            return self._not_matched(engine)
+        return res
 
     def _photo_failed(self, kind: str) -> dict:
         logger.warning("guide photo analysis failed reason=%s", kind)
@@ -274,13 +354,41 @@ class GuideService:
                 "search": None, "fallback_reason": None, "manual_options": [], "actions": [], "interpreted_question": None,
                 **extra}
 
-    def _answer_en(self, question: str, monument_id: Optional[str], history: list[dict], usage: Usage) -> dict:
+    def _named_monument_en(self, question: str):
+        """Soruda adı açıkça geçen tek eser (İngilizce ad, Türkçe ad, diğer adlar; "Bursa"/"Tomb of" ekleri olmadan da).
+        Soruda birden fazla eser geçiyorsa eser seçilmez (karşılaştırma sorusu; tahmin yok)."""
+        q = f" {fold(re.sub(r'[^0-9A-Za-zÀ-ÿĞğİıŞş]+', ' ', question))} "
+        best, best_len, tie = None, 0, False
+        hits = set()
+        for m in self.ask_service.repo.catalog.monuments:
+            names = {m.name, *(m.alternative_names or ())}
+            if m.name_en:
+                names |= {m.name_en, *(m.alternative_names_en or ())}
+                base = re.sub(r"^(Bursa|Tomb of( Sultan)?)\s+", "", m.name_en)
+                if base != m.name_en:
+                    names |= {base, f"{base} Tomb", f"{base}'s tomb", f"{base} Türbesi"}
+            for n in names:
+                key = fold(re.sub(r"[^0-9A-Za-zÀ-ÿĞğİıŞş]+", " ", n)).strip()
+                if len(key) < 5 or f" {key} " not in q:
+                    continue
+                hits.add(m.monument_id)
+                if len(key) > best_len:
+                    best, best_len, tie = m, len(key), False
+                elif len(key) == best_len and best is not None and best.monument_id != m.monument_id:
+                    tie = True
+        return None if tie or len(hits) > 1 else best
+
+    def _answer_en(self, question: str, monument_id: Optional[str], history: list[dict], usage: Usage,
+                   use_named: bool = True) -> dict:
         """İngilizce rehber (Faz 11): yalnızca eserin onaylı İngilizce kayıtları (`text_en`; kitabın İngilizce bölümünden,
         yönetici onaylı). Her cümle dayandığı kayıt kimliğini taşır; kimliksiz cümle ve kayıtta geçmeyen sayı atılır."""
-        m = self.ask_service.repo.get(monument_id) if monument_id else None
+        # R6.17: soruda adı geçen eser açık sayfadakinden önce gelir (ana sayfadan ya da başka eserin sayfasından sorulabilir).
+        named = self._named_monument_en(question) if use_named else None
+        m = named or (self.ask_service.repo.get(monument_id) if monument_id else None)
         if m is None:
             return self._base("generative", "monument_not_identified",
-                              "Ask me on a monument's page and I will answer from its approved English records.")
+                              "Which monument do you mean? Name it in your question (for example, “Who commissioned the "
+                              "Bursa Grand Mosque?”) or ask me on its page, and I will answer from its approved English records.")
         name = m.name_en or m.name
         mon = {"monument_id": m.monument_id, "name": name}
         facts = [f for f in m.facts if f.text_en]
@@ -321,7 +429,7 @@ class GuideService:
         return self._base("generative", "answered", "", sentences=sentences, facts=views, monument=mon,
                           removed_claims=removed)
 
-    def _observe(self, question: str, clean: img.CleanImage, engine, usage: Usage) -> dict:
+    def _observe(self, question: str, clean: img.CleanImage, engine, usage: Usage, lang: str = "tr") -> dict:
         """Görsel iki aşamada değerlendirilir: önce katalogdan bağımsız gözlem (yapı türü, özellikler, kimliğin
         belirlenebilirliği, olası yapay üretim işaretleri), sonra katalogla karşılaştırma. Model yalnızca 10 eserden
         birini seçmeye zorlanmaz; açık uyum yoksa eşleşme boş kalır."""
@@ -329,40 +437,48 @@ class GuideService:
         if model is None:
             raise ProviderError("vision_unsupported")
         monuments = list(engine.corpus.monuments.values())
-        text = self._call(model, vision_messages(question, clean.data_url(), monuments), self.settings.max_vision_tokens,
-                          usage, est_tokens=3000, timeout_s=self.settings.vision_timeout_s, stage="vision")
+        en = lang == "en"
+        messages = vision_messages(question, clean.data_url(), monuments)
+        if en:
+            # Serbest metin alanları İngilizce istenir; sabit değerli alanlar (tür, kimlik, olasılık) aynı kalır.
+            messages[-1]["content"].append({"type": "text", "text": VISION_EN})
+        style, hedge, definitive, visible_of = ((_STYLE_EN, _HEDGE_EN, _DEFINITIVE_EN, _visible_parts_en) if en else
+                                                (_STYLE, _HEDGE, _DEFINITIVE, _visible_parts))
+        text = self._call(model, messages, self.settings.max_vision_tokens,
+                          usage, est_tokens=3000, timeout_s=self.settings.vision_timeout_s, stage="vision",
+                          provider=self._vision_provider(), breaker=self._vision_breaker())
         data = parse(text) or {}
         visible = str(data.get("visible_text") or "")[:200]
         # Gözlem metni de denetlenir: tarih, kişi, malzeme, tarihî olay veya yapı/yer adı içeren cümleler gösterilmez.
         # Ad yalnızca fotoğrafta okunan yazıda geçiyorsa kalabilir. Eser kimliği gözlemde söylenmez; yalnızca katalog
         # karşılaştırmasının sonucu olarak, olasılık derecesiyle gösterilir.
         checker = Checker({}, [d.text for d in engine.corpus.docs], [visible])
-        lex = self._lexicon(engine)
+        lex = None if en else self._lexicon(engine)  # sözlük Türkçedir; İngilizce gözlemde kullanılmaz
         dropped_words = []
 
         def ok(t: str, phrase: bool = False, material: bool = False) -> bool:
             if checker._check(Sentence(t, [PHOTO_ID])) is not None and not (material and _only_material(checker, t)):
                 return False
-            if not _no_names(t, visible, phrase) or _STYLE.search(fold(t)):
+            if not _no_names(t, visible, phrase) or style.search(fold(t)):
                 return False
             bad = lex.unknown_words(t, visible) if lex is not None else []
             dropped_words.extend(bad)  # bozuk Türkçe sözcük ("okşu", "duşarlı"): ifade gösterilmez
             return not bad
 
         sentences = lambda v, n: " ".join(x for x in _sentences(str(v or "")) if ok(x))[:n]
-        desc = sentences(data.get("description"), 600)
+        desc = sentences(data.get("description"), 900)
         feats = [str(f)[:80] for f in (data.get("features") or []) if isinstance(f, (str, int))][:10]
         feats = [f for f in feats if ok(f, phrase=True)]
         # Açıklama yalnızca fotoğrafta görülen öğeleri anlatabilir: betimlemede veya özelliklerde geçmeyen bir mimari
         # öğeyi (ör. avlu görünmüyorken "revak") açıklayan cümle gösterilmez.
-        seen = _visible_parts(" ".join([desc, *feats]))
+        seen = visible_of(" ".join([desc, *feats]))
         explanation = " ".join(x for x in _sentences(str(data.get("architecture_explanation") or ""))
-                               if ok(x) and _visible_parts(x) <= seen)[:700]
+                               if ok(x) and visible_of(x) <= seen)[:700]
         # Malzeme izlenimi ayrı ve ihtiyatlı: yalnızca "benziyor/olabilir" gibi çekinceli bir görsel tahmin gösterilir;
         # tarihî kaynak bilgisi değildir ve cevap istemine konmaz (malzeme iddiası yalnızca onaylı kayıttan gelir).
         mg = data.get("material_guess")
         mg_text = str((mg.get("text") if isinstance(mg, dict) else mg) or "")[:200]
-        material = mg_text if mg_text and _HEDGE.search(fold(mg_text)) and not _DEFINITIVE.search(fold(mg_text)) \
+        material = mg_text if mg_text and hedge.search(fold(mg_text)) and not definitive.search(fold(mg_text)) \
             and ok(mg_text, material=True) else ""
         btype = str(data.get("building_type") or "").strip().lower()
         btype = btype if btype in BUILDING_TYPES else "belirsiz"
@@ -371,7 +487,7 @@ class GuideService:
         reason = sentences(ident.get("reason"), 200)
         signs = [str(x)[:120] for x in (data.get("synthetic_signs") or []) if isinstance(x, str)][:4]
         # Yapay üretim işaretleri yalnızca olasılık olarak gösterilir; kesin yargı içeren ifade atılır.
-        signs = [x for x in signs if ok(x) and not _DEFINITIVE.search(fold(x))]
+        signs = [x for x in signs if ok(x) and not definitive.search(fold(x))]
         raw = data.get("catalog_match") if "catalog_match" in data else data.get("candidates")
         cands, dropped = [], 0
         for c in raw or []:
@@ -391,7 +507,8 @@ class GuideService:
         return {"is_architecture": bool(data.get("is_architecture", True)), "building_type": btype, "description": desc,
                 "features": feats, "architecture_explanation": explanation, "material_guess": material, "visible_text": visible,
                 "identity": {"identifiable": identifiable, "reason": reason}, "synthetic_signs": signs, "candidates": cands,
-                "candidates_view": [{**c, "name": engine.corpus.monuments[c["monument_id"]].name} for c in cands]}
+                "candidates_view": [{**c, "name": _name_en(engine, c["monument_id"]) if en else
+                                     engine.corpus.monuments[c["monument_id"]].name} for c in cands]}
 
     def _not_matched(self, engine, named: list[str] = ()) -> dict:
         """Güvenilir eşleşme yok. En yakın eser önerilmez: ziyaretçi mimarinin açıklamasını görebilir, başka fotoğraf
@@ -504,12 +621,16 @@ class GuideService:
         return {"provider": getattr(self.provider, "name", None), "key": key_status, "configured": ok,
                 "text_model": self.settings.text_model, "vision_model": self.settings.vision_model or self.settings.text_model,
                 "photo_enabled": self.photo_enabled(), "budget": self.budget.status(), "circuit": self.breaker.state(),
+                "vision": self._vision_status(),
                 "deadline_s": self.settings.deadline_s,
                 "lexicon": getattr(self.lexicon, "state", "disabled"),
                 "account": (self.provider.describe() if hasattr(self.provider, "describe") else {}) if self.provider else {}}
 
 
-NOT_MATCHED = "Bu görsel kayıtlı eserlerle güvenilir şekilde eşleştirilemedi."
+# R5.7: eşleşmeme bir hata değil, ikincil bilgidir: fotoğrafın betimlemesi (varsa) ayrıca gösterilir; kimlik, kurucu,
+# tarih veya konum söylenmez.
+NOT_MATCHED = ("Fotoğraftaki yapı kayıtlı eserlerden biriyle güvenilir şekilde eşleşmedi; bu yüzden yapının adı, "
+               "yaptıranı, tarihi veya konumu hakkında bilgi veremiyorum.")
 # Ziyaretçiye teknik ayrıntı (HTTP durumu, hata kodu, sağlayıcı adı) gösterilmez.
 PHOTO_FAILED_REASON = {
     "timeout": "Yapay zekâ fotoğrafı zamanında inceleyemedi.",
@@ -535,6 +656,26 @@ _HEDGE = re.compile(r"olabilir|benziyor|benzer|gorunuyor|izlenimi|andiriyor|muht
 # serbesttir ("revak, kemerli geçittir" demek için kemerin ayrıca sayılması gerekmez).
 _VISIBLE = ("minare", "kubbe", "sadirvan", "avlu", "revak", "mihra", "minber", "kitabe", "sebil", "kasnak", "seref",
             "tonoz", "eyvan", "cesme")
+
+
+# R6.17: İngilizce gözlem için aynı denetimlerin İngilizce kalıpları (fold sonrası küçük harf).
+_DEFINITIVE_EN = re.compile(r"certain|definitely|clearly generated|is fake|fake|proof|proves")
+_STYLE_EN = re.compile(r"\b(style|ottoman|seljuk|byzantin|mamluk|beylik|baroque|gothic|rococo|neoclassic)")
+_HEDGE_EN = re.compile(r"\b(may|might|could|appear\w*|seem\w*|looks? like|resembl\w*|possibl\w*|probabl\w*|likely|impression)\b")
+_VISIBLE_EN = {"minaret": "minare", "dome": "kubbe", "shadirvan": "sadirvan", "ablution": "sadirvan", "courtyard": "avlu",
+               "portico": "revak", "arcade": "revak", "mihrab": "mihra", "minbar": "minber", "inscription": "kitabe",
+               "sebil": "sebil", "drum": "kasnak", "balcon": "seref", "vault": "tonoz", "iwan": "eyvan", "fountain": "cesme"}
+
+
+def _visible_parts_en(text: str) -> set[str]:
+    return {v for w in fold(text).split() for k, v in _VISIBLE_EN.items() if w.startswith(k)}
+
+
+def _name_en(engine, monument_id: str) -> str:
+    m = engine.corpus.monuments.get(monument_id)
+    if m is None:
+        return monument_id
+    return getattr(m, "name_en", None) or m.name
 
 
 def _visible_parts(text: str) -> set[str]:
@@ -586,6 +727,31 @@ are given. Rules:
 - Warm, respectful and short: at most 4 sentences.
 Return only one JSON object: {"sentences": [{"text": "...", "sources": ["<record id>"]}]}"""
 EN_NOTICE = "The guide is a character (an impersonation). Every sentence is based on an approved record with its source."
+EN_PHOTO_NOTICE = ("Your photo is sent for analysis to the NVIDIA Nemotron model via OpenRouter only after location and "
+                   "device data are removed and a local face check is passed; VAKIFNAME does not store it. On the free "
+                   "endpoint the provider may log the content sent.")
+EN_NOT_ARCHITECTURE = "I couldn't find a building in this photo. Try a photo showing the outside or inside of a monument."
+VISION_EN = ("LANGUAGE: write every free-text field (description, features, architecture_explanation, material_guess, "
+             "identity.reason, synthetic_signs) in plain English. Keep the fixed values of building_type, identifiable and "
+             "likelihood exactly as listed above (they are codes, not translated).")
+# Türkçe yoldaki sabit fotoğraf mesajlarının İngilizcesi (tarihî bilgi içermez).
+EN_MESSAGES = {
+    NOT_MATCHED: "The building in the photo did not reliably match any of the registered monuments, so I cannot tell you "
+                 "its name, who commissioned it, its date or its location.",
+    "Fotoğraf açık olan eserden farklı, kayıtlı bir esere benziyor (görsel benzerlik, kesin kimlik değildir). Onu mu "
+    "soruyorsunuz?": "The photo looks like a different registered monument from the one open on this page (visual "
+                     "similarity, not a certain identification). Is that the one you mean?",
+    "Fotoğraf birden fazla kayıtlı esere benziyor (görsel benzerlik, kesin kimlik değildir). Hangisini soruyorsunuz?":
+        "The photo looks like more than one registered monument (visual similarity, not a certain identification). "
+        "Which one do you mean?",
+    **{f"Fotoğraf analiz edilemedi. {tr}": f"The photo could not be analysed. {en}" for tr, en in (
+        ("Yapay zekâ fotoğrafı zamanında inceleyemedi.", "The AI could not examine the photo in time."),
+        ("Yapay zekâ sağlayıcısına şu anda ulaşılamıyor.", "The AI provider cannot be reached right now."),
+        ("Yapay zekâ sağlayıcısı şu anda yoğun.", "The AI provider is busy right now."),
+        ("Yapay zekâ rehberi şu anda yoğun.", "The AI guide is busy right now."),
+        ("Yapay zekâ sağlayıcısına geçici olarak ulaşılamıyor.", "The AI provider is temporarily unreachable."),
+        ("Fotoğraf analizi şu anda kullanılamıyor.", "Photo analysis is not available right now."))},
+}
 EN_UNAVAILABLE = "The guide can't answer right now. You can read the approved records and their sources on this page."
 CERTAINTY_EN = {"documented": "Documented in the sources", "reported": "Reported tradition", "uncertain": "Not certain"}
 

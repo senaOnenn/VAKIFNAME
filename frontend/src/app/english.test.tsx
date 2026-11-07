@@ -1,7 +1,7 @@
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { stubFetch } from '../test/fixtures'
+import { stubFetch, SIGNED_IN, PROFILE } from '../test/fixtures'
 import { Narrator } from './components/Narrator'
 import { factIn, nameOf, textIn } from './contentLang'
 import { resetLangForTests, setLang } from './i18n'
@@ -42,7 +42,8 @@ afterEach(() => {
 
 function open(path: string, extra: Record<string, unknown> = {}) {
   const fetchMock = stubFetch({
-    '/auth/me': { status: 401, body: {} },
+    '/auth/me': SIGNED_IN,
+    '/player/profile': PROFILE,
     '/guide/status': { body: { enabled: false } },
     '/monuments/BUR-1001': { body: DETAIL },
     '/route': { status: 500, body: {} },
@@ -79,16 +80,24 @@ describe('eser sayfası (İngilizce)', () => {
     open('/eser/BUR-1001')
     expect(await screen.findByRole('heading', { level: 1, name: 'Bursa Grand Mosque' })).toBeInTheDocument()
     expect(screen.getByText('This is an active place of worship; please keep quiet.')).toBeInTheDocument()
-    const facts = screen.getByRole('region', { name: 'History and sources' })
+    await userEvent.click(screen.getByRole('button', { name: /History Ledger/ }))
+    const facts = screen.getByRole('dialog', { name: 'History Ledger' })
     expect(within(facts).getByRole('heading', { name: 'Twenty domes' })).toBeInTheDocument()
-    expect(within(facts).getByText(/Source: Bursa Vakıf Eserleri, Cilt I, p\. 121/)).toBeInTheDocument()
+    const source = () => within(facts).getByRole('complementary', { name: 'Source details' })
+    expect(within(source()).getByText('Bursa Vakıf Eserleri')).toBeInTheDocument()
+    expect(within(source()).getByText('Vol. I, p. 121')).toBeInTheDocument()  // onaylı İngilizce bölümün sayfası
+    expect(within(facts).queryByText(/No approved English version of this record yet/)).not.toBeInTheDocument()
+    await userEvent.click(within(facts).getByRole('button', { name: 'Next record' }))
     const tr = within(facts).getByText('Halk arasında anlatılır.')
     expect(tr).toHaveAttribute('lang', 'tr')
     expect(within(facts).getAllByText(/No approved English version of this record yet/)).toHaveLength(1)
+    expect(within(source()).getByText('Vol. I, p. 22')).toBeInTheDocument()
   })
 
   it('anlatım yalnızca İngilizcesi onaylı kayıtlardan; Türkçe kayıt anlatılmaz', async () => {
     open('/eser/BUR-1001')
+    await userEvent.click(await screen.findByRole('button', { name: 'Ask the Guide' }))
+    await userEvent.click(await screen.findByRole('tab', { name: 'Narration' }))  // panel içeriği ayrı parçada (R6.12)
     const intro = 'Welcome! I am your guide here. Let me share what the sources tell us about Bursa Grand Mosque.'
     expect(await screen.findByText(intro, { selector: '.vk-narr__line' })).toBeInTheDocument()
     const transcript = document.querySelector('.vk-narr__transcript')!
@@ -121,8 +130,9 @@ describe('anlatıcı (İngilizce)', () => {
       },
     })
     render(<Narrator monument={DETAIL} />)
+    await userEvent.click(screen.getByRole('tab', { name: 'Talk to the Guide' }))
     // Rehber durumu gelene kadar kutu kapalıdır; yazmadan önce açılmasını bekle (yük altında yarış olmasın).
-    const box = await screen.findByRole('textbox')
+    const box = await screen.findByRole('textbox', { name: 'Type your question' })
     await waitFor(() => expect(box).toBeEnabled())
     await userEvent.type(box, 'Who built it?')
     await userEvent.click(screen.getByRole('button', { name: 'Ask' }))

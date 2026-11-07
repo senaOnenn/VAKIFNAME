@@ -1,227 +1,161 @@
-/* Oyun girişi: tek sütun mobil, geniş ekranda iki sütun (görev + ilerleme yan yana). */
-.vk-ghome {
-  max-width: 60rem;
-}
-.vk-ghome__label {
-  color: var(--vk-gold);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-.vk-ghome__current {
+/* ══ R6.7 Vakfiye Odası ═══════════════════════════════════════════════════════════════════════════════════════════
+   Oda (gece laciverdi, arşiv odası görseli GameLayout'ta) + tek parşömen yaprak: solda Kayıp Vakfiye, sağda sonraki
+   keşif (tek ana eylem) ve tamamlanan eserler, altta şehrin bütün eserleri. Telefonda tek sütun. Kutu yok, cetvel var. */
+
+.vk-desk {
+  width: min(78rem, 100%);
+  margin: 0 auto;
+  padding: var(--vk-space-6) var(--vk-space-4) var(--vk-space-7);
   display: grid;
-  gap: var(--vk-space-3);
-  padding: var(--vk-space-5);
-  border-radius: var(--vk-radius-lg);
-  background: radial-gradient(120% 140% at 0% 0%, rgb(74 91 255 / 0.22), transparent 60%), var(--vk-surface);
-  box-shadow: var(--vk-shadow-gold);
-}
-.vk-ghome__current-head {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--vk-space-2);
-}
-.vk-ghome__city {
-  color: var(--vk-ivory-dim);
-  font-size: 0.875rem;
-}
-.vk-ghome__current h2 {
-  font-size: clamp(1.6rem, 5vw, 2.2rem);
-  color: var(--vk-gold-bright);
-  line-height: 1.15;
-}
-.vk-ghome__meta {
-  color: var(--vk-ivory-dim);
-}
-.vk-ghome__step {
-  display: flex;
-  align-items: center;
-  gap: var(--vk-space-3);
-  padding: var(--vk-space-3);
-  border-radius: var(--vk-radius);
-  background: rgb(9 12 34 / 0.45);
-  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.35);
+  gap: var(--vk-space-5);
   color: var(--vk-ivory);
 }
-.vk-ghome__step-n {
+.vk-desk__head {
   display: grid;
-  place-items: center;
-  flex: none;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  border: 1px solid var(--vk-gold);
-  color: var(--vk-gold-bright);
-  font: 600 0.85rem var(--vk-font-display);
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: end;
+  gap: var(--vk-space-5);
 }
-.vk-ghome__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--vk-space-2);
-  margin-top: var(--vk-space-1);
-}
-
-.vk-ghome__progress {
+.vk-desk__title {
   display: grid;
   gap: var(--vk-space-2);
-  justify-items: start;
-  padding: var(--vk-space-4) var(--vk-space-5);
-  border-radius: var(--vk-radius-lg);
-  border: 1px solid rgb(201 162 75 / 0.3);
-  background: rgb(26 32 80 / 0.55);
-  text-decoration: none;
-  color: var(--vk-ivory) !important;
+  max-width: 40rem;
 }
-.vk-ghome__progress:hover {
-  border-color: var(--vk-gold);
-}
-.vk-ghome__pieces {
-  display: grid;
-  grid-template-columns: repeat(10, minmax(0, 22px));
-  gap: 6px;
-}
-.vk-ghome__pieces span {
-  aspect-ratio: 1;
-  border-radius: 5px;
-  border: 1px dashed rgb(201 162 75 / 0.55);
-  transform: rotate(45deg) scale(0.75);
-}
-.vk-ghome__pieces span.is-found {
-  background: var(--vk-gold-gradient);
-  border: 0;
-  box-shadow: 0 0 12px rgb(233 200 116 / 0.5);
-}
-.vk-ghome__progress-text {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--vk-space-2) var(--vk-space-4);
-  color: var(--vk-ivory-dim);
-  font-size: 0.95rem;
-}
-.vk-ghome__more {
+.vk-desk__eyebrow {
+  margin: 0;
   color: var(--vk-gold-bright);
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.vk-desk__title h1 {
+  margin: 0;
+  font: 600 clamp(2.4rem, 5vw, 3.8rem) / 1.02 var(--vk-font-display);
+  text-wrap: balance;
+}
+.vk-desk__lead {
+  margin: 0;
+  color: rgb(243 234 211 / 0.88);
+  font-size: clamp(1rem, 1.25vw, 1.12rem);
+  line-height: 1.6;
+}
+.vk-desk__head .vk-crest {
+  justify-self: end;
+  padding: var(--vk-space-3) var(--vk-space-4) var(--vk-space-3) var(--vk-space-3);
+  border-left: 1px solid rgb(201 162 75 / 0.35);
+}
+.vk-desk__state {
+  margin: 0;
+}
+.vk-desk__state--error {
+  color: #f0b4bd;
 }
 
-.vk-ghome__h {
-  font-size: 1.6rem;
-  margin-bottom: var(--vk-space-3);
+.vk-desk__folio {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-areas:
+    'vakfiye next'
+    'vakfiye done'
+    'route route';
+  align-items: start;
+  column-gap: clamp(1.5rem, 4vw, 3.5rem);
+  row-gap: var(--vk-space-5);
+  padding: clamp(1.75rem, 4vw, 3rem);
 }
-.vk-ghome__games {
-  list-style: none;
+.vk-desk__vakfiye { grid-area: vakfiye; display: grid; gap: var(--vk-space-2); }
+.vk-desk__next { grid-area: next; display: grid; gap: var(--vk-space-2); justify-items: start; }
+.vk-desk__done {
+  grid-area: done;
+  display: grid;
+  gap: var(--vk-space-2);
+  padding-top: var(--vk-space-4);
+  border-top: 1px solid var(--rule);
+}
+.vk-desk__route {
+  grid-area: route;
+  display: grid;
+  gap: var(--vk-space-2);
+  padding-top: var(--vk-space-4);
+  border-top: 1px solid var(--rule);
+}
+.vk-desk__vakfiye .vk-puzzle {
+  margin: var(--vk-space-1) 0 0;
+  width: 100%;
+}
+.vk-desk__vakfiye .vk-piece__hole {
+  fill: rgb(122 90 22 / 0.08);
+  stroke: rgb(122 90 22 / 0.45);
+}
+.vk-desk__donelist {
+  display: grid;
+  gap: 0.35rem;
   margin: 0;
   padding: 0;
+  list-style: none;
+}
+.vk-desk__donelist li {
   display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
   gap: var(--vk-space-3);
 }
-.vk-ghome__game {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    'n title'
-    'n text';
-  gap: var(--vk-space-1) var(--vk-space-3);
-  height: 100%;
-  padding: var(--vk-space-4);
-  border-radius: var(--vk-radius);
-  background: rgb(9 12 34 / 0.45);
-  box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.22);
+.vk-desk__donelist a {
+  font: 600 1.05rem var(--vk-font-display);
   text-decoration: none;
-  color: var(--vk-ivory) !important;
-  transition: box-shadow var(--vk-dur-fast) var(--vk-ease);
-}
-.vk-ghome__game:hover {
-  box-shadow: inset 0 0 0 1.5px var(--vk-gold);
-}
-.vk-ghome__game-n {
-  grid-area: n;
-  display: grid;
-  place-items: center;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  background: var(--vk-gold-gradient);
-  color: var(--vk-night);
-  font: 700 0.85rem var(--vk-font-display);
-}
-.vk-ghome__game-title {
-  grid-area: title;
-  font: 600 1.25rem var(--vk-font-display);
-}
-.vk-ghome__game-text {
-  grid-area: text;
-  color: var(--vk-ivory-dim);
-  font-size: 0.92rem;
-}
-
-.vk-ghome__seals {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: var(--vk-space-3) var(--vk-space-4);
-  color: var(--vk-ivory-dim);
-  font-size: 0.95rem;
-}
-.vk-ghome__seals strong {
-  color: var(--vk-ivory);
-}
-.vk-ghome__exit {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--vk-space-2);
-}
-
-@media (min-width: 760px) {
-  .vk-ghome__games {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .vk-ghome__game {
-    grid-template-columns: 1fr;
-    grid-template-areas: 'n' 'title' 'text';
-    align-content: start;
-  }
-  .vk-ghome__seals {
-    grid-template-columns: auto 1fr auto 1fr;
-  }
-}
-
-/* Eserin mühür yolu (oyun panelinde) */
-.vk-gmon {
-  max-width: 48rem;
-}
-.vk-gmon__back {
-  justify-self: start;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-.vk-gmon__head {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: var(--vk-space-4);
-}
-.vk-gmon__head > div {
-  display: grid;
-  gap: var(--vk-space-1);
-  min-width: 0;
-}
-.vk-gmon__head h1 {
-  font-size: clamp(1.7rem, 6vw, 2.5rem);
-  line-height: 1.1;
   overflow-wrap: anywhere;
 }
-.vk-gmon__img {
-  width: clamp(4.5rem, 22vw, 7.5rem);
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: var(--vk-radius);
-  box-shadow: var(--vk-shadow-gold);
+.vk-desk__donelist a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
-.vk-gmon__story {
+.vk-desk__donemeta {
+  color: var(--ink-gold);
+  font: italic 0.9rem var(--vk-font-display);
+}
+.vk-desk__route-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--vk-space-2) var(--vk-space-4);
+}
+.vk-desk__maplink {
   justify-self: start;
-  font-size: 0.9rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font: 500 0.98rem var(--vk-font-display);
+  text-decoration: underline;
+  text-decoration-color: rgb(122 90 22 / 0.5);
+  text-underline-offset: 0.22em;
+}
+
+@media (max-width: 960px) {
+  .vk-desk__head {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .vk-desk__head .vk-crest {
+    justify-self: start;
+    padding-left: 0;
+    border-left: 0;
+  }
+  .vk-desk__folio {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'next' 'vakfiye' 'done' 'route';
+  }
+  .vk-desk__vakfiye {
+    padding-top: var(--vk-space-4);
+    border-top: 1px solid var(--rule);
+  }
+}
+@media (max-width: 640px) {
+  .vk-desk {
+    padding: var(--vk-space-5) var(--vk-space-3) var(--vk-space-6);
+  }
+  .vk-desk__folio {
+    padding: var(--vk-space-5) var(--vk-space-4);
+  }
 }

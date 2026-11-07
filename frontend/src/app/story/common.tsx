@@ -33,14 +33,15 @@ export function useEnter() {
   const navigate = useNavigate()
   return useCallback(
     (to: string, state?: unknown) => {
-      if (auth.status === 'none') startGuest()
+      // Halka açık bölümlere geçişte misafir tercihi hatırlanır; oyun (R6.2) hesap ister, oraya misafir olarak girilmez.
+      if (auth.status === 'none' && !to.startsWith('/oyun') && !to.startsWith('/pasaport')) startGuest()
       navigate(to, state === undefined ? undefined : { state })
     },
     [auth.status, navigate],
   )
 }
 
-/** Ana sayfanın üst menüsü: Keşfet (aynı sayfada eserler), Harita, Rehber, Oyun; ilerleme çizgisi `--story`. */
+/** Ana sayfanın üst menüsü: Keşfet (aynı sayfada eserler), Harita, Oyun (R6.10: rehber sağ alttaki düğmede); ilerleme çizgisi `--story`. */
 export function StoryBar({ barRef }: { barRef: RefObject<HTMLElement | null> }) {
   const { t } = useLang()
   const auth = useAuth()
@@ -56,7 +57,6 @@ export function StoryBar({ barRef }: { barRef: RefObject<HTMLElement | null> }) 
     <>
       <a href="#eserler" className="vk-story__navlink" onClick={(e) => (e.preventDefault(), setOpen(false), scrollToId('eserler'))}>{t('Keşfet')}</a>
       <a href="/harita" className="vk-story__navlink" onClick={go('/harita')}>{t('Harita')}</a>
-      <a href="/rehber" className="vk-story__navlink" onClick={go('/rehber')}>{t('Rehber')}</a>
       <a href="/oyun" className="vk-story__navlink" onClick={go('/oyun')}>{t('Oyun')}</a>
     </>
   )

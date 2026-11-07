@@ -1,0 +1,174 @@
+/* ══ R6.7 Görev ekranı: eser, tek ana eylem (bilgi görevi), isteğe bağlı dinleme ve Tarih Defteri, ikincil bonus
+   ziyaret. Pano yok: başlık, bir satırlık ziyaret uyarısı ve tek parşömen yaprak. ════════════════════════════════════ */
+
+.vk-task {
+  width: min(56rem, 100%);
+  margin: 0 auto;
+  padding: var(--vk-space-5) var(--vk-space-4) var(--vk-space-7);
+  display: grid;
+  gap: var(--vk-space-4);
+  color: var(--vk-ivory);
+}
+.vk-task__back {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--vk-ivory);
+  text-decoration: underline;
+  text-decoration-color: rgb(233 200 116 / 0.5);
+  text-underline-offset: 0.25em;
+}
+.vk-task__head {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  align-items: end;
+  gap: var(--vk-space-5);
+}
+.vk-task__img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 999px 999px 4px 4px;
+  outline: 1px solid rgb(201 162 75 / 0.55);
+  outline-offset: 5px;
+  box-shadow: 0 20px 40px -24px rgb(0 0 0 / 0.9);
+}
+.vk-task__title {
+  display: grid;
+  gap: var(--vk-space-1);
+}
+.vk-task__eyebrow {
+  margin: 0;
+  color: var(--vk-gold-bright);
+  font: italic 500 1rem var(--vk-font-display);
+}
+.vk-task__title h1 {
+  margin: 0;
+  font: 600 clamp(2.1rem, 4.6vw, 3.4rem) / 1.04 var(--vk-font-display);
+  text-wrap: balance;
+}
+.vk-task__status {
+  margin: 0;
+  color: var(--vk-ivory-dim);
+  font-size: 0.95rem;
+}
+.vk-task__notice {
+  margin: 0;
+  padding-left: var(--vk-space-3);
+  border-left: 2px solid #c2455a;
+  color: rgb(243 234 211 / 0.9);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.vk-task__notice strong {
+  color: #f0b4bd;
+  font-family: var(--vk-font-display);
+}
+.vk-task__folio {
+  display: grid;
+  gap: var(--vk-space-5);
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+}
+.vk-task__quest,
+.vk-task__visit {
+  display: grid;
+  gap: var(--vk-space-2);
+  justify-items: start;
+}
+.vk-task__visit {
+  padding-top: var(--vk-space-4);
+  border-top: 1px solid var(--rule);
+}
+.vk-task__line {
+  margin: 0;
+  max-width: 40rem;
+  color: var(--ink-dim);
+  line-height: 1.55;
+}
+.vk-task__go {
+  margin-top: var(--vk-space-2);
+  min-height: 52px;
+  padding: 0 2rem;
+  font-size: 1.05rem;
+}
+.vk-task__done {
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-4);
+}
+.vk-task__extras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vk-space-2) var(--vk-space-4);
+  margin-top: var(--vk-space-3);
+}
+.vk-task__extra {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 500 1.02rem var(--vk-font-display);
+  text-decoration: underline;
+  text-decoration-color: rgb(122 90 22 / 0.5);
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+}
+.vk-task__extra:hover {
+  text-decoration-thickness: 2px;
+}
+.vk-task__extra:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.vk-task__extra--strong {
+  min-height: 46px;
+  padding: 0 1.2rem;
+  border: 1px solid var(--ink-gold);
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.vk-task__hint {
+  color: var(--ink-dim);
+  font: italic 0.9rem var(--vk-font-display);
+}
+.vk-task__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-2) var(--vk-space-4);
+  margin-top: var(--vk-space-1);
+}
+.vk-task__ok {
+  margin: 0;
+  color: #6c4f10;
+  font-weight: 700;
+}
+.vk-task__warn {
+  margin: 0;
+  color: #8e2a3a;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .vk-task {
+    padding: var(--vk-space-4) var(--vk-space-3) var(--vk-space-6);
+  }
+  .vk-task__head {
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: var(--vk-space-3);
+    align-items: center;
+  }
+  .vk-task__done {
+    align-items: flex-start;
+  }
+}
+.vk-task__soon {
+  display: grid;
+  gap: var(--vk-space-3);
+  justify-items: start;
+}

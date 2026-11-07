@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { API_BASE_URL, apiGet, apiPost } from '../api/client'
+import { VOICE_ZULAL, type VoiceProfile } from './narratorVoice'
 
 /**
  * Satır satır seslendirme. Ses yalnızca kullanıcı başlatınca çalışır.
@@ -12,16 +13,18 @@ export type PlayState = 'idle' | 'playing' | 'paused' | 'done'
 
 const synth = (): SpeechSynthesis | null => (typeof window !== 'undefined' && 'speechSynthesis' in window ? window.speechSynthesis : null)
 
-export function pickTurkishVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
+/** Türkçe tarayıcı sesi: önce ses profiline uygun ad (varsayılan: önceki rehberin kadın sesleri), yoksa ilk Türkçe ses. */
+export function pickTurkishVoice(voices: SpeechSynthesisVoice[], profile: VoiceProfile = VOICE_ZULAL): SpeechSynthesisVoice | null {
   const tr = voices.filter((v) => v.lang?.toLowerCase().startsWith('tr'))
-  return tr.find((v) => /yelda|emel|filiz|female|kadın/i.test(v.name)) ?? tr[0] ?? null
+  return tr.find((v) => profile.browserPrefer.tr.test(v.name)) ?? tr[0] ?? null
 }
 
-/** İngilizce anlatım için tarayıcı sesi (Faz 11): önce en-US/en-GB, sonra herhangi bir İngilizce ses. */
-export function pickVoice(voices: SpeechSynthesisVoice[], lang: 'tr' | 'en'): SpeechSynthesisVoice | null {
-  if (lang === 'tr') return pickTurkishVoice(voices)
+/** İngilizce anlatım için tarayıcı sesi (Faz 11): en-US/en-GB içinde önce profile uygun ad, sonra herhangi bir İngilizce ses. */
+export function pickVoice(voices: SpeechSynthesisVoice[], lang: 'tr' | 'en', profile: VoiceProfile = VOICE_ZULAL): SpeechSynthesisVoice | null {
+  if (lang === 'tr') return pickTurkishVoice(voices, profile)
   const en = voices.filter((v) => v.lang?.toLowerCase().startsWith('en'))
-  return en.find((v) => /^en[-_](us|gb)$/i.test(v.lang)) ?? en[0] ?? null
+  const main = en.filter((v) => /^en[-_](us|gb)$/i.test(v.lang))
+  return main.find((v) => profile.browserPrefer.en.test(v.name)) ?? main[0] ?? en[0] ?? null
 }
 
 /** Okuma modunda bir satırın ekranda kalma süresi (ms): yaklaşık dakikada 170 sözcük, en az 2,5 sn. */
@@ -39,13 +42,16 @@ export const resetSpeechStatusForTests = () => {
 
 export function useNarration(
   lines: { spoken: string; text: string }[],
-  opts: { onDone?: () => void; monumentId?: string; lang?: 'tr' | 'en' } = {},
+  opts: { onDone?: () => void; monumentId?: string; lang?: 'tr' | 'en'; voiceProfile?: VoiceProfile } = {},
 ) {
+  const profile = opts.voiceProfile ?? VOICE_ZULAL
   const [state, setState] = useState<PlayState>('idle')
   const [index, setIndex] = useState(0)
   const [rate, setRate] = useState(1)
   const [muted, setMuted] = useState(false)
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
+  // R3.3: ses beklenirken (sunucu sesi açık ya da tarayıcı sesi var) bu cümle sessiz kaldıysa; altyazı okuma modunda ilerler.
+  const [lineSilent, setLineSilent] = useState(false)
   const timer = useRef<number | null>(null)
   const run = useRef(0) // her başlatmada artar; eski geri çağrılar yok sayılır
   // Ağız senkronu için konuşmanın anlık konumu: satır, son kelimenin karakter konumu ve o anın zamanı (Faz 8).
@@ -87,11 +93,11 @@ export function useNarration(
   useEffect(() => {
     const s = synth()
     if (!s) return
-    const load = () => setVoice(pickVoice(s.getVoices(), lang))
+    const load = () => setVoice(pickVoice(s.getVoices(), lang, profile))
     load()
     s.addEventListener?.('voiceschanged', load)
     return () => s.removeEventListener?.('voiceschanged', load)
-  }, [lang])
+  }, [lang, profile])
 
   const clear = () => {
     if (timer.current !== null) window.clearTimeout(timer.current)
@@ -118,10 +124,13 @@ export function useNarration(
       }
       setIndex(i)
       setState('playing')
+      setLineSilent(false)
       const next = () => run.current === myRun && playFrom(i + 1)
       const s = synth()
       const browserVoice = () => {
         if (!s || !voice) {
+          // Sunucu sesi bu cümlede alınamadı ve tarayıcı sesi de yok. (İkisi de baştan yoksa `hasVoice` notu söyler.)
+          if (serverVoice) setLineSilent(true)
           cue.current = { i, char: 0, at: now() }
           timer.current = window.setTimeout(next, readingMs(lines[i].text, rate))
           return
@@ -142,6 +151,7 @@ export function useNarration(
         }
         u.onerror = (e) => {
           if (run.current === myRun && e.error !== 'interrupted' && e.error !== 'canceled') {
+            setLineSilent(true)
             timer.current = window.setTimeout(next, readingMs(lines[i].text, rate))
           }
         }
@@ -205,6 +215,8 @@ export function useNarration(
     rate,
     muted,
     hasVoice: !!voice || serverVoice,
+    /** Bu cümlenin sesi çalınamadı (sunucu ve tarayıcı sesi kullanılamadı); altyazı okuma modunda ilerliyor. */
+    lineSilent: lineSilent && !muted,
     serverVoice,
     cue,
     audio,

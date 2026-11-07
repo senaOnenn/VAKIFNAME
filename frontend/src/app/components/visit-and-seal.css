@@ -1,0 +1,65 @@
+/* ══ R3.12 Ziyaret künyesi — müze duvar etiketinin ziyaret kısmı. Renkler bulunduğu yüzeyden gelir (`currentColor`);
+   duvar etiketinde mürekkep, koyu yüzeyde fildişi. Büyük düğme yok: okunur metin bağlantıları (en az 44 px dokunma). */
+
+.vk-visitc {
+  display: grid;
+  gap: 0.85rem;
+}
+.vk-visitc h2 {
+  margin: 0;
+  font-family: var(--vk-font-display);
+  font-size: 1.25rem;
+}
+.vk-visitc__addr {
+  display: grid;
+  gap: 0.15rem;
+  font-style: normal;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.vk-visitc__place {
+  font-size: var(--vk-text-sm);
+  opacity: 0.85;
+}
+.vk-visitc__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1.5rem;
+}
+.vk-visitc__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: var(--vk-font-display);
+  font-size: 1.1rem;
+  text-decoration: underline;
+  text-decoration-color: rgb(122 90 22 / 0.5);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+.vk-visitc__link svg {
+  width: 18px;
+  height: 18px;
+}
+.vk-visitc__link:hover {
+  text-decoration-thickness: 2px;
+}
+.vk-visitc__link--primary {
+  font-weight: 600;
+}
+.vk-visitc__link:focus-visible {
+  outline: 2px solid var(--vk-indigo, #4a5bff);
+  outline-offset: 3px;
+}
+.vk-visitc__note {
+  margin: 0;
+  font-size: var(--vk-text-xs);
+  line-height: 1.5;
+}

@@ -1,0 +1,324 @@
+/* ══ R3.12 Eser sayfası: editoryal müze kompozisyonu ═══════════════════════════════════════════════════════════════
+   Tek okuma sütunu (kapaktaki başlıkla aynı sol hiza): giriş (kısa tanıtım, kısa bâni, Tarih Defteri önizlemesi) →
+   Fotoğraf Arşivi (kenardan kenara derin lacivert bant) → müze duvar etiketi (sayfadaki tek sıcak taş/fildişi yüzey:
+   künye ve ziyaret). Kutu ve kart yok; yüzey ritmi: gece laciverdi → derin lacivert → taş. Rehber site genelindedir. */
+
+.vk-mon .vk-mon3 {
+  --vk-mon-max: 64rem;
+  padding-top: var(--vk-space-6);
+  gap: var(--vk-space-7);
+}
+
+/* ── Giriş ─────────────────────────────────────────────────────────────────────────────────────────────────── */
+.vk-mon3__intro {
+  display: grid;
+  gap: var(--vk-space-5);
+  max-width: 46rem;
+  min-width: 0;
+}
+.vk-mon .vk-mon__lead {
+  margin: 0;
+  max-width: 40rem;
+  font: 500 clamp(1.3rem, 2.2vw, 1.6rem) / 1.5 var(--vk-font-display);
+  color: var(--vk-ivory);
+}
+
+/* Kısa bâni satırı: madalyon, rol, ad ve kaynak; kutu ve sol çizgi yok. */
+.vk-people--compact {
+  display: grid;
+  gap: var(--vk-space-3);
+}
+.vk-people--compact .vk-person {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.vk-people--compact .vk-person__medal {
+  width: 44px;
+  height: 44px;
+  font-size: 0.95rem;
+}
+.vk-people--compact .vk-person__body {
+  display: grid;
+  gap: 0.1rem;
+}
+.vk-people--compact .vk-person__role {
+  margin: 0;
+  font-family: var(--vk-font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--vk-gold);
+}
+.vk-people--compact .vk-person__name {
+  margin: 0;
+  font-size: 1.2rem;
+}
+.vk-people--compact .vk-person__src {
+  margin: 0;
+  font-size: var(--vk-text-xs);
+  color: var(--vk-ivory-dim);
+}
+
+/* Tarih Defteri önizlemesi: deri cilt (zencerek + şemse) ve iki satır; fotoğrafla yarışmayacak ölçüde. */
+.vk-bookentry {
+  justify-self: start;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.1rem;
+  max-width: 100%;
+  margin-top: var(--vk-space-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--vk-ivory);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.vk-bookentry__cover {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 96px;
+  border-radius: 2px 5px 5px 2px;
+  background: radial-gradient(120% 90% at 42% 34%, #27316f, #1a2150 55%, #10153a);
+  box-shadow:
+    inset 6px 0 0 -2px rgb(0 0 0 / 0.35),
+    0 12px 22px -14px rgb(0 0 0 / 0.9);
+  transition: transform var(--vk-dur) var(--vk-ease);
+}
+.vk-bookentry__cover::before {
+  content: '';
+  position: absolute;
+  inset: 6px 6px 6px 10px;
+  border: 1px solid rgb(201 162 75 / 0.65);
+  pointer-events: none;
+}
+.vk-bookentry__cover .vk-book__semse {
+  width: 22px;
+  fill: none;
+  stroke: #c9a24b;
+  stroke-width: 4;
+}
+.vk-bookentry__cover .vk-book__semse-in {
+  fill: rgb(201 162 75 / 0.15);
+  stroke-width: 2;
+}
+.vk-bookentry__cover .vk-book__semse-tip {
+  display: none;
+}
+.vk-bookentry__cover .vk-book__semse circle {
+  fill: #c9a24b;
+  stroke: none;
+}
+.vk-bookentry__text {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.vk-bookentry__name {
+  font-family: var(--vk-font-display);
+  font-size: 1.4rem;
+  line-height: 1.15;
+}
+.vk-bookentry__desc {
+  color: var(--vk-ivory-dim);
+  font-size: var(--vk-text-sm);
+}
+.vk-bookentry__more {
+  margin-top: 0.2rem;
+  font-family: var(--vk-font-display);
+  font-style: italic;
+  color: var(--vk-gold-bright);
+  text-decoration: underline;
+  text-decoration-color: rgb(201 162 75 / 0.45);
+  text-underline-offset: 0.22em;
+}
+.vk-bookentry:hover .vk-bookentry__cover {
+  transform: translateY(-2px);
+}
+.vk-bookentry:hover .vk-bookentry__name {
+  color: var(--vk-gold-bright);
+}
+.vk-bookentry:focus-visible {
+  outline: 2px solid var(--vk-gold-bright);
+  outline-offset: 6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vk-bookentry__cover {
+    transition: none;
+  }
+  .vk-bookentry:hover .vk-bookentry__cover {
+    transform: none;
+  }
+}
+
+/* ── Fotoğraf Arşivi bandı ─────────────────────────────────────────────────────────────────────────────────── */
+.vk-mon .vk-mon3 > .vk-archive,
+.vk-mond__body > .vk-archive {
+  padding: var(--vk-space-6) 0;
+  border-top: 0;
+  background: #070a20;
+  box-shadow: 0 0 0 100vmax #070a20;
+  clip-path: inset(0 -100vmax);
+}
+
+/* ── Müze duvar etiketi (sayfadaki tek taş/fildişi yüzey) ──────────────────────────────────────────────────── */
+.vk-label {
+  --vk-label-ink: #2b2116;
+  --vk-label-dim: #5e5140;
+  --vk-label-gold: #7a5a16;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: var(--vk-space-6);
+  padding: var(--vk-space-6) clamp(1.25rem, 3vw, 2.5rem);
+  border-radius: 2px;
+  background: linear-gradient(180deg, #eee5d1, #e6dbc2);
+  color: var(--vk-label-ink);
+}
+.vk-label > * {
+  min-width: 0;
+}
+.vk-label > * + * {
+  padding-left: var(--vk-space-6);
+  border-left: 1px solid rgb(122 90 22 / 0.28);
+}
+.vk-label h2,
+.vk-label .vk-sheet__h {
+  margin: 0;
+  font-family: var(--vk-font-display);
+  font-size: 1.3rem;
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--vk-label-ink);
+}
+.vk-label .vk-sheet__list {
+  margin: var(--vk-space-3) 0 0;
+}
+.vk-label .vk-sheet__row {
+  border-color: rgb(122 90 22 / 0.2);
+}
+.vk-label .vk-sheet__row dt {
+  font-family: var(--vk-font-display);
+  font-style: italic;
+  color: var(--vk-label-gold);
+}
+.vk-label .vk-sheet__row dd {
+  color: var(--vk-label-ink);
+  overflow-wrap: anywhere;
+}
+.vk-label .vk-visitc__addr,
+.vk-label .vk-visitc__place {
+  color: var(--vk-label-ink);
+}
+.vk-label .vk-visitc__place,
+.vk-label .vk-visitc__note {
+  color: var(--vk-label-dim);
+}
+.vk-label .vk-visitc__note a {
+  color: var(--vk-label-gold);
+}
+.vk-label__notice {
+  display: grid;
+  gap: 0.15rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid #8e2a3a;
+}
+.vk-label__notice strong {
+  font-family: var(--vk-font-display);
+  font-size: 1.05rem;
+  color: #8e2a3a;
+}
+.vk-label__notice p {
+  margin: 0;
+  color: var(--vk-label-ink);
+  font-size: var(--vk-text-sm);
+  line-height: 1.55;
+}
+.vk-label__game {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--vk-font-display);
+  font-size: 1.05rem;
+  color: var(--vk-label-ink);
+  text-decoration: underline;
+  text-decoration-color: rgb(122 90 22 / 0.5);
+  text-underline-offset: 0.25em;
+}
+
+/* ── Tarih Defteri penceresi (<dialog>, tarayıcının üst katmanında) ───────────────────────────────────────── */
+.vk-bookdlg {
+  width: min(900px, calc(100vw - 2rem));
+  max-width: none;
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--vk-ivory);
+  overflow: visible;
+}
+.vk-bookdlg::backdrop {
+  background: rgb(5 7 20 / 0.86);
+}
+/* Uzun kayıt kesilmez: pencere içinde kayar. */
+.vk-bookdlg__inner {
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--vk-space-3);
+  border-radius: 8px;
+  background: #0b0f2a;
+  border: 1px solid rgb(201 162 75 / 0.3);
+}
+
+/* ── Tablet ve telefon ─────────────────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 820px) {
+  .vk-label {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--vk-space-5);
+  }
+  .vk-label > * + * {
+    padding-left: 0;
+    padding-top: var(--vk-space-5);
+    border-left: 0;
+    border-top: 1px solid rgb(122 90 22 / 0.28);
+  }
+}
+@media (max-width: 640px) {
+  .vk-mon .vk-mon3 {
+    padding-top: var(--vk-space-5);
+    gap: var(--vk-space-6);
+  }
+  .vk-bookdlg {
+    width: 100vw;
+    max-height: 100dvh;
+    margin: 0;
+  }
+  .vk-bookdlg__inner {
+    max-height: 100dvh;
+    min-height: 100dvh;
+    border-radius: 0;
+    border: 0;
+    padding: var(--vk-space-2);
+  }
+  .vk-label {
+    margin-inline: calc(-1 * var(--vk-space-4));
+    padding: var(--vk-space-5) var(--vk-space-4);
+  }
+  .vk-bookentry__cover {
+    width: 60px;
+    height: 80px;
+  }
+}

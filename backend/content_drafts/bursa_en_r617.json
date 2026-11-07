@@ -1,0 +1,1099 @@
+{
+ "schema": "vakifname.en_drafts/1",
+ "status": "draft",
+ "prepared_by": "Claude (R6.17), yönetici onayı bekliyor",
+ "method": "Her kayıt için kitabın İngilizce bölümünden birebir alıntı (quote_en, page = PDF sayfası) seçildi; text_en alıntıyı aşmaz. Türkçe kayıt ile kitap arasındaki farklar 'note' alanında. Sorular Türkçe sorunun kimliğine bağlıdır: şıklar aynı sırada, doğru cevap Türkçe sorudaki şıktır. Hiçbiri onaylı değildir.",
+ "sources": {
+  "cilt-1": {
+   "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt I (Nisan 2026)",
+   "file": "bursa-envanteri-cilt-1.pdf",
+   "sha256": "a1212466d2eda590e72107eac165241dbfd8a777b2ea25ebbb96f8d97a5dcd8a"
+  },
+  "cilt-2": {
+   "title": "Bursa Vakıf Eserleri / Foundation Buildings of Bursa, Cilt II (Nisan 2026)",
+   "file": "bursa-envanteri-cilt-2.pdf",
+   "sha256": "da91ed311e341f04e1e6a8d59f0edc6fc0af56b8e02269860f97f841c32834c5"
+  }
+ },
+ "monuments": [
+  {
+   "monument_id": "BUR-0001",
+   "name_en": "Bursa Grand Mosque",
+   "alternative_names_en": [
+    "Ulu Cami",
+    "Ulucami"
+   ],
+   "address_en": "Atatürk Caddesi, Osmangazi/Bursa (opposite the PTT post office)",
+   "site_notice_en": "This is an active place of worship. Do not visit during prayer times or Friday prayers; keep quiet inside and dress appropriately."
+  },
+  {
+   "monument_id": "BUR-0003",
+   "name_en": "Muradiye Mosque",
+   "alternative_names_en": [],
+   "address_en": null,
+   "site_notice_en": "The Muradiye Mosque in Bursa's Osmangazi district is an important stop for visitors exploring Ottoman architectural heritage. As you look around, notice its architectural details and its stone and brick workmanship. It is also a place of worship: during your visit, keep quiet and respect the privacy of worshippers and the visiting rules."
+  },
+  {
+   "monument_id": "BUR-0005",
+   "name_en": "Muradiye Madrasa",
+   "alternative_names_en": [],
+   "address_en": null,
+   "site_notice_en": null
+  },
+  {
+   "monument_id": "BUR-0007",
+   "name_en": "Tomb of Sultan Murad II",
+   "alternative_names_en": [],
+   "address_en": null,
+   "site_notice_en": "This is a tomb and burial ground. Keep quiet during your visit, do not touch the cenotaphs and follow the visiting hours."
+  },
+  {
+   "monument_id": "BUR-0008",
+   "name_en": "Tomb of Cem Sultan",
+   "alternative_names_en": [],
+   "address_en": null,
+   "site_notice_en": "This tomb was built in 1479 for Şehzade Mustafa, son of Mehmed II (the Conqueror); Cem Sultan was buried here in 1499. It should not be confused with the tomb of Şehzade Mustafa, son of Suleiman the Magnificent, also in Muradiye. This is a tomb and burial ground. Keep quiet during your visit, do not touch the cenotaphs and follow the visiting hours.",
+   "note": "Ziyaret uyarısındaki tarihler Türkçe uyarıdaki onaylı metinden aktarılmıştır (1479 ve 1499 kitabın İngilizce bölümünde, PDF s. 73)."
+  },
+  {
+   "monument_id": "BUR-0009",
+   "name_en": "Koza Han",
+   "alternative_names_en": [
+    "Koza Hanı"
+   ],
+   "address_en": "Hanlar Bölgesi (Hans District), Osmangazi/Bursa",
+   "site_notice_en": null
+  },
+  {
+   "monument_id": "BUR-0013",
+   "name_en": "Pirinç Han",
+   "alternative_names_en": [
+    "Pirinç Hanı"
+   ],
+   "address_en": "Hanlar Bölgesi (Hans District), Osmangazi/Bursa (pedestrian access from Cumhuriyet Caddesi)",
+   "site_notice_en": null
+  },
+  {
+   "monument_id": "BUR-0014",
+   "name_en": "Yıldırım Bayezid Bedesten",
+   "alternative_names_en": [],
+   "address_en": "Atatürk Caddesi, Osmangazi/Bursa (the bazaar below the Grand Mosque)",
+   "site_notice_en": "This is a jewellers' bazaar; it is closed outside business hours."
+  },
+  {
+   "monument_id": "BUR-0019",
+   "name_en": "Tomb of Osman Gazi",
+   "alternative_names_en": [],
+   "address_en": null,
+   "site_notice_en": "This is a tomb and burial ground. Keep quiet during your visit, do not touch the cenotaphs and follow the visiting hours."
+  },
+  {
+   "monument_id": "BUR-0020",
+   "name_en": "Tomb of Orhan Gazi",
+   "alternative_names_en": [],
+   "address_en": null,
+   "site_notice_en": "This is a tomb and burial ground. Keep quiet during your visit, do not touch the cenotaphs and follow the visiting hours."
+  }
+ ],
+ "facts": [
+  {
+   "fact_id": "BUR-0001-F001",
+   "source": "cilt-1",
+   "page": 20,
+   "quote_en": "The mosque and madrasa, which are understood to have been completed in AH 802 / AD 1399-1400 from the date on its minbar, were commissioned by Sultan Yıldırım Bayezid",
+   "title_en": "Yıldırım Bayezid's mosque",
+   "text_en": "Sultan Yıldırım Bayezid commissioned the Grand Mosque. According to the date on its minbar, the building was completed in AH 802, that is AD 1399–1400.",
+   "quest_en": {
+    "question": "Which sultan commissioned the Bursa Grand Mosque?",
+    "choices": [
+     "Murad II",
+     "Mehmed II (the Conqueror)",
+     "Yıldırım Bayezid",
+     "Orhan Gazi"
+    ],
+    "explanation": "The Grand Mosque was built under Yıldırım Bayezid and completed in 1399–1400."
+   }
+  },
+  {
+   "fact_id": "BUR-0001-F002",
+   "source": "cilt-1",
+   "page": 20,
+   "quote_en": "it is believed that the architect who built the mosque and the madrasa could be Ali Neccâr or Hacı İvaz Paşa. Although there is information in the Bursa Y earbooks stating that “It is understood from the general circumstances that the architect of the building was a Greek”, its degree of accuracy is debatable.",
+   "title_en": "Who was the architect?",
+   "text_en": "Who designed the Grand Mosque is uncertain. It is believed that the architect could be Ali Neccâr or Hacı İvaz Paşa. The Bursa yearbooks state that the architect was Greek, but the accuracy of this information is debatable.",
+   "note": "Türkçe kayıttaki 'kitabe ya da belgeyle kanıtlanmış değil' ayrıntısı İngilizce bölümde yok; belirsizlik 'believed / could be' ile korundu. Alıntı bir önceki sayfada (PDF s. 20)."
+  },
+  {
+   "fact_id": "BUR-0001-F003",
+   "source": "cilt-1",
+   "page": 19,
+   "quote_en": "The first imam of the mosque was Süleyman Çelebi, the author of the work called Wasilat al-Najat, also known as Mevlid among the public.",
+   "title_en": "The first imam: Süleyman Çelebi",
+   "text_en": "The first imam of the mosque was Süleyman Çelebi, author of the work popularly known as the Mevlid.",
+   "quest_en": {
+    "question": "Who was the first imam of the Grand Mosque?",
+    "choices": [
+     "Somuncu Baba",
+     "Molla Fenârî",
+     "Emir Sultan",
+     "Süleyman Çelebi"
+    ],
+    "explanation": "The first imam was Süleyman Çelebi, author of the Mevlid."
+   },
+   "note": "Türkçe açıklamadaki 'Somuncu Baba ilk namazı kıldıran kişi olarak anılır' cümlesi İngilizce bölümde bu biçimde yok (kitap: açılışa katılıp Fâtiha'yı tefsir etti); İngilizce açıklamaya alınmadı."
+  },
+  {
+   "fact_id": "BUR-0001-F004",
+   "source": "cilt-1",
+   "page": 25,
+   "quote_en": "Bursa Ulucami is a rectangular-plan building measuring approximately 55 × 69 m The mosque, which attracts attention with its twenty domes and 3500 m² prayer area",
+   "title_en": "A great building of twenty domes",
+   "text_en": "The mosque stands on a rectangular plan of approximately 55 × 69 metres and is covered by twenty domes.",
+   "quest_en": {
+    "question": "How many domes cover the Grand Mosque?",
+    "choices": [
+     "12",
+     "9",
+     "16",
+     "20"
+    ],
+    "explanation": "The mosque is covered by twenty domes."
+   },
+   "note": "Türkçe kayıttaki 'on iki ayağa dayanan' ayrıntısı bu sayfanın İngilizce bölümünde yok; İngilizce metne alınmadı."
+  },
+  {
+   "fact_id": "BUR-0001-F005",
+   "source": "cilt-1",
+   "page": 27,
+   "quote_en": "The mosque’s minbar, made using the kündekâri technique, is a masterpiece made entirely of interlocking pieces, without the use of nails, glue or any other binding material. In the master’s inscription on one of the railings facing west, the phrase “Amel-i el-Hâc Muhammed bin Abdulaziz ibnü’d-Dakki” is written in Thuluth script.",
+   "title_en": "A minbar without nails",
+   "text_en": "The minbar was made using the kündekâri technique: it is built entirely of interlocking pieces, without nails, glue or any other binding material. The master's inscription on the minbar names him as el-Hâc Muhammed bin Abdulaziz.",
+   "quest_en": {
+    "question": "Which technique was used to make the Grand Mosque's minbar?",
+    "choices": [
+     "Kündekâri",
+     "Tile mosaic",
+     "Kalem işi (painted decoration)",
+     "Malakâri (relief plasterwork)"
+    ],
+    "explanation": "The minbar was made with the kündekâri technique, its pieces interlocking without nails or glue."
+   },
+   "note": "Türkçe kayıttaki 'ceviz ağacından' ayrıntısı İngilizce bölümde yok; İngilizce metne alınmadı."
+  },
+  {
+   "fact_id": "BUR-0001-F006",
+   "source": "cilt-1",
+   "page": 30,
+   "quote_en": "The decorations on the mihrab were made by Tevfik Paşa, who was exiled to Bursa in 1862. One of the four friezes surrounding the mihrab is arranged as a Kufic inscription band, one as a stylized motif band, and the other two as a vegetal ornament band.",
+   "title_en": "19th-century decoration of the mihrab",
+   "text_en": "The decorations on the mihrab were made by Tevfik Paşa, who was exiled to Bursa in 1862. The friezes around the mihrab include a Kufic inscription band, a stylized motif band and vegetal ornament bands.",
+   "note": "Türkçe kayıttaki 'büyük kandil motifi' aynı sayfada ayrı cümlede geçiyor; alıntı kısa tutulduğu için İngilizce metne alınmadı."
+  },
+  {
+   "fact_id": "BUR-0001-F007",
+   "source": "cilt-1",
+   "page": 31,
+   "quote_en": "On the pediment under the stairs of the simple and elegant muezzin’s platform, built on eight wooden columns by Mustafa Efendi, the trustee of the Yıldırım Bayezid foundations, there is a verse written in Ta’liq script by the poet Rahimi. The inscription dated AH 956 / AD 1549 is the oldest known inscription in the mosque.",
+   "title_en": "The muezzin's platform and its 1549 inscription",
+   "text_en": "The simple muezzin's platform stands on eight wooden columns. The verse inscribed on it is dated AH 956 / AD 1549 and is the oldest known inscription in the mosque.",
+   "note": "DİKKAT: Türkçe kayıt '1549 yılında yaptırılmıştır' diyor; kitabın İngilizce bölümü 1549'u mahfildeki kitabenin tarihi olarak veriyor. İngilizce metin kitaba uyar; Türkçe kaydın da gözden geçirilmesi önerilir."
+  },
+  {
+   "fact_id": "BUR-0001-F008",
+   "source": "cilt-1",
+   "page": 33,
+   "quote_en": "The pool has sixteen sides and each side is clad with Marmara marble slabs. Each side features a Baroque-style motif and a central tap. At the center of the pool, Pınarbaşı water flows from a three-tier salsabil, a design that both serves as an aesthetic element and emphasizes the space’s cooling and purifying function. The open center of the dome covering the pool is a deliberate design choice, allowing the interior to be illuminated and ventilated by natural light.",
+   "title_en": "The open dome and the shadirvan",
+   "text_en": "The dome covering the central pool was deliberately left open to let in natural light and air. Beneath it is a shadirvan whose pool has sixteen sides clad with Marmara marble.",
+   "quest_en": {
+    "question": "What lies beneath the open central dome of the Grand Mosque?",
+    "choices": [
+     "The sultan's gallery",
+     "A shadirvan (ablution fountain)",
+     "The minbar",
+     "The mihrab"
+    ],
+    "explanation": "Beneath the open dome is a shadirvan with a sixteen-sided pool."
+   },
+   "note": "Türkçe kayıttaki 'son yıllarda camla kapatıldı' ayrıntısı İngilizce bölümde yok; İngilizce metne alınmadı."
+  },
+  {
+   "fact_id": "BUR-0001-F009",
+   "source": "cilt-1",
+   "page": 34,
+   "quote_en": "It is known that the western of the two minarets of the Ulucami was built by Yıldırım Bayezid. The eastern minaret was planned during the first construction but was not completed. The minaret was called “Güdük (Stump) Minaret” because it was used in an incomplete form for a while. It is presumed that the minaret was completed during the reign of Çelebi Sultan Mehmed or Yavuz Sultan Selim.",
+   "title_en": "Two minarets, two periods",
+   "text_en": "The western minaret was built by Yıldırım Bayezid. The eastern minaret was planned in the first construction but left unfinished; it is presumed to have been completed in the reign of Çelebi Sultan Mehmed or Yavuz Sultan Selim.",
+   "note": "Türkçe kayıt Çelebi Mehmed'i 'kabul edilir', Yavuz'u 'olasılık' diye ayırıyor; kitabın İngilizce bölümü ikisini eşit olasılıkla veriyor. İngilizce metin kitaba uyar."
+  },
+  {
+   "fact_id": "BUR-0001-F010",
+   "source": "cilt-1",
+   "page": 36,
+   "quote_en": "Ulucami, which underwent its biggest restoration in its six hundred-year history after the earthquake of 1855, was revived after long years of work that cost a lot of money and was reopened for worship in 1862.",
+   "title_en": "Restoration after the 1855 earthquake",
+   "text_en": "The Grand Mosque underwent the biggest restoration of its history after the earthquake of 1855.",
+   "quest_en": {
+    "question": "After which event did the Grand Mosque undergo its most extensive restoration?",
+    "choices": [
+     "The Timurid invasion",
+     "The bazaar fire",
+     "The First World War",
+     "The 1855 earthquake"
+    ],
+    "explanation": "Its biggest restoration came after the earthquake of 1855."
+   },
+   "note": "Türkçe kayıttaki 'Timur istilasında zarar gördü' ayrıntısı bu sayfanın İngilizce bölümünde yok; İngilizce metne alınmadı. Türkçe açıklama Kültür Portalı'nı anıyor; İngilizce açıklama kitaba dayanır."
+  },
+  {
+   "fact_id": "BUR-0003-F001",
+   "source": "cilt-1",
+   "page": 59,
+   "quote_en": "In the inscription, it is stated that Sultan Murad II had this blessed and honorable imaret built, and that its construction started in the month of Rajab in the Hijri year 828 and was completed in Muharram 830. It is understood from the inscription that the construction of the mosque and complex began in May-June 1425 and was completed in November-December 1426.",
+   "title_en": "The mosque of Murad II",
+   "text_en": "According to its construction inscription, Sultan Murad II had the Muradiye Mosque built: work began in May–June 1425 and was completed in November–December 1426.",
+   "quest_en": {
+    "question": "Which sultan commissioned the Muradiye Mosque?",
+    "choices": [
+     "Yıldırım Bayezid",
+     "Mehmed II (the Conqueror)",
+     "Orhan Gazi",
+     "Murad II"
+    ],
+    "explanation": "According to its construction inscription, the mosque was built for Sultan Murad II in 1425–1426."
+   }
+  },
+  {
+   "fact_id": "BUR-0003-F002",
+   "source": "cilt-1",
+   "page": 60,
+   "quote_en": "The architectural plan scheme with hospices/zawiya was also applied in Muradiye Mosque, the last example of the imperial mosques in Bursa. There is a five-bay narthex in the mosque.",
+   "title_en": "A sultan's mosque with hospices",
+   "text_en": "The Muradiye Mosque follows the early Ottoman plan scheme with hospices (zawiya). A five-bay narthex stretches across its front.",
+   "note": "Türkçe kayıttaki 'yolcuları ve dervişleri ağırlamak için' açıklaması bu alıntıda yok; İngilizce metne alınmadı."
+  },
+  {
+   "fact_id": "BUR-0003-F003",
+   "source": "cilt-1",
+   "page": 59,
+   "quote_en": "The main walls of the mosque are built with three rows of bricks and one row of rubble stone, as seen in the Early Ottoman Period Bursa buildings.",
+   "title_en": "Brick and stone walls",
+   "text_en": "The main walls of the mosque are built with three rows of brick alternating with one row of rubble stone, as in other early Ottoman buildings in Bursa.",
+   "quest_en": {
+    "question": "Which masonry pattern is seen in the walls of the Muradiye Mosque?",
+    "choices": [
+     "Timber frame",
+     "Three rows of brick, one row of stone",
+     "Cut stone only",
+     "Brick only"
+    ],
+    "explanation": "The walls are built with three rows of brick alternating with one row of stone."
+   }
+  },
+  {
+   "fact_id": "BUR-0003-F004",
+   "source": "cilt-1",
+   "page": 60,
+   "quote_en": "By the will of Sultan Abdülhamid II, the walls of these hospices were removed in 1897, and they were incorporated into the mosque and transformed into an iwan.",
+   "title_en": "Side rooms joined to the prayer hall",
+   "text_en": "The walls of the side rooms (hospices) were later removed and the rooms were incorporated into the mosque as an iwan. The source book dates this to 1897, by the will of Sultan Abdülhamid II.",
+   "note": "DİKKAT: Türkçe kayıt dönüşümün yılının kesin olmadığını söylüyor (arşiv belgeleri 18. yüzyılı ve 19. yüzyıl sonunu anıyor); kitabın İngilizce bölümü 1897 diyor. İngilizce metin yılı 'kitaba göre' diye verir; yönetici kararı gerekir."
+  },
+  {
+   "fact_id": "BUR-0003-F005",
+   "source": "cilt-1",
+   "page": 61,
+   "quote_en": "The walls of the area in front of the mihrab are covered with hexagonal emerald green tiles",
+   "title_en": "Hexagonal tiles",
+   "text_en": "The walls of the area in front of the mihrab are covered with hexagonal tiles, which the source book describes as emerald green.",
+   "note": "Türkçe kayıttaki 'resmî kayıtlar lacivert ve firuze der' ayrıntısı İngilizce bölümde yok; İngilizce metin yalnızca kitabın tanımını verir."
+  },
+  {
+   "fact_id": "BUR-0003-F006",
+   "source": "cilt-1",
+   "page": 62,
+   "quote_en": "renovated in the Rococo style, made entirely of plaster. During the same period, the mosque’s minbar also burned down, and a simple wooden minbar with a few steps, dated AH 1315 / AD 1897, was brought from a mosque in one of the villages of Bursa.",
+   "title_en": "A Rococo mihrab",
+   "text_en": "The present mihrab is not original: it was renovated in the Rococo style, made entirely of plaster.",
+   "quest_en": {
+    "question": "In which style is the present mihrab of the Muradiye Mosque?",
+    "choices": [
+     "Rococo",
+     "Seljuk",
+     "Gothic",
+     "Art Nouveau"
+    ],
+    "explanation": "The mihrab was later renovated in the Rococo style, made entirely of plaster."
+   },
+   "note": "DİKKAT: Türkçe kayıt 'mihrap ve minber 1790'da rokoko üslubunda yeniden yapıldı' diyor; kitabın İngilizce bölümüne göre rokoko olan mihraptır, minber aynı dönemde yanmış, yerine 1897 tarihli bir minber getirilmiş, 2014'te bugünkü minber konmuştur. İngilizce metin yalnızca mihrabı anar. '1790' bir önceki sayfanın son satırında geçer (PDF s. 61: 'After the repair in 1790, the mosque’s mihrab was'). Türkçe kaydın gözden geçirilmesi önerilir."
+  },
+  {
+   "fact_id": "BUR-0003-F007",
+   "source": "cilt-1",
+   "page": 62,
+   "quote_en": "Although there was no serious destruction in the earthquake of 1855, the mosque was damaged, its minaret was split, the dome of the tomb was cracked, and the classroom and walls of the madrasa were damaged, and thus, a comprehensive repair process was initiated. In the restoration process carried out by the governor of the period, Ahmet Vefik Paşa, in 1863, after the earthquake, the architect Léon Parvillée was put in charge of the repair of the mosque, and the lead on the dome was renewed in 1866.",
+   "title_en": "An architect called in after the earthquake",
+   "text_en": "The mosque was damaged in the earthquake of 1855. In the restoration carried out by the governor Ahmet Vefik Paşa in 1863, the architect Léon Parvillée was put in charge of repairing the mosque.",
+   "note": "Türkçe kayıttaki 'Fransız', 'Parvillée'nin 1874 tarihli kitabı' ve 'müdahalelerin ayrıntıları belgelenmemiş' ayrıntıları İngilizce bölümde yok; İngilizce metne alınmadı."
+  },
+  {
+   "fact_id": "BUR-0003-F008",
+   "source": "cilt-1",
+   "page": 62,
+   "quote_en": "The final restoration of the mosque was completed with extensive work carried out between 2012 and 2014. As a result of the surface cleaning operations, the hand-painted works in the tombs were brought to light. The presence of the Greek flag and army pennant on both sides of the narthex revealed that the mosque was used as a warehouse by Greek soldiers between 1920 and 1922.",
+   "title_en": "Traces of the occupation under the plaster",
+   "text_en": "During the restoration of 2012–2014, a Greek flag and army pennant were found on both sides of the narthex. According to the source book, they show that the mosque was used as a warehouse by Greek soldiers between 1920 and 1922.",
+   "note": "Türkçe kayıt 'rivayet / basın haberi' kesinliğinde ve 'karargâh olarak da kullanılmış olabilir' diyor; kitap depo kullanımını daha kesin anlatıyor. İngilizce metin 'kaynak kitaba göre' diye verir, karargâh iddiası alınmadı. Kesinlik Türkçe kayıttaki gibi kalır (reported)."
+  },
+  {
+   "fact_id": "BUR-0005-F001",
+   "source": "cilt-1",
+   "page": 63,
+   "quote_en": "The madrasa has the characteristics of the Early Ottoman Period with a 17 × 17 m inner courtyard with an arcade, a single iwan, and sixteen cells.",
+   "title_en": "A square courtyard with arcades",
+   "text_en": "The madrasa has a single-iwan plan around a square inner courtyard of about 17 × 17 m surrounded by an arcade, with sixteen cells.",
+   "quest_en": {
+    "question": "What are the approximate dimensions of the Muradiye Madrasa's inner courtyard?",
+    "choices": [
+     "55 × 69 m",
+     "5 × 5 m",
+     "40 × 40 m",
+     "17 × 17 m"
+    ],
+    "explanation": "The arcaded inner courtyard measures about 17 × 17 m."
+   },
+   "note": "Türkçe kayıt oda sayısının kaynaklarda farklı verildiğini söylüyor (14 ya da 16); kitabın İngilizce bölümü on altı hücre diyor. Türkçe açıklamadaki 'Kültür Portalı: 16,80 m' İngilizce açıklamaya alınmadı."
+  },
+  {
+   "fact_id": "BUR-0005-F002",
+   "source": "cilt-1",
+   "page": 64,
+   "quote_en": "The cells located in the southern corners are larger than the others. It is thought that these spaces were used as rooms for teachers and their assistants.",
+   "title_en": "Rooms set aside for teachers",
+   "text_en": "The cells in the southern corners are larger than the others. It is thought that they were used as rooms for the teachers and their assistants.",
+   "note": "Türkçe kayıttaki gerekçe (vakıf kayıtlarında 14–15 öğrenci) İngilizce bölümde yok; belirsizlik 'It is thought' ile korundu."
+  },
+  {
+   "fact_id": "BUR-0005-F003",
+   "source": "cilt-1",
+   "page": 64,
+   "quote_en": "It is known that the madrasa was repaired in 1623, 1781 and 1844.",
+   "title_en": "Repairs over the centuries",
+   "text_en": "The madrasa is known to have been repaired several times, including in 1623, 1781 and 1844.",
+   "note": "Türkçe kayıttaki '2 Temmuz 1844 tarihli keşif kaydı' ve kurşun örtü altındaki ahşap döşemeler ayrıntısı İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0005-F004",
+   "source": "cilt-1",
+   "page": 64,
+   "quote_en": "In the earthquake of 1855, cracks appeared in the classroom walls, plaster fell off and the chimneys of the hearths collapsed.",
+   "title_en": "Traces of the 1855 earthquake",
+   "text_en": "The earthquake of 1855 also affected the madrasa: cracks appeared in the classroom walls, plaster fell off and the chimneys of the hearths collapsed.",
+   "note": "Türkçe kayıttaki 'ardından kapsamlı bir onarımdan geçti' bu alıntıda yok."
+  },
+  {
+   "fact_id": "BUR-0005-F005",
+   "source": "cilt-1",
+   "page": 64,
+   "quote_en": "Following the restoration carried out in the 1940s, the madrasa was transferred to the Ministry of Health in 1951 and it was decided to use it as a Tuberculosis Treatment Dispensary.",
+   "title_en": "A dispensary for a time",
+   "text_en": "After a restoration in the 1940s, the madrasa was transferred to the Ministry of Health in 1951 to be used as a tuberculosis dispensary.",
+   "quest_en": {
+    "question": "What was the Muradiye Madrasa used as after 1951?",
+    "choices": [
+     "A tuberculosis dispensary",
+     "A post office",
+     "A primary school",
+     "A caravanserai"
+    ],
+    "explanation": "In 1951 the madrasa was transferred to the Ministry of Health to be used as a tuberculosis dispensary."
+   }
+  },
+  {
+   "fact_id": "BUR-0005-F006",
+   "source": "cilt-1",
+   "page": 64,
+   "quote_en": "After the completion of the works, the building was opened as the Muradiye Manuscripts Museum affiliated with Bursa Metropolitan Municipality.",
+   "title_en": "From madrasa to museum",
+   "text_en": "After restoration works, the madrasa was opened as the Muradiye Manuscripts Museum, affiliated with Bursa Metropolitan Municipality.",
+   "note": "Türkçe kayıttaki açılış yılı (2019) ve müze adındaki 'Kur'an ve' İngilizce bölümde yok; kitap restorasyonu 2014–2016 diye veriyor."
+  },
+  {
+   "fact_id": "BUR-0007-F001",
+   "source": "cilt-1",
+   "page": 68,
+   "quote_en": "His son Mehmed II, remaining faithful to his father’s will, had a tomb built in AH 855 / AD 1451 with a square plan, an open roof, and a gallery on four sides, where hafiz’ could recite the Quran.",
+   "title_en": "A tomb built by his son",
+   "text_en": "Remaining faithful to his father's will, Murad II's son Mehmed II had the tomb built in AH 855 / AD 1451.",
+   "quest_en": {
+    "question": "Who had the Tomb of Murad II built?",
+    "choices": [
+     "Mehmed II (the Conqueror)",
+     "Bayezid II",
+     "Orhan Gazi",
+     "Yavuz Sultan Selim"
+    ],
+    "explanation": "In keeping with Murad II's will, his son Mehmed II had the tomb built."
+   },
+   "note": "Türkçe kayıttaki 'kapı üzerindeki kitabeye göre' ifadesi bu alıntıda yok; İngilizce metne alınmadı."
+  },
+  {
+   "fact_id": "BUR-0007-F002",
+   "source": "cilt-1",
+   "page": 68,
+   "quote_en": "He wanted the tomb to be designed in accordance with the Prophet’s Sunnah, so an underground burial chamber called a “crypt” was not included, and his body was buried directly in the ground. No one else was buried in the tomb.",
+   "title_en": "A grave open to the sky",
+   "text_en": "In keeping with Murad II's wishes, no underground crypt was built: his body was buried directly in the ground, and the tomb was given an open roof.",
+   "quest_en": {
+    "question": "In keeping with Murad II's will, how was the roof of his tomb left?",
+    "choices": [
+     "Covered in gold",
+     "Covered with tiles",
+     "Covered with timber",
+     "Open at the centre"
+    ],
+    "explanation": "In keeping with his will, the tomb was given an open roof and he was buried directly in the ground."
+   },
+   "note": "'Open roof' aynı sayfada bir sonraki paragrafta geçer (F001 alıntısı)."
+  },
+  {
+   "fact_id": "BUR-0007-F003",
+   "source": "cilt-1",
+   "page": 68,
+   "quote_en": "He wanted the tomb to be designed in accordance with the Prophet’s Sunnah, so an underground burial chamber called a “crypt” was not included, and his body was buried directly in the ground. No one else was buried in the tomb.",
+   "title_en": "A sultan alone",
+   "text_en": "No one else was buried in the tomb of Murad II.",
+   "note": "Türkçe kayıttaki 'ailesinin bazı üyelerinin sandukaları sonradan eklenen bitişik bölümdedir' ayrıntısı İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0007-F004",
+   "source": "cilt-1",
+   "page": 68,
+   "quote_en": "Above the door of the tomb is a three-line inscription in Jeli Thuluth script on a marble surface.",
+   "title_en": "The door inscription",
+   "text_en": "Above the door of the tomb is a three-line inscription in Jeli Thuluth script on marble.",
+   "note": "Türkçe kayıt kitabenin 'yapılış öyküsünü anlattığını' söylüyor; kitabın İngilizce çevirisine göre kitabe Sultan Murad'ın ölümünü anlatır (PDF s. 69). İngilizce metin yalnızca kitabenin yerini ve yazısını verir; Türkçe kaydın gözden geçirilmesi önerilir."
+  },
+  {
+   "fact_id": "BUR-0007-F005",
+   "source": "cilt-1",
+   "page": 69,
+   "quote_en": "The tomb, which reflects the general characteristics of Bursa structures, was built using one row of cut stone and two rows of bricks alternately.",
+   "title_en": "Alternating masonry",
+   "text_en": "Like other Bursa buildings, the tomb was built using one row of cut stone and two rows of brick alternately."
+  },
+  {
+   "fact_id": "BUR-0007-F006",
+   "source": "cilt-1",
+   "page": 70,
+   "quote_en": "The tomb consists of two interlocking squares measuring 13.45 × 13.45 m and 6.90 × 6.90 m.",
+   "title_en": "Two squares, one inside the other",
+   "text_en": "The plan of the tomb consists of two interlocking squares measuring 13.45 × 13.45 m and 6.90 × 6.90 m.",
+   "note": "Türkçe kayıttaki galeri genişliği (3,25 m) bu alıntıda yok. Galerinin hafızların Kur'an okuması için yapıldığı PDF s. 68'de geçer."
+  },
+  {
+   "fact_id": "BUR-0007-F007",
+   "source": "cilt-1",
+   "page": 70,
+   "quote_en": "The middle section is covered with a squinched dome supported by pointed arches resting on four columns and four piers. The bases and capitals of the columns are spolia materials from the Byzantine period.",
+   "title_en": "Columns from Byzantium",
+   "text_en": "The central dome rests on pointed arches carried by four columns and four piers. The bases and capitals of the columns are spolia, reused from the Byzantine period."
+  },
+  {
+   "fact_id": "BUR-0007-F008",
+   "source": "cilt-1",
+   "page": 70,
+   "quote_en": "During the last restoration in 2014, surface cleaning and research inside the tomb revealed hand-painted ornamentation from various periods.",
+   "title_en": "Painted decoration under the whitewash",
+   "text_en": "During the last restoration in 2014, surface cleaning inside the tomb revealed hand-painted ornamentation from various periods.",
+   "note": "Türkçe kayıttaki 'iki ayrı katman', 'üst katman 1857–58' ve '2012–2015 çalışmaları' ayrıntıları İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0008-F001",
+   "source": "cilt-1",
+   "page": 73,
+   "quote_en": "He was transferred to this tomb built for him in AH 884 / AD 1479, and when his nephew Cem Sultan, who died in Naples and whose body was brought to Bursa in 1499, was also buried here, the tomb began to be known as the “Cem Sultan Tomb” over time.",
+   "title_en": "Originally built for Şehzade Mustafa",
+   "text_en": "The building known today as the Cem Sultan Tomb was built in AH 884 / AD 1479 for Şehzade Mustafa, son of Mehmed II (the Conqueror).",
+   "quest_en": {
+    "question": "For whom was the Cem Sultan Tomb originally built?",
+    "choices": [
+     "Şehzade Mahmud",
+     "Şehzade Mustafa",
+     "Cem Sultan",
+     "Murad II"
+    ],
+    "explanation": "The tomb was built in 1479 for Şehzade Mustafa, son of Mehmed II; Cem Sultan was buried here in 1499."
+   },
+   "note": "Şehzade Mustafa'nın Fatih'in oğlu olduğu aynı sayfada bir önceki cümlede geçer; o cümle PDF metninde bozuk karakterler içerdiği için alıntıya alınmadı."
+  },
+  {
+   "fact_id": "BUR-0008-F002",
+   "source": "cilt-1",
+   "page": 73,
+   "quote_en": "He was transferred to this tomb built for him in AH 884 / AD 1479, and when his nephew Cem Sultan, who died in Naples and whose body was brought to Bursa in 1499, was also buried here, the tomb began to be known as the “Cem Sultan Tomb” over time.",
+   "title_en": "Cem Sultan's return",
+   "text_en": "Cem Sultan died in Naples; his body was brought to Bursa in 1499 and buried in this tomb, which over time came to be known as the Cem Sultan Tomb.",
+   "quest_en": {
+    "question": "In which year was Cem Sultan's body brought to Bursa?",
+    "choices": [
+     "1499",
+     "1481",
+     "1451",
+     "1855"
+    ],
+    "explanation": "Cem Sultan died in Naples, and his body was brought to Bursa in 1499."
+   },
+   "note": "DİKKAT: kitabın İngilizce bölümü Cem Sultan'ı Şehzade Mustafa'nın 'nephew'u (yeğeni) diye anıyor; Türkçe kayıt 'kardeşi' diyor (ikisi de Fatih'in oğlu). Yakınlık İngilizce metne alınmadı. Türkçe açıklamadaki '1495'te İtalya'da öldü' İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0008-F003",
+   "source": "cilt-1",
+   "page": 73,
+   "quote_en": "In the four marble sarcophagi inside the tomb, Şehzade Mustafa, Bayezid II’s son Şehzade Abdullah (d. AH 890 / AD 1485), Şehzade Cem, and Bayezid II’s son Şehzade Alemşah (d. AH 909 / AD 1503) are buried.",
+   "title_en": "Four princes",
+   "text_en": "Four princes are buried in the tomb: Şehzade Mustafa, Şehzade Cem (Cem Sultan), Şehzade Abdullah and Şehzade Alemşah."
+  },
+  {
+   "fact_id": "BUR-0008-F004",
+   "source": "cilt-1",
+   "page": 75,
+   "quote_en": "The tomb, built with a neat craftsmanship of cut stone and brick, is entered through a marble portico. The hexagonal planned tomb has a lead-covered dome sitting on a hexagonal drum.",
+   "title_en": "A hexagonal plan",
+   "text_en": "The hexagonal tomb is built of cut stone and brick and is entered through a marble portico. Its lead-covered dome sits on a hexagonal drum.",
+   "quest_en": {
+    "question": "What is the shape of the Cem Sultan Tomb's plan?",
+    "choices": [
+     "Square",
+     "Circular",
+     "Octagonal",
+     "Hexagonal"
+    ],
+    "explanation": "The tomb has a hexagonal plan and a dome resting on a hexagonal drum."
+   }
+  },
+  {
+   "fact_id": "BUR-0008-F005",
+   "source": "cilt-1",
+   "page": 75,
+   "quote_en": "The walls are covered with turquoise and dark blue hexagonal tiles up to 2.35 m above the ground. The edges and centres of the tiles are stamped with gilding, as in the Yeşil and Muradiye Mosques. Areas not covered with tiles, such as portico, pediments, drum, and dome are decorated with very rich hand-painted work.",
+   "title_en": "Gilded tiles",
+   "text_en": "Up to 2.35 m above the ground, the walls are covered with turquoise and dark blue hexagonal tiles stamped with gilding. The surfaces above are decorated with rich hand-painted work.",
+   "quest_en": {
+    "question": "What colours are the wall tiles of the Cem Sultan Tomb?",
+    "choices": [
+     "Red and yellow",
+     "Black and white",
+     "Green and purple",
+     "Turquoise and dark blue"
+    ],
+    "explanation": "The lower walls are covered with gilded turquoise and dark blue tiles."
+   }
+  },
+  {
+   "fact_id": "BUR-0008-F006",
+   "source": "cilt-1",
+   "page": 75,
+   "quote_en": "The interior of the dome is filled with rumi and hatayi motifs, and at its base is the Ayat al-Kursi written in Jeli Thuluth calligraphy within six cartouches. On both sides of the mihrab, in muthanna style, there is a muthanna Basmala al-Sharif",
+   "title_en": "The inscription band in the dome",
+   "text_en": "The interior of the dome is filled with rumi and hatayi motifs, and at its base the Ayat al-Kursi is written in Jeli Thuluth within six cartouches. On both sides of the mihrab is a Basmala written in muthanna (mirror) style.",
+   "note": "Türkçe kayıttaki 'Âyetü'l-kürsî ile birlikte besmele' ve 'besmelelerin altındaki celî sülüs ibare' ayrıntıları İngilizce metne alınmadı (kitap ibareyi de müsennâ diye anıyor)."
+  },
+  {
+   "fact_id": "BUR-0009-F001",
+   "source": "cilt-2",
+   "page": 8,
+   "quote_en": "The Koza Han was built by Sultan Bayezid II to provide income for his complex in İstanbul.",
+   "title_en": "A foundation han",
+   "text_en": "Sultan Bayezid II had the Koza Han built to provide income for his complex in Istanbul.",
+   "quest_en": {
+    "question": "What was the income of the Koza Han meant to support?",
+    "choices": [
+     "The Bursa Grand Mosque",
+     "The Edirne Palace",
+     "Foundations in Mecca",
+     "Bayezid II's complex in Istanbul"
+    ],
+    "explanation": "Bayezid II had the han built to provide income for his complex in Istanbul."
+   }
+  },
+  {
+   "fact_id": "BUR-0009-F002",
+   "source": "cilt-2",
+   "page": 8,
+   "quote_en": "The construction started in March 1489 and was completed and opened on September 30, 1491.",
+   "title_en": "1489–1491",
+   "text_en": "According to the source book, construction of the han started in March 1489, and it was completed and opened on 30 September 1491.",
+   "quest_en": {
+    "question": "In which years was the Koza Han built?",
+    "choices": [
+     "1507–1508",
+     "1425–1426",
+     "1490–1491",
+     "1396–1400"
+    ],
+    "explanation": "Official sources date the Koza Han to 1490–1491; the source book says construction started in March 1489 and ended in September 1491."
+   },
+   "note": "Türkçe kayıt yapımı 1490–1491 diye verip kitabın 1489 başlangıcını ayrıca anıyor; İngilizce metin kitabın tarihlerini verir, soru ve doğru şık Türkçe ile aynı kalır. Başlık '1490–1491' yerine kitaptaki aralık oldu."
+  },
+  {
+   "fact_id": "BUR-0009-F003",
+   "source": "cilt-2",
+   "page": 11,
+   "quote_en": "The upper floor arcade of the Han, built of wooden material, was repaired by the Bursa Association for the Appreciation of Antiquities in the 1950s, and the stables section was also overhauled during this process.",
+   "title_en": "A major restoration in the 1950s",
+   "text_en": "In the 1950s, the Bursa Association for the Appreciation of Antiquities repaired the han's wooden upper-floor arcade, and the stable section was also overhauled.",
+   "note": "Türkçe kayıt '1950'ye doğru' diyor ve sonradan eklenen yapıların temizlendiğini, mescidin 1946 onarımını anıyor; bunlar İngilizce bölümde yok. Kitap '1950'ler' diyor."
+  },
+  {
+   "fact_id": "BUR-0009-F004",
+   "source": "cilt-2",
+   "page": 8,
+   "quote_en": "The architect of the han was Abdülûlâ bin Pulad Şah, the building supervisor was Şücâ bin Karaca",
+   "title_en": "The architect, son of Pulad Şah",
+   "text_en": "The architect of the han was Abdülûlâ bin Pulad Şah.",
+   "note": "Türkçe kayıttaki öteki yazımlar (Abdullah, Abdülali) İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0009-F005",
+   "source": "cilt-2",
+   "page": 9,
+   "quote_en": "The han consists of rooms above and below arranged around a courtyard, in accordance with the classical Ottoman han plan, and a stable-storage section adjacent to the east façade.",
+   "title_en": "The courtyard and the stable section",
+   "text_en": "Following the classical Ottoman han plan, the han consists of two storeys of rooms around a courtyard, with a stable and storage section adjoining its east façade.",
+   "note": "'İç Koza Han' adı İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0009-F006",
+   "source": "cilt-2",
+   "page": 10,
+   "quote_en": "The courtyard of the stables is a rectangular area measuring approximately 22 x 30 m, surrounded by arches.",
+   "title_en": "The stable section",
+   "text_en": "The stable section of the han has its own courtyard, a rectangular area of approximately 22 × 30 m surrounded by arches.",
+   "note": "Türkçe kayıttaki moloz taş, tek kat ve 'bugün yeme içme mekânı' ayrıntıları bu alıntıda yok (kitap tek katı s. 9'da, kahvehane kullanımını s. 11'de anar)."
+  },
+  {
+   "fact_id": "BUR-0009-F007",
+   "source": "cilt-2",
+   "page": 10,
+   "quote_en": "In the middle of the courtyard, there is a detached masjid called the Köşk (Pavilion) Masjid, which we have seen before in some Seljuk caravanserais.",
+   "title_en": "The pavilion mosque in the courtyard",
+   "text_en": "In the middle of the courtyard is a detached pavilion mosque (köşk mescit), a type seen earlier in some Seljuk caravanserais.",
+   "quest_en": {
+    "question": "What stands in the middle of the Koza Han courtyard?",
+    "choices": [
+     "A bathhouse",
+     "A pavilion mosque (köşk mescit)",
+     "A clock tower",
+     "A tomb"
+    ],
+    "explanation": "In the middle of the courtyard is a detached pavilion mosque."
+   },
+   "note": "Türkçe kayıttaki 'sekiz ayak' ve 'altında şadırvan' ayrıntıları İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0009-F008",
+   "source": "cilt-2",
+   "page": 10,
+   "quote_en": "It is understood from an archive document that a second wooden masjid was built next to this masjid because it was not enough for the congregation, but this structure has not survived to the present day.",
+   "title_en": "The lost wooden masjid",
+   "text_en": "An archive document shows that a second, wooden masjid was once built next to the pavilion mosque because it was not large enough for the congregation. This structure has not survived."
+  },
+  {
+   "fact_id": "BUR-0009-F009",
+   "source": "cilt-2",
+   "page": 11,
+   "quote_en": "In a document dated AH 1040 /AD 1630, information is given regarding the repair of the han’s water channels",
+   "title_en": "Repairs in the records",
+   "text_en": "Archive documents record repairs to the han: a document dated AH 1040 / AD 1630, for example, gives information on the repair of its water channels.",
+   "note": "Türkçe kayıttaki onarım yılları (1671, 1784, 1946, 2007; 1671-72 ve 1785) ve kurşunun kiremitle değiştirilmesi İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0009-F010",
+   "source": "cilt-2",
+   "page": 11,
+   "quote_en": "Today, the Koza Han has become one of the most heavily used commercial areas in the Bursa Bazaar. On the upper floor there are businesses that trade in silk",
+   "title_en": "A living marketplace",
+   "text_en": "The Koza Han is still a place of trade: today it is one of the busiest commercial areas of the Bursa Bazaar, with silk traders on the upper floor.",
+   "note": "Türkçe kayıttaki 'yapıldığı günden bu yana' bu alıntıda yok (kitap s. 9: 'still maintains its commercial vitality')."
+  },
+  {
+   "fact_id": "BUR-0013-F001",
+   "source": "cilt-2",
+   "page": 22,
+   "quote_en": "was built by Sultan Bayezid II to provide foundation income for his mosque in İstanbul.",
+   "title_en": "Bayezid II's second han",
+   "text_en": "Sultan Bayezid II had the Pirinç Han built to provide foundation income for his mosque in Istanbul.",
+   "quest_en": {
+    "question": "Which sultan commissioned the Pirinç Han?",
+    "choices": [
+     "Yıldırım Bayezid",
+     "Murad II",
+     "Orhan Gazi",
+     "Bayezid II"
+    ],
+    "explanation": "The Pirinç Han was built by Bayezid II to provide income for his mosque in Istanbul."
+   },
+   "note": "Türkçe kayıttaki 've imaretine' İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0013-F002",
+   "source": "cilt-2",
+   "page": 22,
+   "quote_en": "According to archive documents, the architect of the building was Yakub Şah bin Sultan Şah, and his assistant was Ali bin Abdullah.",
+   "title_en": "The architects",
+   "text_en": "According to archive documents, the architect of the han was Yakub Şah bin Sultan Şah, and his assistant was Ali bin Abdullah.",
+   "quest_en": {
+    "question": "Who was the architect of the Pirinç Han?",
+    "choices": [
+     "Mimar Sinan",
+     "Hacı İvaz Paşa",
+     "Mimar Kasım",
+     "Yakub Şah"
+    ],
+    "explanation": "According to archive documents, the architect was Yakub Şah bin Sultan Şah, assisted by Ali bin Abdullah."
+   }
+  },
+  {
+   "fact_id": "BUR-0013-F003",
+   "source": "cilt-2",
+   "page": 22,
+   "quote_en": "The construction started in Muharram AH 913 / May AD 1507 and was completed in Rabi al-Awwal AH 914 / July AD 1508.",
+   "title_en": "1507–1508",
+   "text_en": "Construction of the han started in May 1507 (Muharram AH 913) and was completed in July 1508 (Rabi al-Awwal AH 914).",
+   "note": "Türkçe kayıttaki 'resmî kaynaklar 1490–1508 der' ayrıntısı İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0013-F004",
+   "source": "cilt-2",
+   "page": 23,
+   "quote_en": "The han, which measures approximately 70 × 75 m and is built on two floors, has thirty rooms on the lower floor. These rooms are lined up behind pointed arched and cross-vaulted arcades resting on cut stone piers measuring 1.35 × 1.35 m.",
+   "title_en": "A two-storey han around a courtyard",
+   "text_en": "The han, measuring approximately 70 × 75 m, is built on two floors, with its rooms lined up behind arcades resting on cut stone piers.",
+   "note": "Türkçe kayıttaki 'kare avlu' İngilizce bölümde açıkça yazmıyor."
+  },
+  {
+   "fact_id": "BUR-0013-F005",
+   "source": "cilt-2",
+   "page": 25,
+   "quote_en": "During the great earthquake that devastated Bursa on January 31, 1855, the Pirinç Han was also heavily damaged, and the western and northern arcades and the shops in this area were completely destroyed. The building was used in this state for more than a century, and the comprehensive restoration work that started in the 1980s lasted approximately twenty years.",
+   "title_en": "A twenty-year restoration",
+   "text_en": "The han was heavily damaged in the great earthquake of 31 January 1855. The comprehensive restoration that started in the 1980s lasted approximately twenty years.",
+   "quest_en": {
+    "question": "In which year was the major restoration of the Pirinç Han completed?",
+    "choices": [
+     "1983",
+     "2004",
+     "1855",
+     "1960"
+    ],
+    "explanation": "The restoration, which started in 1983, was completed in 2004."
+   },
+   "note": "DİKKAT: 1983 ve 2004 yılları kitabın İngilizce bölümünde yok ('1980'lerde başlayıp yaklaşık yirmi yıl süren'). Soru ve açıklama Türkçe onaylı kayda göre çevrildi; yönetici, sorunun İngilizcede kullanılıp kullanılmayacağına karar vermeli."
+  },
+  {
+   "fact_id": "BUR-0013-F006",
+   "source": "cilt-2",
+   "page": 22,
+   "quote_en": "Throughout history, the Koza Han was also known as “Hân-ı Cedîd-i Evvel (First New Han)”; for this reason, the Pirinç Han, which was built afterwards, was called “Hân-ı Cedîd-i Sânî (Second New Han)”.",
+   "title_en": "The second new han",
+   "text_en": "Because it was built after the Koza Han, known as the First New Han, the Pirinç Han was called “Hân-ı Cedîd-i Sânî”, the Second New Han.",
+   "quest_en": {
+    "question": "By which name is the Pirinç Han known in old records?",
+    "choices": [
+     "Beylik Han",
+     "Emir Han",
+     "Fidan Han",
+     "Hân-ı Cedîd-i Sânî"
+    ],
+    "explanation": "Because it was built after the Koza Han, it was called Hân-ı Cedîd-i Sânî, the “Second New Han”."
+   }
+  },
+  {
+   "fact_id": "BUR-0013-F007",
+   "source": "cilt-2",
+   "page": 23,
+   "quote_en": "The rooms are located on the east, north and south sides. The western façade is covered with a barrel vault, indicating that this section was used as a stable.",
+   "title_en": "The stable in the west wing",
+   "text_en": "The rooms are on the east, north and south sides, while the western section is covered with a barrel vault, indicating that it was used as a stable.",
+   "note": "Türkçe kayıttaki 1677 onarım kaydı kitapta PDF s. 25'te geçer ('the arch piers of the stables'); alıntı sayfasına bitişik olmadığı için İngilizce metne alınmadı. Kesinlik Türkçe kayıttaki gibi (reported)."
+  },
+  {
+   "fact_id": "BUR-0013-F008",
+   "source": "cilt-2",
+   "page": 23,
+   "quote_en": "During the opening of Cumhuriyet Street, the northeast corner of the han was cut, so a total of six rooms, three rooms on top of each other, were demolished",
+   "title_en": "A corner cut for the street",
+   "text_en": "The northeast corner of the han was cut when Cumhuriyet Street was opened, and six rooms were demolished.",
+   "note": "Türkçe kayıttaki yıllar (1903–1906) ve cadde adı (Hamidiye Caddesi) İngilizce bölümde yok; kitap caddenin bugünkü adını kullanıyor."
+  },
+  {
+   "fact_id": "BUR-0013-F010",
+   "source": "cilt-2",
+   "page": 25,
+   "quote_en": "Some authors state that the lead covering of this han was removed in the 17th century and that its roof was covered with tiles; however, no documentation has yet been found regarding this situation.",
+   "title_en": "An undocumented account of the roof",
+   "text_en": "Some authors state that the han's lead roof covering was removed in the 17th century and replaced with tiles. However, no document confirming this has yet been found."
+  },
+  {
+   "fact_id": "BUR-0014-F001",
+   "source": "cilt-2",
+   "page": 29,
+   "quote_en": "The first bedesten built in the Ottoman Empire, Yıldırım Bayezid Bedesten was built in the 14th century by Yıldırım Bayezid, as the city rapidly transformed into a trade center.",
+   "title_en": "The first Ottoman bedesten",
+   "text_en": "Built by Yıldırım Bayezid in the 14th century, this was the first bedesten built in the Ottoman Empire.",
+   "quest_en": {
+    "question": "Why is the Bursa Bedesten important?",
+    "choices": [
+     "It is Bursa's oldest mosque",
+     "It is the first Ottoman palace",
+     "It is the first Ottoman mint",
+     "It is the first bedesten built in the Ottoman period"
+    ],
+    "explanation": "It is the first bedesten built in the Ottoman Empire."
+   },
+   "note": "Türkçe kayıttaki '14. yüzyılın sonunda' ifadesinde 'sonunda' İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0014-F002",
+   "source": "cilt-2",
+   "skip": "Kitabın İngilizce bölümünde bu kaydın iddiası (değerli malların güvenle saklanması, bankacılık ve borsacılığın çekirdeği) bulunamadı; taslak hazırlanmadı. Türkçe kayıt İngilizce modda 'İngilizcesi henüz yok' etiketiyle görünür."
+  },
+  {
+   "fact_id": "BUR-0014-F003",
+   "source": "cilt-2",
+   "page": 29,
+   "quote_en": "The central area of the bedesten is 15,00 × 56,50 meters in terms of interior dimensions. The upper covering system consists of 14 domes supported by six piers.",
+   "title_en": "Six piers, fourteen domes",
+   "text_en": "The interior of the bedesten measures 15.00 × 56.50 m. Its roof consists of 14 domes supported by six piers."
+  },
+  {
+   "fact_id": "BUR-0014-F005",
+   "source": "cilt-2",
+   "page": 29,
+   "quote_en": "However, over time the structure deteriorated and was severely damaged in the Kapalıçarşı Fire of 1958, rendering it unusable. In 1960, a comprehensive restoration was carried out, remaining faithful to its original architectural features.",
+   "title_en": "The fire and the 1960 restoration",
+   "text_en": "The bedesten was severely damaged in the Kapalıçarşı (Covered Bazaar) fire of 1958 and was comprehensively restored in 1960.",
+   "note": "Türkçe kayıt yangın yılının kaynaklarda farklı olduğunu söylüyor (1956 ve 1958); kitabın İngilizce bölümü 1958 diyor."
+  },
+  {
+   "fact_id": "BUR-0014-F006",
+   "source": "cilt-2",
+   "page": 29,
+   "quote_en": "Today, the Bedesten continues its existence as a section of the Bursa Kapalıçarşı and is largely home to jewelers’ workshops.",
+   "title_en": "Today a jewellers' bazaar",
+   "text_en": "Today the bedesten is a section of the Bursa Kapalıçarşı (Covered Bazaar) and is largely home to jewellers' workshops.",
+   "quest_en": {
+    "question": "What is the bedesten used as today?",
+    "choices": [
+     "A spice bazaar",
+     "A secondhand booksellers' bazaar",
+     "A jewellers' bazaar",
+     "A silk bazaar"
+    ],
+    "explanation": "Today the bedesten is largely home to jewellers' workshops."
+   }
+  },
+  {
+   "fact_id": "BUR-0019-F001",
+   "source": "cilt-2",
+   "page": 119,
+   "quote_en": "It is stated in early Ottoman sources that Orhan Bey, who conquered Bursa, fulfilled his father Osman Gazi’s will and had his body buried in the structure known as the “Gümüşlü Kümbet”.",
+   "title_en": "The wish to rest under the Silver Dome",
+   "text_en": "According to early Ottoman sources, Orhan Bey, who conquered Bursa, fulfilled his father Osman Gazi's will and had him buried in the building known as the “Gümüşlü Kümbet” (Silver Dome).",
+   "quest_en": {
+    "question": "Who had Osman Gazi buried in Bursa?",
+    "choices": [
+     "Murad I",
+     "Yıldırım Bayezid",
+     "Murad II",
+     "Orhan Gazi"
+    ],
+    "explanation": "Orhan Gazi, who conquered Bursa, fulfilled his father's will and had him buried in the Gümüşlü Kümbet."
+   },
+   "note": "Türkçe kayıttaki 1326 yılı ve naaşın Söğüt'ten taşınması bu alıntıda yok; İngilizce metne ve açıklamaya alınmadı. Kesinlik Türkçe kayıttaki gibi (reported); 'Gümüşlü Kümbet' vasiyeti kitapta 'According to legend' diye anlatılır."
+  },
+  {
+   "fact_id": "BUR-0019-F002",
+   "source": "cilt-2",
+   "page": 119,
+   "quote_en": "The round-plan building where Osman Gazi is buried burned in 1801 and was later repaired.",
+   "title_en": "The fire of 1801",
+   "text_en": "The round-plan Byzantine building where Osman Gazi is buried burned in 1801 and was later repaired.",
+   "note": "'Byzantine' bu alıntıda yok (kitap yapıyı aynı sayfada Bizans dönemi şapeli olarak anlatır); yönetici isterse çıkarılabilir."
+  },
+  {
+   "fact_id": "BUR-0019-F003",
+   "source": "cilt-2",
+   "page": 119,
+   "quote_en": "However, it is understood from the statement in an archive document that “the tomb of Sultan Osman Gazi was not completely destroyed, but it was damaged a lot” that it was severely damaged during the 1855 Bursa Earthquake.",
+   "title_en": "The 1855 earthquake",
+   "text_en": "The tomb was severely damaged in the 1855 Bursa earthquake. According to an archive document cited in the source book, it was not completely destroyed.",
+   "note": "Türkçe kayıt Kültür Portalı'nın 'tamamen yıkıldı' görüşünü de anıyor; İngilizce bölümde yalnızca arşiv belgesi var."
+  },
+  {
+   "fact_id": "BUR-0019-F004",
+   "source": "cilt-2",
+   "page": 119,
+   "quote_en": "The tomb that stands today was rebuilt by Sultan Abdulaziz in 1863. It is known that the new building was built in larger dimensions",
+   "title_en": "Rebuilt by Abdülaziz",
+   "text_en": "The tomb that stands today was rebuilt by Sultan Abdülaziz in 1863.",
+   "quest_en": {
+    "question": "Who built the present building of the Osman Gazi Tomb?",
+    "choices": [
+     "Orhan Gazi",
+     "Abdülhamid II",
+     "Sultan Abdülaziz",
+     "Mahmud II"
+    ],
+    "explanation": "The present tomb was rebuilt by Sultan Abdülaziz in 1863."
+   }
+  },
+  {
+   "fact_id": "BUR-0019-F005",
+   "source": "cilt-2",
+   "page": 122,
+   "quote_en": "The body, drum and dome of the structure have an octagonal plan.",
+   "title_en": "An octagonal tomb",
+   "text_en": "The tomb has an octagonal plan and is covered by a dome.",
+   "quest_en": {
+    "question": "What is the shape of the Osman Gazi Tomb's plan?",
+    "choices": [
+     "Square",
+     "Hexagonal",
+     "Rectangular",
+     "Octagonal"
+    ],
+    "explanation": "The tomb has an octagonal plan."
+   }
+  },
+  {
+   "fact_id": "BUR-0019-F006",
+   "source": "cilt-2",
+   "page": 122,
+   "quote_en": "The sarcophagus located inside the tomb is covered with a velvet cloth decorated with vegetal motifs in the Baroque style. The part of the grille inlaid with mother-of-pearl is a rare example of artistic value.",
+   "title_en": "A mother-of-pearl grille",
+   "text_en": "Osman Gazi's sarcophagus is surrounded by a grille; the part inlaid with mother-of-pearl is a rare example of artistic value.",
+   "note": "Türkçe kayıttaki 'ahşap sanduka' İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0019-F007",
+   "source": "cilt-2",
+   "page": 122,
+   "quote_en": "There are seventeen sarcophagi in the Osman Gazi Tomb. Only five of these are known to whom they belong. In addition to Osman Gazi, sarcophagi belonging to his son Alâaddin Bey, Orhan Gazi’s wife Asporça Hatun, his son from Asporça, İbrahim, and Murad I’s son Savcı Bey have been identified.",
+   "title_en": "Seventeen sarcophagi",
+   "text_en": "There are seventeen sarcophagi in the tomb, and the owners of only five are known: Osman Gazi; his son Alâaddin Bey; Orhan Gazi's wife Asporça Hatun; their son İbrahim; and Murad I's son Savcı Bey.",
+   "quest_en": {
+    "question": "How many sarcophagi are there in the Osman Gazi Tomb?",
+    "choices": [
+     "4",
+     "17",
+     "5",
+     "21"
+    ],
+    "explanation": "There are seventeen sarcophagi in the tomb; the owners of five are known."
+   }
+  },
+  {
+   "fact_id": "BUR-0019-F008",
+   "source": "cilt-2",
+   "page": 123,
+   "quote_en": "The area where the tomb is located was registered as a UNESCO World Heritage Site in 2014, together with the Hanlar District, the Sultan Complexes and Cumalıkızık village.",
+   "title_en": "UNESCO World Heritage",
+   "text_en": "The area where the tomb stands was registered as a UNESCO World Heritage Site in 2014, together with the Hanlar District, the sultans' complexes and the village of Cumalıkızık.",
+   "quest_en": {
+    "question": "In which year were Bursa and Cumalıkızık added to the UNESCO World Heritage List?",
+    "choices": [
+     "2008",
+     "2020",
+     "2014",
+     "1999"
+    ],
+    "explanation": "The site was registered as a UNESCO World Heritage Site in 2014."
+   },
+   "note": "Türkçe kayıttaki alanın resmî adı ('Bursa ve Cumalıkızık: Osmanlı İmparatorluğu'nun Doğuşu') İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0020-F001",
+   "source": "cilt-2",
+   "page": 115,
+   "quote_en": "The tomb belongs to Orhan Gazi, the second sultan of the Ottoman Empire and the conqueror of Bursa.",
+   "title_en": "The conqueror of Bursa",
+   "text_en": "The tomb belongs to Orhan Gazi, the second sultan of the Ottoman Empire and the conqueror of Bursa.",
+   "quest_en": {
+    "question": "In order, which Ottoman sultan was Orhan Gazi?",
+    "choices": [
+     "The third",
+     "The fourth",
+     "The second",
+     "The first"
+    ],
+    "explanation": "Orhan Gazi, son of Osman Gazi, was the second sultan of the Ottoman state."
+   }
+  },
+  {
+   "fact_id": "BUR-0020-F003",
+   "source": "cilt-2",
+   "page": 116,
+   "quote_en": "It is understood from the following statement in a document that the tomb was completely destroyed during the great earthquake that occurred in Bursa in 1855",
+   "title_en": "Destroyed in the earthquake",
+   "text_en": "According to an archive document, the tomb was completely destroyed in the great Bursa earthquake of 1855.",
+   "note": "Kesinlik Türkçe kayıttaki gibi (reported)."
+  },
+  {
+   "fact_id": "BUR-0020-F004",
+   "source": "cilt-2",
+   "page": 116,
+   "quote_en": "The inscription of the current building has not survived to the present day. However, there is no doubt that it was rebuilt together with the Osman Gazi Tomb in AH 1280 / AD 1863 by Sultan Abdulaziz.",
+   "title_en": "Rebuilt in 1863",
+   "text_en": "The present tomb was rebuilt by Sultan Abdülaziz together with the Osman Gazi Tomb; the source book dates this to AH 1280 / AD 1863. The building's inscription has not survived.",
+   "quest_en": {
+    "question": "In which year was the present building of the Orhan Gazi Tomb built?",
+    "choices": [
+     "1868",
+     "1863",
+     "1326",
+     "1855"
+    ],
+    "explanation": "According to official sources, Sultan Abdülaziz rebuilt the tomb in 1863."
+   },
+   "note": "Kitap aynı bölümde (PDF s. 117) yeniden yapımı 1868 diye de veriyor; Türkçe kaydın 'uncertain' kesinliği bu yüzden. İngilizce metin s. 116'daki tarihi 'kaynak kitaba göre' diye verir."
+  },
+  {
+   "fact_id": "BUR-0020-F005",
+   "source": "cilt-2",
+   "page": 116,
+   "quote_en": "The tomb building, which has a square plan and is covered with a single dome, measures 16.80 × 16.80 m.",
+   "title_en": "A square plan with a single dome",
+   "text_en": "The tomb has a square plan, measures 16.80 × 16.80 m and is covered with a single dome.",
+   "quest_en": {
+    "question": "What is the shape of the Orhan Gazi Tomb's plan?",
+    "choices": [
+     "Hexagonal",
+     "Circular",
+     "Square",
+     "Octagonal"
+    ],
+    "explanation": "The tomb has a square plan and is covered with a single dome."
+   },
+   "note": "Türkçe kayıt 'her kenarı dıştan yaklaşık 16,80 m' diyor; kitap '16.80 × 16.80 m' diyor ('dıştan' yok)."
+  },
+  {
+   "fact_id": "BUR-0020-F006",
+   "source": "cilt-2",
+   "page": 117,
+   "quote_en": "The building, which has been repaired many times over the years for different reasons, underwent partial or comprehensive repairs in 1615, 1791, 1808, 1813, 1816-1818 until the reconstruction process",
+   "title_en": "Repairs before the reconstruction",
+   "text_en": "The tomb was repaired many times over the years before its reconstruction, including in 1615, 1791, 1808, 1813 and 1816–1818.",
+   "note": "Türkçe kayıttaki 1801 yangını (Alan Yönetim Planı) ve 2009 onarımı (Kültür envanteri) İngilizce bölümde yok."
+  },
+  {
+   "fact_id": "BUR-0020-F008",
+   "source": "cilt-2",
+   "page": 117,
+   "quote_en": "The area where the tomb is located was declared a UNESCO World Heritage Site in 2014, together with the Hanlar District, the Sultan Complexes and Cumalıkızık village.",
+   "title_en": "UNESCO World Heritage",
+   "text_en": "The area where the tomb stands was declared a UNESCO World Heritage Site in 2014, together with the Hanlar District, the sultans' complexes and the village of Cumalıkızık."
+  }
+ ]
+}

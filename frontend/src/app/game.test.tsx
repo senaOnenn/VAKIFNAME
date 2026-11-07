@@ -1,7 +1,7 @@
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { stubFetch } from '../test/fixtures'
+import { PLAYER, stubFetch, SIGNED_IN, PROFILE } from '../test/fixtures'
 import VakifnameApp from './VakifnameApp'
 import type { GameState, Quiz } from './api'
 import { INTRO_SEEN_KEY } from './screens/Intro'
@@ -11,7 +11,7 @@ vi.mock('./components/RouteMap', () => ({ default: () => <div>harita</div> }))
 
 const ID = 'BUR-1001'
 const game = (over: Partial<GameState> = {}): GameState => ({
-  monument_id: ID, locked: false, listened: false, asked: false, guide_required: true, ready_for_quiz: false,
+  monument_id: ID, locked: false, listened: false, asked: false, started: false, guide_required: false, ready_for_quiz: false, quiz_available: true,
   quiz_size: 5, pass_mark: 4, knowledge: null, visit: null, visit_radius_m: 50, simulated_visit_allowed: false, site_notice: null,
   ...over,
 })
@@ -48,7 +48,8 @@ function server(state: GameState, extra: Record<string, unknown> = {}) {
     return undefined
   }
   const fetchMock = stubFetch({
-    '/auth/me': { status: 401, body: {} },
+    '/auth/me': SIGNED_IN,
+    '/player/profile': PROFILE,
     '/guide/status': { body: { enabled: true } },
     [`/monuments/${ID}`]: { body: DETAIL },
     '/route': { status: 500, body: {} },
@@ -81,41 +82,97 @@ afterEach(() => {
 })
 
 describe('mühür yolu (oyun paneli)', () => {
-  it('kilitli eserde oyun yerine kilit açıklaması ve rotaya dönüş verir', async () => {
-    server(game({ locked: true }))
+  it('R6.7: esere tıklayınca görev ekranı; dinlemeden doğrudan "Göreve Başla"; yarım kalan görevde "Göreve Devam Et"', async () => {
+    const srv = server(game({ ready_for_quiz: true }))
+    const { unmount } = open(`/oyun/eser/${ID}`)
+    expect(await screen.findByRole('heading', { level: 1, name: 'Bursa Ulu Camii' })).toBeInTheDocument()
+    expect(screen.getByText('Henüz keşfedilmedi')).toBeInTheDocument()
+    // Tek ana eylem; dinleme şartı, kilit ve üç sütunlu mühür yolu yok.
+    expect(screen.getByRole('link', { name: 'Göreve Başla' })).toHaveAttribute('href', `/oyun/eser/${ID}/rozet`)
+    expect(screen.getByRole('heading', { name: '5 soru, en az 4 doğru' })).toBeInTheDocument()
+    expect(screen.queryByText(/kilitli/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Mühür yolu' })).not.toBeInTheDocument()
+    // Bilgi mührü olmadan ziyaret (bonus) görünmez.
+    expect(screen.queryByRole('heading', { name: 'Eseri yerinde ziyaret et' })).not.toBeInTheDocument()
+    unmount()
+    srv.set(game({ ready_for_quiz: true, started: true }))
     open(`/oyun/eser/${ID}`)
-    expect(await screen.findByText(/Bu eser henüz kilitli/)).toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: /Rotaya dön/ }).map((a) => a.getAttribute('href'))).toEqual(['/oyun/rota/bursa', '/oyun/rota/bursa'])
+    expect(await screen.findByRole('link', { name: 'Göreve Devam Et' })).toHaveAttribute('href', `/oyun/eser/${ID}/rozet`)
+    expect(screen.getByText('Göreve başlandı')).toBeInTheDocument()
   })
 
-  it('I. kademe bitmeden "Rozeti Al" kapalıdır; hazır olunca sınava götürür', async () => {
-    const srv = server(game())
-    const { unmount } = open(`/oyun/eser/${ID}`)
-    expect(await screen.findByRole('button', { name: 'Rozeti Al' })).toBeDisabled()
-    expect(screen.getByRole('link', { name: 'Eser sayfasında dinle' })).toHaveAttribute('href', `/eser/${ID}`)
-    unmount()
-    srv.set(game({ listened: true, asked: true, ready_for_quiz: true }))
+  it('R6.8: görevi hazır olmayan eserde dürüst içerik durumu; çalışmayan düğme yok; hazır başka göreve geçiş', async () => {
+    server(game({ quiz_available: false }), {
+      '/route': { body: { city: 'bursa', total: 2, completed_count: 0, next: ID,
+        start: { source: 'city_center', latitude: 40.18, longitude: 29.06 }, completed: [],
+        stops: [
+          { monument_id: ID, name: 'Bursa Ulu Camii', type: 'cami', latitude: 40.18, longitude: 29.06, state: 'unlocked', progress: 'new', quest_ready: false, distance_m: 100, order: 1 },
+          { monument_id: 'BUR-9002', name: 'Hazır Eser', type: 'han', latitude: 40.19, longitude: 29.07, state: 'unlocked', progress: 'new', quest_ready: true, distance_m: 300, order: 2 },
+        ] } },
+    })
     open(`/oyun/eser/${ID}`)
-    expect(await screen.findByRole('link', { name: 'Rozeti Al' })).toHaveAttribute('href', `/oyun/eser/${ID}/rozet`)
+    expect(await screen.findByRole('heading', { name: 'Görev hazırlanıyor' })).toBeInTheDocument()
+    expect(screen.getByText(/onaylı kayıtlarından henüz 5 soru çıkmıyor/)).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Göreve Başla' })).not.toBeInTheDocument()
+    expect(await screen.findByRole('link', { name: 'Hazır bir görevle devam et: Hazır Eser' })).toHaveAttribute('href', '/oyun/eser/BUR-9002')
+    // Tarihî kayıtlar ve hikâye yine erişilebilir; sistem hatası gibi gösterilmez.
+    expect(screen.getByRole('button', { name: 'Tarih Defteri' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Hikâyeyi dinle' })).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
+  it('R6.8: eski sunucu (quiz_available yok) "soru yok" diye yanlış söylenmez; sunucunun güncel olmadığı söylenir', async () => {
+    const old = game({ ready_for_quiz: false }) as Partial<GameState>
+    delete old.quiz_available
+    server(old as GameState)
+    open(`/oyun/eser/${ID}`)
+    expect(await screen.findByText(/Oyun sunucusu güncel değil/)).toBeInTheDocument()
+    expect(screen.queryByText(/henüz 5 soru çıkmıyor|yeterli onaylı soru/)).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Göreve Başla' })).not.toBeInTheDocument()
+  })
+
+  it('R6.7: isteğe bağlı "Hikâyeyi dinle" rehberi aynı ekranda anlatım sekmesiyle açar; "Tarih Defteri" pencerede açılır', async () => {
+    server(game({ ready_for_quiz: true }))
+    open(`/oyun/eser/${ID}`)
+    await screen.findByRole('link', { name: 'Göreve Başla' })
+    await userEvent.click(screen.getByRole('button', { name: 'Hikâyeyi dinle' }))
+    expect(await screen.findByRole('tab', { name: 'Anlatım', selected: true })).toBeInTheDocument()
+    expect(window.location.pathname).toBe(`/oyun/eser/${ID}`)
+    await userEvent.keyboard('{Escape}')
+    const bookBtn = screen.getByRole('button', { name: 'Tarih Defteri' })
+    await userEvent.click(bookBtn)
+    expect(bookBtn).toHaveAttribute('aria-expanded', 'true')
+    expect(await screen.findByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('R6.7: tamamlanan görevde bilgi mührü ve XP sonucu; ziyaret ayrı bonus görev olarak görünür', async () => {
+    server(game({ knowledge: { earned_at: '2026-10-27T10:00:00Z' } }))
+    open(`/oyun/eser/${ID}`)
+    expect(await screen.findByRole('heading', { name: 'Bilgi mührü kazanıldı' })).toBeInTheDocument()
+    expect(screen.getByText(/\+50 XP · vakfiyenin bir parçası yerine oturdu/)).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Göreve Başla' })).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Eseri yerinde ziyaret et' })).toBeInTheDocument()
+    expect(screen.getByText(/Konumun kaydedilmez/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Konumumu doğrula' })).toBeEnabled()
   })
 
   it('anlatım sonuna kadar dinlenince sunucuya "listened" bildirilir', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const srv = server(game())
     open(`/eser/${ID}`)
-    // Eser sayfası katalogdur: oyun kontrolleri yok, yalnızca durum ve oyun paneline geçiş.
-    const link = await screen.findByRole('region', { name: 'Bu eserin mühür yolu' })
-    expect(within(link).getByRole('link', { name: 'Mühür yoluna git' })).toHaveAttribute('href', `/oyun/eser/${ID}`)
+    // Eser sayfası katalogdur (R3.7): oyun kontrolleri, mühür ve kademeler yok; yalnızca oyun paneline tek bağlantı.
+    expect(await screen.findByRole('link', { name: 'Bilgi Görevine Başla' })).toHaveAttribute('href', `/oyun/eser/${ID}`)
     expect(screen.queryByRole('button', { name: 'Rozeti Al' })).not.toBeInTheDocument()
-    expect(within(link).getByText(/Yukarıdaki anlatımı sonuna kadar dinle/)).toBeInTheDocument()
-    // Sunucu sonraki okumada I. kademeyi tamam sayar (soru da sorulmuş); sayfa durumu yeniden okur.
+    expect(screen.queryByRole('list', { name: /kademe/ })).not.toBeInTheDocument()
     srv.set(game({ asked: true, ready_for_quiz: true }))
+    await userEvent.click(screen.getByRole('button', { name: 'Rehbere Sor' }))  // R3.9: rehber paneli
+    await userEvent.click(screen.getByRole('tab', { name: 'Anlatım' }))
     await userEvent.click(screen.getByRole('button', { name: 'Dinle' }))
     await act(async () => {
       vi.advanceTimersByTime(60_000)
     })
-    expect(await within(link).findByText('Anlatımı dinledin. Rozeti Al soruları seni bekliyor.')).toBeInTheDocument()
-    expect(srv.calls.find((c) => c.path === 'engagement')!.body).toMatchObject({ event: 'listened', user_id: expect.stringMatching(/^ziyaretci-/) })
+    await vi.waitFor(() => expect(srv.calls.some((c) => c.path === 'engagement')).toBe(true))
+    expect(srv.calls.find((c) => c.path === 'engagement')!.body).toMatchObject({ event: 'listened', user_id: expect.stringMatching(/^u-oyuncu$/) })
   })
 
   it('bilgi mühründen sonra ziyaret: konum gönderilir, altın mühür olur', async () => {
@@ -203,25 +260,26 @@ describe('Rozeti Al (sınav)', () => {
     server(game(), { [`/monuments/${ID}/quiz`]: { status: 409, body: { detail: 'Önce anlatımı dinleyip rehbere bir soru sormalısın.' } } })
     open(`/oyun/eser/${ID}/rozet`)
     expect(await screen.findByText('Önce anlatımı dinleyip rehbere bir soru sormalısın.')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: '← Mühür yoluna dön' })).toHaveAttribute('href', `/oyun/eser/${ID}`)
+    expect(screen.getByRole('link', { name: '← Göreve dön' })).toHaveAttribute('href', `/oyun/eser/${ID}`)
   })
 })
 
 describe('pasaport', () => {
   it('yapboz bulunan ve altın parçaları sayar; mühür listesi simüle edilmiş ziyareti belirtir', async () => {
     const summary = (id: string, name: string) => ({
-      monument_id: id, name, type: 'cami', city: 'Bursa', district: 'Osmangazi', address: '-', location: null,
+      monument_id: id, name, type: 'cami', city: 'Bursa', district: 'Osmangazi', address: '-',
+      location: { latitude: 40.18, longitude: 29.06, accuracy_m: 20 }, // R6.9: vakfiye rotadaki (konumlu) eserlerden
       checkin_available: false, fact_count: 1, game_fact_count: 1, image_count: 0, illustration: 'representative_drawing',
     })
     const seal = (id: string, name: string, kind: string, simulated = false) => ({ user_id: 'x', monument_id: id, monument_name: name, kind, earned_at: '2026-10-27T10:00:00Z', simulated })
     const fetchMock = stubFetch({})
-    // Misafir kimliği önceden sabitlenir ki mühür defteri yolu bilinsin.
-    const vid = 'ziyaretci-0b8f2c1e-1a2b-4c3d-8e9f-0123456789ab'
-    window.localStorage.setItem('vakifname.visitorId', vid)
+    // R6.2: pasaport hesabındır; mühür defteri oturumdaki hesabın kimliğiyle istenir.
+    const vid = PLAYER.user_id
     fetchMock.mockImplementation(async (input: RequestInfo | URL) => {
       const path = new URL(String(input)).pathname
       const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { 'Content-Type': 'application/json' } })
-      if (path === '/auth/me') return json({}, 401)
+      if (path === '/auth/me') return json(PLAYER)
+      if (path === '/player/profile') return json(PROFILE.body)
       if (path === '/monuments') return json({ published_count: 3, data_version: 't', generated_at: null, monuments: [summary('BUR-1001', 'Bir'), summary('BUR-1002', 'İki'), summary('BUR-1003', 'Üç')] })
       if (path === `/users/${vid}/seals`)
         return json({ user_id: vid, knowledge_seals: [seal('BUR-1001', 'Bir', 'knowledge'), seal('BUR-1002', 'İki', 'knowledge')], visit_seals: [seal('BUR-1002', 'İki', 'visit', true)], monuments: [] })
@@ -229,10 +287,24 @@ describe('pasaport', () => {
     })
     open('/pasaport')
     expect(await screen.findByRole('heading', { name: 'Kayıp Vakfiye' })).toBeInTheDocument()
-    expect(screen.getByText('3 parçadan 2 parça bulundu, 1 parça altın. Her bilgi mührü bir parça getirir.')).toBeInTheDocument()
+    expect(screen.getByText('3 parçadan 2 parça bulundu, 1 parça altın.')).toBeInTheDocument()  // sayılar bir kez (R6.16)
     expect(screen.getByRole('img', { name: /Kayıp Vakfiye: 3 parçadan 2 parça bulundu, 1 parça altın/ })).toBeInTheDocument()
     const list = within(screen.getByRole('region', { name: 'Mühürler' }))
     expect(list.getByText(/Altın · ziyaret .*\(simülasyon\)/)).toBeInTheDocument()
     expect(list.getByText('Henüz yok')).toBeInTheDocument()
+    // R6.16: her eser tek satır; bilgi ve altın mühür ayrı işaretli.
+    const rows = list.getAllByRole('listitem')
+    expect(rows).toHaveLength(3)
+    const marks = (i: number) => within(rows[i]).getAllByRole('img').map((m) => m.getAttribute('aria-label'))
+    expect(marks(0)).toEqual(['Bilgi mührü kazanıldı', 'Altın mühür yok'])
+    expect(marks(1)).toEqual(['Bilgi mührü kazanıldı', 'Altın mühür kazanıldı'])
+    expect(marks(2)).toEqual(['Bilgi mührü yok', 'Altın mühür yok'])
+    expect(within(rows[1]).getByRole('link', { name: 'İki' })).toHaveAttribute('href', '/oyun/eser/BUR-1002')
+    // Künye: karakter, seviye ve XP sunucudan.
+    const crest = screen.getByRole('region', { name: 'Kâşifin' })
+    expect(within(crest).getByText('Seviye 1')).toBeInTheDocument()
+    expect(within(crest).getByText('0 / 50 XP')).toBeInTheDocument()
+    // Ayrı sayaç paneli yok (aynı bilgi tekrar edilmez).
+    expect(screen.queryByRole('heading', { name: 'Kazanılanlar' })).not.toBeInTheDocument()
   })
 })

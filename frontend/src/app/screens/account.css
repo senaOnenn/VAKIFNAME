@@ -93,3 +93,31 @@
   font-size: 0.9rem;
   min-height: 1.2em;
 }
+
+/* R6.5 Oyuncu profili: kâşif künyesi ve mühür sayıları (koyu yüzeyde). */
+.vk-account__player {
+  display: grid;
+  gap: var(--vk-space-4);
+  justify-items: start;
+  margin: var(--vk-space-5) 0;
+  padding: var(--vk-space-5) 0;
+  border-top: 1px solid rgb(201 162 75 / 0.3);
+  border-bottom: 1px solid rgb(201 162 75 / 0.3);
+  text-align: left;
+}
+.vk-account__player h2 {
+  margin: 0;
+  font: 600 1.4rem var(--vk-font-display);
+}
+.vk-account__player .vk-tally {
+  width: 100%;
+}
+.vk-account__change {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--vk-ivory);
+  text-decoration: underline;
+  text-decoration-color: rgb(233 200 116 / 0.5);
+  text-underline-offset: 0.25em;
+}

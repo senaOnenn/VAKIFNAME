@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check:public-build": "node scripts/check-public-build.mjs"
+    "check:public-build": "node scripts/check-public-build.mjs",
+    "check:i18n": "node scripts/check-i18n.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

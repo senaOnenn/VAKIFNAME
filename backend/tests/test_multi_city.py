@@ -1,11 +1,10 @@
 """Çok şehir: yeni şehir kendi kimlik önekiyle (ör. KUT-0001) kataloğa girer; liste, eser sayfası, rota ve oyun Bursa'ya
 özel bir sabite takılmadan çalışır ve şehirler birbirinin rotasına karışmaz."""
 import json
-import uuid
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
+from tests.players import PlayerClient as TestClient, new_player
 from pydantic import ValidationError
 
 from app.main import create_app
@@ -38,8 +37,9 @@ def c(tmp_path):
         yield client
 
 
-def visitor() -> str:
-    return f"ziyaretci-{uuid.uuid4()}"
+def visitor(c) -> str:
+    """Yeni oyuncu hesabı (R6.2: oyun yalnızca hesapla)."""
+    return new_player(c)
 
 
 def test_new_city_monument_is_listed_and_readable(c):
@@ -50,7 +50,7 @@ def test_new_city_monument_is_listed_and_readable(c):
 
 
 def test_each_city_has_its_own_route(c):
-    user = visitor()
+    user = visitor(c)
     kut = c.get("/route", params={"city": "kutahya", "user_id": user}).json()
     assert kut["city"] == "kutahya" and kut["total"] == 1
     assert [s["monument_id"] for s in kut["stops"]] == ["KUT-0001"]
@@ -59,7 +59,7 @@ def test_each_city_has_its_own_route(c):
 
 
 def test_new_city_monument_enters_the_game_unlocked(c):
-    state = c.get("/monuments/KUT-0001/game", params={"user_id": visitor()}).json()
+    state = c.get("/monuments/KUT-0001/game", params={"user_id": visitor(c)}).json()
     assert state["monument_id"] == "KUT-0001" and state["locked"] is False
 
 

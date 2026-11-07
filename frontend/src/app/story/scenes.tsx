@@ -1,17 +1,16 @@
 import { useEffect, useId, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
 import { getGuideAvailability } from '../../catalog/guideClient'
 import type { MonumentSummary } from '../api'
 import type { City } from '../cities'
+import { useGuide } from '../components/GuideWidget'
 import { Seal } from '../components/Seal'
-import { VakfiyePuzzle, type PieceState } from '../components/VakfiyePuzzle'
 import { gamePath } from '../gameCity'
 import { useLang } from '../i18n'
 import { MonumentStrip, prefersReducedMotion, scrollToId, useEnter, useNear } from './common'
 import { mapPoint } from './engine'
 
 /**
- * Hikâyenin yedi sahnesi. Her sahne normal sayfa akışında bir bölümdür (`data-scene`); arka plan görseli sabit sahne
+ * Hikâyenin altı sahnesi. Her sahne normal sayfa akışında bir bölümdür (`data-scene`); arka plan görseli sabit sahne
  * katmanındadır (StoryExperience). Metin ve düğmeler gerçek HTML'dir. Şehir adı ve sayılar katalogdan gelir (CLAUDE.md §1).
  */
 
@@ -34,7 +33,7 @@ function Cue({ to, label }: { to: string; label: string }) {
 const k = (n: number) => ({ ['--k' as string]: n })
 
 /**
- * Sabitlenen bölüm (1–3. sahneler): bölüm ekrandan uzun, içindeki çerçeve ekrana yapışır. Metin görselin güvenli
+ * Sabitlenen bölüm (1–2. sahneler): bölüm ekrandan uzun, içindeki çerçeve ekrana yapışır. Metin görselin güvenli
  * bölgesinde durur; motorun yazdığı `--tv` ile belirir ve geçişten önce çekilir (geçiş anında ekranda metin olmaz).
  */
 function Chapter({ id, n, labelledBy, children }: { id: string; n: number; labelledBy: string; children: ReactNode }) {
@@ -56,7 +55,7 @@ export function Scene1Welcome({ hasFilm, onFilm }: { hasFilm: boolean; onFilm: (
         <h1 id="s1-h" className="vk-ch__h1" style={k(1)}>{t('Geçmişi Keşfet, Mirası Yaşat.')}</h1>
         <p className="vk-ch__lead" style={k(2)}>{t('Yüzyılların izini sür, vakıf eserlerinin hikâyelerini keşfet.')}</p>
         <div className="vk-s__ctas" style={k(3)}>
-          <a href="#yolculuk" className="vk-btn vk-s__cta" onClick={(e) => (e.preventDefault(), scrollToId('yolculuk'))}>
+          <a href="#sehirler" className="vk-btn vk-s__cta" onClick={(e) => (e.preventDefault(), scrollToId('sehirler'))}>
             {t('Keşfe Başla')} <span className="vk-s__arrow" aria-hidden="true">↓</span>
           </a>
           {hasFilm && (
@@ -67,23 +66,7 @@ export function Scene1Welcome({ hasFilm, onFilm }: { hasFilm: boolean; onFilm: (
         </div>
       </div>
       <div className="vk-ch__cue" style={k(4)}>
-        <Cue to="yolculuk" label={t('Yolculuğa kaydır')} />
-      </div>
-    </Chapter>
-  )
-}
-
-export function Scene2Journey() {
-  const { t } = useLang()
-  return (
-    <Chapter id="yolculuk" n={2} labelledBy="s2-h">
-      <div className="vk-ch__text vk-ch__text--2" data-content>
-        <p className="vk-ch__eyebrow" style={k(0)}>{t('Yolculuk')}</p>
-        <h2 id="s2-h" className="vk-ch__h2" tabIndex={-1} data-focus-target style={k(1)}>{t('Her Yolculuk Bir Adımla Başlar')}</h2>
-        <p className="vk-ch__lead" style={k(2)}>{t('Tarihî sokaklardan yüzyıllık hikâyelere uzanan bir keşif seni bekliyor.')}</p>
-        <div style={k(3)}>
-          <Cue to="sehirler" label={t('Haritaya kaydır')} />
-        </div>
+        <Cue to="sehirler" label={t('Haritaya kaydır')} />
       </div>
     </Chapter>
   )
@@ -103,7 +86,7 @@ function markers(cities: City[]): Marker[] {
   return out
 }
 
-export function Scene3Map({ cities, pilot }: { cities: City[]; pilot: Pilot }) {
+export function Scene2Map({ cities, pilot }: { cities: City[]; pilot: Pilot }) {
   const { t } = useLang()
   const [note, setNote] = useState('')
   const [chosen, setChosen] = useState(false)
@@ -120,10 +103,10 @@ export function Scene3Map({ cities, pilot }: { cities: City[]; pilot: Pilot }) {
   const open = cities.filter((c) => c.open)
   const soon = cities.filter((c) => !c.open)
   return (
-    <Chapter id="sehirler" n={3} labelledBy="s3-h">
-      <div className="vk-ch__text vk-ch__text--3">
+    <Chapter id="sehirler" n={2} labelledBy="s2-h">
+      <div className="vk-ch__text vk-ch__text--2">
         <p className="vk-ch__eyebrow" style={k(0)}>{t('Türkiye')}</p>
-        <h2 id="s3-h" className="vk-ch__h2" tabIndex={-1} data-focus-target style={k(1)}>
+        <h2 id="s2-h" className="vk-ch__h2" tabIndex={-1} data-focus-target style={k(1)}>
           {t('Keşif {from} Başlıyor', { from: pilot.city.ablative, city: pilot.city.name })}
         </h2>
         <p className="vk-ch__lead" style={k(2)}>{t('Anadolu’nun kültürel mirasını keşfetmeye ilk adımını at.')}</p>
@@ -132,8 +115,8 @@ export function Scene3Map({ cities, pilot }: { cities: City[]; pilot: Pilot }) {
       {/* Harita görseliyle aynı kutuda (sabit sahne katmanı), gerçek koordinattan yerleşen işaretler. */}
       {/* Ekran boyutunda kırpan kap: görsel boyutundaki işaret katmanı sayfayı yana taşırmasın. */}
       <div className="vk-mapclip" aria-hidden="true">
-      <div className="vk-map" data-box="2">
-        <div className="vk-map__cam" data-cam="2">
+      <div className="vk-map" data-box="1">
+        <div className="vk-map__cam" data-cam="1">
           {markers(cities).map((m) => {
             const isOpen = m.cities[0].open
             return (
@@ -184,16 +167,16 @@ const PinIcon = () => (
   </svg>
 )
 
-export function Scene4City({ pilot }: { pilot: Pilot }) {
+export function Scene3City({ pilot }: { pilot: Pilot }) {
   const { t } = useLang()
   const vars = { gen: pilot.city.genitive, city: pilot.city.name }
   return (
-    <Chapter id="sehir" n={4} labelledBy="s4-h">
-      <div className="vk-ch__text vk-ch__text--4" data-content>
+    <Chapter id="sehir" n={3} labelledBy="s3-h">
+      <div className="vk-ch__text vk-ch__text--3" data-content>
         <p className="vk-ch__place" style={k(0)}>
           <PinIcon /> {pilot.city.name}
         </p>
-        <h2 id="s4-h" className="vk-ch__h2" tabIndex={-1} data-focus-target style={k(1)}>{t('{gen} Vakıf Mirasını Keşfet', vars)}</h2>
+        <h2 id="s3-h" className="vk-ch__h2" tabIndex={-1} data-focus-target style={k(1)}>{t('{gen} Vakıf Mirasını Keşfet', vars)}</h2>
         {/* "Osmanlı'nın ilk başkenti" gibi tarihî bir iddia onaylı katalogda kaynaklı kayıt olmadan yazılmaz (CLAUDE.md §4). */}
         <p className="vk-ch__lead" style={k(2)}>{t('{gen} yüzyıllık izini, envanterde belgelenmiş eserleriyle sür.', vars)}</p>
         <div className="vk-ch__row" style={k(3)}>
@@ -211,7 +194,7 @@ export function Scene4City({ pilot }: { pilot: Pilot }) {
   )
 }
 
-export function Scene5Monuments({ pilot, monuments, loading, error, reload }: {
+export function Scene4Monuments({ pilot, monuments, loading, error, reload }: {
   pilot: Pilot; monuments: MonumentSummary[]; loading: boolean; error: string | null; reload: () => void
 }) {
   const { t } = useLang()
@@ -219,12 +202,12 @@ export function Scene5Monuments({ pilot, monuments, loading, error, reload }: {
   const ref = useRef<HTMLDivElement>(null)
   const near = useNear(ref)
   return (
-    <Chapter id="eserler" n={5} labelledBy="s5-h">
+    <Chapter id="eserler" n={4} labelledBy="s4-h">
       <div ref={ref} className="vk-ch__cards" data-content>
         <div className="vk-ch__cardshead">
-          <div className="vk-ch__text vk-ch__text--5">
+          <div className="vk-ch__text vk-ch__text--4">
             <p className="vk-ch__eyebrow" style={k(0)}>{t('Keşfet')}</p>
-            <h2 id="s5-h" className="vk-ch__h2" tabIndex={-1} data-focus-target style={k(1)}>{t('Her Eser Bir Hikâye Taşır')}</h2>
+            <h2 id="s4-h" className="vk-ch__h2" tabIndex={-1} data-focus-target style={k(1)}>{t('Her Eser Bir Hikâye Taşır')}</h2>
             <p className="vk-ch__lead" style={k(2)}>{t('{gen} vakıf mirasını yakından tanı.', { gen: pilot.city.genitive, city: pilot.city.name })}</p>
           </div>
           <a href="/eserler" className="vk-btn vk-btn--ghost vk-s__ghostbtn vk-ch__all" style={k(2.5)} onClick={(e) => (e.preventDefault(), enter('/eserler'))}>
@@ -247,140 +230,187 @@ export function Scene5Monuments({ pilot, monuments, loading, error, reload }: {
 const SUGGESTIONS = ['Bu eseri kim yaptırdı?', 'Bir külliyede hangi yapılar bulunur?', 'Vakfiye nedir?']
 
 /**
- * Rehber sahnesi: gerçek bir sohbetin nasıl başladığı. Soru ve fotoğraf Rehber sayfasına taşınır (aynı `/guide/ask`
- * hattı; fotoğraf göndermeden önce orada açık onay istenir). Rehber kapalıysa girişler kapalıdır ve bu açıkça yazılır.
+ * R3.13 Rehber sahnesi: tek soru yolu. Bir soru alanı (yalnızca sunucu `photo: true` derse içinde fotoğraf ekleme) ve
+ * "Sor"; en çok üç hazır soru (yalnızca kutuyu doldurur, gönderim ziyaretçinin). Soru ve fotoğraf Rehber sayfasına
+ * taşınır (aynı `/guide/ask` hattı; fotoğraf göndermeden önce orada önizleme ve açık onay istenir). Rehber kapalıysa
+ * girişler kapalıdır ve bu açıkça yazılır; fotoğraf analizi kapalıysa fotoğraf seçeneği yoktur ve bu söylenir.
  */
-export function Scene6Guide() {
+export function Scene5Guide() {
   const { t } = useLang()
-  const enter = useEnter()
   const ref = useRef<HTMLDivElement>(null)
   const near = useNear(ref)
   const id = useId()
-  const [enabled, setEnabled] = useState<boolean | null>(null)
+  const [status, setStatus] = useState<{ enabled: boolean; photo: boolean } | null>(null)
   const [q, setQ] = useState('')
   useEffect(() => {
     if (!near) return
     const ctl = new AbortController()
-    getGuideAvailability(ctl.signal).then((a) => setEnabled(a.enabled), () => setEnabled(false))
+    getGuideAvailability(ctl.signal).then(
+      (a) => setStatus({ enabled: a.enabled, photo: a.enabled && a.photo === true }),
+      () => setStatus({ enabled: false, photo: false }),
+    )
     return () => ctl.abort()
   }, [near])
+  // R6.14: soru (ve fotoğraf) sayfa değiştirmeden sağ alttaki "Rehbere Sor" panelinde açılır; soru panelin sohbetinde
+  // bir kez gönderilir. Aktarım anında giriş alanı boşalır: ikinci tıklama ya da Enter aynı soruyu yeniden göndermez.
+  const guide = useGuide()
   function ask(e: FormEvent) {
     e.preventDefault()
-    if (q.trim()) enter('/rehber', { question: q.trim() })
+    const question = q.trim()
+    if (!question) return
+    guide.ask({ question })
+    setQ('')
   }
-  const pick = (question?: string) => (e: ChangeEvent<HTMLInputElement>) => {
+  const pick = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     e.target.value = ''
-    if (file) enter('/rehber', question ? { photo: file, question } : { photo: file })
+    if (file && status?.photo) {
+      guide.ask({ photo: file, question: q.trim() || undefined })
+      setQ('')
+    }
   }
-  const off = enabled === false
+  const off = status?.enabled === false
+  const checking = status === null
   return (
-    <Chapter id="rehber-tanitim" n={6} labelledBy="s6-h">
-      <div ref={ref} className="vk-ch__text vk-ch__text--6" data-content>
+    <Chapter id="rehber-tanitim" n={5} labelledBy="s5-h">
+      <div ref={ref} className="vk-ch__text vk-ch__text--5" data-content>
         <p className="vk-ch__eyebrow" style={k(0)}>{t('Yapay zekâ rehber')}</p>
-        <h2 id="s6-h" className="vk-ch__h2" style={k(1)}>{t('Tarihin Merak Ettiklerini Anlatsın')}</h2>
+        <h2 id="s5-h" className="vk-ch__h2" style={k(1)}>{t('Tarihin Merak Ettiklerini Anlatsın')}</h2>
         <p className="vk-ch__lead" style={k(2)}>{t('Sorularını sor, mimari detayları keşfet, geçmişi kaynaklarla öğren.')}</p>
-        <div className="vk-guide" style={k(3)}>
-          <p className={`vk-guide__status${off ? ' is-off' : enabled ? ' is-on' : ''}`} role="status">
-            <span className="vk-guide__dot" aria-hidden="true" />
-            {enabled === null ? t('Rehberin durumu denetleniyor…') : off ? t('Rehber şu anda kapalı; soru gönderilemez.') : t('Rehber açık')}
-          </p>
-          <form className="vk-guide__ask" onSubmit={ask}>
-            <label htmlFor={`${id}-q`} className="vk-guide__label">{t('Metinle Sor')}</label>
-            <div className="vk-guide__row">
-              <input id={`${id}-q`} value={q} maxLength={500} onChange={(e) => setQ(e.target.value)} placeholder={t('Örn. Bir külliyede hangi yapılar bulunur?')} disabled={off} />
-              <button type="submit" className="vk-btn" disabled={off || !q.trim()}>{t('Sor')}</button>
-            </div>
-            <div className="vk-guide__chips" aria-label={t('Örnek sorular')} role="group">
-              {SUGGESTIONS.map((s) => (
-                <button key={s} type="button" className="vk-guide__chip" disabled={off} onClick={() => setQ(t(s))}>{t(s)}</button>
-              ))}
-            </div>
-          </form>
-          <div className="vk-guide__tools">
-            <label className={`vk-guide__tool${off ? ' is-disabled' : ''}`}>
-              <input type="file" accept="image/jpeg,image/png,image/webp" onChange={pick()} disabled={off} className="vk-sr-only" />
-              <strong>{t('Fotoğraf Ekle')}</strong>
-              <span>{t('Eserin fotoğrafını seç; rehber katalogdaki eserlerle eşleştirmeye çalışır.')}</span>
-            </label>
-            <label className={`vk-guide__tool${off ? ' is-disabled' : ''}`}>
-              <input type="file" accept="image/jpeg,image/png,image/webp" onChange={pick(t('Bu fotoğraftaki yapının mimari ayrıntılarını anlatır mısın?'))} disabled={off} className="vk-sr-only" />
-              <strong>{t('Mimariyi Analiz Et')}</strong>
-              <span>{t('Kubbe, kapı, kitabe gibi ayrıntıları sor; kaynakta yoksa “bulamadım” der.')}</span>
-            </label>
+        <form className="vk-ask" style={k(3)} onSubmit={ask}>
+          <label htmlFor={`${id}-q`} className="vk-sr-only">{t('Sorunu yaz')}</label>
+          <div className={`vk-ask__field${off ? ' is-off' : ''}`}>
+            <input id={`${id}-q`} value={q} maxLength={500} onChange={(e) => setQ(e.target.value)}
+              placeholder={t('Örn. Bir külliyede hangi yapılar bulunur?')} disabled={off || checking} />
+            {status?.photo && (
+              <label className="vk-ask__photo" title={t('Fotoğraf ekle')}>
+                <input type="file" accept="image/jpeg,image/png,image/webp" onChange={pick} className="vk-sr-only" />
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" />
+                </svg>
+                <span className="vk-sr-only">{t('Fotoğraf ekle')}</span>
+              </label>
+            )}
+            <button type="submit" className="vk-ask__send" disabled={off || checking || !q.trim()}>{t('Sor')}</button>
           </div>
-          <p className="vk-guide__fine">{t('Cevaplar yalnızca onaylı kayıtlardan gelir ve dayandığı kaydı gösterir. Fotoğraf saklanmaz; göndermeden önce onayın istenir.')}</p>
-        </div>
-        <div className="vk-s__ctas" style={k(4)}>
-          <a href="/rehber" className="vk-btn vk-s__cta" onClick={(e) => (e.preventDefault(), enter('/rehber'))}>{t('AI Rehberi Aç')}</a>
-        </div>
+          <div className="vk-ask__chips" role="group" aria-label={t('Örnek sorular')}>
+            {SUGGESTIONS.map((s) => (
+              <button key={s} type="button" className="vk-ask__chip" disabled={off || checking} onClick={() => setQ(t(s))}>{t(s)}</button>
+            ))}
+          </div>
+          <p className="vk-ask__fine" role="status">
+            {checking
+              ? t('Rehberin durumu denetleniyor…')
+              : off
+                ? t('Rehber şu anda kapalı; soru gönderilemez.')
+                : status?.photo
+                  ? t('Cevaplar yalnızca onaylı kayıtlardan gelir ve dayandığı kaydı gösterir. Fotoğraf saklanmaz; göndermeden önce onayın istenir.')
+                  : t('Cevaplar yalnızca onaylı kayıtlardan gelir ve dayandığı kaydı gösterir. Fotoğrafla soru şu anda kapalı.')}
+          </p>
+        </form>
       </div>
     </Chapter>
   )
 }
 
-// Örnek yapboz (gerçek ilerleme değildir; "Örnek görünüm" diye yazılır): birkaç parça bulunmuş, biri ziyaretle altın.
-const SAMPLE: PieceState[] = ['found', 'gold', 'missing', 'found', 'missing', 'missing', 'found', 'missing', 'missing', 'missing']
+// Sayılar yazıyla (başlık dili sakin ve editoryal kalsın); daha büyük sayılarda rakam.
+const WORDS = {
+  tr: ['Sıfır', 'Bir', 'İki', 'Üç', 'Dört', 'Beş', 'Altı', 'Yedi', 'Sekiz', 'Dokuz', 'On', 'On bir', 'On iki'],
+  en: ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'],
+}
 
-export function Scene7Game({ pilot }: { pilot: Pilot }) {
-  const { t } = useLang()
+/**
+ * R6.1 Oyun tanıtımı: "Kayıp Vakfiyenin İzinde". Arşiv odasının görseli (vakfiye parçaları, mühürler) sahnenin asıl
+ * öğesidir; solda yalnızca etiket, başlık, kısa açıklama ve iki eylem durur. Parça sayısı katalogdaki eser sayısından
+ * gelir (oyunda her eser bir parçadır; `GET /route` → `total`). "Oyun Nasıl Oynanır?" kısa bir pencere açar (yerel
+ * `<dialog>`): sunucudaki kurallar aynen anlatılır, yeni kural yoktur.
+ */
+export function Scene6Game({ pilot }: { pilot: Pilot }) {
+  const { t, lang } = useLang()
   const enter = useEnter()
+  const id = useId()
+  const dlg = useRef<HTMLDialogElement>(null)
+  const opener = useRef<HTMLButtonElement>(null)
+  const [howOpen, setHowOpen] = useState(false)
   const go = (to: string) => (e: { preventDefault: () => void }) => (e.preventDefault(), enter(to))
+  const n = pilot.count
+  const word = n > 0 ? (WORDS[lang === 'en' ? 'en' : 'tr'][n] ?? String(n)) : ''
+  useEffect(() => {
+    const d = dlg.current
+    if (!d) return
+    if (howOpen && !d.open) {
+      if (typeof d.showModal === 'function') d.showModal()
+      else d.setAttribute('open', '')
+    } else if (!howOpen && d.open) {
+      if (typeof d.close === 'function') d.close()
+      else d.removeAttribute('open')
+    }
+  }, [howOpen])
+  const close = () => {
+    setHowOpen(false)
+    opener.current?.focus({ preventScroll: true })
+  }
   return (
-    <Chapter id="oyun-tanitim" n={7} labelledBy="s7-h">
-      <div className="vk-ch__text vk-ch__text--7" data-content>
-        <p className="vk-ch__eyebrow" style={k(0)}>{t('Oyun')}</p>
-        <h2 id="s7-h" className="vk-ch__h2" style={k(1)}>{t('Keşfet. Çöz. Mirası Tamamla.')}</h2>
-        <p className="vk-ch__lead" style={k(2)}>{t('Görevleri tamamla, kayıp vakfiye parçalarını bul ve keşif rozetlerini kazan.')}</p>
-        <div className="vk-quest">
-          <section className="vk-quest__card vk-quest__card--vakfiye" style={k(3)} aria-labelledby="q-vakfiye">
-            <h3 id="q-vakfiye">{t('Kayıp Vakfiye')}</h3>
-            <VakfiyePuzzle pieces={SAMPLE} labels={SAMPLE.map((_, n) => t('Örnek parça {n}', { n: n + 1 }))} />
-            <p>
-              {pilot.count > 0 && t('{n} eser, {n} parça.', { n: pilot.count }) + ' '}
-              {t('Her bilgi mührü vakfiyenin bir parçasını yerine oturtur; eseri ziyaret edince parça altınlaşır.')}
-            </p>
-            <p className="vk-quest__sample">{t('Örnek görünüm')}</p>
-          </section>
-          <section className="vk-quest__card" style={k(3.6)} aria-labelledby="q-muhur">
-            <h3 id="q-muhur">{t('Mühürler ve rozetler')}</h3>
-            <p className="vk-quest__seal">
-              <Seal kind="knowledge" label={t('Bilgi mührü')} size={46} />
-              <span><strong>{t('Bilgi mührü')}</strong> {t('“Rozeti Al”: 5 kısa sorudan en az 4 doğru.')}</span>
-            </p>
-            <p className="vk-quest__seal">
-              <Seal kind="gold" label={t('Altın mühür')} size={46} />
-              <span><strong>{t('Altın mühür')}</strong> {t('Eseri yerinde ziyaret edince bilgi mührün altına dönüşür.')}</span>
-            </p>
-          </section>
-          <section className="vk-quest__card" style={k(4.2)} aria-labelledby="q-rota">
-            <h3 id="q-rota">{t('Tarihî Rotalar')}</h3>
-            <p>{t('En yakın açık eserden başla; her bilgi mührü rotada yeni bir eserin kilidini açar.')}</p>
-          </section>
-        </div>
-        <div className="vk-s__ctas" style={k(4.8)}>
+    <Chapter id="oyun-tanitim" n={6} labelledBy="s6-h">
+      <div className="vk-ch__text vk-ch__text--6" data-content>
+        <p className="vk-ch__eyebrow" style={k(0)}>VAKIFNAME · {t('Kayıp Vakfiye')}</p>
+        <h2 id="s6-h" className="vk-ch__h2 vk-game6__h" style={k(1)}>{t('Kayıp Vakfiyenin İzinde')}</h2>
+        <p className="vk-ch__lead" style={k(2)}>
+          {word && t('{n} tarihî eser. {n} kayıp parça.', { n: word }) + ' '}
+          {t('Geçmişin izlerini takip et, vakfiyeyi yeniden bir araya getir.')}
+        </p>
+        <div className="vk-s__ctas" style={k(3)}>
           <a href="/oyun" className="vk-btn vk-s__cta" onClick={go('/oyun')}>{t('Maceraya Başla')}</a>
-          <a href={gamePath.route(pilot.city.slug)} className="vk-btn vk-btn--ghost vk-s__ghostbtn" onClick={go(gamePath.route(pilot.city.slug))}>
-            {t('Rotaları Keşfet')}
+          <button ref={opener} type="button" className="vk-s__ghost" aria-haspopup="dialog" aria-expanded={howOpen}
+            aria-controls={`${id}-how`} onClick={() => setHowOpen(true)}>
+            {t('Oyun Nasıl Oynanır?')}
+          </button>
+        </div>
+        <p className="vk-game6__path" style={k(3.8)}>{t('Eserleri keşfet · Mühürleri kazan · Vakfiyeyi tamamla')}</p>
+      </div>
+
+      <dialog ref={dlg} id={`${id}-how`} className="vk-howto" aria-labelledby={`${id}-how-h`} onClose={() => setHowOpen(false)}
+        onCancel={(e) => (e.preventDefault(), close())}>
+        <div className="vk-howto__head">
+          <h3 id={`${id}-how-h`}>{t('Oyun nasıl oynanır?')}</h3>
+          <button type="button" className="vk-howto__close" onClick={close}>{t('Kapat')}</button>
+        </div>
+        <p className="vk-howto__intro">
+          {t('Vakfiyenin kayıp parçaları eserlerde saklı. Bir eser seç, bilgi görevini oyna; her bilgi mührü bir parçayı yerine oturtur.')}
+        </p>
+        <ol className="vk-howto__steps">
+          <li>
+            <span className="vk-howto__n" aria-hidden="true">I</span>
+            <div>
+              <strong>{t('Eseri seç')}</strong>
+              <p>{t('Bursa’nın eserlerinden dilediğini seç; hepsi baştan açık. Hikâyeyi dinlemek ve rehbere sormak isteğe bağlı.')}</p>
+            </div>
+          </li>
+          <li>
+            <span className="vk-howto__n"><Seal kind="knowledge" label={t('Bilgi mührü')} size={34} /></span>
+            <div>
+              <strong>{t('Rozeti Al')}</strong>
+              <p>{t('5 kısa sorudan en az 4’ünü doğru yanıtla: bilgi mührü senin, vakfiyenin bir parçası yerine oturur.')}</p>
+            </div>
+          </li>
+          <li>
+            <span className="vk-howto__n"><Seal kind="gold" label={t('Altın mühür')} size={34} /></span>
+            <div>
+              <strong>{t('Ziyaret et (bonus)')}</strong>
+              <p>{t('Eseri yerinde ziyaret et; konumun doğrulanınca mührün ve parçan altına döner. Konumun kaydedilmez.')}</p>
+            </div>
+          </li>
+        </ol>
+        <p className="vk-howto__note">
+          {t('Her adım XP kazandırır; aynı başarı ikinci kez sayılmaz. Bütün parçalar bulununca vakfiye tamamlanır.')}
+        </p>
+        <div className="vk-howto__actions">
+          <a href="/oyun" className="vk-btn vk-s__cta" onClick={(e) => (close(), go('/oyun')(e))}>{t('Maceraya Başla')}</a>
+          <a href={gamePath.route(pilot.city.slug)} className="vk-howto__link" onClick={(e) => (close(), go(gamePath.route(pilot.city.slug))(e))}>
+            {t('{city} rotasını gör', { city: pilot.city.name })}
           </a>
         </div>
-      </div>
+      </dialog>
     </Chapter>
-  )
-}
-
-/** Final: sahnenin sonu, slogan ve uygulamaya geçiş (son görsel arkada kalır). */
-export function StoryFinal() {
-  const { t } = useLang()
-  const enter = useEnter()
-  return (
-    <div className="vk-final">
-      <p className="vk-final__slogan vk-rv">{t('Geçmişi Keşfet, Mirası Yaşat.')}</p>
-      <div className="vk-s__ctas vk-s__ctas--center vk-rv" style={{ ['--i' as string]: 1 }}>
-        <a href="/eserler" className="vk-btn vk-s__cta" onClick={(e) => (e.preventDefault(), enter('/eserler'))}>{t('Uygulamaya geç')}</a>
-        <Link to="/giris" className="vk-btn vk-btn--ghost vk-s__ghostbtn">{t('Giriş yap veya hesap aç')}</Link>
-      </div>
-      <p className="vk-final__foot"><Link to="/gizlilik">{t('Aydınlatma metni')}</Link></p>
-    </div>
   )
 }

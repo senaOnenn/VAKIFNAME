@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { stubFetch, type Routes } from '../test/fixtures'
+import { PROFILE, stubFetch, type Routes } from '../test/fixtures'
 import VakifnameApp from './VakifnameApp'
 import { resetAuthForTests } from './session'
 import { INTRO_SEEN_KEY } from './screens/Intro'
@@ -20,6 +20,8 @@ function server(initial: User | null, extra: Routes = {}) {
   const log = (path: string, init?: RequestInit) =>
     calls.push({ path, method: init?.method ?? 'GET', body: init?.body ? JSON.parse(String(init.body)) : {} })
   stubFetch({
+    // R6.3: parolasını yenileyen hesap kâşifini daha önce seçmiştir (oyun ekranı doğrudan açılır).
+    '/player/profile': PROFILE,
     '/auth/me': (init?: RequestInit) => {
       log('/auth/me', init)
       return user ? { body: user } : { status: 401, body: { detail: 'Oturum açık değil.' } }
@@ -151,7 +153,7 @@ describe('parola yenileme', () => {
     await userEvent.type(screen.getByLabelText('E-posta'), ' kimse@example.com ')
     await userEvent.click(screen.getByRole('button', { name: 'Bağlantı gönder' }))
     expect(await screen.findByRole('status')).toHaveTextContent('Bu adresle kayıtlı bir hesap varsa')
-    expect(calls.find((c) => c.path === '/auth/password-reset/request')!.body).toEqual({ email: 'kimse@example.com' })
+    expect(calls.find((c) => c.path === '/auth/password-reset/request')!.body).toEqual({ email: 'kimse@example.com', lang: 'tr' }) // R6.17: e-posta arayüz dilinde gider
   })
 
   it('yeni parolayı belirteçle gönderir, oturum açar ve şehir seçimine götürür', async () => {

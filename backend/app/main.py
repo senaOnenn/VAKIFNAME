@@ -24,13 +24,15 @@ from .speech_routes import router as speech_router
 from .tts import SpeechService, TtsSettings
 from .auth_routes import router as auth_router
 from .people_routes import router as people_router
+from .player_routes import router as player_router
 from .stats import StatsStore
 from .stats_routes import router as stats_router
 from .google_auth import google_verifier_from_env
 from .mailer import mailer_from_env, public_base_url
 from .guide.lexicon import TurkishLexicon
 from .guide.privacy import FaceScreen
-from .guide.registry import DEFAULT_MODELS, build_provider, log_selection
+from .local_preview import router as local_preview_router
+from .guide.registry import DEFAULT_MODELS, DEFAULT_VISION_MODELS, build_provider, build_vision_provider, log_selection
 from .guide.service import GuideService, GuideSettings, budget_from_env
 from .guide_routes import BodyLimit, InFlight, TesterSessions, guide_mode, router as guide_router
 from .monument_routes import router as monument_router
@@ -53,6 +55,12 @@ for _name in ("vakifname.guide", "vakifname.auth"):
 
 DEFAULT_PLACES_FILE = Path(__file__).resolve().parents[2] / "data" / "places.json"
 # Dahili dışa aktarıcının (`python -m app.internal.publish`) ürettiği, yalnızca yayın onaylı kayıtları içeren anlık görüntü.
+# Genel API sürümü. Arayüzün beklediği bir uç eklendiğinde artırılır; arayüzdeki `REQUIRED_API_VERSION` ile eşleşir.
+# 4 = R6.2 hesapla oyun + R6.3 oyuncu profili/karakter + R6.4 XP ve seviye.
+# 5 = R6.7 açık görevler (kilit ve zorunlu dinleme yok; eser durumu) + R6.8 `quiz_available`.
+API_VERSION = 5
+API_FEATURES = ("account_only_game", "player_profile", "xp", "open_quests")
+
 DEFAULT_PUBLIC_CATALOG_FILE = Path(__file__).resolve().parents[2] / "data" / "public_catalog" / "catalog.json"
 
 DEFAULT_CORS_ORIGINS = [
@@ -180,6 +188,14 @@ def create_app(
     # Hesaplar ve oturumlar `VAKIFNAME_ACCOUNTS_DB` dosyasında (ilerlemeden ayrı); tanımlı değilse bellek içi (testler).
     accounts_db = accounts_db or (Path(os.environ["VAKIFNAME_ACCOUNTS_DB"]) if os.environ.get("VAKIFNAME_ACCOUNTS_DB") else None)
     app.state.accounts = AccountStore(accounts_db, token_ttls=email_token_ttls_from_env())
+    # R6.4.2: dosya yolu verilmezse hesaplar ve ilerleme bellektedir; yeniden başlatmada hepsi silinir (eski hesapla
+    # giriş "E-posta veya parola hatalı" döner). Testler için doğrudur, gerçek kullanımda değil: açıkça uyarılır.
+    memory = [name for name, db in (("VAKIFNAME_ACCOUNTS_DB", accounts_db), ("VAKIFNAME_PROGRESS_DB", progress_db))
+              if db is None]
+    if memory:
+        logging.getLogger("vakifname.storage").warning(
+            "%s tanımlı değil: hesaplar, oturumlar, karakterler ve oyun ilerlemesi bellekte tutuluyor ve sunucu yeniden "
+            "başlatılınca silinir. Kalıcı olması için dosya yolu verin.", " ve ".join(memory))
     # Hesap e-postaları (doğrulama, parola yenileme; bkz. app/mailer.py): `VAKIFNAME_MAIL_BACKEND=off|file|smtp`
     # (varsayılan off). Bağlantılar `VAKIFNAME_PUBLIC_BASE_URL` üzerine kurulur. Geçersiz yapılandırma açılışta hata verir.
     app.state.mailer = mailer_from_env()
@@ -219,8 +235,14 @@ def create_app(
     provider, provider_name, _ = build_provider()
     if not os.environ.get("VAKIFNAME_GUIDE_MODEL") and provider_name in DEFAULT_MODELS:
         guide_settings.text_model = DEFAULT_MODELS[provider_name]
+    # Görsel sağlayıcı (R5.3): `VAKIFNAME_GUIDE_VISION_PROVIDER` boşsa fotoğraf gözlemi metin sağlayıcısıyla yapılır.
+    vision_provider, vision_name = build_vision_provider()
+    if vision_provider is not None and not os.environ.get("VAKIFNAME_GUIDE_VISION_MODEL"):
+        guide_settings.vision_model = DEFAULT_VISION_MODELS[vision_name]
     if app.state.guide_mode != "off":
         log_selection(provider, guide_settings.text_model)
+        if vision_provider is not None:
+            log_selection(vision_provider, guide_settings.vision_model)
     # Türkçe sözlük (zeyrek; ~9 sn, ~200 MB; arka planda yüklenir): rehberde bozuk sözcük denetimi, Esere Sor'da yazım
     # düzeltmesinin doğru yazılmış ama katalogda geçmeyen sözcükleri ("nereli", "şehirden") değiştirmemesi için. Rehber
     # ve Esere Sor ikisi de kapalıysa yüklenmez. Yüklenene kadar düzeltme yalnızca katalog sözlüğüyle çalışır.
@@ -229,7 +251,7 @@ def create_app(
     if lexicon is not None:
         app.state.ask.word_check = lexicon.is_word
     app.state.guide = GuideService(app.state.ask, provider, budget_from_env(), guide_settings, face_screen=FaceScreen(),
-                                   lexicon=lexicon)
+                                   lexicon=lexicon, vision_provider=vision_provider)
     g_min, g_hour, g_global = (int(x) for x in os.environ.get("VAKIFNAME_GUIDE_RATE", "6/60/10").split("/"))
     app.state.guide_limiter = RateLimiter(per_minute=g_min, per_hour=g_hour, global_per_minute=g_global)
     app.state.guide_sessions = TesterSessions()
@@ -264,7 +286,10 @@ def create_app(
 
     @app.get("/")
     def read_root():
-        return {"status": "ok", "message": "VAKIFNAME API Service Active"}
+        # Sağlık ve sürüm (R6.4.1): arayüz, çalışan sunucunun kendi beklediği uçları taşıyıp taşımadığını buradan anlar
+        # (eski kodla çalışan süreç = "sunucu güncel değil"). Gizli bilgi, yapılandırma veya kullanıcı verisi içermez.
+        return {"status": "ok", "message": "VAKIFNAME API Service Active", "api_version": API_VERSION,
+                "features": list(API_FEATURES)}
 
     if demo_api:
         app.include_router(router)
@@ -273,7 +298,10 @@ def create_app(
     app.include_router(monument_router)
     app.include_router(game_router)
     app.include_router(route_router)
+    app.include_router(player_router)
     app.include_router(people_router)
+    # R6.15.2: yayın izni bekleyen envanter fotoğrafları yalnızca yerel önizlemede (değişken tanımlı + loopback + vekilsiz).
+    app.include_router(local_preview_router)
     app.include_router(stats_router)
     app.include_router(auth_router)
     app.include_router(content_router)

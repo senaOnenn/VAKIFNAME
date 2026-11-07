@@ -12,6 +12,14 @@ export function progressId(auth: AuthState): string {
   return auth.status === 'user' ? auth.user.user_id : getVisitorId()
 }
 
+/**
+ * R6.2: oyun ilerlemesi yalnızca hesaptadır. Halka açık sayfalar (eser, Keşfet, harita, rehber) ilerleme isteğini yalnızca
+ * oturum açıkken yapar; misafirken `null` (sunucu da misafir kimliğini reddeder).
+ */
+export function accountId(auth: AuthState): string | null {
+  return auth.status === 'user' ? auth.user.user_id : null
+}
+
 const WITH_COOKIE = { credentials: 'include' as const }
 
 // --- Rota (GET /route): sözleşme backend/app/route_routes.py ile aynıdır ---------------------------------------------
@@ -25,6 +33,10 @@ export interface RouteStop {
   latitude: number
   longitude: number
   state: StopState
+  /** R6.7: oyuncunun bu eserdeki durumu (tamamlananlar `completed` listesindedir). Eski sunucuda yoktur. */
+  progress?: 'new' | 'started'
+  /** R6.8: onaylı kayıtlardan 5 soruluk bilgi görevi kurulabiliyor mu. */
+  quest_ready?: boolean
   distance_m: number
   order: number
 }
@@ -135,8 +147,12 @@ export interface GameState {
   locked: boolean
   listened: boolean
   asked: boolean
-  /** Rehber kapalıysa soru sormak şart değildir. */
+  /** R6.7: göreve başlandı (anlatım, rehbere soru ya da açılmış bir bilgi görevi). */
+  started?: boolean
+  /** R6.7'den beri her zaman false (dinleme ve soru isteğe bağlı). */
   guide_required: boolean
+  /** R6.8: bu eserde onaylı kayıtlardan 5 soruluk görev kurulabiliyor mu (eski sunucuda yok). */
+  quiz_available?: boolean
   ready_for_quiz: boolean
   quiz_size: number
   pass_mark: number
@@ -334,6 +350,12 @@ export interface ContentTranslation {
   monument_id: string
   fact_title: string | null
   fact_text: string | null
+  /** R6.17: Türkçe kaydın sorusu (doğru cevap yöneticiye gösterilmez; sunucuda kalır). */
+  fact_quest?: QuestText | null
+  /** Sorunun İngilizcesi: şıklar Türkçe soruyla aynı sırada. */
+  quest_en?: QuestText | null
+  /** Taslağı hazırlayanın yöneticiye notu (kitapla Türkçe kayıt arasındaki farklar). */
+  note?: string | null
   title_en: string
   text_en: string
   quote_en: string
@@ -345,10 +367,17 @@ export interface ContentTranslation {
   updated_at: string
   decision: Decision
 }
+export interface QuestText {
+  question: string
+  choices: string[]
+  explanation: string
+}
 export interface MonumentEn {
   monument_id: string
   name_en: string
   site_notice_en: string | null
+  alternative_names_en?: string[]
+  address_en?: string | null
   status: ContentStatus
   decision: Decision
 }
@@ -367,6 +396,8 @@ export interface MonumentEdit {
   tr_facts?: TrFact[]
 }
 export type TranslationInput = Pick<ContentTranslation, 'title_en' | 'text_en' | 'quote_en' | 'source_id' | 'page'> & {
+  quest_en?: QuestText | null
+  note?: string | null
   publish: boolean
 }
 export type FactInput = Pick<
@@ -444,7 +475,9 @@ export const putTranslation = (factId: string, body: TranslationInput) =>
   apiPost(`${C}/facts/${enc(factId)}/en`, body, undefined, { ...WITH_COOKIE, method: 'PUT' }) as Promise<ContentTranslation>
 export const translationAction = (factId: string, action: 'publish' | 'reject' | 'withdraw') =>
   apiPost(`${C}/facts/${enc(factId)}/en/${action}`, {}, undefined, WITH_COOKIE) as Promise<ContentTranslation>
-export const putMonumentEn = (id: string, body: { name_en: string; site_notice_en: string | null; publish: boolean }) =>
+export const putMonumentEn = (id: string, body: {
+  name_en: string; site_notice_en: string | null; alternative_names_en?: string[]; address_en?: string | null; publish: boolean
+}) =>
   apiPost(`${C}/monuments/${enc(id)}/en`, body, undefined, { ...WITH_COOKIE, method: 'PUT' }) as Promise<MonumentEn>
 /** Kitap sayfasındaki fotoğraf (karar 14 = A); `url` yönetici önizlemesidir. */
 export interface BookImage {
@@ -465,3 +498,79 @@ export const imageAction = (id: string, action: 'publish' | 'withdraw') =>
 export const adminMediaUrl = (url: string) => (url.startsWith('/') ? `${API_BASE_URL}${url}` : url)
 /** Kayıt kimliğinden eser kimliği: `BUR-5001-F001` → `BUR-5001`. */
 export const monumentOfFact = (factId: string) => factId.replace(/-F\d+$/, '')
+
+// --- Oyuncu profili (R6.3/R6.4): karakter, XP ve seviye. Kimlik oturumdan alınır. -----------------------------------
+export type CharacterId = 'gezgin' | 'nakkas' | 'katip'
+export type XpSource = 'first_discovery' | 'listened' | 'listen_and_ask' | 'knowledge' | 'visit'
+export type Stage = 'baslangic' | 'gezginlik' | 'arastirmaci' | 'muhafiz'
+/** R6.4: sunucunun doğrulanmış kayıtlardan hesapladığı XP ve seviye (istemci hesaplamaz, yazamaz). */
+export interface PlayerProgress {
+  xp: number
+  level: number
+  /** Bulunulan seviyenin başladığı toplam XP. */
+  level_xp: number
+  /** Sonraki seviyenin eşiği; en üst seviyede `null`. */
+  next_level_xp: number | null
+  /** Kozmetik görünüm aşaması (seviyeden hesaplanır). */
+  stage: Stage
+  max_level: number
+  recent: { source: XpSource; monument_id: string | null; amount: number; earned_at: string }[]
+}
+export interface PlayerProfile {
+  /** Seçilmiş karakter; ilk girişte `null` (sunucu varsayılan karakter atamaz). */
+  character: { id: CharacterId; chosen_at: string } | null
+  progress: PlayerProgress
+}
+export const getPlayerProfile = (signal?: AbortSignal) =>
+  apiGet('/player/profile', signal, WITH_COOKIE) as Promise<PlayerProfile>
+export const chooseCharacter = (id: CharacterId) =>
+  apiPost('/player/character', { character_id: id }, undefined, { ...WITH_COOKIE, method: 'PUT' }) as Promise<PlayerProfile>
+
+// --- Sunucu sürümü (R6.4.1) -----------------------------------------------------------------------------------------
+/**
+ * Bu arayüzün beklediği en düşük sunucu API sürümü (`GET /` yanıtındaki `api_version`; bkz. backend/app/main.py).
+ * Eski kodla çalışan bir sunucu (yeni uçlar yok) bu sayede "güncel değil" diye ayırt edilir.
+ */
+export const REQUIRED_API_VERSION = 5
+export async function backendIsCurrent(signal?: AbortSignal): Promise<boolean> {
+  try {
+    const body = (await apiGet('/', signal)) as { api_version?: unknown } | null
+    return typeof body?.api_version === 'number' && body.api_version >= REQUIRED_API_VERSION
+  } catch {
+    return false
+  }
+}
+
+// --- Kayıp Vakfiye yerleşimi (R6.9): tek ve sabit yuva sırası; bütün ekranlar aynı yerleşimi kullanır. --------------
+export const getVakfiyeLayout = (city: string, signal?: AbortSignal) =>
+  apiGet(`/vakfiye/layout?city=${enc(city)}`, signal).then((b) => (b as { slots: string[] }).slots)
+
+// --- Yerel önizleme fotoğrafları (R6.15.2; backend/app/local_preview.py) -------------------------------------------
+// Yayın izni bekleyen envanter fotoğrafları yalnızca geliştiricinin bilgisayarındaki önizlemede vardır; canlı sunucuda uç
+// 404 döner ve liste boş kalır. Kaynak (yayın ve cilt) ile yayın izni ayrı alanlardır.
+export interface LocalPhoto {
+  image_id: string
+  file: string
+  card_file: string
+  width: number
+  height: number
+  /** Envanter yayını ve cildi (PDF'teki gömülü görselle piksel eşleşmesiyle doğrulandı). */
+  source: string
+  /** R6.16: PDF sayfası ve (yalnızca sayfa metninde okunduysa) basılı sayfa; yoksa null, tahmin edilmez. */
+  pdf_page?: number | null
+  printed_pages?: string[] | null
+}
+export interface LocalPhotos {
+  images: LocalPhoto[]
+  publication: { status: string; public: boolean; note: string }
+}
+export const localMediaUrl = (file: string) => `${API_BASE_URL}/local-media/${enc(file)}`
+export const getLocalPhotos = (id: string, signal?: AbortSignal): Promise<LocalPhotos | null> =>
+  apiGet(`/monuments/${enc(id)}/local-photos`, signal).then(
+    (b) => {
+      const body = b as Partial<LocalPhotos>
+      return Array.isArray(body.images) && body.publication?.public === false ? (body as LocalPhotos) : null
+    },
+    () => null,
+  )
+

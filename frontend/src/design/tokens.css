@@ -58,6 +58,77 @@
   --vk-dur-slow: 900ms;
 }
 
+/* ── Görev 49 / A1: ortak tasarım sistemi token'ları ──────────────────────────────────────────────
+   Yalnızca EKLENDİ; yukarıdaki adlar ve değerler değişmedi. Değerler, iç sayfalarda bugün en çok kullanılan sabitlerden
+   seçildi; böylece bir sabiti token'la değiştirmek görünümü değiştirmez.
+   Bilerek TANIMLANMAYANLAR: --vk-night-2 ve --vk-radius-md (film-dialog.css bunları yedek değerle kullanıyor; tanımlamak
+   oradaki görünümü sessizce değiştirirdi) ve --vk-d (story.css'in kendi değişkeni).
+   Kırılım noktaları (CSS değişkeni @media içinde kullanılamaz; referans): 360 dar telefon · 640 büyük telefon ·
+   900 masaüstü menüsü (app-shell, game-layout) · 960 iki sütun · 1200 geniş ekran. */
+:root {
+  /* Yazı ölçeği: arayüz (sans) ve başlık (serif) aynı ölçeği kullanır */
+  --vk-text-xs: 0.75rem; /* üst başlık (eyebrow), küçük etiket */
+  --vk-text-sm: 0.85rem; /* meta bilgi, fotoğraf atfı */
+  --vk-text-md: 0.9rem; /* sayaç, yardımcı metin */
+  --vk-text-base: 1rem; /* gövde */
+  --vk-text-lg: 1.15rem; /* öne çıkan paragraf */
+  --vk-text-xl: 1.4rem; /* kart ve bölüm başlığı */
+  --vk-text-2xl: 1.7rem; /* büyük bölüm başlığı */
+  --vk-text-page-title: clamp(1.9rem, 6vw, 3rem); /* iç sayfa h1 (vk-page__head) */
+  --vk-text-display: clamp(2.3rem, 8vw, 4.6rem); /* sinematik başlık (ana sayfa, kapak) */
+  --vk-leading-tight: 1.1;
+  --vk-leading-snug: 1.3;
+  --vk-leading-body: 1.55;
+  --vk-tracking-eyebrow: 0.14em;
+  --vk-tracking-display: 0.02em;
+  --vk-measure: 38rem; /* okunabilir satır uzunluğu */
+
+  /* Sayfa yerleşimi (vk-page) */
+  --vk-page-max: 76rem;
+  --vk-page-gutter: var(--vk-space-4);
+  --vk-page-pad-top: var(--vk-space-5);
+  --vk-page-pad-bottom: var(--vk-space-6);
+  --vk-page-gap: var(--vk-space-5);
+  --vk-rule-width: 150px;
+
+  /* Altın çizgiler (kenarlık) */
+  --vk-line-faint: rgb(201 162 75 / 0.18);
+  --vk-line: rgb(201 162 75 / 0.35);
+  --vk-line-strong: rgb(201 162 75 / 0.5);
+
+  /* Yüzeyler: cam (yapışkan çubuklar), yükseltilmiş kart */
+  --vk-surface-glass: rgb(9 12 34 / 0.72);
+  --vk-surface-raised: rgb(26 32 80 / 0.8);
+
+  /* Parşömen ve taş (iç sayfalarda okunabilir yüzeyler için; açık zeminde metin --vk-ink) */
+  --vk-parchment: #f1e6c8;
+  --vk-parchment-deep: #e2d2a8;
+  --vk-ink: #2a2136;
+  --vk-ink-soft: #5a4a3a;
+  --vk-stone: #242a52;
+  --vk-stone-line: rgb(243 234 211 / 0.08);
+
+  /* Durum renkleri (yeşil yok, CLAUDE.md §5). Metin olarak koyu zeminde kullanılır; zemin tonları yarı saydam. */
+  --vk-success: var(--vk-gold-bright);
+  --vk-info: var(--vk-indigo-soft);
+  --vk-warning: #f2b36b;
+  --vk-success-bg: rgb(233 200 116 / 0.12);
+  --vk-info-bg: rgb(143 162 255 / 0.12);
+  --vk-warning-bg: rgb(242 179 107 / 0.12);
+  --vk-danger-bg: rgb(255 138 155 / 0.12);
+
+  /* Yarıçap ve katmanlar */
+  --vk-radius-sm: 8px;
+  --vk-radius-pill: 999px;
+  --vk-z-raised: 2;
+  --vk-z-sticky: 5;
+  --vk-z-overlay: 10;
+  --vk-z-modal: 1000;
+
+  /* Kart gölgesi */
+  --vk-shadow-card: 0 10px 30px rgb(0 0 0 / 0.35);
+}
+
 /* Hareket azaltma tercihine saygı: süreler sıfırlanır, animasyon yalnızca son hâli gösterir. */
 @media (prefers-reduced-motion: reduce) {
   :root {

@@ -366,7 +366,29 @@ describe('İngilizce içerik (Faz 11)', () => {
     const put = calls(f, '/admin/content/facts/BUR-1001-F001/en')[0].init
     expect(put.method).toBe('PUT')
     expect(body(put)).toEqual({ title_en: 'Completion', text_en: 'The mosque was completed in 1399.', quote_en: 'not in the book',
-      source_id: 'SRC-0001', page: 14, publish: true })
+      source_id: 'SRC-0001', page: 14, publish: true, note: null, quest_en: null })
+  })
+
+  it('R6.17: taslak notu ve sorunun İngilizcesi gösterilir; şıklar Türkçe sırayla düzenlenir, doğru cevap gönderilmez', async () => {
+    const quest = { question: 'Who completed the mosque?', choices: ['Bayezid', 'Orhan'], explanation: 'It was Bayezid.' }
+    const withQuest = { ...TRANSLATION, note: 'Kitapta 1399 geçiyor.', quest_en: quest,
+      fact_quest: { question: 'Camiyi kim tamamladı?', choices: ['Bayezid', 'Orhan'], explanation: 'Bayezid tamamladı.' } }
+    const f = enServer({
+      '/admin/content/monuments/BUR-1001': { body: { ...CATALOG_EDIT, translations: [withQuest] } },
+      '/admin/content/facts/BUR-1001-F001/en': { body: withQuest },
+    })
+    open('/yonetim/icerik/ceviri/BUR-1001-F001')
+    expect(await screen.findByText(/Kitapta 1399 geçiyor\./)).toBeInTheDocument()
+    expect(screen.getByLabelText('İngilizce soru')).toHaveValue('Who completed the mosque?')
+    const second = screen.getByLabelText('Şık 2 (Orhan)')
+    await userEvent.clear(second)
+    await userEvent.type(second, 'Orhan Gazi')
+    await userEvent.click(screen.getByRole('button', { name: 'Onayla ve yayımla' }))
+    await screen.findByText('Çeviri onaylandı ve yayımlandı.')
+    const sent = body(calls(f, '/admin/content/facts/BUR-1001-F001/en')[0].init) as Record<string, unknown>
+    expect(sent.quest_en).toEqual({ ...quest, choices: ['Bayezid', 'Orhan Gazi'] })
+    expect(JSON.stringify(sent)).not.toContain('answer_index')
+    expect(sent.note).toBe('Kitapta 1399 geçiyor.')
   })
 
   it('eserin İngilizce adı katalog eserinde de yayımlanır; kayıtların İngilizce durumu listelenir', async () => {
@@ -385,7 +407,7 @@ describe('İngilizce içerik (Faz 11)', () => {
     expect(await within(card).findByText('İngilizce ad yayımlandı.')).toBeInTheDocument()
     const put = calls(f, '/admin/content/monuments/BUR-1001/en')[0].init
     expect(put.method).toBe('PUT')
-    expect(body(put)).toEqual({ name_en: 'Grand Mosque', site_notice_en: null, publish: true })
+    expect(body(put)).toEqual({ name_en: 'Grand Mosque', site_notice_en: null, publish: true, alternative_names_en: [], address_en: null })
   })
 
   it('hat İngilizce kipinde lang=en gönderir ve sonucu İngilizce karşılık olarak bildirir', async () => {

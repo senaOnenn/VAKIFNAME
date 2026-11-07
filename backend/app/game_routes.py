@@ -1,4 +1,12 @@
-"""Gerçek oyun döngüsü API'si: dinle ve konuş → "Rozeti Al" sınavı (bilgi mührü) → ziyaret (altın ziyaret mührü).
+"""Gerçek oyun döngüsü API'si.
+
+**R6.7 ürün kararı:** oyuncu bir eseri seçer ve doğrudan bilgi görevini (5 soru, en az 4 doğru) oynar. Anlatımı
+dinlemek ve rehbere soru sormak **isteğe bağlıdır** (öğrenme deneyimi; doğrulanınca bir kez XP verir) ve sınavın şartı
+değildir. Eser kilidi yoktur (`route_routes.monument_locked` her zaman False). Gerçek ziyaret, bilgi mühründen sonra
+ayrı bir bonus görevdir; mesafe kuralı, simülasyon işareti ve konumun saklanmaması aynen sürer. Durum yanıtındaki
+alanlar korunur: `guide_required` artık her zaman False, `ready_for_quiz` bilgi mührü yoksa ve soru üretilebiliyorsa True.
+
+(Aşağıdaki kademe açıklaması R6.7 öncesi kuraldır; kayıt için.)
 
 Kademeler (ekip kararı, CLAUDE.md §2.6; soru kuralları için bkz. `game.py`):
 1. **Dinle ve konuş**: anlatım sonuna kadar dinlendi (`listened`) ve rehbere en az bir soru soruldu (`asked`). Rehber
@@ -136,16 +144,22 @@ def _state(request: Request, m: PublicMonument, user_id: str) -> dict:
     visit = store.seal(user_id, m.monument_id, "visit")
     locked = knowledge is None and monument_locked(request, m, user_id)
     events = store.engagement(user_id, m.monument_id)
-    listened, asked, required = "listened" in events, "asked" in events, guide_required(request)
-    ready = (listened and (asked or not required) and not locked and knowledge is None
-             and game.quiz_capacity(request.app.state.monuments.catalog, m) >= game.QUIZ_SIZE)
+    listened, asked = "listened" in events, "asked" in events
+    required = False  # R6.7: dinleme ve soru sorma isteğe bağlı; sınavın şartı değil
+    # R6.8: içerik durumu ayrı bildirilir: onaylı kayıtlardan 5 soruluk sınav kurulabiliyor mu (arayüz "soru yok" ile
+    # "başka bir neden"i karıştırmasın).
+    available = game.quiz_capacity(request.app.state.monuments.catalog, m) >= game.QUIZ_SIZE
+    ready = not locked and knowledge is None and available
     return {
         "monument_id": m.monument_id,
         "locked": locked,
         "listened": listened,
         "asked": asked,
+        # R6.7: göreve başlandı mı (anlatım, rehbere soru ya da açılmış bir bilgi görevi); "Göreve Devam Et" için.
+        "started": m.monument_id in store.started(user_id),
         "guide_required": required,
         "ready_for_quiz": ready,
+        "quiz_available": available,
         "quiz_size": game.QUIZ_SIZE,
         "pass_mark": game.PASS_MARK,
         "knowledge": {"earned_at": knowledge["earned_at"]} if knowledge else None,
@@ -172,6 +186,7 @@ def post_engagement(request: Request, response: Response, body: EngagementReques
     m = _monument(request, monument_id)
     _progress(request).record_engagement(body.user_id, m.monument_id, body.event)
     response.headers["Cache-Control"] = "no-store"
+    # XP (dinleme 10, rehbere soru 20; eser başına birer kez) olay kaydıyla aynı anda depoda türetilir (bkz. xp.py).
     return _state(request, m, body.user_id)
 
 
@@ -188,8 +203,6 @@ def start_quiz(request: Request, response: Response, body: QuizRequest, monument
         raise HTTPException(status_code=409, detail=ALREADY_EARNED)
     if state["locked"]:
         raise HTTPException(status_code=403, detail=LOCKED)
-    if not state["listened"] or (state["guide_required"] and not state["asked"]):
-        raise HTTPException(status_code=409, detail=NEEDS_LISTEN_AND_ASK if state["guide_required"] else NEEDS_LISTEN)
     catalog = request.app.state.monuments.catalog
     rng = request.app.state.game_rng
     lang = "en" if body.lang == "en" and game.english_ready(catalog, m) else "tr"

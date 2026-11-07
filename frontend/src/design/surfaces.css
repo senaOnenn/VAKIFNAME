@@ -1,0 +1,77 @@
+/* Bilgi panelleri (Görev 50 / A2): bilgi, uyarı, başarı, hata.
+   Mevcut .vk-notice (monument.css; eser sayfası ve mühür yolundaki ziyaret uyarısı) ile aynı biçimdedir: solda altın
+   şerit, sağ köşeler yuvarlak. vk-notice'e bu aşamada dokunulmadı; yönetim ve oyun ekranlarına henüz uygulanmadı.
+
+   Anlam yalnızca renkle verilmez: her varyantın kendi simgesi vardır ve panelde görünür bir etiket metni bulunur.
+   Kullanım:
+     <aside class="vk-callout vk-callout--warning">
+       <div><strong class="vk-callout__label">Uyarı</strong><p>…</p></div>
+     </aside>
+   Simge ::before ile çizilir ve ekran okuyucudan gizlenir (`content: … / ''`); anlamı etiket metni taşır.
+   Kontrast (WCAG AA ≥ 4.5:1, ölçüldü): gece laciverdi zeminde etiketler 6.2–8.8:1, gövde fildişi ≥ 11.9:1; sayfanın en açık
+   üst zemininde (#1b2262) etiketler 4.9–7.0:1 (en düşük: bilgi/indigo), gövde ≥ 9.4:1. */
+.vk-callout {
+  --vk-callout-accent: var(--vk-info);
+  --vk-callout-bg: var(--vk-info-bg);
+  --vk-callout-symbol: 'i';
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--vk-space-3);
+  padding: var(--vk-space-4) var(--vk-space-5);
+  border-left: 3px solid var(--vk-callout-accent);
+  border-radius: 0 var(--vk-radius) var(--vk-radius) 0;
+  background: var(--vk-callout-bg);
+  color: var(--vk-ivory);
+}
+.vk-callout::before {
+  content: var(--vk-callout-symbol);
+  content: var(--vk-callout-symbol) / '';
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-top: 0.05rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--vk-callout-accent);
+  color: var(--vk-callout-accent);
+  font: 700 0.9rem/1 var(--vk-font-ui);
+}
+.vk-callout__label {
+  display: block;
+  margin-bottom: var(--vk-space-1);
+  color: var(--vk-callout-accent);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.vk-callout p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.vk-callout--info {
+  --vk-callout-accent: var(--vk-info);
+  --vk-callout-bg: var(--vk-info-bg);
+  --vk-callout-symbol: 'i';
+}
+.vk-callout--warning {
+  --vk-callout-accent: var(--vk-warning);
+  --vk-callout-bg: var(--vk-warning-bg);
+  --vk-callout-symbol: '!';
+}
+.vk-callout--success {
+  --vk-callout-accent: var(--vk-success);
+  --vk-callout-bg: var(--vk-success-bg);
+  --vk-callout-symbol: '✓';
+}
+.vk-callout--error {
+  --vk-callout-accent: var(--vk-danger);
+  --vk-callout-bg: var(--vk-danger-bg);
+  --vk-callout-symbol: '×';
+}
+/* Yüksek kontrast modunda şerit ve simge sistem renklerine döner, anlam etiket metninde kalır. */
+@media (forced-colors: active) {
+  .vk-callout {
+    border: 1px solid CanvasText;
+    border-left-width: 3px;
+  }
+}

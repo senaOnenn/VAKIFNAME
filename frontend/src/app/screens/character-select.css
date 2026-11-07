@@ -1,0 +1,260 @@
+/* ══ Karakter seçimi: vakfiye odasında kâşiflerin takdimi (R6.3, R6.5) ═════════════════════════════════════════════
+   Arka plan ana sayfanın son sahnesi (arşiv odası); üstünde gece laciverdi perde. Üç kemerli niş duvara oyulmuş gibi
+   durur; içinde kâşifin portresi. Seçilen nişin içi fener ışığıyla dolar, adı altınlaşır. Kart değil, niş. Palet A. */
+
+.vk-cs {
+  --cs-gold: #c9a24b;
+  --cs-gold-hi: #e9c874;
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: clamp(2rem, 6vh, 4rem) var(--vk-space-4) var(--vk-space-6);
+  color: var(--vk-ivory);
+  background:
+    linear-gradient(180deg, rgb(9 12 34 / 0.8) 0%, rgb(9 12 34 / 0.66) 40%, rgb(9 12 34 / 0.94) 100%),
+    var(--room, none) 70% 50% / cover no-repeat,
+    radial-gradient(120% 90% at 50% 0%, #161c47, #0a0d24 70%);
+}
+.vk-cs__inner {
+  width: min(66rem, 100%);
+  display: grid;
+  gap: var(--vk-space-5);
+}
+.vk-cs__head {
+  display: grid;
+  gap: var(--vk-space-2);
+  max-width: 42rem;
+}
+.vk-cs__eyebrow {
+  margin: 0;
+  color: var(--cs-gold-hi);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.vk-cs__title {
+  margin: 0;
+  font: 600 clamp(2.3rem, 5vw, 3.8rem) / 1.04 var(--vk-font-display);
+  text-wrap: balance;
+}
+.vk-cs__lead {
+  margin: 0;
+  max-width: 36rem;
+  font-size: clamp(1.02rem, 1.3vw, 1.15rem);
+  line-height: 1.6;
+  color: rgb(243 234 211 / 0.9);
+}
+.vk-cs__form {
+  display: grid;
+  gap: var(--vk-space-4);
+}
+.vk-cs__set {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+/* Niş: kemer + portre + ad + gözü + kısa takdim. Bütün alan tıklanır (etiket). */
+.vk-cs__niche {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.35rem;
+  text-align: center;
+  cursor: pointer;
+}
+.vk-cs__radio {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.vk-cs__arch {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 999px 999px 6px 6px;
+  overflow: hidden;
+  background:
+    radial-gradient(80% 55% at 50% 30%, rgb(201 162 75 / 0.12), transparent 70%),
+    linear-gradient(180deg, #161c47, #0a0d24);
+  box-shadow:
+    inset 0 0 0 1px rgb(201 162 75 / 0.5),
+    inset 0 0 0 7px rgb(9 12 34 / 0.55),
+    inset 0 0 0 8px rgb(201 162 75 / 0.2),
+    0 26px 40px -26px rgb(0 0 0 / 0.95);
+  transition: box-shadow 260ms var(--vk-ease), transform 260ms var(--vk-ease);
+}
+/* Fener ışığı: seçilince nişin içine dolar. */
+.vk-cs__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 50% at 50% 34%, rgb(255 222 150 / 0.36), transparent 72%);
+  opacity: 0;
+  transition: opacity 320ms var(--vk-ease);
+}
+.vk-cs__portrait {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 0;
+  width: 92%;
+  height: 92%;
+}
+.vk-cs__mark {
+  position: absolute;
+  top: 0.9rem;
+  left: 50%;
+  translate: -50% 0;
+  padding: 0.1rem 0.7rem;
+  border-radius: 999px;
+  background: #8e2a3a;
+  color: #f3ead3;
+  font: 600 0.75rem var(--vk-font-ui);
+  letter-spacing: 0.04em;
+}
+.vk-cs__name {
+  margin-top: var(--vk-space-2);
+  font: 600 clamp(1.3rem, 2vw, 1.6rem) / 1.15 var(--vk-font-display);
+}
+.vk-cs__theme {
+  color: var(--cs-gold-hi);
+  font: italic 500 1rem var(--vk-font-display);
+}
+.vk-cs__desc {
+  max-width: 19rem;
+  color: rgb(243 234 211 / 0.82);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.vk-cs__tool {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--vk-ivory-dim);
+  font-size: 0.85rem;
+}
+.vk-cs__niche:hover .vk-cs__arch {
+  box-shadow:
+    inset 0 0 0 1px rgb(233 200 116 / 0.8),
+    inset 0 0 0 7px rgb(9 12 34 / 0.55),
+    inset 0 0 0 8px rgb(201 162 75 / 0.3),
+    0 26px 40px -26px rgb(0 0 0 / 0.95);
+}
+.vk-cs__niche.is-picked .vk-cs__arch {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 0 0 1.5px var(--cs-gold-hi),
+    inset 0 0 0 7px rgb(9 12 34 / 0.4),
+    inset 0 0 0 8px rgb(233 200 116 / 0.55),
+    0 0 50px -12px rgb(233 200 116 / 0.55),
+    0 30px 44px -26px rgb(0 0 0 / 0.95);
+}
+.vk-cs__niche.is-picked .vk-cs__glow {
+  opacity: 1;
+}
+.vk-cs__niche.is-picked .vk-cs__name {
+  color: var(--cs-gold-hi);
+}
+.vk-cs__niche:has(.vk-cs__radio:focus-visible) .vk-cs__arch {
+  outline: 2px solid var(--cs-gold-hi);
+  outline-offset: 5px;
+}
+
+.vk-cs__note {
+  margin: 0;
+  max-width: 46rem;
+  color: var(--vk-ivory-dim);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.vk-cs__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vk-space-3) var(--vk-space-5);
+}
+.vk-cs__go {
+  min-height: 48px;
+}
+.vk-cs__go:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.vk-cs__back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--vk-ivory);
+  text-decoration: underline;
+  text-decoration-color: rgb(233 200 116 / 0.5);
+  text-underline-offset: 0.25em;
+}
+.vk-cs__state {
+  margin: 0;
+}
+.vk-cs__state--error {
+  color: #f0b4bd;
+}
+
+/* Telefon: nişler alt alta; kemer solda (portre), ad ve takdim sağda. */
+@media (max-width: 720px) {
+  .vk-cs {
+    place-items: start center;
+  }
+  .vk-cs__set {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--vk-space-3);
+  }
+  .vk-cs__niche {
+    grid-template-columns: 7rem minmax(0, 1fr);
+    grid-template-areas:
+      'arch name'
+      'arch theme'
+      'arch desc';
+    justify-items: start;
+    align-content: center;
+    column-gap: var(--vk-space-3);
+    row-gap: 0.1rem;
+    text-align: left;
+  }
+  .vk-cs__arch {
+    grid-area: arch;
+  }
+  .vk-cs__name {
+    grid-area: name;
+    margin-top: 0;
+  }
+  .vk-cs__theme {
+    grid-area: theme;
+  }
+  .vk-cs__desc {
+    grid-area: desc;
+    font-size: 0.9rem;
+  }
+  .vk-cs__mark {
+    top: 0.4rem;
+    font-size: 0.62rem;
+    padding: 0 0.4rem;
+  }
+  .vk-cs__niche.is-picked .vk-cs__arch {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vk-cs__arch,
+  .vk-cs__glow {
+    transition: none;
+  }
+  .vk-cs__niche.is-picked .vk-cs__arch {
+    transform: none;
+  }
+}
