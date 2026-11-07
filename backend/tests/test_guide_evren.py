@@ -132,6 +132,7 @@ def test_evren_key_is_separate_from_openrouter_key(monkeypatch, tmp_path):
     assert evren_key_path() == tmp_path / "yok"
     assert load_evren_key() == (None, KeyStatus.MISSING)
     (tmp_path / "evren_api_key").write_text(KEY + "\n")
+    (tmp_path / "evren_api_key").chmod(0o600)  # POSIX'te anahtar dosyası yalnızca sahibince okunmalı (Windows'ta denetlenmez)
     assert evren_key_path() == tmp_path / "evren_api_key"  # systemd LoadCredential önceliklidir
     assert load_evren_key() == (KEY, KeyStatus.OK)
 

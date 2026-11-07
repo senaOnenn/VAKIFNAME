@@ -65,7 +65,7 @@ def test_rejects_api_origin_with_path_and_missing_build(tmp_path, dist):
                                   "/pasaport", "/hesap", "/yonetim", "/yonetim/icerik", "/yonetim/icerik/eser/BUR-5001",
                                   "/yonetim/icerik/eser/yeni", "/yonetim/icerik/eser/BUR-0001/yeni-kayit",
                                   "/yonetim/icerik/kayit/BUR-0001-F501", "/yonetim/icerik/ceviri/BUR-0001-F001", "/dogrula", "/sifre-yenile",
-                                  "/harita", "/rehber", "/oyun", "/oyun/sehir", "/oyun/rota/bursa", "/oyun/eser/BUR-0001",
+                                  "/harita", "/rehber", "/oyun", "/oyun/karakter", "/oyun/sehir", "/oyun/rota/bursa", "/oyun/eser/BUR-0001",
                                   "/oyun/eser/BUR-0001/rozet"])
 def test_app_routes_open_directly(dist, path):
     # Sayfa adres çubuğundan açılınca ya da yenilenince uygulama yüklenir.
