@@ -16,8 +16,8 @@ android {
         applicationId = "com.tikirsoft.vakifname"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
         manifestPlaceholders["hostName"] = siteHost
         manifestPlaceholders["defaultUrl"] = "https://$siteHost/"
     }

@@ -23,8 +23,9 @@
 
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 
+        <!-- Kendi açılışımız: ilk açılışta konum iznini ön planda sorar (bkz. LauncherActivity.java). -->
         <activity
-            android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
+            android:name=".LauncherActivity"
             android:alwaysRetainTaskState="true"
             android:exported="true"
             android:label="@string/app_name">

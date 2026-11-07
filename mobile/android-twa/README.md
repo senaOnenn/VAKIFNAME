@@ -5,6 +5,11 @@ Uygulama canlı siteyi (`https://calismalar.tikirsoft.com`) telefondaki Chrome i
 güncellemesi uygulamaya kendiliğinden gelir. Chrome yoksa uygulama içi WebView'a düşer.
 
 - Paket: `com.tikirsoft.vakifname` · minSdk 26 · targetSdk 36 · AGP 9.5 · Gradle 9.8.2
+- **Konum izni:** ilk açılışta `LauncherActivity` (bizim) izni uygulama ön plandayken bir kez sorar. Android 14+ arka
+  plandaki uygulamanın pencere açmasını engellediği için (BAL_BLOCK) kütüphanenin site açıkken açtığı izin penceresi
+  çıkmıyordu (Android 16'da görüldü, 7 Kasım). Reddedilirse bir daha sorulmaz; site şehir merkeziyle çalışır.
+- Cihazda denendi (Samsung Galaxy A07, Android 16, Chrome 156, 7 Kasım): tam ekran açılış (adres çubuğu yok),
+  Google ile giriş, konum izni ve rota konumu çalışıyor.
 - İkon ve açılış ekranı şimdilik takım logosundaki lale amblemi (`res/drawable/ic_launcher_*`, `splash.xml`); tasarım
   gelince bu dosyalar değişir.
 - Adres çubuğunun gizlenmesi için sitede `/.well-known/assetlinks.json` (kaynak: `frontend/public/.well-known/`) imza
