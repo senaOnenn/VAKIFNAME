@@ -39,11 +39,18 @@ function introSeen(): boolean {
  * ana sayfayı görür; üst menüden Keşfet, Harita, Rehber ve Oyun'a geçer.
  */
 function Home() {
-  const [seen, setSeen] = useState(introSeen)
-  const done = useCallback(() => setSeen(true), [])
+  // Açılış → tanıtım: tanıtım, açılış perdesi çözülmeye başlarken altta açılır; perde bitince kaldırılır (yumuşak geçiş).
+  const [stage, setStage] = useState<'intro' | 'leaving' | 'done'>(() => (introSeen() ? 'done' : 'intro'))
+  const leave = useCallback(() => setStage((s) => (s === 'intro' ? 'leaving' : s)), [])
+  const done = useCallback(() => setStage('done'), [])
   // İlk sahne çizildikten sonra olası ekranlar boşta önceden yüklenir (geçişte bekleme ve boş ekran olmasın).
   useEffect(() => prefetchScreens(), [])
-  return seen ? <Landing /> : <Intro onDone={done} />
+  return (
+    <>
+      {stage !== 'intro' && <Landing />}
+      {stage !== 'done' && <Intro leaving={stage === 'leaving'} onLeave={leave} onDone={done} />}
+    </>
+  )
 }
 
 /** Oyun ekranlarının eski adresleri (paylaşılmış bağlantılar, yer imleri) oyun paneline yönlenir. */

@@ -186,28 +186,6 @@ main.vk-exhpage a.vk-exh__map {
     linear-gradient(180deg, #121848, var(--vk-niche-ink) 70%);
   box-shadow: inset 0 0 0 1px rgb(201 162 75 / 0.38), inset 0 0 0 9px rgb(10 13 38 / 0.6), inset 0 0 0 10px rgb(201 162 75 / 0.16);
 }
-/* Nişin tepesinde ince girih: sekiz köşeli yıldız (yalnızca çizgi). */
-.vk-niche::before {
-  content: '';
-  position: absolute;
-  top: 1.6rem;
-  left: 50%;
-  width: 34px;
-  height: 34px;
-  transform: translateX(-50%) rotate(22.5deg);
-  border: 1px solid rgb(201 162 75 / 0.5);
-  box-shadow: 0 0 0 0 transparent;
-}
-.vk-niche::after {
-  content: '';
-  position: absolute;
-  top: 1.6rem;
-  left: 50%;
-  width: 34px;
-  height: 34px;
-  transform: translateX(-50%) rotate(67.5deg);
-  border: 1px solid rgb(201 162 75 / 0.5);
-}
 .vk-niche__shelf {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

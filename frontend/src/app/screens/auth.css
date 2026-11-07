@@ -11,15 +11,6 @@
   overflow: hidden;
   isolation: isolate;
 }
-.vk-auth__ornament {
-  position: absolute;
-  width: 120%;
-  max-width: 760px;
-  aspect-ratio: 1;
-  opacity: 0.22;
-  z-index: -1;
-  animation: vk-auth-spin 180s linear infinite;
-}
 .vk-auth__brand {
   display: grid;
   justify-items: center;
@@ -161,17 +152,6 @@
 .vk-auth__note {
   color: var(--vk-ivory-dim);
   font-size: 0.8rem;
-}
-
-@keyframes vk-auth-spin {
-  to {
-    rotate: 360deg;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .vk-auth__ornament {
-    animation: none;
-  }
 }
 
 /* Geniş ekran (web): iki sütun, sol marka, sağ kart */

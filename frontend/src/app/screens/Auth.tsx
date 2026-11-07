@@ -2,7 +2,7 @@ import { useCallback, useId, useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { GoogleButton } from '../components/GoogleButton'
-import { GoldRule, Ornament } from '../components/Ornament'
+import { GoldRule } from '../components/Ornament'
 import { LangSwitch, useLang } from '../i18n'
 import { NEXT_PARAM, safeNext } from '../RequireAccount'
 import { googleSignIn, login, register, startGuest, useAuth } from '../session'
@@ -110,7 +110,6 @@ export default function Auth() {
     <main className="vk-auth">
       <LangSwitch className="vk-auth__lang" />
       <section className="vk-auth__hero" aria-hidden="false">
-        <Ornament className="vk-auth__ornament" />
         <div className="vk-auth__brand">
           <p className="vk-auth__eyebrow">{t('Vakıf Eserleri Envanter Projesi')}</p>
           <h1 className="vk-auth__title">VAKIFNAME</h1>

@@ -104,6 +104,22 @@ describe('açılış', () => {
     expect(window.sessionStorage.getItem(INTRO_SEEN_KEY)).toBe('1')
   })
 
+  it('geçiş yumuşaktır: tanıtım açılış perdesinin altında açılır, perde çözülünce kaldırılır', async () => {
+    fakeAuthServer()
+    vi.useFakeTimers()
+    open('/')
+    expect(document.querySelector('.vk-intro__ornament')).toBeNull()  // 7 Kasım: arka plandaki yıldız kaldırıldı
+    await act(async () => {
+      vi.advanceTimersByTime(4400)
+    })
+    expect(screen.getByRole('heading', LANDING_HEADING)).toBeInTheDocument()
+    expect(document.querySelector('.vk-intro')).toHaveClass('vk-intro--leaving')
+    await act(async () => {
+      vi.advanceTimersByTime(1200)
+    })
+    expect(document.querySelector('.vk-intro')).toBeNull()
+  })
+
   it('"Geç" düğmesi açılışı atlar', async () => {
     fakeAuthServer()
     open('/')

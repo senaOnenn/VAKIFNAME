@@ -12,15 +12,13 @@ const CERTAINTY: Record<string, string> = {
   uncertain: 'Kesin değil',
 }
 
-/** Şemse: badem biçimli orta madalyon, içinde sekiz köşeli yıldız (Osmanlı cilt bezemesi). Süstür. */
+/** Şemse: badem biçimli orta madalyon ve merkez halkası (Osmanlı cilt bezemesi). Süstür. */
 export function Semse() {
   return (
     <svg className="vk-book__semse" viewBox="0 -12 120 204" aria-hidden="true" focusable="false">
       <path d="M60 4 C96 40 112 70 112 90 C112 110 96 140 60 176 C24 140 8 110 8 90 C8 70 24 40 60 4 Z" />
       <path className="vk-book__semse-in" d="M60 22 C88 50 100 74 100 90 C100 106 88 130 60 158 C32 130 20 106 20 90 C20 74 32 50 60 22 Z" />
       <g transform="translate(60 90)">
-        <rect x="-20" y="-20" width="40" height="40" />
-        <rect x="-20" y="-20" width="40" height="40" transform="rotate(45)" />
         <circle r="8" />
       </g>
       <path className="vk-book__semse-tip" d="M60 4 V-10 M60 176 V190" />
