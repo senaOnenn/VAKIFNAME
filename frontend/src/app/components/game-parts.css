@@ -29,7 +29,9 @@
   outline-offset: 4px;
   pointer-events: none;
 }
-.vk-folio a {
+.vk-folio a,
+.vk-app .vk-folio a:not(.vk-btn) {
+  /* Genel `.vk-app a` (parlak altın) parşömende okunmuyordu (mobil denetim, 7 Kasım): yaprakta mürekkep rengi. */
   color: var(--ink);
 }
 .vk-folio :focus-visible {

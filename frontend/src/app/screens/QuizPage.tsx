@@ -117,6 +117,7 @@ export default function QuizPage() {
   const [deadline, setDeadline] = useState<number | null>(null)
   const [now, setNow] = useState(() => Date.now())
   const started = useRef(-1)
+  const navRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (auth.status === 'loading' || started.current === attempt) return
@@ -180,6 +181,14 @@ export default function QuizPage() {
       setBusy(false)
     }
   }
+
+  // Cevaptan sonra açıklama ve "Sonraki soru" görünür olsun (telefonda ekranın altında, alt menünün arkasında kalıyordu).
+  const answeredHere = !!(q && steps[q.qid])
+  useEffect(() => {
+    if (!answeredHere) return
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    navRef.current?.scrollIntoView?.({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' })
+  }, [answeredHere, idx])
 
   // Süre dolunca cevapsız gönderilir (yanlış sayılır).
   useEffect(() => {
@@ -295,7 +304,7 @@ export default function QuizPage() {
           <FactSource fact={step.fact} />
         </section>
       )}
-      <div className="vk-quiz__nav">
+      <div className="vk-quiz__nav" ref={navRef}>
         {step && (last ? (
           <button type="button" className="vk-btn" onClick={() => setShowResult(true)} disabled={!result}>{t('Sonucu gör')}</button>
         ) : (

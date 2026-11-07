@@ -188,6 +188,9 @@
 }
 .vk-auth__forgot {
   justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
   margin-top: var(--vk-space-2);
   font-size: 0.85rem;
 }

@@ -58,6 +58,9 @@
 }
 /* `.vk-app a:not(.vk-btn)` (design/base.css) altın bağlantı rengini ezmek için iki sınıf. */
 main.vk-exhpage .vk-crumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px; /* dokunma alanı (WCAG 2.5.8) */
   color: var(--vk-ivory-dim);
   text-decoration: none;
 }
@@ -234,7 +237,7 @@ main.vk-exhpage a.vk-exh__map {
 }
 .vk-obj__credit {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   line-height: 1.4;
   text-align: center;
   color: rgb(201 194 174 / 0.85);

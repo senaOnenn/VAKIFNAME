@@ -375,12 +375,16 @@
   width: 7.4rem;
   height: 7.4rem;
   margin-top: 0.3rem;
-  padding: 0.9rem;
+  padding: 0.55rem;
   border: 2px solid currentColor;
   border-radius: 50%;
   box-shadow: inset 0 0 0 4px var(--vk-book-paper), inset 0 0 0 5px currentColor;
   color: var(--vk-book-lapis);
-  font: 600 0.78rem/1.25 var(--vk-font-ui);
+  font: 600 0.75rem/1.25 var(--vk-font-ui);
+  /* Kelime ortasından bölünmesin ("Kaynaklard-a"; mobil denetim, 7 Kasım). */
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
   text-align: center;
   transform: rotate(-7deg);
   opacity: 0.92;

@@ -347,7 +347,7 @@
   background: rgb(9 12 34 / 0.92);
   box-shadow: 0 0 0 1px rgb(201 162 75 / 0.35);
   color: var(--vk-ivory);
-  font: 700 0.72rem var(--vk-font-ui);
+  font: 700 0.75rem var(--vk-font-ui);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   cursor: pointer;
@@ -522,7 +522,7 @@
 /* Telefon */
 @media (max-aspect-ratio: 4/5) {
   .vk-mark__label {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     padding: 0.15rem 0.45rem;
   }
   .vk-mark__label strong {
@@ -788,7 +788,7 @@
 }
 .vk-scard__type {
   color: var(--vk-gold);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -823,7 +823,7 @@
 .vk-scard__credit {
   padding: 0 var(--vk-space-4) var(--vk-space-3);
   color: rgb(201 194 174 / 0.8);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.4;
 }
 
@@ -1174,7 +1174,9 @@
   /* 1: görsel üstte (%68), metin altta */
   .vk-ch__text--1 {
     top: auto;
-    bottom: calc(var(--vk-space-5) + env(safe-area-inset-bottom));
+    /* Sağ alttaki "Rehbere Sor" düğmesinin (60 px + 20 px) üstünde kalsın: dar telefonda "Tanıtım filmini izle" ile
+       çakışıyordu (mobil denetim, 7 Kasım). */
+    bottom: calc(88px + env(safe-area-inset-bottom));
   }
   .vk-ch--1 .vk-ch__cue {
     display: none; /* "Keşfe Başla" zaten aşağı götürür */

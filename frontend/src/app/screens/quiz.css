@@ -383,3 +383,7 @@
 .vk-quiz__result .vk-quiz__tally .is-wrong {
   color: #a3283f;
 }
+/* Kaydırınca alt menünün (telefon) arkasında kalmasın. */
+.vk-quiz__nav {
+  scroll-margin-bottom: 110px;
+}

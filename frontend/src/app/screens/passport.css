@@ -202,6 +202,9 @@
   box-shadow: 0 1px 3px rgb(138 106 34 / 0.6), inset 0 0 0 1.5px rgb(255 255 255 / 0.4);
 }
 .vk-app a.vk-book2__mname {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
   font: 600 1.05rem / 1.25 var(--vk-font-display);
   color: var(--ink);
   text-decoration: none;

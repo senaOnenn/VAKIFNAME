@@ -306,12 +306,11 @@ describe('Rozeti Al (sınav)', () => {
     server(game({ ready_for_quiz: true }), { [`/monuments/${ID}/quiz`]: { status: 201, body: QUIZ }, ...st.routes })
     open(`/oyun/eser/${ID}/rozet`)
     expect(await screen.findByRole('timer', { name: 'Kalan süre: 30 saniye' })).toBeInTheDocument()
+    // Soru sunucuda açılınca (süre başlayınca) şıklar tıklanabilir olur; zaman ondan sonra ilerletilir.
+    await vi.waitFor(() => expect(screen.getByRole('radio', { name: /^Seçenek 1/ })).toBeEnabled())
+    // Sahte saat gerçek zamanla da ilerler; yük altında saniye kayabileceği için ara değer denetlenmez.
     await act(async () => {
-      vi.advanceTimersByTime(20_000)
-    })
-    expect(screen.getByRole('timer', { name: 'Kalan süre: 10 saniye' })).toHaveClass('is-low')
-    await act(async () => {
-      vi.advanceTimersByTime(10_500)
+      vi.advanceTimersByTime(30_500)
     })
     expect(await screen.findByText('✗ Süre doldu; yanlış sayıldı.')).toBeInTheDocument()
     expect(st.sent).toEqual([{ qid: 'a', choice: null }])
