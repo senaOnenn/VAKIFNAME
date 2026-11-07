@@ -1,6 +1,9 @@
 .vk-shell {
   min-height: 100dvh;
   display: grid;
+  /* Sütun ekran genişliğini aşamaz: uzun hesap adı ya da geniş içerik sayfayı yana taşırmaz, "…" ile kısalır
+     (7 Kasım, telefon denemesi: "auto" sütunda başlık içeriği kadar genişleyip sayfayı 384 → 485 px yapıyordu). */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
 }
 .vk-shell__skip {
@@ -138,6 +141,7 @@
 }
 .vk-shell__end .vk-shell__chip {
   margin-left: 0;
+  min-width: 0; /* yazı genişliğinin altına küçülebilsin (text-overflow: ellipsis) */
 }
 .vk-shell__chip {
   text-decoration: none;
@@ -153,5 +157,12 @@
   .vk-shell__top {
     gap: var(--vk-space-3);
     padding: var(--vk-space-3) var(--vk-space-4);
+  }
+  /* Telefonda uzun hesap adı başlığı taşırmasın (7 Kasım, cihaz denemesi): logo sabit, ad "…" ile kısalır. */
+  .vk-shell__logo {
+    flex: none;
+  }
+  .vk-shell__end {
+    gap: var(--vk-space-2);
   }
 }
