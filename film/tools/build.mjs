@@ -74,10 +74,11 @@ export const SCENES = [
     voice: 'Keşfettikçe kâşifin büyür.',
     tr: 'Keşfettikçe kâşifin büyür.',
     en: 'The more you explore, the more your explorer grows.' },
-  { id: 'herkes', n: 10, min: 8, lead: 0.4,
-    voice: 'Türkçe ya da İngilizce, sesli ya da yazılı; herkes için.',
-    tr: 'Türkçe ya da İngilizce, sesli ya da yazılı; herkes için.',
-    en: 'Turkish or English, spoken or written; for everyone.' },
+  // 8 Kasım (Talha): erişilebilirlik sahnesi beş kullanıcı grubunu öne çıkarır (görme, işitme, renk körlüğü, hareket, dikkat).
+  { id: 'herkes', n: '10b', min: 12.6, lead: 0.5,
+    voice: 'Sesli anlatım, altyazı, büyük yazı ve süresiz sorularla Vakıfname herkes için.',
+    tr: 'Sesli anlatım, altyazı, büyük yazı ve süresiz sorularla VAKIFNAME herkes için.',
+    en: 'With narration, subtitles, large text and untimed questions, VAKIFNAME is for everyone.' },
   { id: 'kapanis', n: 11, min: 7.5, lead: 0.5,
     voice: 'Vakıfname ile vakıf eserlerini yerinde keşfet.',
     tr: 'VAKIFNAME ile vakıf eserlerini yerinde keşfet.',
@@ -114,7 +115,20 @@ const EKRANLAR = {
   'ziyaret': 'kayit/07-ziyaret-once.png', 'ziyaret-altin': 'kayit/07-ziyaret-altin.png',
   'defter': 'kayit/08-defter.png',
   'erisilebilirlik': 'kayit/10-erisilebilirlik.png', 'en-eser': 'kayit/10-en-eser.png', 'en-rota': 'kayit/10-en-rota.png',
+  'a11y-menu': 'kayit/11-menu.png', 'a11y-gorme': 'kayit/11-gorme.png', 'a11y-altyazi': 'kayit/11-altyazi.png',
+  'a11y-odak': 'kayit/11-odak.png', 'a11y-suresiz': 'kayit/11-suresiz.png',
+  // Renk körlüğü: aynı soru ekranı filmde döteranopi süzgecinden geçirilir (#vk-deut).
+  'soru2-deut': 'kayit/06-soru2-yanlis.png',
 }
+
+/** Erişilebilirlik sahnesindeki kullanıcı grupları ve telefondaki karşılıkları (an: sahne başından, özgün sn). */
+const GRUPLAR = [
+  { at: 0.6, ad: 'Görme engelli ve az gören', ne: 'Ekran okuyucu · Büyük yazı · Yüksek kontrast · Sesli anlatım' },
+  { at: 3.2, ad: 'İşitme engelli', ne: 'Altyazı · Büyük altyazı · Anlatımın tam metni · Yazılı soru-cevap' },
+  { at: 5.0, ad: 'Renk körlüğü', ne: 'Anlam yalnız renkle verilmez: ✓ / ✗ ve yazı' },
+  { at: 7.6, ad: 'Hareket ve el kullanımı', ne: 'Klavyeyle tam kullanım · Geniş düğmeler · Süre sınırı olmadan' },
+  { at: 10.2, ad: 'Dikkat ve anlama', ne: 'Hareketi azalt · Duraklat, cümle cümle ilerle, hızı ayarla' },
+]
 
 // --- Ses ve zamanlama -----------------------------------------------------------------------------------------------
 function audioFile(s) {
@@ -265,18 +279,23 @@ const AKIS_A = [
   ['vakfiye', 0, 'defter', 'it'],
 ]
 const AKIS_B = [
-  ['herkes', 0, 'erisilebilirlik', 'ilk'],
-  ['herkes', 3.0, 'en-eser', 'sol', { x: 274, y: 30, t: -0.35 }],
-  ['herkes', 5.2, 'en-rota', 'it'],
+  ['herkes', 0, 'a11y-menu', 'ilk'],
+  ['herkes', 1.7, 'a11y-gorme', 'sol'],
+  ['herkes', 3.2, 'a11y-altyazi', 'it'],
+  ['herkes', 5.0, 'soru2-yanlis', 'it'],
+  ['herkes', 6.1, 'soru2-deut', 'sol'],
+  ['herkes', 7.6, 'a11y-odak', 'it'],
+  ['herkes', 8.8, 'a11y-suresiz', 'sol'],
+  ['herkes', 10.2, 'dinliyor-2', 'it'],
 ]
 
-function phone(id, akis, from, to) {
+function phone(id, akis, from, to, extra = '') {
   const imgs = akis.map(([, , name], i) => `<img class="scr${i === 0 ? ' first' : ''}" id="${id}-${name}" src="assets/ekran/${name}.png" alt=""/>`).join('')
   const taps = akis
     .map(([, , , , tap], i) => (tap ? `<i class="tap" id="${id}-tap${i}" style="left:${f(tap.x * K)}px;top:${f(tap.y * K)}px"></i>${tap.konum ? `<i class="pulse" id="${id}-pulse${i}" style="left:${f(tap.x * K)}px;top:${f(tap.y * K)}px"></i>` : ''}` : ''))
     .join('')
   return `<div class="clip tel" id="${id}" data-start="${O(from)}" data-duration="${O(to - from)}" data-track-index="2">
-    <div class="tel-screen">${imgs}${taps}</div></div>`
+    <div class="tel-screen">${imgs}${taps}${extra}</div></div>`
 }
 
 // --- Parşömen (Kayıp Vakfiye) ----------------------------------------------------------------------------------------
@@ -333,8 +352,10 @@ function sceneHtml(t) {
   </section>
 
   <section ${clip('herkes')}>
-    <div class="cap"><p class="cap-k">Herkes için</p><h2 class="cap-t">Türkçe · English</h2>
-      <ul class="chips"><li>Sesli anlatım ve altyazı</li><li>Büyük yazı · Yüksek kontrast</li><li>Sorularda süre sınırı olmadan</li></ul></div>
+    <svg class="defs" width="0" height="0" aria-hidden="true"><filter id="vk-deut" color-interpolation-filters="linearRGB">
+      <feColorMatrix type="matrix" values="0.367322 0.860646 -0.227968 0 0  0.280085 0.672501 0.047413 0 0  -0.011820 0.042940 0.968881 0 0  0 0 0 1 0"/></filter></svg>
+    <div class="cap cap-a11y"><p class="cap-k">Herkes için</p><h2 class="cap-t">Erişilebilir tasarım</h2>
+      <ol class="groups">${GRUPLAR.map((g, i) => `<li class="g g-${i}"><i></i><b>${esc(g.ad)}</b><span>${esc(g.ne)}</span></li>`).join('')}</ol></div>
   </section>
 
   <section ${clip('kapanis')}>
@@ -342,7 +363,6 @@ function sceneHtml(t) {
     <img class="end-kasif ek-l" src="${kasifImg('kadin', 4)}" alt=""/><img class="end-kasif ek-r" src="${kasifImg('erkek', 4)}" alt=""/>
     <div class="i-center c-center"><p class="i-title c-title">${letters('c-letter')}</p><div class="i-rule c-rule">${GOLD_RULE}</div>
       <p class="i-tag c-tag">Vakıf eserlerini yerinde keşfet.</p></div>
-    <p class="credits">Ekranlar uygulamanın kendisinden · Bilgiler: Vakıf Eserleri Envanter Projesi yayınları · Fotoğraflar: Wikimedia Commons (künyeler uygulamada) · Harita: © OpenStreetMap katkıcıları · Ses: Zülal'in sesinden, izniyle, yapay zekâ ile üretildi · Rehber ve kâşifler canlandırmadır</p>
   </section>`
 }
 
@@ -469,11 +489,20 @@ function timelineJs(t, env) {
   })
   fadeOut('#s-gelisim .g-title, #s-gelisim .kf, #s-gelisim .stage', end(S.gelisim) - 0.45, 0.4)
 
-  // Herkes için.
+  // Herkes için: beş kullanıcı grubu sırayla; o anki grup parlar, telefonda karşılığı görünür.
   const E = S.herkes.start
   fadeIn('#s-herkes .cap-k', E + 0.15, 0.5, { y: 14 })
   fadeIn('#s-herkes .cap-t', E + 0.3, 0.7, { y: 22 })
-  L.push(`tl.fromTo("#s-herkes .chips li",{opacity:0,x:-24},{opacity:1,x:0,duration:0.45,stagger:0.35,ease:"power2.out"},${at(E + 1.0)});`)
+  GRUPLAR.forEach((g, i) => {
+    L.push(`tl.fromTo("#s-herkes .g-${i}",{opacity:0,x:-24},{opacity:1,x:0,duration:0.45,ease:"power2.out"},${at(E + g.at)});`)
+    L.push(`tl.fromTo("#s-herkes .g-${i} i",{scaleY:0},{scaleY:1,duration:0.35,ease:"power2.out"},${at(E + g.at)});`)
+    if (i > 0) {
+      L.push(`tl.to("#s-herkes .g-${i - 1}",{opacity:0.5,duration:0.35},${at(E + g.at)});`)
+      L.push(`tl.to("#s-herkes .g-${i - 1} i",{scaleY:0,duration:0.3},${at(E + g.at)});`)
+    }
+  })
+  fadeIn('#telB-badge', E + 6.1, 0.4, { y: -10 })
+  fadeOut('#telB-badge', E + 7.45, 0.3)
   fadeOut('#s-herkes .cap', end(S.herkes) - 0.45, 0.4)
 
   // Kapanış: introyla aynı yazı, iki Başkâşif.
@@ -485,8 +514,7 @@ function timelineJs(t, env) {
   fadeIn('#s-kapanis .c-tag', C + 1.3, 0.8, { y: 12 })
   fadeIn('#s-kapanis .ek-l', C + 0.6, 0.9, { x: -60 })
   fadeIn('#s-kapanis .ek-r', C + 0.6, 0.9, { x: 60 })
-  fadeIn('#s-kapanis .credits', C + 2.2, 0.8)
-  fadeOut('#s-kapanis .c-center, #s-kapanis .end-kasif, #s-kapanis .credits, #s-kapanis .i-halo', end(S.kapanis) - 0.8, 0.8)
+  fadeOut('#s-kapanis .c-center, #s-kapanis .end-kasif, #s-kapanis .i-halo', end(S.kapanis) - 0.8, 0.8)
   return scaleJs(L.join('\n'))
 }
 
@@ -566,7 +594,7 @@ function mainFilm(t, subtitles) {
       return `<audio id="ses-${s.id}" class="clip" data-start="${O(s.voiceAt)}" data-duration="${f(probe(fast))}" data-track-index="5" data-volume="1" src="assets/audio/v3/hizli/${fast.split('/').pop()}"></audio>`
     })
     .join('\n')
-  const phones = phone('telA', AKIS_A, S.urun.start, S.vakfiye.start + 3.4) + phone('telB', AKIS_B, S.herkes.start, S.herkes.start + S.herkes.dur)
+  const phones = phone('telA', AKIS_A, S.urun.start, S.vakfiye.start + 3.4) + phone('telB', AKIS_B, S.herkes.start, S.herkes.start + S.herkes.dur, '<p class="tel-badge" id="telB-badge">Renk körlüğü görünümü · döteranopi</p>')
   const subs = subtitles
     ? cuesOut(t, 'tr')
         .map((c) => `<p class="clip sub" data-start="${f(c.a)}" data-duration="${f(c.b - c.a)}" data-track-index="4"><span>${esc(c.text)}</span></p>`)

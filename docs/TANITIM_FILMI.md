@@ -112,11 +112,12 @@ Sürüm 2 eleştirisi (Talha): film ürünü değil eserleri anlatıyordu ("ür�
 | 7 | "Konumumu doğrula" → altın mühür (+100 XP) | Eserin önüne gittiğinde mührün altına döner. |
 | 8 | Mühür Defteri → yırtık parşömen birleşir, altınlaşır | Her mühür, Kayıp Vakfiye'nin bir parçası. |
 | 9 | İki kâşif, dört aşama (düz) | Keşfettikçe kâşifin büyür. |
-| 10 | Erişilebilirlik menüsü → İngilizce arayüz | Türkçe ya da İngilizce, sesli ya da yazılı; herkes için. |
+| 10 | Erişilebilirlik: beş grup (görme, işitme, renk körlüğü, hareket, dikkat) ve her birinin ekranı; renk körlüğünde aynı soru ekranı döteranopi süzgecinden | Sesli anlatım, altyazı, büyük yazı ve süresiz sorularla Vakıfname herkes için. |
 | 11 | VAKIFNAME, iki Başkâşif | Vakıfname ile vakıf eserlerini yerinde keşfet. |
 
 Sesler `~/vakifname-voice/film-v3-20261108/` (+ `-kapanis/`; tek başına "Vakıfname." Whisper denetiminden geçmedi, kapanış
-cümlesi "… ile …" biçiminde üretildi) → `film/assets/audio/v3/`. Süre ≈76 sn.
+cümlesi "… ile …" biçiminde üretildi; erişilebilirlik cümlesi `-erisim/`, dosya adı `sahne-10b.mp3`) → `film/assets/audio/v3/`.
+Süre ≈80 sn. Kapanıştaki künye satırı Talha'nın isteğiyle kaldırıldı (ses için yapay zekâ notu sitedeki film penceresinde).
 
 ```bash
 cd film && OUT=~/vakifname-video-assets/film-v3 bash tools/render.sh film altyazili

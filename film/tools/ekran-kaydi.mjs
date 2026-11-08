@@ -7,10 +7,10 @@
 //   VAKIFNAME_VISIT_SIMULATION=off VAKIFNAME_CORS_ORIGINS=http://localhost:5181 VAKIFNAME_PUBLIC_BASE_URL=http://localhost:5181 \
 //     .venv/bin/uvicorn app.main:app --port 8011                              # API (konum gerçek denetlenir; konum taklit edilir)
 //   cd frontend && VITE_API_BASE_URL=http://localhost:8011 npx vite --port 5181 --strictPort   # (+ tanıtım sayfası görsel env'leri)
-// Kayıt:  VK_EMAIL=zeynep3@ornek.org node film/tools/ekran-kaydi.mjs landing landing2 karakter rota rehber sorular ziyaret defter seviye dil
+// Kayıt:  VK_EMAIL=zeynep3@ornek.org node film/tools/ekran-kaydi.mjs landing landing2 karakter rota rehber sorular ziyaret defter seviye erisim
 // Çıktı ~/vakifname-film-demo/kayit/*.png (telefon 390 × 844 @2x, konum Ulu Cami'nin yanı). Kâşif seçimi ilk kez görünsün diye
 // her tam kayıtta yeni bir tanıtım hesabı açılır. Playwright: /opt/homebrew/lib/node_modules/playwright (Chrome kanalı).
-//   adımlar: giris (her zaman), landing, karakter, rota, rehber, sorular, ziyaret, defter, dil
+//   adımlar: giris (her zaman), landing, landing2, karakter, rota, rehber, sorular, ziyaret, defter, seviye, erisim, dil
 import { chromium } from '/opt/homebrew/lib/node_modules/playwright/index.mjs'
 import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -180,6 +180,41 @@ const STEPS = {
     await p.goto(BASE + '/oyun')
     await shot('09-oda', { wait: 2500 })
     await dump('oda')
+  },
+  async erisim() {
+    // Erişilebilirlik sahnesi: ayarlar menüsü (hepsi açık), yüksek kontrast + çok büyük yazı, büyük altyazı (sessiz),
+    // süresiz soru, klavye odağı. Ayarlar cihazda 'vakifname.a11y' kaydında tutulur.
+    const prefs = async (v) => { await p.evaluate((x) => localStorage.setItem('vakifname.a11y', JSON.stringify(x)), v); await p.reload(); await p.waitForTimeout(1800) }
+    const NORMAL = { text: 'normal', contrast: false, calm: false, untimed: false }
+    await p.goto(BASE + '/oyun/eser/BUR-0001')
+    await prefs({ text: 'xlarge', contrast: true, calm: true, untimed: true })
+    await shot('11-gorme', { wait: 600 })
+    await clickText(/^Erişilebilirlik ayarları$/)
+    await shot('11-menu', { wait: 1000 })
+    await p.keyboard.press('Escape')
+    // İşitme: büyük altyazı + sessiz (yalnızca altyazı)
+    await prefs(NORMAL)
+    await p.getByRole('button', { name: /Hikâyeyi dinle/ }).click({ force: true })
+    await p.waitForTimeout(1200)
+    for (const label of [/Büyük altyazı/, /Sessiz \(yalnızca altyazı\)/]) {
+      const box = p.getByLabel(label)
+      if (await box.count()) await box.first().check({ force: true })
+    }
+    await clickText(/^Dinle$/).catch(() => {})
+    await shot('11-altyazi', { wait: 4200 })
+    await dump('altyazi')
+    // Hareket: süresiz soru (Koza Han; ilk soru) ve klavye odağı
+    await p.goto(BASE + '/oyun/eser/BUR-0009')
+    await prefs({ ...NORMAL, untimed: true })
+    await p.keyboard.press('Tab')
+    const gorev = p.getByRole('link', { name: /Göreve Başla/ }).first()
+    await gorev.focus()
+    await p.evaluate(() => document.activeElement?.scrollIntoView({ block: 'center' }))
+    await shot('11-odak', { wait: 700 })
+    await p.goto(BASE + '/oyun/eser/BUR-0009/rozet')
+    await p.waitForSelector('[role=radio]', { timeout: 20000 })
+    await shot('11-suresiz', { wait: 1800 })
+    await prefs(NORMAL)
   },
   async dil() {
     await p.goto(BASE + '/oyun/eser/BUR-0001')

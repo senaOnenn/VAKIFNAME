@@ -963,3 +963,70 @@ body {
   bottom: 46px;
   text-align: left;
 }
+
+/* Erişilebilirlik sahnesi: beş kullanıcı grubu */
+.cap-a11y {
+  top: 140px;
+  width: 900px;
+}
+.cap-a11y .cap-t {
+  font-size: 72px;
+}
+.groups {
+  display: grid;
+  gap: 30px;
+  margin-top: 36px;
+  list-style: none;
+}
+.groups li {
+  position: relative;
+  padding-left: 28px;
+  opacity: 0;
+}
+.groups li i {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 5px;
+  border-radius: 3px;
+  background: var(--gold-bright);
+  transform-origin: 50% 0;
+}
+.groups b {
+  display: block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 46px;
+  line-height: 1.1;
+  color: var(--gold-bright);
+}
+.groups span {
+  display: block;
+  margin-top: 6px;
+  font-size: 26px;
+  line-height: 1.35;
+  color: var(--ivory-dim);
+}
+.defs {
+  position: absolute;
+}
+#telB-soru2-deut {
+  filter: url(#vk-deut);
+}
+.tel-badge {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  top: 92px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 8px 18px;
+  border: 1.5px solid #e9c874;
+  border-radius: 999px;
+  background: rgb(5 6 15 / 0.88);
+  font-size: 18px;
+  font-weight: 600;
+  color: #e9c874;
+  opacity: 0;
+}
