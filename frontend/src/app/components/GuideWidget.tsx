@@ -4,7 +4,7 @@ import { accountId, sendEngagement, type MonumentDetail } from '../api'
 import { nameOf } from '../contentLang'
 import { useLang } from '../i18n'
 import { useAuth } from '../session'
-import guidePortrait from '../../assets/guide/rehber-osmanli-320.webp'
+import guidePortrait from '../../assets/guide/rehber-kadin-320.webp'
 import { GuideDrawer } from './GuideDrawer'
 // R6.12: panelin içeriği (anlatım, ses, dudak senkronu, sohbet, fotoğraf) ilk açılışta yüklenir; ana sayfanın ilk
 // paketine girmez. Düğme ve panel çerçevesi hemen hazırdır.

@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, type ReactNode, type RefObject } from 'react'
 import { useLang } from '../i18n'
-import guidePortrait from '../../assets/guide/rehber-osmanli-320.webp'
+import guidePortrait from '../../assets/guide/rehber-kadin-320.webp'
 import './guide-drawer.css'
 
 /**
