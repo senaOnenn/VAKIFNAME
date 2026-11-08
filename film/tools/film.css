@@ -655,3 +655,311 @@ body {
 .ek-r {
   right: 40px;
 }
+
+/* ================================================================================================================
+   Sürüm 3 (8 Kasım): ürün tanıtımı — site introsu, telefon çerçevesinde gerçek ekranlar, adım başlıkları, akış çizgisi.
+   ================================================================================================================ */
+
+/* Açılış: sitedeki intro (frontend/src/app/screens/intro.css) ile aynı görünüm, film ölçeğinde. */
+#s-intro {
+  z-index: 10;
+  background: radial-gradient(120% 90% at 50% 0%, #1b2262 0%, #0f1330 55%, #090c22 100%);
+}
+.i-halo {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(40% 35% at 50% 48%, rgb(74 91 255 / 0.32), transparent 70%),
+    radial-gradient(30% 25% at 50% 52%, rgb(233 200 116 / 0.14), transparent 70%);
+}
+.i-center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 24px;
+  text-align: center;
+}
+.i-title {
+  display: flex;
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 150px;
+  line-height: 1;
+}
+.i-letter,
+.c-letter {
+  display: inline-block;
+  background: linear-gradient(100deg, #8a6a22 0%, #e9c874 40%, #fff3cf 50%, #e9c874 60%, #8a6a22 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.04em;
+}
+.i-rule,
+.i-rule svg {
+  display: block;
+  width: 360px;
+  height: 18px;
+}
+.i-tag {
+  margin: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 42px;
+  color: var(--ivory-dim);
+  letter-spacing: 0.06em;
+}
+.c-center {
+  top: 44%;
+}
+.c-title {
+  font-size: 118px;
+}
+#s-kapanis .end-kasif {
+  width: 450px;
+  height: 720px;
+}
+#s-kapanis .ek-l {
+  left: 10px;
+}
+#s-kapanis .ek-r {
+  right: 10px;
+}
+#s-kapanis .credits {
+  left: 500px;
+  right: 500px;
+}
+
+/* Telefon: uygulama ekranları 390 × 844 → 413,4 × 894,6 (K = 1,06). */
+.tel {
+  inset: auto;
+  left: 1170px;
+  top: 52px;
+  width: 441.4px;
+  height: 922.6px;
+  padding: 14px;
+  border-radius: 60px;
+  background: #05060f;
+  box-shadow:
+    0 0 0 2px rgb(201 162 75 / 0.55),
+    0 30px 80px rgb(0 0 0 / 0.6),
+    0 0 140px rgb(74 91 255 / 0.2);
+}
+.tel-screen {
+  position: relative;
+  width: 413.4px;
+  height: 894.6px;
+  overflow: hidden;
+  border-radius: 46px;
+  background: #0f1330;
+}
+.scr {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 413.4px;
+  height: auto;
+  opacity: 0;
+}
+.scr.first {
+  opacity: 1;
+}
+.tap,
+.pulse {
+  position: absolute;
+  z-index: 5;
+  border-radius: 50%;
+  opacity: 0;
+}
+.tap {
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border: 3px solid #e9c874;
+  background: rgb(233 200 116 / 0.28);
+  box-shadow: 0 0 18px rgb(233 200 116 / 0.6);
+}
+.pulse {
+  width: 90px;
+  height: 90px;
+  margin: -45px 0 0 -45px;
+  border: 4px solid #e9c874;
+}
+
+/* Adım başlıkları (sol sütun) */
+.cap {
+  position: absolute;
+  left: 150px;
+  top: 300px;
+  width: 820px;
+}
+#s-rehber .cap {
+  top: 150px;
+}
+.cap-k {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.cap-t {
+  margin: 14px 0 20px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 84px;
+  line-height: 1.02;
+  color: var(--gold-bright);
+}
+.cap-s {
+  max-width: 740px;
+  font-size: 32px;
+  line-height: 1.38;
+  color: var(--ivory-dim);
+}
+.cap-guide {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin-bottom: 28px;
+}
+.cap-guide img {
+  position: relative;
+  z-index: 1;
+  width: 200px;
+  height: 200px;
+}
+.cap-guide .guide-halo {
+  top: 50%;
+  width: 380px;
+  height: 380px;
+  margin: -190px 0 0 -190px;
+}
+
+/* Ürün akışı çizgisi */
+.rail {
+  position: absolute;
+  left: 150px;
+  top: 870px;
+  display: flex;
+  gap: 34px;
+  list-style: none;
+  font-size: 24px;
+  color: rgb(243 234 211 / 0.4);
+}
+.rail li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rail i {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+.rail li.done {
+  color: var(--gold);
+}
+.rail li.done i {
+  background: var(--gold);
+}
+.rail li.on {
+  color: var(--gold-bright);
+  font-weight: 700;
+}
+.rail li.on i {
+  width: 18px;
+  height: 18px;
+  background: var(--gold-bright);
+  box-shadow: 0 0 14px rgb(233 200 116 / 0.9);
+}
+
+/* Kayıp Vakfiye (sürüm 3) */
+.v-title,
+.g-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 78px;
+  margin: 0;
+  text-align: center;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 84px;
+  color: var(--gold-bright);
+}
+#s-vakfiye .big {
+  left: 460px;
+  top: 215px;
+  width: 1000px;
+}
+#s-vakfiye .tp:not(.tp-0) {
+  opacity: 0;
+}
+
+/* Kâşif gelişimi (düz görsel) */
+.kf {
+  position: absolute;
+  bottom: 30px;
+  width: 560px;
+  height: 820px;
+}
+.kf-kadin {
+  left: 170px;
+}
+.kf-erkek {
+  right: 170px;
+}
+.kf img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 50% 100%;
+}
+.kf .st:not(.st-0) {
+  opacity: 0;
+}
+
+/* Herkes için */
+.chips {
+  display: grid;
+  gap: 18px;
+  margin-top: 34px;
+  list-style: none;
+}
+.chips li {
+  position: relative;
+  padding-left: 44px;
+  font-size: 34px;
+  color: var(--ivory);
+}
+.chips li::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  background: var(--gold-bright);
+  transform: rotate(45deg);
+}
+
+/* Altyazı sol sütunda (telefonun üstüne binmesin) */
+.sub {
+  left: 120px;
+  right: auto;
+  width: 900px;
+  bottom: 46px;
+  text-align: left;
+}

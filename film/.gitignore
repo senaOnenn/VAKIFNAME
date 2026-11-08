@@ -10,3 +10,5 @@ assets/fonts/
 index.html
 # Ürünün kaynağından kopyalanan görseller (build.mjs copyImages)
 assets/img/
+# Uygulama ekran kayıtları (tools/ekran-kaydi.mjs → build.mjs copyImages)
+assets/ekran/

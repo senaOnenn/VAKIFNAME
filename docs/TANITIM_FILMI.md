@@ -87,3 +87,38 @@ cd film && OUT=~/vakifname-video-assets/film-v2 bash tools/render.sh film altyaz
 
 Kararlar (8 Kasım, Talha): APK indirme bağlantısı sitede **yayımlanmaz**; Buse'nin madalyon çerçevesi **kullanılmaz**;
 uygulama ikonu ve Kayıp Vakfiye yapboz tasarımı işleri **iptal** (filmde parşömen anlatımı yeterli).
+
+## Sürüm 3 (8 Kasım, Talha) — ürün tanıtımı
+
+Sürüm 2 eleştirisi (Talha): film ürünü değil eserleri anlatıyordu ("ürünü satıyoruz, eserleri değil; ürünün akışı
+önemli"); açılışta sitedeki gibi intro yoktu; 3D kâşif kabartması seviye 1, 5 ve 7'de bozuktu. Sürüm 3:
+
+- **Açılış** sitedeki introyla aynı (Intro.tsx / intro.css zamanlaması: harfler bulanıklıktan belirir, altın çizgi, "Geçmişin
+  izinde, geleceğe bir miras"; perde 4,6 sn'de çözülür, alttan ürün açılır).
+- **Tarihî bilgi yok.** Uygulamanın **gerçek ekranları** telefon çerçevesinde, dokunma halkalarıyla; solda adım başlığı
+  ve ürün akışı çizgisi (Kâşif → Rota → Rehber → Sorular → Ziyaret). Ekranlar yerel tanıtım sunucusundan
+  (`film/tools/ekran-kaydi.mjs`; canlı içeriğin kopyası, ayrı veritabanı, konum taklidi — canlıya yazılmaz).
+- **Kâşifler düz görsel** (3D yok); aşama geçişi altın parıltıyla. 3D maketler çıkarıldı (`sahne3d.js` kullanılmıyor).
+- Kayıp Vakfiye yırtık parşömeni ve ×1,15 tempo aynı.
+
+| # | Ekran | Ses (Zülal) |
+|---|---|---|
+| 1 | Site introsu | — |
+| 2 | Tanıtım sayfası (kaydırma) | Vakıfname, vakıf eserlerini keşfetmenin yeni yolu. |
+| 3 | Kâşif seçimi → Vakfiye Odası | Önce kâşifini seç. |
+| 4 | Şehir → rota → "Konumumu kullan" | Şehrini seç; rota seni en yakın eserden başlatır. |
+| 5 | Eser → rehber anlatımı (altyazılı) → rehbere soru, kaynaklı cevap | Eserin başında rehberin anlatır; merak ettiğini ona sor. |
+| 6 | Soru (30 sn) → yeşil doğru → kırmızı yanlış → bilgi mührü | Sonra bilgini sına: dört doğru, bir bilgi mührü. |
+| 7 | "Konumumu doğrula" → altın mühür (+100 XP) | Eserin önüne gittiğinde mührün altına döner. |
+| 8 | Mühür Defteri → yırtık parşömen birleşir, altınlaşır | Her mühür, Kayıp Vakfiye'nin bir parçası. |
+| 9 | İki kâşif, dört aşama (düz) | Keşfettikçe kâşifin büyür. |
+| 10 | Erişilebilirlik menüsü → İngilizce arayüz | Türkçe ya da İngilizce, sesli ya da yazılı; herkes için. |
+| 11 | VAKIFNAME, iki Başkâşif | Vakıfname ile vakıf eserlerini yerinde keşfet. |
+
+Sesler `~/vakifname-voice/film-v3-20261108/` (+ `-kapanis/`; tek başına "Vakıfname." Whisper denetiminden geçmedi, kapanış
+cümlesi "… ile …" biçiminde üretildi) → `film/assets/audio/v3/`. Süre ≈76 sn.
+
+```bash
+cd film && OUT=~/vakifname-video-assets/film-v3 bash tools/render.sh film altyazili
+# site: VAKIFNAME_FILM_DIR=~/vakifname-video-assets/film-v3 npm run build (frontend)
+```
