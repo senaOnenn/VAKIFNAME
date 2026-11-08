@@ -18,11 +18,12 @@ import { nextStop, stopsOf, tripEase, type StopModel } from './engine'
  * - Klavye: ↓ PageDown Boşluk / ↑ PageUp Shift+Boşluk / Home End; yazı alanında, düğmede (Boşluk) ve yatay oklarda
  *   karışmaz. Bilinçli tuş basışı oturma süresini beklemez (yalnızca basılı tutulan tuşun tekrarı bekler); gidiş
  *   sürerken ters yön tuşu geri çevirir. Gidişten sonra odak yeni sahnenin başlığına taşınır.
- * - Dokunmatik ekran: parmak hareketi sırasında kaydırma yereldir (müdahale yok). Parmak kalkınca dikey hareket ≥ 40 px
- *   ise yönündeki bir sonraki durağa gidilir (kısa bir kaydırma da sahne değiştirir; uzun kaydırma iki sahne atlamaz).
+ * - Dokunmatik ekran (8 Kasım): teker gibi, sabit sahnede dikey parmak hareketi sayfayı kaydırmaz, yalnızca yön verir
+ *   (tarayıcının atalet kaydırması gidişle çekişip görüntüyü titretmesin). Parmak kalkınca dikey hareket ≥ 40 px ise
+ *   yönündeki bir sonraki durağa gidilir (kısa bir kaydırma da sahne değiştirir; uzun kaydırma iki sahne atlamaz).
  *   Geçiş sırasında ekrana yalnızca dokunulursa geçiş yarıda kalmaz, hedefine tamamlanır. Yatay hareket (kart şeridi),
- *   yazı alanı ve uzun içerikli sahnenin içi karışmaz. Yedek olarak CSS scroll-snap duraklara yapıştırır
- *   (`scroll-snap-stop: always`).
+ *   yazı alanı ve uzun içerikli sahnenin içi yereldir (tarayıcı kaydırır, gidiş başlamaz). Yedek olarak CSS
+ *   scroll-snap duraklara yapıştırır (`scroll-snap-stop: always`).
  * - Hareket azaltılmışsa hiçbiri devrede değildir: düz, kilitsiz sayfa kaydırması.
  */
 const THRESHOLD = 30
@@ -255,13 +256,34 @@ export function useSceneNavigator(root: RefObject<HTMLElement | null>, model: St
       }
       if (go(dir, true, e.repeat)) e.preventDefault()
     }
-    let touch: { x: number; y: number; ignore: boolean; resume: Trip | null } | null = null
+    /**
+     * `lock`: hareketin ilk adımında bir kez karar verilir. `block`: parmak sayfayı kaydırmaz (yalnızca yön verir), gidiş
+     * parmak kalkınca oynar. `native`: tarayıcı kaydırır (yatay kart şeridi, akıştaki sahnenin içi).
+     */
+    let touch: { x: number; y: number; ignore: boolean; resume: Trip | null; lock: 'block' | 'native' | null } | null = null
     const onTouchStart = (e: TouchEvent) => {
       // Geçiş sırasında dokunuş geçişi durdurur; parmak kaydırmadan kalkarsa geçiş hedefine tamamlanır (yarıda kalmaz).
       const resume = animating ? trip : null
       stop()
       const t = e.touches[0]
-      touch = e.touches.length === 1 && t ? { x: t.clientX, y: t.clientY, ignore: editable(e.target), resume } : null
+      touch = e.touches.length === 1 && t ? { x: t.clientX, y: t.clientY, ignore: editable(e.target), resume, lock: null } : null
+    }
+    // 8 Kasım: parmak sayfayı kendisi kaydırıp kalkınca tarayıcının atalet kaydırması ile gidişin `scrollTo` adımları
+    // birkaç kare çekişiyordu (ölçüm: her kaldırışta 15–20 px geri sıçrama, ardından ~250 ms ±1–2 px titreme; görseller
+    // kaydırma konumuna bağlı olduğu için onlar da titriyordu). Teker gibi: sabit sahnede dikey hareket engellenir.
+    const onTouchMove = (e: TouchEvent) => {
+      const s0 = touch
+      const t = e.touches[0]
+      if (!s0 || s0.ignore || !t || e.touches.length !== 1) return
+      if (!s0.lock) {
+        const dy = s0.y - t.clientY
+        const dx = s0.x - t.clientX
+        if (!dx && !dy) return
+        const dir: 1 | -1 = dy > 0 ? 1 : -1
+        const local = Math.abs(dx) > Math.abs(dy) || (nextStop(model, window.scrollY, dir) === null && !atEdge(dir))
+        s0.lock = local ? 'native' : 'block'
+      }
+      if (s0.lock === 'block' && e.cancelable) e.preventDefault()
     }
     const onTouchEnd = (e: TouchEvent) => {
       const t = e.changedTouches[0]
@@ -270,7 +292,10 @@ export function useSceneNavigator(root: RefObject<HTMLElement | null>, model: St
       if (!s0 || !t || e.touches.length) return
       const dy = s0.y - t.clientY
       const dx = s0.x - t.clientX
-      if (s0.ignore || Math.abs(dy) < 40 || Math.abs(dx) > Math.abs(dy)) {
+      const swipe = !s0.ignore && Math.abs(dy) >= 40 && Math.abs(dx) <= Math.abs(dy)
+      // Sayfayı tarayıcı kaydırdıysa (akıştaki sahne) gidiş başlamaz: atalet kaydırmasıyla çekişmesin, yapışma tamamlar.
+      if (swipe && s0.lock === 'native') return
+      if (!swipe) {
         const r = s0.resume
         if (r) {
           const left = Math.abs(r.to - window.scrollY) / Math.max(1, Math.abs(r.to - r.from))
@@ -278,7 +303,8 @@ export function useSceneNavigator(root: RefObject<HTMLElement | null>, model: St
         }
         return
       }
-      go(dy > 0 ? 1 : -1, false, !s0.resume)
+      // Engellenen kaydırma bilinçli bir harekettir (atalet kuyruğu yok): tuş basışı gibi oturma süresini beklemez.
+      go(dy > 0 ? 1 : -1, false, false)
     }
     // Kaydırma çubuğu sürüklenince gidiş durur; sayfanın içine tıklamak süren geçişi yarıda bırakmaz.
     const onPointer = (e: MouseEvent) => {
@@ -288,6 +314,7 @@ export function useSceneNavigator(root: RefObject<HTMLElement | null>, model: St
     window.addEventListener('wheel', onWheel, { passive: false })
     window.addEventListener('keydown', onKey)
     window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: false })
     window.addEventListener('touchend', onTouchEnd, { passive: true })
     window.addEventListener('mousedown', onPointer)
     // Sahne içindeki bağlantılar (Keşfe Başla, Bursa, Eserleri Keşfet) aynı gidişi kullanır.
@@ -305,6 +332,7 @@ export function useSceneNavigator(root: RefObject<HTMLElement | null>, model: St
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('keydown', onKey)
       window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
       window.removeEventListener('touchend', onTouchEnd)
       window.removeEventListener('mousedown', onPointer)
       delete w.__vkGoto

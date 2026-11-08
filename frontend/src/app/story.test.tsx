@@ -4,7 +4,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { stubFetch } from '../test/fixtures'
 import { INTRO_SEEN_KEY } from './screens/Intro'
 import { resetAuthForTests } from './session'
-import { boxFor, camera, coverScale, mapPoint, MATCH, matchMove, nextStop, REST_P, SCENES, sceneMix, stopsOf, textVisibility } from './story/engine'
+import { useRef } from 'react'
+import { boxFor, camera, coverScale, mapPoint, MATCH, matchMove, nextStop, REST_P, SCENES, sceneMix, stopsOf, textVisibility, type StopModel } from './story/engine'
+import { useSceneNavigator } from './story/navigator'
 import VakifnameApp from './VakifnameApp'
 
 // Ana sayfanın 7 sahnelik hikâyesi. Kimlikler kurgusaldır (gerçek katalog kimlikleri ön yüz kaynağına girmez).
@@ -448,5 +450,57 @@ describe('altı sahne', () => {
     // Süsler yalnızca boş (aria-hidden sahnede) ışık öğeleridir: ek görsel ya da parça kopyası yok.
     expect(layer.querySelectorAll('img').length).toBeLessThanOrEqual(1)
     expect(layer.closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+})
+
+describe('dokunmatik gezinme (8 Kasım: parmak kalkınca titreme)', () => {
+  // Durağın ortası: 1350; 3. sahne akışta [2000, 3200]; sayfa sonu 4200.
+  const model: StopModel = { tops: [0, 1000, 2000], heights: [1500, 1500, 3000], pinned: [true, true, false], vh: 800, docEnd: 4200, ends: [1500, 2500, 4000] }
+  function Harness() {
+    const root = useRef<HTMLDivElement>(null)
+    useSceneNavigator(root, model)
+    return <div ref={root}><section data-scene="1" /></div>
+  }
+  const touchEv = (type: string, x: number, y: number, end = false) => {
+    const e = new Event(type, { bubbles: true, cancelable: true })
+    const pt = [{ clientX: x, clientY: y }]
+    Object.defineProperty(e, 'touches', { value: end ? [] : pt })
+    Object.defineProperty(e, 'changedTouches', { value: pt })
+    window.dispatchEvent(e)
+    return e
+  }
+  const at = (y: number) => Object.defineProperty(window, 'scrollY', { value: y, configurable: true })
+  afterEach(() => at(0))
+
+  it('sabit sahnede dikey parmak hareketi sayfayı kaydırmaz; parmak kalkınca sonraki durağa gidiş başlar', async () => {
+    const scrollTo = vi.fn()
+    vi.stubGlobal('scrollTo', scrollTo)
+    at(0)
+    render(<Harness />)
+    touchEv('touchstart', 200, 600)
+    expect(touchEv('touchmove', 202, 560).defaultPrevented).toBe(true)
+    expect(touchEv('touchmove', 204, 480).defaultPrevented).toBe(true)
+    touchEv('touchend', 204, 480, true)
+    await waitFor(() => expect(scrollTo).toHaveBeenCalled())
+    const last = scrollTo.mock.calls.at(-1)!
+    expect(last[1]).toBeGreaterThanOrEqual(0)
+    expect(last[1]).toBeLessThanOrEqual(1350)
+  })
+
+  it('yatay hareket (kart şeridi) ve akıştaki sahnenin içi tarayıcıya kalır; akışta parmak kalkınca gidiş başlamaz', async () => {
+    const scrollTo = vi.fn()
+    vi.stubGlobal('scrollTo', scrollTo)
+    at(1350)
+    render(<Harness />)
+    touchEv('touchstart', 300, 500)
+    expect(touchEv('touchmove', 200, 495).defaultPrevented).toBe(false)
+    expect(touchEv('touchmove', 150, 400).defaultPrevented).toBe(false) // karar ilk adımda verildi
+    touchEv('touchend', 150, 495, true)
+    at(2500)
+    touchEv('touchstart', 200, 600)
+    expect(touchEv('touchmove', 200, 560).defaultPrevented).toBe(false)
+    touchEv('touchend', 200, 450, true)
+    await new Promise((r) => setTimeout(r, 60))
+    expect(scrollTo).not.toHaveBeenCalled()
   })
 })
