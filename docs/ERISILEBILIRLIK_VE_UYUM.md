@@ -27,8 +27,8 @@ liste olarak da seçilebilir.
 | Yüksek kontrast | **Erişilebilirlik menüsü → Yüksek kontrast**: soluk metin tam fildişi, bağlantıların altı çizili, kalın odak halkası, görsel üstündeki metnin arkası koyu | Başlıktaki ♿ düğmesi |
 | Yazı boyutu | **Normal / Büyük (%112,5) / Çok büyük (%125)**; düzen bozulmaz, dar ekranda başlık iki satıra iner | Aynı menü |
 | Renk körlüğü | Anlam hiçbir yerde yalnız renkle verilmez: sorularda ✓/✗ ve "Doğru/Yanlış cevap" yazısı, mühürlerde durum yazısı, haritada farklı biçimler. Kırmızı-yeşil (döteranopi) ve mavi-sarı (tritanopi) taklidiyle kontrol edildi | Sorular, Mühür Defteri, harita |
-| Sesli anlatım | Eser anlatımı cihazın sesiyle (tarayıcı konuşma sentezi, TR/EN) okunur; ses yoksa altyazı okuma modunda ilerler | Eser sayfası → Rehber → Anlatım |
-| Altyazı | Anlatım metni ekranda; tanıtım filmi sessizdir, TR/EN altyazısı varsayılan açık | Rehber paneli, tanıtım filmi |
+| Sesli anlatım | Eser anlatımı ekip üyesi Zülal'in izinli ses klonuyla (TR ve EN); bir cümlenin dosyası yoksa cihazın sesi, ses hiç yoksa altyazı okuma modu | Eser sayfası → Rehber → Anlatım |
+| Altyazı | Anlatım metni ekranda; tanıtım filminde TR/EN altyazı varsayılan açık | Rehber paneli, tanıtım filmi |
 | Klavye | Bütün denetimler klavyeyle kullanılır; görünür odak halkası; Esc pencereleri kapatır ve odağı geri verir | Tüm ekranlar |
 | Hareket | İşletim sisteminin "hareketi azalt" ayarı ve menüdeki **Hareketi azalt** seçeneği animasyonları kapatır | `design/a11y.css` |
 | Süre sınırı (WCAG 2.2.1) | Sorularda 30 sn sınır var; menüdeki **Sorularda süre sınırı olmasın** ile kapatılabilir (sunucu da süre uygulamaz) | `a11y.ts`, `game_routes.py` |
@@ -67,7 +67,7 @@ Aydınlatma metni üründe: **/gizlilik** (7 Kasım'da rehber, istatistik ve cih
 | Wikimedia Commons fotoğrafları | CC BY / CC BY-SA (fotoğraf başına) | Her fotoğrafın altında fotoğrafçı, lisans ve kaynak |
 | Harita verisi | © OpenStreetMap katkıcıları, ODbL | Atıf haritanın köşesinde |
 | Yazı tipi Cormorant Garamond | SIL Open Font License 1.1 | Lisans dosyası `public/fonts/` |
-| Seslendirme | Kullanılmıyor: ekip üyesinin klon sesi 8 Kasım'da kaldırıldı; anlatım cihazın sesiyle, tanıtım filmi sessiz ve altyazılı | — |
+| Seslendirme | Ekip üyesinin (Zülal) sesi, **açık izniyle**; Chatterbox Multilingual (MIT) ile yerelde üretildi (anlatım TR/EN ve tanıtım filmi) | Tanıtım filminde "ekip üyemizin sesinden izniyle yapay zekâ ile üretildi" notu |
 | Yüz algılama modelleri | UltraFace RFB-320 ve YuNet, MIT | Dosya özetleri kodda sabit (`guide/privacy.py`) |
 | Yapay zekâ hizmetleri | Anthropic Claude (abonelik oturumu), OpenRouter ücretsiz model (sağlayıcı koşulları) | Ücretli modele geçiş kapalı (`VAKIFNAME_GUIDE_ALLOW_PAID_MODEL`) |
 

@@ -11,15 +11,15 @@ const SYSTEM = [
 ]
 
 describe('anlatıcı ses profili', () => {
-  it('Osmanlı rehberi erkek profile bağlıdır; izinli erkek kaydı henüz yok (sunucu sesi tanımsız)', () => {
-    expect(FIGURE_VOICE).toBe(VOICE_ERKEK)
+  it('8 Kasım: rehber kadın profile bağlıdır (Zülal); erkek profilin izinli kaydı yok (sunucu sesi tanımsız)', () => {
+    expect(FIGURE_VOICE).toBe(VOICE_KADIN)
     expect(VOICE_ERKEK.gender).toBe('male')
     expect(VOICE_ERKEK.serverVoice).toEqual({ tr: null, en: null })
   })
 
-  it('kadın anlatıcı profili tarayıcı sesine dayanır; klon ses kaldırıldı (8 Kasım)', () => {
+  it('kadın anlatıcı profili ve izinli sesi (zulal-1, TR + EN)', () => {
     expect(VOICE_KADIN.gender).toBe('female')
-    expect(VOICE_KADIN.serverVoice).toEqual({ tr: null, en: null })
+    expect(VOICE_KADIN.serverVoice).toEqual({ tr: 'zulal-1', en: 'zulal-1' })
     expect(pickTurkishVoice(SYSTEM)!.name).toBe('Yelda')  // varsayılan profil: eski davranış birebir
     expect(pickVoice([v('Yelda', 'tr-TR'), v('Microsoft Tolga', 'tr-TR')], 'tr')!.name).toBe('Yelda')
   })
@@ -38,12 +38,13 @@ describe('anlatıcı ses profili', () => {
   })
 
   it('bu bilgisayarın kurulu sesleriyle (Windows, R3.3 denetimi) erkek profil Tolga ve David’i seçer', () => {
+    // (Erkek profil şu an rehbere bağlı değil; profil kuralı korunur.)
     const local = [
       v('Microsoft David - English (United States)', 'en-US'), v('Microsoft Mark - English (United States)', 'en-US'),
       v('Microsoft Zira - English (United States)', 'en-US'), v('Microsoft Tolga - Turkish (Turkey)', 'tr-TR'),
       v('Google Türkçe', 'tr-TR'),
     ]
-    expect(pickVoice(local, 'tr', FIGURE_VOICE)!.name).toBe('Microsoft Tolga - Turkish (Turkey)')
-    expect(pickVoice(local, 'en', FIGURE_VOICE)!.name).toBe('Microsoft David - English (United States)')
+    expect(pickVoice(local, 'tr', VOICE_ERKEK)!.name).toBe('Microsoft Tolga - Turkish (Turkey)')
+    expect(pickVoice(local, 'en', VOICE_ERKEK)!.name).toBe('Microsoft David - English (United States)')
   })
 })

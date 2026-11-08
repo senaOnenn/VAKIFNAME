@@ -1,5 +1,5 @@
 import type { Mouth } from '../lipsync'
-import { VOICE_ERKEK, VOICE_KADIN, type VoiceProfile } from '../narratorVoice'
+import { VOICE_KADIN, type VoiceProfile } from '../narratorVoice'
 import { GuideCharacter } from './GuideCharacter'
 import { GuidePortrait, PORTRAIT_LIP_SYNC } from './GuidePortrait'
 
@@ -9,7 +9,8 @@ import { GuidePortrait, PORTRAIT_LIP_SYNC } from './GuidePortrait'
  * Her çizim kendi anlatıcı ses profiline bağlıdır (`narratorVoice.ts`): kadın karakter kadın, erkek karakter erkek sesi.
  */
 const FIGURES: Record<'portrait' | 'legacy', { Component: typeof GuidePortrait; lipSync: boolean; voice: VoiceProfile }> = {
-  portrait: { Component: GuidePortrait, lipSync: PORTRAIT_LIP_SYNC, voice: VOICE_ERKEK },
+  // 8 Kasım: rehber kadın olarak yeniden çizilecek; ses Zülal'in (TR + EN), tarayıcı yedeğinde kadın sesleri.
+  portrait: { Component: GuidePortrait, lipSync: PORTRAIT_LIP_SYNC, voice: VOICE_KADIN },
   legacy: { Component: GuideCharacter, lipSync: true, voice: VOICE_KADIN },
 }
 const ACTIVE: keyof typeof FIGURES = 'portrait'

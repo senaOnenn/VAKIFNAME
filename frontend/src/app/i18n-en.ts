@@ -644,7 +644,7 @@ export const EN: Record<string, string> = {
   'Bağlantı yok: harita yerine ana yollar gösteriliyor.': 'No connection: showing main roads instead of the map.',
   'Tanıtım filmini izle': 'Watch the intro film',
   'Tanıtım filmi': 'Intro film',
-  'Film sessizdir; anlatım altyazıdadır. Rehber bir canlandırmadır.': 'The film is silent; the narration is in the subtitles. The guide is a dramatisation.',
+  'Seslendirme, ekip üyemizin sesinden izniyle yapay zekâ ile üretildi. Rehber bir canlandırmadır.': 'The narration was generated with AI from a team member\'s voice, with their permission. The guide is a dramatisation.',
 
   // Oyun paneli ve ana bölümler (Görev 34)
   'Oyun': 'Game',

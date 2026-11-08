@@ -11,8 +11,8 @@
  *    (anlatım yine çalışır), ses hiç yoksa altyazı okuma modunda ilerler.
  *
  * Kural: yalnızca izinli kayıttan üretilmiş ses kullanılır; gerçek tarihî kişilerin sesi taklit edilmez.
- * 8 Kasım (Talha): ekip üyesinin klon sesi (`zulal-1`) kaldırıldı; hiçbir profilde sunucu sesi yok, anlatım tarayıcı
- * sesi ve altyazıyla sürer.
+ * 8 Kasım (Talha): rehberin sesi Türkçe ve İngilizce anlatımda Zülal'in izinli klon sesidir (`zulal-1`); rehber kadın
+ * olarak yeniden çizilecek, o zamana dek portre de bu sesle konuşur (tarayıcı yedeğinde kadın sistem sesleri).
  */
 export type VoiceProfile = {
   id: 'kadin' | 'erkek'
@@ -23,11 +23,11 @@ export type VoiceProfile = {
   browserPrefer: { tr: RegExp; en: RegExp }
 }
 
-/** Önceki rehber (SVG karakter): kadın anlatıcı. Sunucu sesi yok (8 Kasım); tarayıcı yedeğinde kadın sistem sesleri. */
+/** Rehber (kadın anlatıcı): ekipten izinli kadın sesi `zulal-1` (30 Ekim; 8 Kasım: TR + EN). Tarayıcı yedeği kadın sesleri. */
 export const VOICE_KADIN: VoiceProfile = {
   id: 'kadin',
   gender: 'female',
-  serverVoice: { tr: null, en: null },
+  serverVoice: { tr: 'zulal-1', en: 'zulal-1' },
   browserPrefer: { tr: /yelda|emel|filiz|female|kadın/i, en: /^$/ },
 }
 
