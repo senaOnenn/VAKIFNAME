@@ -1,24 +1,41 @@
-// Tanıtım filmi derleyicisi (Faz 9; senaryo docs/TANITIM_FILMI.md, 30 Ekim onaylı).
+// Tanıtım filmi derleyicisi (Faz 9; senaryo docs/TANITIM_FILMI.md, 30 Ekim onaylı; 8 Kasım sürüm 2: 1,15 hız, 3D eser
+// maketleri, kadın rehber, Buse'nin kâşifleri ve gelişimi, yırtık parşömen vakfiye).
 //
 //   node film/tools/build.mjs [film|altyazili|dongu|dongu-mobil]   → film/index.html (o sürüm; HyperFrames projede tek kök
 //                                          kompozisyon ister) + film/out/tanitim-tr.vtt, tanitim-en.vtt. Render: tools/render.sh
 //
 // Çizimler ürünün kendi bileşenlerinden gelir (frontend/scripts/film-art.tsx, Vite SSR). Sahne süreleri ses dosyalarından
-// (film/assets/audio/sahne-N.wav|mp3; repoya girmez) ölçülür; ses yoksa tahmini sürelerle sessiz taslak çıkar. Ağız
-// senkronu ürünün kuralıyla (lipsync.ts) ses süresine yayılır. Tarihî cümleler onaylı kayıtlardan aynen alınır; İngilizce
-// altyazıdaki tarihî cümleler kitabın İngilizce bölümündendir (makine çevirisi yok).
+// (film/assets/audio/sahne-N.wav|mp3; repoya girmez) ölçülür; ses yoksa tahmini sürelerle sessiz taslak çıkar. Tarihî
+// cümleler onaylı kayıtlardan aynen alınır; İngilizce altyazıdaki tarihî cümleler kitabın İngilizce bölümündendir.
+//
+// Hız (SPEED): senaryo ve zaman çizelgesi özgün saniyelerle yazılır; çıktıda bütün konum/süreler SPEED'e bölünür (O(),
+// scaleJs). İç içe çizelge + timeScale kullanılmaz: HyperFrames'in seek'i iç içe çizelgede sıfır anlı set'leri bozuyor
+// (8 Kasım denemesi). Ses atempo ile hızlanır (perde değişmez). 3D sahneler: tools/sahne3d.js.
 import { execFileSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { kozaHan, osmanGaziTurbesi, uluCami } from './monuments.mjs'
+import { parchment, scatter } from './parsomen.mjs'
 
 const FILM = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ROOT = resolve(FILM, '..')
 const FRONT = join(ROOT, 'frontend')
 const AUDIO = join(FILM, 'assets', 'audio')
+const IMG = join(FILM, 'assets', 'img')
 const W = 1920
 const H = 1080
+/** Film hızı (8 Kasım: öncekinden 1,15 kat hızlı). */
+const SPEED = 1.15
+/** Özgün saniye → film saniyesi. */
+const O = (x) => Number((x / SPEED).toFixed(3))
+/** Kâşif gelişimi sahnesinde aşama geçişleri (sahne başından, özgün saniye). */
+const FLIPS = [1.9, 3.9, 5.9]
+const STAGES = [
+  ['1', 'Çırak Kâşif'],
+  ['3', 'Gezgin Seyyah'],
+  ['5', 'Vakıf Muhafızı'],
+  ['7', 'Başkâşif'],
+]
 
 // --- Senaryo -------------------------------------------------------------------------------------------------------
 // voice: seslendirilen metin (okunuşu yazıyla); tr: altyazı (kayıttaki cümle aynen); en: İngilizce altyazı.
@@ -54,6 +71,11 @@ export const SCENES = [
     tr: "Bugünkü türbeyi 1863'te Sultan Abdülaziz yeniden yaptırmıştır. Eserin önüne gittiğinde mührün altına döner.",
     // Kitap, Cilt II s. 119.
     en: 'The tomb that stands today was rebuilt by Sultan Abdulaziz in 1863. Go to the monument and your seal turns gold.' },
+  // 8 Kasım: kâşif gelişimi (Buse'nin dört aşaması; XP dinleme, bilgi ve ziyaretten gelir, bkz. backend/app/xp.py).
+  { id: 10, min: 9, lead: 0.6, kasif: true,
+    voice: 'Keşfettikçe kâşifin büyür; çıraktan başkâşife yükselir.',
+    tr: 'Keşfettikçe kâşifin büyür; çıraktan başkâşife yükselir.',
+    en: 'The more you explore, the more your explorer grows, from apprentice to master explorer.' },
   { id: 8, min: 8, lead: 0.6,
     voice: 'Her eser bir parça. Hepsini ziyaret edersen vakfiye altın olur.',
     tr: 'Her eser bir parça. Hepsini ziyaret edersen vakfiye altın olur.',
@@ -85,6 +107,44 @@ export function timing() {
     t += dur
     return out
   })
+}
+
+/** Hızlandırılmış ses (atempo; perde değişmez). Kaynaktan yeniyse yeniden üretilmez. Çıktı assets/audio/hizli/. */
+function fastAudio(file) {
+  const dir = join(AUDIO, 'hizli')
+  mkdirSync(dir, { recursive: true })
+  const out = join(dir, file.split('/').pop().replace(/\.\w+$/, '.mp3'))
+  if (!existsSync(out) || statSync(out).mtimeMs < statSync(file).mtimeMs) {
+    execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', file, '-filter:a', `atempo=${SPEED}`, '-c:a', 'libmp3lame', '-q:a', '2', out])
+  }
+  return out
+}
+
+/** Ses zarfı (0–1, `step` saniyelik pencereler, üç pencerelik ortalama): rehberin konuşurken parlayan halesi için. */
+function envelope(file, step = 0.1) {
+  const sr = 8000
+  const raw = execFileSync('ffmpeg', ['-loglevel', 'error', '-i', file, '-ac', '1', '-ar', String(sr), '-f', 's16le', '-'], { maxBuffer: 64 << 20 })
+  const n = Math.floor(sr * step)
+  const rms = []
+  for (let i = 0; i + n * 2 <= raw.length; i += n * 2) {
+    let sum = 0
+    for (let j = 0; j < n; j++) {
+      const v = raw.readInt16LE(i + j * 2) / 32768
+      sum += v * v
+    }
+    rms.push(Math.sqrt(sum / n))
+  }
+  const smooth = rms.map((_, i) => (rms[Math.max(0, i - 1)] + rms[i] + rms[Math.min(rms.length - 1, i + 1)]) / 3)
+  const peak = Math.max(...smooth, 1e-6)
+  return smooth.map((v) => Math.min(1, v / peak))
+}
+
+/** Görseller ürünün kaynağından kopyalanır (repoya ikinci kez girmez): Buse'nin kâşifleri ve kadın rehber. */
+function copyImages() {
+  mkdirSync(IMG, { recursive: true })
+  const kasif = join(FRONT, 'src/assets/kasif')
+  for (const name of readdirSync(kasif).filter((x) => x.endsWith('.webp'))) copyFileSync(join(kasif, name), join(IMG, name))
+  copyFileSync(join(FRONT, 'src/assets/guide/rehber-kadin-640.webp'), join(IMG, 'rehber.webp'))
 }
 
 // --- Yardımcılar ----------------------------------------------------------------------------------------------------
@@ -136,25 +196,13 @@ async function loadArt() {
   const vite = await createServer({ root: FRONT, logLevel: 'error', server: { middlewareMode: true, hmr: false, watch: null }, appType: 'custom' })
   try {
     const mod = await vite.ssrLoadModule(join(FRONT, 'scripts/film-art.tsx'))
-    const art = mod.art()
-    const seq = Object.fromEntries(SCENES.map((s) => [s.id, mod.mouthSequence(s.voice)]))
-    return { art, seq }
+    return mod.art()
   } finally {
     await vite.close()
   }
 }
 
 // --- Sahne işaretlemesi ---------------------------------------------------------------------------------------------
-function guideSvg(art) {
-  // Göz kırpma: açık gözler bir grupta, kapalı gözler ayrı çizgiler (film sabit zamanlarda değiştirir).
-  let svg = art.guide.replace(/<g><ellipse cx="(125|175)" cy="170"[\s\S]*?<\/g>/g, (m) => `<g class="vkf-eye-open">${m}</g>`)
-  const closed = [125, 175]
-    .map((cx) => `<path class="vkf-eye-closed" d="M${cx - 12} 171 Q${cx} 178 ${cx + 12} 171" stroke="#2a1a12" stroke-width="3.4" stroke-linecap="round" fill="none" style="opacity:0"/>`)
-    .join('')
-  svg = svg.replace('<path class="vk-gchar__brow"', closed + '<path class="vk-gchar__brow"')
-  return svg.replace('class="vk-gchar ', 'class="vk-gchar vkf-guide ')
-}
-
 // Batıdaki yakın şehirlerin (İzmir, Manisa) etiketleri çakışmasın.
 const LABEL = { izmir: { dx: -10, dy: 22, anchor: 'end' }, manisa: { dx: -10, dy: -10, anchor: 'end' } }
 
@@ -175,7 +223,7 @@ function turkeyMap(art, id) {
     </g></g></svg>`
 }
 
-function bursaMap(id, withRoute = true) {
+function bursaMap(id, withRoute = true, kasif = false) {
   const p = (m) => bursa(m.lat, m.lng)
   const [s, a, b, c] = [p(MON.start), p(MON.ulu), p(MON.koza), p(MON.osman)]
   const route = `M${s.x} ${s.y} L${a.x} ${a.y} L${b.x} ${b.y} L${c.x} ${c.y}`
@@ -186,6 +234,10 @@ function bursaMap(id, withRoute = true) {
   return `<svg class="map" id="${id}" viewBox="0 0 ${W} ${H}"><g class="bursa-roads">${roads(bursa)}</g>
     ${withRoute ? `<path class="route draw" d="${route}" pathLength="1"/>
     <circle class="you" cx="${s.x}" cy="${s.y}" r="11"/>
+    ${kasif ? `<g class="you-kasif"><clipPath id="${id}-kc"><circle cx="${s.x}" cy="${s.y - 96}" r="58"/></clipPath>
+      <path d="M${s.x - 13} ${s.y - 36} L${s.x} ${s.y - 16} L${s.x + 13} ${s.y - 36} Z" fill="#E9C874"/>
+      <circle cx="${s.x}" cy="${s.y - 96}" r="63" fill="#0f1330" stroke="#E9C874" stroke-width="5"/>
+      <image href="assets/img/kadin-1-portre.webp" x="${s.x - 58}" y="${s.y - 154}" width="116" height="116" clip-path="url(#${id}-kc)"/></g>` : ''}
     ${pin(a, 1, MON.ulu.name, -1)}${pin(b, 2, MON.koza.name)}${pin(c, 3, MON.osman.name, -1)}` : ''}</svg>`
 }
 
@@ -202,22 +254,28 @@ function visitInset() {
     <text class="ring-label" x="230" y="96" text-anchor="middle">50 m</text></svg>`
 }
 
+// Parşömenler bir kez üretilir (aynı tohum: Koza Han'daki küçük vakfiye ile büyük vakfiye aynı yırtığı taşır).
+const PM6 = parchment({ id: 'pm6', holes: true })
+const PV8 = parchment({ id: 'pv8', holes: true, whole: true })
+const kasifImg = (who, n) => `assets/img/${who}-${n}-boy.webp`
+
 function sceneHtml(t, art) {
   const S = Object.fromEntries(t.map((s) => [s.id, s]))
-  const clip = (id, extra = '') => `class="clip scene${extra}" id="s${id}" data-start="${f(S[id].start)}" data-duration="${f(S[id].dur)}" data-track-index="1"`
-  const title = (txt) => `<h2 class="mon-title">${esc(txt)}</h2>`
+  const clip = (id, extra = '') => `class="clip scene${extra}" id="s${id}" data-start="${O(S[id].start)}" data-duration="${O(S[id].dur)}" data-track-index="1"`
+  const title = (txt, extra = '') => `<h2 class="mon-title${extra}">${esc(txt)}</h2>`
   const source = (txt) => `<p class="source">Kaynak: ${esc(txt)}</p>`
+  const canvas = (id) => `<canvas id="${id}" class="g3d" width="${W}" height="${H}"></canvas>`
   return `
-  <section ${clip(1)}><div class="orn">${uniq(art.ornament, 'o1').replace(/<(polygon|circle)/g, '<$1 pathLength="1" class="draw"')}</div></section>
+  <section ${clip(1)}>${canvas('g1')}</section>
 
   <section ${clip(2)}>${turkeyMap(art, 'tr2')}<p class="kicker">Vakıf Eserleri Envanter Projesi</p></section>
 
-  <section ${clip(3)}>${turkeyMap(art, 'tr3')}${bursaMap('bm3')}</section>
+  <section ${clip(3)}>${turkeyMap(art, 'tr3')}${bursaMap('bm3', true, true)}</section>
 
   <section ${clip(4)}>
+    ${canvas('g4')}
     ${title(MON.ulu.name)}
     <div class="medal"><div class="medal-ring"><span>Y.B.</span></div><p><small>Eserin banisi</small>Yıldırım Bayezid</p></div>
-    <svg class="mon" viewBox="0 0 1000 560">${uluCami()}</svg>
     ${source('Bursa Vakıf Eserleri, Cilt I · s. 20, 25')}
   </section>
 
@@ -228,45 +286,77 @@ function sceneHtml(t, art) {
   </section>
 
   <section ${clip(6)}>
+    ${canvas('g6')}
     ${title(MON.koza.name)}
-    <svg class="mon" viewBox="0 0 1000 560">${kozaHan()}</svg>
-    <div class="mini-puzzle">${uniq(art.puzzle.missing, 'pm6')}<div class="pz-one">${uniq(art.puzzle.found, 'pf6')}</div></div>
+    <div class="mini">${PM6.svg}</div>
     ${source('Bursa Vakıf Eserleri, Cilt II · s. 11')}
   </section>
 
   <section ${clip(7)}>
+    ${canvas('g7')}
     ${title(MON.osman.name)}
-    <svg class="mon" viewBox="0 0 1000 560">${osmanGaziTurbesi()}</svg>
     <div class="visit">${visitInset()}</div>
     <div class="seal-v"><div class="sv-k">${uniq(art.seals.knowledge, 'sk7')}</div><div class="sv-g">${uniq(art.seals.gold, 'sg7')}<i class="shine"></i></div><p>Altın mühür</p></div>
     ${source('Bursa Vakıf Eserleri, Cilt II · s. 120')}
   </section>
 
+  <section ${clip(10)}>
+    <div class="flash"></div>
+    ${canvas('g10')}
+    ${title('Çıraktan Başkâşife', ' center')}
+    <div class="stage">
+      ${STAGES.map(([lv, name], i) => `<p class="stage-name st-${i}"><small>Seviye ${lv}</small>${esc(name)}</p>`).join('')}
+      <ol class="stage-track">${STAGES.map((_, i) => `<li class="sn-${i}"></li>`).join('')}</ol>
+    </div>
+  </section>
+
   <section ${clip(8)}>
-    <h2 class="mon-title center">Kayıp Vakfiye</h2>
-    <div class="puzzle"><div class="pz-base">${uniq(art.puzzle.missing, 'pm8')}</div><div class="pz-found">${uniq(art.puzzle.found, 'pf8')}</div><div class="pz-gold">${uniq(art.puzzle.gold, 'pg8')}</div></div>
+    ${title('Kayıp Vakfiye', ' center')}
+    <div class="big">${PV8.svg}</div>
   </section>
 
   <section ${clip(9)}>${turkeyMap(art, 'tr9')}
+    <img class="end-kasif ek-l" src="${kasifImg('kadin', 4)}" alt=""/><img class="end-kasif ek-r" src="${kasifImg('erkek', 4)}" alt=""/>
     <div class="end"><p class="wordmark">VAKIFNAME</p><div class="rule">${art.rule}</div><p class="tagline">Vakıf eserlerini yerinde keşfet.</p></div>
-    <p class="credits">Bilgiler: Vakıf Eserleri Envanter Projesi yayınları · Harita verisi: © OpenStreetMap katkıcıları · Ses: Zülal'in sesinden, izniyle, yapay zekâ ile üretildi · Rehber bir canlandırmadır</p>
+    <p class="credits">Bilgiler: Vakıf Eserleri Envanter Projesi yayınları · Harita verisi: © OpenStreetMap katkıcıları · Eser modelleri temsilîdir · Ses: Zülal'in sesinden, izniyle, yapay zekâ ile üretildi · Rehber ve kâşifler canlandırmadır</p>
   </section>`
 }
 
-// --- Zaman çizelgesi (GSAP) -----------------------------------------------------------------------------------------
-function timelineJs(t, seq) {
+/** 3D sahnelerin ayarı (sahne3d.js okur); zamanlar film saniyesidir. */
+function config3d(t) {
+  const S = Object.fromEntries(t.map((s) => [s.id, s]))
+  const at = (id) => ({ start: O(S[id].start), dur: O(S[id].dur) })
+  return {
+    scenes: [
+      { canvas: 'g1', kind: 'trio', ...at(1), w: W, h: H },
+      // Maket ekranın solunda (sağda rehber / vakfiye / ziyaret): görüş merkezi kaydırılır (center, piksel).
+      { canvas: 'g4', kind: 'ulu', ...at(4), w: W, h: H, center: [610, 560] },
+      { canvas: 'g6', kind: 'koza', ...at(6), w: W, h: H, center: [600, 545] },
+      { canvas: 'g7', kind: 'turbe', ...at(7), w: W, h: H, center: [600, 560] },
+      {
+        canvas: 'g10', kind: 'kasif', ...at(10), w: W, h: H, spread: 5.2, flips: FLIPS.map(O),
+        images: { kadin: [1, 2, 3, 4].map((n) => kasifImg('kadin', n)), erkek: [1, 2, 3, 4].map((n) => kasifImg('erkek', n)) },
+      },
+    ],
+  }
+}
+
+// --- Zaman çizelgesi (GSAP; özgün saniyelerle yazılır, çıktıda SPEED'e bölünür) ----------------------------------------
+/** Üretilen çizelgedeki süre ve aralıkları film saniyesine çevirir (konumlar zaten at() ile çevrilir). */
+const scaleJs = (js) => js.replace(/\b(duration|stagger):(-?[0-9.]+)/g, (_, k, v) => `${k}:${f(Number(v) / SPEED)}`)
+
+function timelineJs(t, env4) {
   const S = Object.fromEntries(t.map((s) => [s.id, s]))
   const L = []
-  const at = (n) => f(n)
+  const at = (n) => O(n)
   const fadeIn = (sel, t0, d = 0.6, from = {}) => L.push(`tl.fromTo(${JSON.stringify(sel)},{opacity:0,...${JSON.stringify(from)}},{opacity:1,y:0,x:0,scale:1,duration:${d},ease:"power2.out"},${at(t0)});`)
   const fadeOut = (sel, t0, d = 0.5) => L.push(`tl.to(${JSON.stringify(sel)},{opacity:0,duration:${d},ease:"power1.in"},${at(t0)});`)
   const draw = (sel, t0, d, stagger = 0) => L.push(`tl.to(${JSON.stringify(sel)},{strokeDashoffset:0,duration:${d},ease:"power1.inOut",stagger:${stagger}},${at(t0)});`)
   const end = (s) => s.start + s.dur
 
-  // 1 — girih çizilir.
-  draw('#s1 .draw', S[1].start + 0.2, 2.6, 0.18)
-  L.push(`tl.fromTo("#s1 .orn",{scale:0.92,rotation:-6},{scale:1,rotation:0,duration:${f(S[1].dur)},ease:"none"},${at(S[1].start)});`)
-  fadeOut('#s1 .orn', end(S[1]) - 0.6, 0.6)
+  // 1 — üç eserin maketi sırayla yükselir (3D; sahne3d.js). Burada yalnızca giriş/çıkış.
+  fadeIn('#g1', S[1].start, 0.8)
+  fadeOut('#g1', end(S[1]) - 0.6, 0.6)
 
   // 2 — Türkiye haritası, envanter şehirleri sırayla yanar (yayın yılı sırası: Hatay, Konya, Bursa, Kütahya, İzmir, Manisa).
   draw('#tr2 .tr-land', S[2].start, 1.8)
@@ -276,44 +366,48 @@ function timelineJs(t, seq) {
     fadeIn(`#tr2 .city-${slug}`, S[2].start + 2.0 + i * 0.55, 0.5, { scale: 0.4, transformOrigin: '50% 50%' })
   })
 
-  // 3 — Bursa'ya yakınlaşma, yollar ve rota.
+  // 3 — Bursa'ya yakınlaşma, yollar, kâşif (Çırak) ve rota.
   L.push(`tl.set("#tr3 .tr-land",{strokeDashoffset:0},0);`)
   L.push(`tl.fromTo("#tr3 .tr-zoom",{scale:1},{scale:7,svgOrigin:"178 137",duration:1.6,ease:"power2.in"},${at(S[3].start)});`)
   fadeOut('#tr3', S[3].start + 1.0, 0.6)
   fadeIn('#bm3 .bursa-roads', S[3].start + 1.1, 0.8, { scale: 0.85, transformOrigin: '50% 50%' })
   fadeIn('#bm3 .you', S[3].start + 1.6, 0.4)
+  fadeIn('#bm3 .you-kasif', S[3].start + 1.7, 0.6, { y: 24 })
   draw('#bm3 .route', S[3].start + 2.0, 2.4)
   ;[1, 2, 3].forEach((n, i) => fadeIn(`#bm3 .pin-${n}`, S[3].start + 2.3 + i * 0.7, 0.45, { scale: 0.3, transformOrigin: '50% 50%' }))
 
-  // 4 — Ulu Cami: silüet çizilir, rehber konuşur, banisi madalyonu, kaynak.
+  // 4 — Ulu Cami: 3D maket yükselir; rehber (sabit görsel) konuşurken halesi sesle parlar; banisi madalyonu, kaynak.
+  fadeIn('#g4', S[4].start, 0.5)
   fadeIn('#s4 .mon-title', S[4].start + 0.2, 0.7, { y: 24 })
-  draw('#s4 .mon .ln', S[4].start + 0.2, 2.2, 0.012)
-  fadeIn('#s4 .mon circle', S[4].start + 2.3, 0.5)
   fadeIn('#s4 .medal', S[4].start + 2.6, 0.7, { scale: 0.7, transformOrigin: '50% 50%' })
   fadeIn('#s4 .source', S[4].start + 3.2, 0.6, { y: 10 })
   fadeIn('.guide-wrap', S[4].start + 0.3, 0.8, { x: 60 })
   fadeOut('.guide-wrap', end(S[4]) - 0.6, 0.5)
+  env4.forEach((v, i) => {
+    L.push(`tl.to(".guide-halo",{opacity:${f(0.22 + 0.78 * v)},scale:${f(1 + 0.07 * v)},duration:0.1,ease:"none"},${at(S[4].voiceAt + i * 0.1)});`)
+  })
+  L.push(`tl.to(".guide-halo",{opacity:0.22,scale:1,duration:0.4},${at(S[4].voiceAt + S[4].voiceDur)});`)
 
-  // 5 — soru, doğru şık, bilgi mührü basılır.
+  // 5 — soru, doğru şık (üründeki gibi yeşil ✓), bilgi mührü basılır.
   fadeIn('#s5 .quiz', S[5].start + 0.2, 0.6, { y: 30 })
   L.push(`tl.fromTo("#s5 .quiz-c li",{opacity:0,x:-20},{opacity:1,x:0,duration:0.4,stagger:0.15},${at(S[5].start + 0.7)});`)
-  L.push(`tl.to("#s5 .ok",{backgroundColor:"rgba(201,162,75,0.28)",borderColor:"#E9C874",duration:0.4},${at(S[5].start + 2.2)});`)
+  L.push(`tl.to("#s5 .ok",{backgroundColor:"rgba(63,174,114,0.22)",borderColor:"#3fae72",duration:0.4},${at(S[5].start + 2.2)});`)
   fadeIn('#s5 .ok b', S[5].start + 2.3, 0.3, { scale: 0.2 })
   L.push(`tl.fromTo("#s5 .seal-k",{opacity:0,scale:2.4,rotation:-18},{opacity:1,scale:1,rotation:0,duration:0.8,ease:"back.out(1.6)"},${at(S[5].start + 3.2)});`)
 
-  // 6 — Koza Han: silüet, parça vakfiyeye uçar.
+  // 6 — Koza Han: 3D maket; küçük vakfiyede Ulu Cami'nin parçası yerinde, yenisi maketten uçup yerine oturur.
+  fadeIn('#g6', S[6].start, 0.5)
   fadeIn('#s6 .mon-title', S[6].start + 0.2, 0.7, { y: 24 })
-  draw('#s6 .mon .ln', S[6].start + 0.2, 2.2, 0.01)
-  fadeIn('#s6 .mon circle', S[6].start + 2.3, 0.5)
-  fadeIn('#s6 .mini-puzzle', S[6].start + 1.4, 0.6)
-  L.push(`tl.set("#s6 .pz-one .vk-piece",{opacity:0},0);`)
-  L.push(`tl.fromTo("#s6 .pz-one .vk-piece:nth-of-type(2)",{opacity:0,x:-520,y:120,scale:1.6},{opacity:1,x:0,y:0,scale:1,duration:1.1,ease:"power3.out"},${at(S[6].start + 3.0)});`)
+  fadeIn('#s6 .mini', S[6].start + 1.4, 0.6)
+  {
+    const p = PM6.pieces[1]
+    L.push(`tl.fromTo("#s6 .tp-1",{opacity:0,x:-1250,y:180,rotation:-30,scale:1.5,svgOrigin:"${p.cx} ${p.cy}"},{opacity:1,x:0,y:0,rotation:0,scale:1,duration:1.2,ease:"power3.out"},${at(S[6].start + 3.0)});`)
+  }
   fadeIn('#s6 .source', S[6].start + 2.6, 0.6, { y: 10 })
 
-  // 7 — Osman Gazi Türbesi: ziyaretçi 50 m halkasına girer, mühür altına döner.
+  // 7 — Osman Gazi Türbesi: 3D maket; ziyaretçi 50 m halkasına girer, mühür altına döner.
+  fadeIn('#g7', S[7].start, 0.5)
   fadeIn('#s7 .mon-title', S[7].start + 0.2, 0.7, { y: 24 })
-  draw('#s7 .mon .ln', S[7].start + 0.2, 2.2, 0.012)
-  fadeIn('#s7 .mon circle', S[7].start + 2.3, 0.5)
   fadeIn('#s7 .visit', S[7].start + 1.0, 0.7, { scale: 0.85, transformOrigin: '50% 50%' })
   L.push(`tl.fromTo("#s7 .visitor",{x:190,y:-150},{x:30,y:-20,duration:2.4,ease:"power1.inOut"},${at(S[7].start + 1.6)});`)
   L.push(`tl.to("#s7 .ring",{stroke:"#E9C874",strokeWidth:5,duration:0.4},${at(S[7].start + 3.9)});`)
@@ -322,46 +416,48 @@ function timelineJs(t, seq) {
   L.push(`tl.fromTo("#s7 .shine",{xPercent:-160},{xPercent:160,duration:1.1,ease:"power1.inOut"},${at(S[7].start + 4.9)});`)
   fadeIn('#s7 .source', S[7].start + 2.6, 0.6, { y: 10 })
 
-  // 8 — Kayıp Vakfiye: parçalar yerine oturur, sonra altınlaşır.
-  fadeIn('#s8 .mon-title', S[8].start + 0.2, 0.6, { y: 20 })
-  fadeIn('#s8 .pz-base', S[8].start + 0.3, 0.6)
-  L.push(`tl.set("#s8 .pz-found .vk-piece, #s8 .pz-gold .vk-piece",{opacity:0},0);`)
-  L.push(`tl.fromTo("#s8 .pz-found .vk-piece",{opacity:0,scale:1.3,transformOrigin:"50% 50%"},{opacity:1,scale:1,duration:0.4,stagger:0.22,ease:"back.out(1.5)"},${at(S[8].start + 0.9)});`)
-  L.push(`tl.to("#s8 .pz-gold .vk-piece",{opacity:1,duration:0.45,stagger:0.18},${at(S[8].start + 3.6)});`)
+  // 10 — kâşif gelişimi: iki kâşif (3D kabartma) dört aşamadan geçer; her geçişte kart döner (sahne3d.js), ad değişir.
+  fadeIn('#g10', S[10].start, 0.6)
+  fadeIn('#s10 .mon-title', S[10].start + 0.2, 0.7, { y: 24 })
+  fadeIn('#s10 .stage', S[10].start + 0.5, 0.6, { y: 16 })
+  FLIPS.forEach((fl, i) => {
+    const tt = S[10].start + fl
+    L.push(`tl.to("#s10 .st-${i}",{opacity:0,y:-16,duration:0.22},${at(tt - 0.22)});`)
+    L.push(`tl.fromTo("#s10 .st-${i + 1}",{opacity:0,y:16},{opacity:1,y:0,duration:0.35,ease:"power2.out"},${at(tt + 0.04)});`)
+    L.push(`tl.to("#s10 .sn-${i + 1}",{backgroundColor:"#E9C874",boxShadow:"0 0 18px rgba(233,200,116,0.9)",duration:0.3},${at(tt)});`)
+    L.push(`tl.fromTo("#s10 .flash",{opacity:0},{opacity:0.6,duration:0.14,yoyo:true,repeat:1},${at(tt - 0.1)});`)
+  })
+  fadeOut('#s10 .stage, #s10 .mon-title, #g10', end(S[10]) - 0.5, 0.5)
 
-  // 9 — kapanış: harita ışıkları, VAKIFNAME.
+  // 8 — Kayıp Vakfiye: yırtık parşömen parçaları uçup birleşir, dikişler kaybolur, vakfiye altınlaşır.
+  fadeIn('#s8 .mon-title', S[8].start + 0.2, 0.6, { y: 20 })
+  fadeIn('#s8 .big', S[8].start + 0.3, 0.6)
+  const sc = scatter(10, 5)
+  const order = [5, 2, 8, 3, 9, 4, 7, 6]
+  order.forEach((i, k) => {
+    const p = PV8.pieces[i]
+    const s0 = sc[i]
+    L.push(`tl.fromTo("#s8 .tp-${i}",{opacity:0,x:${f(s0.x * 1.3)},y:${f(s0.y * 1.3)},rotation:${s0.rot},scale:1.25,svgOrigin:"${p.cx} ${p.cy}"},{opacity:1,x:0,y:0,rotation:0,scale:1,duration:0.95,ease:"back.out(1.15)"},${at(S[8].start + 0.7 + k * 0.27)});`)
+  })
+  const done = S[8].start + 0.7 + (order.length - 1) * 0.27 + 0.95
+  L.push(`tl.fromTo("#s8 .seam-glow",{opacity:0},{opacity:1,duration:0.3,yoyo:true,repeat:1},${at(done + 0.05)});`)
+  L.push(`tl.to("#s8 .whole",{opacity:1,duration:0.45},${at(done + 0.15)});`)
+  L.push(`tl.to("#s8 .whole .wash",{opacity:0.62,duration:1.1,ease:"power1.inOut"},${at(done + 0.6)});`)
+  L.push(`tl.to("#s8 .whole .gilt",{opacity:1,duration:1.1,ease:"power1.inOut"},${at(done + 0.6)});`)
+  L.push(`tl.fromTo("#s8 .whole .sweep",{x:-1400},{x:1400,duration:1.4,ease:"power1.inOut"},${at(done + 1.2)});`)
+
+  // 9 — kapanış: harita ışıkları, iki Başkâşif, VAKIFNAME.
   L.push(`tl.set("#tr9 .tr-land",{strokeDashoffset:0,fillOpacity:0.55},0);`)
   L.push(`tl.fromTo("#tr9",{opacity:0},{opacity:0.32,duration:0.8},${at(S[9].start)});`)
   L.push(`tl.fromTo("#tr9 .city",{opacity:0},{opacity:1,duration:0.4,stagger:0.12},${at(S[9].start + 0.4)});`)
+  fadeIn('#s9 .ek-l', S[9].start + 0.5, 0.9, { x: -50 })
+  fadeIn('#s9 .ek-r', S[9].start + 0.5, 0.9, { x: 50 })
   fadeIn('#s9 .wordmark', S[9].start + 0.9, 0.9, { y: 20 })
   fadeIn('#s9 .rule', S[9].start + 1.4, 0.6)
   fadeIn('#s9 .tagline', S[9].start + 1.7, 0.7, { y: 14 })
   fadeIn('#s9 .credits', S[9].start + 2.6, 0.8)
-  fadeOut('#s9 .end, #s9 .credits, #tr9', end(S[9]) - 0.8, 0.8)
-
-  // Ağız senkronu (yalnızca rehberin göründüğü sahne): ürünün kuralı, ses süresine yayılır.
-  const g = S[4]
-  const visemes = seq[4]
-  const total = visemes.reduce((a, v) => a + v.w, 0)
-  let acc = 0
-  let prev = 'X'
-  for (const v of visemes) {
-    const tt = g.voiceAt + (acc / total) * g.voiceDur
-    if (v.shape !== prev) {
-      L.push(`tl.set(".vkf-m",{opacity:0},${at(tt)});tl.set(".vkf-m-${v.shape}",{opacity:1},${at(tt)});`)
-      prev = v.shape
-    }
-    acc += v.w
-  }
-  L.push(`tl.set(".vkf-m",{opacity:0},${at(g.voiceAt + g.voiceDur)});tl.set(".vkf-m-X",{opacity:1},${at(g.voiceAt + g.voiceDur)});`)
-  // Göz kırpma: sabit aralıklarla (rastgele değil; render her seferinde aynı).
-  for (let b = g.start + 1.7; b < end(g) - 0.5; b += 3.3) {
-    L.push(`tl.set(".vkf-eye-open",{opacity:0},${at(b)});tl.set(".vkf-eye-closed",{opacity:1},${at(b)});tl.set(".vkf-eye-open",{opacity:1},${at(b + 0.13)});tl.set(".vkf-eye-closed",{opacity:0},${at(b + 0.13)});`)
-  }
-  // Konuşurken baş hafifçe sallanır, gövde nefes alır.
-  L.push(`tl.to(".vkf-guide .vk-gchar__head",{rotation:-1.4,svgOrigin:"150 264",duration:1.3,ease:"sine.inOut",yoyo:true,repeat:${Math.max(1, Math.floor(g.voiceDur / 1.3))}},${at(g.voiceAt)});`)
-  L.push(`tl.to(".vkf-guide .vk-gchar__body",{scaleY:1.012,svgOrigin:"150 380",duration:2.1,ease:"sine.inOut",yoyo:true,repeat:${Math.floor(g.dur / 2.1)}},${at(g.start)});`)
-  return L.join('\n')
+  fadeOut('#s9 .end, #s9 .credits, #tr9, #s9 .end-kasif', end(S[9]) - 0.8, 0.8)
+  return scaleJs(L.join('\n'))
 }
 
 // --- Altyazılar -----------------------------------------------------------------------------------------------------
@@ -389,18 +485,22 @@ const vttTime = (x) => {
   const sec = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')
   return `${h}:${m}:${sec}.${String(ms % 1000).padStart(3, '0')}`
 }
+/** Altyazılar film saniyesiyle (hızlandırılmış). */
+const cuesOut = (t, lang) => cues(t, lang).map((c) => ({ a: c.a / SPEED, b: c.b / SPEED, text: c.text }))
 const vtt = (list) => 'WEBVTT\n\n' + list.map((c, i) => `${i + 1}\n${vttTime(c.a)} --> ${vttTime(c.b)}\n${c.text}\n`).join('\n')
 
 // --- Sayfa ----------------------------------------------------------------------------------------------------------
 const CSS = readFileSync(join(FILM, 'tools', 'film.css'), 'utf8')
 
-function page({ id, body, js, duration, width = W, height = H, extraCss = '' }) {
+/** `duration` ve `js` film saniyesiyle. `head`/`tail`: 3D için ek betikler. */
+function page({ id, body, js, duration, width = W, height = H, extraCss = '', head = '', tail = '' }) {
   return `<!doctype html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=${width}, height=${height}"/>
 <script src="vendor/gsap.min.js"></script>
+${head}
 <style>${CSS}
 html,body{width:${width}px;height:${height}px}#root{width:${width}px;height:${height}px}
 ${extraCss}</style>
@@ -418,25 +518,42 @@ tl.set({}, {}, ${f(duration)});
 window.__timelines["${id}"] = tl;
 tl.seek(0);
 </script>
+${tail}
 </body>
 </html>
 `
 }
 
-function mainFilm(t, art, seq, subtitles) {
-  const total = t[t.length - 1].start + t[t.length - 1].dur
+function mainFilm(t, art, subtitles) {
+  const total = O(t[t.length - 1].start + t[t.length - 1].dur)
   const audio = t
     .filter((s) => s.file)
-    .map((s) => `<audio id="ses-${s.id}" class="clip" data-start="${f(s.voiceAt)}" data-duration="${f(s.voiceDur)}" data-track-index="5" data-volume="1" src="assets/audio/${s.file.split('/').pop()}"></audio>`)
+    .map((s) => {
+      const fast = fastAudio(s.file)
+      return `<audio id="ses-${s.id}" class="clip" data-start="${O(s.voiceAt)}" data-duration="${f(probe(fast))}" data-track-index="5" data-volume="1" src="assets/audio/hizli/${fast.split('/').pop()}"></audio>`
+    })
     .join('\n')
   const g = t.find((s) => s.guide)
-  const guide = `<div class="clip guide-wrap" data-start="${f(g.start)}" data-duration="${f(g.dur)}" data-track-index="2">${guideSvg(art)}<p class="role">Rehber · canlandırma</p></div>`
+  const guide = `<div class="clip guide-wrap" data-start="${O(g.start)}" data-duration="${O(g.dur)}" data-track-index="2">
+    <div class="guide-halo"></div><img class="guide-img" src="assets/img/rehber.webp" alt=""/><p class="role">Rehber · canlandırma</p></div>`
   const subs = subtitles
-    ? cues(t, 'tr')
+    ? cuesOut(t, 'tr')
         .map((c) => `<p class="clip sub" data-start="${f(c.a)}" data-duration="${f(c.b - c.a)}" data-track-index="4"><span>${esc(c.text)}</span></p>`)
         .join('\n')
     : ''
-  return page({ id: subtitles ? 'altyazili' : 'main', body: sceneHtml(t, art) + guide + subs + audio, js: timelineJs(t, seq), duration: total })
+  const env4 = g.file ? envelope(g.file) : []
+  // 3D: çizim hazır olana kadar render bekler (buildReady); hf-seek zamanı modül yüklenmeden gelirse saklanır.
+  const head = `<script>
+window.__hf = window.__hf || {};
+window.__hf.buildReady = window.__hf.buildReady || {};
+window.__hf.buildReady.vk3d = new Promise((ok, no) => { window.__vk3dDone = ok; window.__vk3dFail = no; });
+window.addEventListener('hf-seek', (e) => { window.__vk3dTime = e.detail.time; });
+window.__vk3d = ${JSON.stringify(config3d(t))};
+</script>`
+  return page({
+    id: subtitles ? 'altyazili' : 'main', body: sceneHtml(t, art) + guide + subs + audio, js: timelineJs(t, env4), duration: total,
+    head, tail: '<script type="module" src="tools/sahne3d.js"></script>',
+  })
 }
 
 /** Tanıtım sayfası arka planı: 12 sn, yazısız, sessiz; başı ve sonu aynı kare (dikişsiz döngü). */
@@ -469,17 +586,18 @@ if (process.argv[2] === 'ses-isleri') {
   console.log(`${jobs.length} ses satırı → ${process.argv[3]}`)
   process.exit(0)
 }
-const { art, seq } = await loadArt()
+const art = await loadArt()
 const t = timing()
+copyImages()
 mkdirSync(join(FILM, 'assets', 'fonts'), { recursive: true })
 mkdirSync(join(FILM, 'out'), { recursive: true })
 copyFileSync(join(FRONT, 'src/assets/fonts/cormorant-garamond-latin-ext.woff2'), join(FILM, 'assets/fonts/cormorant-garamond-latin-ext.woff2'))
 const variant = process.argv[2] ?? 'film'
-const html = { film: () => mainFilm(t, art, seq, false), altyazili: () => mainFilm(t, art, seq, true), dongu: () => loop(false), 'dongu-mobil': () => loop(true) }[variant]
+const html = { film: () => mainFilm(t, art, false), altyazili: () => mainFilm(t, art, true), dongu: () => loop(false), 'dongu-mobil': () => loop(true) }[variant]
 if (!html) throw new Error(`Bilinmeyen sürüm: ${variant} (film | altyazili | dongu | dongu-mobil)`)
 writeFileSync(join(FILM, 'index.html'), html())
-writeFileSync(join(FILM, 'out', 'tanitim-tr.vtt'), vtt(cues(t, 'tr')))
-writeFileSync(join(FILM, 'out', 'tanitim-en.vtt'), vtt(cues(t, 'en')))
+writeFileSync(join(FILM, 'out', 'tanitim-tr.vtt'), vtt(cuesOut(t, 'tr')))
+writeFileSync(join(FILM, 'out', 'tanitim-en.vtt'), vtt(cuesOut(t, 'en')))
 const total = t[t.length - 1].start + t[t.length - 1].dur
-console.log(`${variant} · film ${total.toFixed(1)} sn · ses: ${t.filter((s) => s.file).length}/${t.length} sahne`)
-for (const s of t) console.log(`  ${s.id}: ${s.start.toFixed(1)}–${(s.start + s.dur).toFixed(1)} sn${s.file ? '' : ' (tahmini; ses yok)'}`)
+console.log(`${variant} · film ${O(total).toFixed(1)} sn (özgün ${total.toFixed(1)} sn, ×${SPEED}) · ses: ${t.filter((s) => s.file).length}/${t.length} sahne`)
+for (const s of t) console.log(`  ${s.id}: ${O(s.start).toFixed(1)}–${O(s.start + s.dur).toFixed(1)} sn${s.file ? '' : ' (tahmini; ses yok)'}`)

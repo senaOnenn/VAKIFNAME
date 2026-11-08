@@ -8,3 +8,5 @@ assets/fonts/
 .hyperframes/
 # Derleme çıktısı (node tools/build.mjs <sürüm>)
 index.html
+# Ürünün kaynağından kopyalanan görseller (build.mjs copyImages)
+assets/img/

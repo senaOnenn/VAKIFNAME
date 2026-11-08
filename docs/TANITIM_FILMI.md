@@ -56,3 +56,34 @@ tools/render.sh                                         # hepsi → ~/vakifname-
 - Site: `frontend/heroVideo.ts` `filmAssets()` film + iki altyazıyı derlemeye koyar (VTT denetimli); tanıtım sayfası dosya
   varsa "Tanıtım filmini izle" düğmesini gösterir (pencerede altyazı varsayılan açık, Esc ile kapanır).
 - `film/package.json`'da bulut yayını ("publish") komutu bilerek yok; HyperFrames kullanım verisi kapalı (`telemetry disable`).
+
+## Sürüm 2 (8 Kasım, Talha)
+
+Çıktılar `~/vakifname-video-assets/film-v2/` (eski `film/` klasörüne dokunulmaz). Değişenler:
+
+- **Hız ×1,15.** Senaryo ve zaman çizelgesi özgün saniyelerle yazılır; çıktıda bütün zamanlar `SPEED`'e bölünür
+  (`O()`, `scaleJs`), ses `atempo=1.15` ile hızlanır (perde değişmez; `film/assets/audio/hizli/`). İç içe GSAP çizelgesi
+  + `timeScale` denendi, HyperFrames'in seek'i sıfır anlı `set`'leri bozdu; kullanılmaz. Süre ≈80 sn.
+- **3D eser maketleri** (`film/tools/sahne3d.js`, Three.js 0.187 `film/vendor/three.min.js`, MIT): Ulu Cami (5 × 4 kubbe,
+  iki minare), Koza Han (avlu, revaklar, köşk mescit), Osman Gazi Türbesi; gece laciverdi gövde, altın çizgi, pencerelerde
+  sıcak ışık; tabandan yükselerek "inşa" olur, kamera yavaşça döner. **Temsilîdir, rölöve değildir** (kapanışta yazılı).
+  Açılış sahnesindeki girih/yıldız kaldırıldı; yerine üç eserin maketi yükselir.
+- **Rehber:** kadın rehber görseli (sabit; ağız senkronu yok); konuşurken yalnızca arkasındaki hale ses zarfıyla parlar.
+- **Kâşifler (Buse):** Bursa haritasında ziyaretçi Çırak Kâşif portresiyle; yeni sahne "Çıraktan Başkâşife" — iki kâşif dört
+  aşamadan geçer (Seviye 1 Çırak Kâşif → 3 Gezgin Seyyah → 5 Vakıf Muhafızı → 7 Başkâşif), her geçişte kart 3D döner.
+  Kâşifler düz çizimin silüetinden hesaplanan yükseklik haritasıyla **kabartılır** (gerçek 3D model değil; dönünce hacim
+  verir). Kapanışta iki Başkâşif. Yeni ses satırı (Zülal, benzerlik 0,99): "Keşfettikçe kâşifin büyür; çıraktan başkâşife
+  yükselir." EN altyazı: "The more you explore, the more your explorer grows, from apprentice to master explorer."
+- **Kayıp Vakfiye:** yırtık parşömen (`film/tools/parsomen.mjs`): 5 × 2 = 10 parça, komşular aynı yırtık kenarı paylaşır;
+  parçalar uçup birleşir, dikişler kaybolur, vakfiye altınlaşır. Yazı satırları el yazısı dokusudur (harf taklidi yok).
+  Koza Han sahnesinde aynı parşömenin küçüğü: Ulu Cami'nin parçası yerinde, Koza Han'ınki uçup oturur.
+- Sorudaki doğru şık üründeki gibi yeşil ✓.
+- Görseller derlemede ürünün kaynağından kopyalanır (`film/assets/img/`, repoya girmez).
+
+```bash
+cd film && OUT=~/vakifname-video-assets/film-v2 bash tools/render.sh film altyazili
+# site: VAKIFNAME_FILM_DIR=~/vakifname-video-assets/film-v2 npm run build (frontend)
+```
+
+Kararlar (8 Kasım, Talha): APK indirme bağlantısı sitede **yayımlanmaz**; Buse'nin madalyon çerçevesi **kullanılmaz**;
+uygulama ikonu ve Kayıp Vakfiye yapboz tasarımı işleri **iptal** (filmde parşömen anlatımı yeterli).

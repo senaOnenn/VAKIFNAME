@@ -234,16 +234,30 @@ body {
 }
 .guide-wrap {
   left: auto;
-  right: 110px;
-  top: 200px;
+  right: 120px;
+  top: 210px;
   bottom: auto;
-  width: 600px;
+  width: 560px;
   height: 640px;
 }
-.guide-wrap svg {
-  width: 600px;
-  height: 608px;
-  overflow: visible;
+/* 8 Kasım: rehber sabit bir görseldir (kadın rehber); konuşurken yalnızca arkasındaki hale sesle parlar. */
+.guide-halo {
+  position: absolute;
+  left: 50%;
+  top: 270px;
+  width: 640px;
+  height: 640px;
+  margin: -320px 0 0 -320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(233 200 116 / 0.5) 0%, rgb(233 200 116 / 0.16) 42%, rgb(233 200 116 / 0) 68%);
+  opacity: 0.22;
+}
+.guide-img {
+  position: relative;
+  display: block;
+  width: 540px;
+  height: 540px;
+  margin: 0 auto 10px;
 }
 .role {
   text-align: center;
@@ -291,7 +305,8 @@ body {
   justify-content: space-between;
 }
 .quiz-c b {
-  color: var(--gold-bright);
+  /* Üründeki doğru cevap rengi (quiz.css --vk-ok-ink; paletteki tek yeşil istisnası, yalnızca soru ekranı). */
+  color: #8fe0b0;
   opacity: 0;
 }
 .seal-k,
@@ -494,9 +509,10 @@ body {
 }
 .credits {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 54px;
+  left: 470px;
+  right: 470px;
+  bottom: 44px;
+  line-height: 1.5;
   text-align: center;
   font-size: 19px;
   color: var(--ivory-dim);
@@ -524,4 +540,118 @@ body {
 .loop-map {
   position: absolute;
   inset: 0;
+}
+
+/* 8 Kasım — 3D sahneler (tools/sahne3d.js çizer) */
+.g3d {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+}
+
+/* Yırtık parşömen vakfiye (tools/parsomen.mjs) */
+.parsomen {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.hole {
+  fill: rgb(35 43 102 / 0.5);
+  stroke: rgb(201 162 75 / 0.55);
+  stroke-width: 2.5;
+  stroke-dasharray: 9 8;
+}
+.mini {
+  position: absolute;
+  left: 1230px;
+  top: 360px;
+  width: 620px;
+}
+.big {
+  position: absolute;
+  left: 400px;
+  top: 220px;
+  width: 1120px;
+}
+
+/* Başta gizli olanlar (zaman çizelgesi fromTo ile açar; sıfır anlı set kullanılmaz) */
+#s6 .tp:not(.tp-0),
+#s8 .tp:not(.tp-0):not(.tp-1),
+.stage-name:not(.st-0) {
+  opacity: 0;
+}
+
+/* Kâşif gelişimi */
+.stage {
+  position: absolute;
+  left: 760px;
+  top: 470px;
+  width: 400px;
+  text-align: center;
+}
+.stage-name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  font-family: var(--display);
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--gold-bright);
+}
+.stage-name small {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--ui);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ivory-dim);
+}
+.stage-track {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  list-style: none;
+}
+.stage-track li {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  background: transparent;
+}
+.stage-track .sn-0 {
+  background: var(--gold-bright);
+}
+.flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(900px 700px at 50% 55%, rgb(233 200 116 / 0.45), rgb(233 200 116 / 0) 70%);
+  opacity: 0;
+}
+
+/* Kapanış: iki Başkâşif */
+.end-kasif {
+  position: absolute;
+  bottom: 0;
+  width: 560px;
+  height: 840px;
+  object-fit: contain;
+  object-position: 50% 100%;
+}
+.ek-l {
+  left: 40px;
+}
+.ek-r {
+  right: 40px;
 }
