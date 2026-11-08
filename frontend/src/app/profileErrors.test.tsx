@@ -83,7 +83,7 @@ describe('oyuncu profili hataları (R6.4.1)', () => {
     })
     expect(await screen.findByRole('alert')).toHaveTextContent('Oyun sunucusu güncel değil')
     // R6.5: kâşifler profil yüklenemese de görünür (boş ekran yok); kaydetmek yine sunucuya bağlıdır.
-    expect(screen.getAllByRole('radio')).toHaveLength(3)
-    expect(document.querySelectorAll('.vk-cs__arch svg[data-character]')).toHaveLength(3)
+    expect(screen.getAllByRole('radio')).toHaveLength(2)
+    expect(document.querySelectorAll('.vk-cs__arch img[data-character]')).toHaveLength(2)
   })
 })

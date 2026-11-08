@@ -160,7 +160,7 @@ def test_client_cannot_write_xp(c_default):
     register(c, email="hile@example.com")
     for method in ("post", "put", "patch", "delete"):
         assert getattr(c, method)("/player/xp").status_code == 405
-    assert c.put("/player/character", json={"character_id": "gezgin", "xp": 5000}).status_code == 422
+    assert c.put("/player/character", json={"character_id": "erkek", "xp": 5000}).status_code == 422
     assert c.post(f"/monuments/{OPEN}/engagement", json={"user_id": "x", "event": "xp"}).status_code == 422
     assert xp(c)["total"] == 0
 

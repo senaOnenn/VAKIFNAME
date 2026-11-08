@@ -1,7 +1,7 @@
 import { useEffect, useId, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { chooseCharacter, useLoad, type CharacterId } from '../api'
-import { CHARACTERS } from '../characters'
+import { CHARACTERS, characterOf } from '../characters'
 import { KasifPortrait } from '../components/KasifPortrait'
 import { useLang } from '../i18n'
 import { loadPlayerProfile, PlayerLoadError, PROFILE_FAIL_TEXT, profileFailure } from '../player'
@@ -33,7 +33,8 @@ export default function CharacterSelect() {
   const loaded = useLoad((s) => loadPlayerProfile(s), [])
   const data = loaded.data?.profile ?? null
   const fail = loaded.data?.fail ?? (loaded.error ? 'error' : null)
-  const current = data?.character?.id ?? null
+  // Eski kimlikler (8 Kasım öncesi) güncel kâşife eşlenir; seçili kart doğru görünsün.
+  const current = characterOf(data?.character?.id)?.id ?? null
   const [picked, setPicked] = useState<CharacterId | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -99,7 +100,7 @@ export default function CharacterSelect() {
           </fieldset>
 
           <p className="vk-cs__note">
-            {t('Kâşifler yalnızca görünüştür; oyunda hepsi aynı kurallarla ilerler. Seviyen yükseldikçe kâşifinin kıyafeti ve eşyaları gelişir: Başlangıç, Gezginlik, Araştırmacı, Vakfiye Muhafızı.')}
+            {t('Kâşifler yalnızca görünüştür; oyunda ikisi de aynı kurallarla ilerler. Seviyen yükseldikçe kâşifinin kıyafeti ve eşyaları gelişir: Çırak Kâşif, Gezgin Seyyah, Vakıf Muhafızı, Başkâşif.')}
           </p>
           {error && <p className="vk-cs__state vk-cs__state--error" role="alert">{error}</p>}
           <div className="vk-cs__actions">

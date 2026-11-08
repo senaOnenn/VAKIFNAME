@@ -50,7 +50,8 @@ def level_for(xp: int) -> int:
 
 
 def stage_for(level: int) -> Stage:
-    """Kozmetik görünüm aşaması: 1–2 Başlangıç, 3–4 Gezginlik, 5–6 Araştırmacı, 7+ Vakfiye Muhafızı."""
+    """Kozmetik görünüm aşaması (8 Kasım adları, Buse): 1–2 Çırak Kâşif, 3–4 Gezgin Seyyah, 5–6 Vakıf Muhafızı, 7+ Başkâşif.
+    Kimlikler (baslangic, gezginlik, arastirmaci, muhafiz) kayıt ve API uyumu için değişmez."""
     if level >= 7:
         return "muhafiz"
     if level >= 5:

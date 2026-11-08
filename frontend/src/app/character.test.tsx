@@ -54,43 +54,43 @@ describe('karakter seçimi (R6.3)', () => {
     expect(screen.getAllByRole('radio').every((r) => !(r as HTMLInputElement).checked)).toBe(true)
     expect(paths(f).some(([p, m]) => p === '/player/character' && m === 'PUT')).toBe(false)
     // R6.5: her nişte kâşifin portresi çizilidir (geçici amblem ya da boş alan yok); karakterler yalnızca görünüştür.
-    expect(document.querySelectorAll('.vk-cs__arch svg[data-character]')).toHaveLength(3)
+    expect(document.querySelectorAll('.vk-cs__arch img[data-character]')).toHaveLength(2)
     expect(screen.queryByText('Geçici görünüm')).not.toBeInTheDocument()
-    expect(screen.getByText('Yolların ve hanların izinde')).toBeInTheDocument()
-    expect(screen.getByText(/yalnızca görünüştür; oyunda hepsi aynı kurallarla ilerler/)).toBeInTheDocument()
+    expect(screen.getAllByText('Yolların ve eserlerin izinde')).toHaveLength(2)
+    expect(screen.getByText(/yalnızca görünüştür; oyunda ikisi de aynı kurallarla ilerler/)).toBeInTheDocument()
     // Klavye: Tab ile gruba girilir, boşlukla seçilir, oklarla değişir.
     const radios = screen.getAllByRole('radio')
     radios[0].focus()
     await userEvent.keyboard(' ')
     expect(radios[0]).toBeChecked()
     await userEvent.keyboard('{ArrowRight}')
-    expect(screen.getByRole('radio', { name: 'Nakkaş Çırağı' })).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'Erkek kâşif' })).toBeChecked()
     expect(go).toBeEnabled()
     await userEvent.click(go)
     await waitFor(() => expect(window.location.pathname).toBe('/oyun/rota/bursa'))
     const put = f.mock.calls.find((c) => new URL(String(c[0])).pathname === '/player/character')!
     expect((put[1] as RequestInit).method).toBe('PUT')
-    expect(JSON.parse(String((put[1] as RequestInit).body))).toEqual({ character_id: 'nakkas' })
-    expect(await screen.findByRole('link', { name: 'Kâşifin Nakkaş Çırağı. Kâşifini değiştir' })).toBeInTheDocument()
+    expect(JSON.parse(String((put[1] as RequestInit).body))).toEqual({ character_id: 'erkek' })
+    expect(await screen.findByRole('link', { name: 'Kâşifin Erkek kâşif. Kâşifini değiştir' })).toBeInTheDocument()
   })
 
   it('karakterini seçmiş oyuncu seçim ekranını görmeden oyuna girer', async () => {
     open('/oyun/sehir', { '/auth/me': SIGNED_IN, '/player/profile': PROFILE })
     expect(await screen.findByRole('heading', { name: 'Nereyi keşfetmek istersin?' })).toBeInTheDocument()
     expect(window.location.pathname).toBe('/oyun/sehir')
-    expect(screen.getByRole('link', { name: 'Kâşifin Gezgin. Kâşifini değiştir' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Kâşifin Erkek kâşif. Kâşifini değiştir' })).toBeInTheDocument()
   })
 
   it('kâşif sonradan değiştirilebilir: mevcut seçim işaretli gelir, kayıttan sonra aynı sayfaya dönülür', async () => {
     open('/oyun/sehir', {
       '/auth/me': SIGNED_IN,
       '/player/profile': PROFILE,
-      '/player/character': { body: { character: { id: 'katip', chosen_at: '2026-11-01T10:00:00+00:00' }, progress: progressOf(0) } },
+      '/player/character': { body: { character: { id: 'kadin', chosen_at: '2026-11-01T10:00:00+00:00' }, progress: progressOf(0) } },
     })
-    await userEvent.click(await screen.findByRole('link', { name: 'Kâşifin Gezgin. Kâşifini değiştir' }))
+    await userEvent.click(await screen.findByRole('link', { name: 'Kâşifin Erkek kâşif. Kâşifini değiştir' }))
     expect(await screen.findByRole('heading', { level: 1, name: 'Kâşifini değiştir' })).toBeInTheDocument()
-    await waitFor(() => expect(screen.getByRole('radio', { name: 'Gezgin' })).toBeChecked())
-    await userEvent.click(screen.getByRole('radio', { name: 'Kâtip Çırağı' }))
+    await waitFor(() => expect(screen.getByRole('radio', { name: 'Erkek kâşif' })).toBeChecked())
+    await userEvent.click(screen.getByRole('radio', { name: 'Kadın kâşif' }))
     await userEvent.click(screen.getByRole('button', { name: 'Kaydet ve devam et' }))
     await waitFor(() => expect(window.location.pathname).toBe('/oyun/sehir'))
   })
@@ -109,7 +109,7 @@ describe('karakter seçimi (R6.3)', () => {
       '/player/profile': NONE,
       '/player/character': { status: 401, body: { detail: 'Oyunu oynamak ve ilerlemeni görmek için giriş yapmalısın.' } },
     })
-    await userEvent.click(await screen.findByRole('radio', { name: 'Gezgin' }))
+    await userEvent.click(await screen.findByRole('radio', { name: 'Erkek kâşif' }))
     await userEvent.click(screen.getByRole('button', { name: 'Seç ve maceraya başla' }))
     expect(await screen.findByText('Oturumunun süresi doldu. Devam etmek için yeniden giriş yap.')).toHaveAttribute('role', 'alert')
     expect(window.location.pathname).toBe('/oyun/karakter')

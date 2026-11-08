@@ -20,7 +20,7 @@ function fakeAuthServer(initial: User | null = null) {
   // R6.3: oyuncu profili. Bu sahte sunucuda kayıtla yeni açılan hesabın karakteri yoktur (ilk oyun); diğer hesaplar
   // karakterini daha önce seçmiştir.
   const chars = new Map<string, string | null>()
-  const characterOf = (id: string) => (chars.has(id) ? chars.get(id)! : 'gezgin')
+  const characterOf = (id: string) => (chars.has(id) ? chars.get(id)! : 'erkek')
   const fetchMock = stubFetch({
     '/auth/me': (init?: RequestInit) => {
       log('/auth/me', init)
@@ -64,7 +64,7 @@ function fakeAuthServer(initial: User | null = null) {
       log('/player/character', init)
       if (!user) return { status: 401, body: { detail: 'Oyunu oynamak ve ilerlemeni görmek için giriş yapmalısın.' } }
       const id = String(body(init).character_id)
-      if (!['gezgin', 'nakkas', 'katip'].includes(id)) return { status: 422, body: { detail: 'Geçersiz karakter.' } }
+      if (!['kadin', 'erkek'].includes(id)) return { status: 422, body: { detail: 'Geçersiz karakter.' } }
       chars.set(user.user_id, id)
       return { body: { character: { id, chosen_at: '2026-11-06T10:00:00+00:00' }, progress: progressOf(0) } }
     },
@@ -215,12 +215,12 @@ describe('giriş / kayıt (sunucu)', () => {
     // R6.3: yeni hesap önce kâşifini seçer (varsayılan yok), sonra şehir seçimine geçer.
     expect(await screen.findByRole('heading', { name: 'Kâşifini seç', level: 1 })).toBeInTheDocument()
     expect(await screen.findByRole('button', { name: 'Seç ve maceraya başla' })).toBeDisabled()
-    await userEvent.click(screen.getByRole('radio', { name: 'Gezgin' }))
+    await userEvent.click(screen.getByRole('radio', { name: 'Erkek kâşif' }))
     await userEvent.click(screen.getByRole('button', { name: 'Seç ve maceraya başla' }))
     expect(await screen.findByRole('heading', CITY_HEADING)).toBeInTheDocument()
     expect(screen.getByText('ayse@example.com')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Kâşifin Gezgin. Kâşifini değiştir' })).toBeInTheDocument()
-    expect(calls.find((c) => c.path === '/player/character')!.body).toEqual({ character_id: 'gezgin' })
+    expect(screen.getByRole('link', { name: 'Kâşifin Erkek kâşif. Kâşifini değiştir' })).toBeInTheDocument()
+    expect(calls.find((c) => c.path === '/player/character')!.body).toEqual({ character_id: 'erkek' })
     const reg = calls.find((c) => c.path === '/auth/register')!
     expect(reg.body).toEqual({ email: 'ayse@example.com', password: PASSWORD, visitor_id: 'ziyaretci-0b8f2c1e-1a2b-4c3d-8e9f-0123456789ab', lang: 'tr' })
     // Parola tarayıcıda saklanmaz.
@@ -362,9 +362,9 @@ describe('kabuk, hesap ve şehir seçimi', () => {
     open('/hesap')
     const section = await screen.findByRole('region', { name: 'Oyuncu profili' })
     const crest = await within(section).findByRole('region', { name: 'Kâşifin' })
-    expect(within(crest).getByRole('heading', { name: 'Gezgin' })).toBeInTheDocument()
+    expect(within(crest).getByRole('heading', { name: 'Erkek kâşif' })).toBeInTheDocument()
     expect(within(crest).getByText('Seviye 1')).toBeInTheDocument()
-    expect(crest.querySelector('svg[data-character="gezgin"]')).not.toBeNull()
+    expect(crest.querySelector('img[data-character="erkek"]')).not.toBeNull()
     expect(within(section).getByRole('link', { name: 'Kâşifini değiştir' })).toHaveAttribute('href', '/oyun/karakter?sonra=%2Foyun')
   })
 
@@ -410,7 +410,7 @@ describe('R6.2: oyun yalnızca hesapla', () => {
     // R6.3: ilk oyunda önce karakter seçilir; sonra istenen oyun adresine gidilir.
     expect(await screen.findByRole('heading', { name: 'Kâşifini seç', level: 1 })).toBeInTheDocument()
     expect(window.location.pathname).toBe('/oyun/karakter')
-    await userEvent.click(await screen.findByRole('radio', { name: 'Kâtip Çırağı' }))
+    await userEvent.click(await screen.findByRole('radio', { name: 'Kadın kâşif' }))
     await userEvent.click(screen.getByRole('button', { name: 'Seç ve maceraya başla' }))
     await vi.waitFor(() => expect(window.location.pathname).toBe('/oyun'))
     expect(await screen.findByRole('heading', { name: 'Vakfiye Odası', level: 1 })).toBeInTheDocument()

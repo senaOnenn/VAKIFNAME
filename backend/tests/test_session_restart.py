@@ -27,7 +27,7 @@ def test_login_survives_a_backend_restart(tmp_path):
         r = first.post("/auth/register", json={"email": "kalici-oturum@example.com", "password": PASSWORD})
         assert r.status_code == 201
         uid = r.json()["user_id"]
-        first.put("/player/character", json={"character_id": "katip"})
+        first.put("/player/character", json={"character_id": "erkek"})
         token = first.cookies.get(SESSION_COOKIE)
         assert token
     # "Yeniden başlatma": aynı dosyalarla yeni uygulama; tarayıcı aynı çerezi gönderir, yeniden giriş yapılmaz.
@@ -36,7 +36,7 @@ def test_login_survives_a_backend_restart(tmp_path):
         me = second.get("/auth/me")
         assert me.status_code == 200 and me.json()["user_id"] == uid
         profile = second.get("/player/profile")
-        assert profile.status_code == 200 and profile.json()["character"]["id"] == "katip"
+        assert profile.status_code == 200 and profile.json()["character"]["id"] == "erkek"
         assert second.get("/route", params={"city": "bursa", "user_id": uid}).status_code == 200
 
 

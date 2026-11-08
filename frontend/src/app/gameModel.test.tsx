@@ -44,22 +44,24 @@ describe('eserler defteri (R6.7: kilit yok)', () => {
   })
 })
 
-describe('kâşif portreleri (R6.5)', () => {
-  it('üç kâşif dört aşamada çizilir; üst aşama katman ekler (muhafızda balmumu mühür)', () => {
-    for (const id of ['gezgin', 'nakkas', 'katip'] as const) {
-      const { container, unmount } = render(<KasifPortrait id={id} stage="baslangic" />)
-      const base = container.querySelectorAll('svg *').length
+describe('kâşif portreleri (R6.5; 8 Kasım: Buse\'nin çizimleri)', () => {
+  it('iki kâşif dört aşamada gösterilir: avatarda portre, nişte boy görseli; eski kimlikler erkek kâşif', () => {
+    for (const id of ['kadin', 'erkek'] as const) {
+      const { container, unmount } = render(<><KasifPortrait id={id} stage="baslangic" crop="bust" /><KasifPortrait id={id} stage="muhafiz" /></>)
+      const [bust, full] = container.querySelectorAll('img')
+      expect(bust.getAttribute('src')).toContain(`${id}-1-portre`)
+      expect(full.getAttribute('src')).toContain(`${id}-4-boy`)
+      expect(full).toHaveAttribute('data-stage', 'muhafiz')
       unmount()
-      const top = render(<KasifPortrait id={id} stage="muhafiz" />)
-      expect(top.container.querySelectorAll('svg *').length).toBeGreaterThan(base)
-      expect(top.container.querySelector('svg')).toHaveAttribute('data-stage', 'muhafiz')
-      top.unmount()
     }
+    const { container } = render(<KasifPortrait id="nakkas" stage="gezginlik" crop="bust" />)
+    expect(container.querySelector('img')).toHaveAttribute('data-character', 'erkek')
+    expect(container.querySelector('img')!.getAttribute('src')).toContain('erkek-2-portre')
   })
 
   it('adı verilince ekran okuyucuya okunur, verilmezse dekoratiftir', () => {
-    render(<><KasifPortrait id="katip" title="Kâtip Çırağı" /><KasifPortrait id="gezgin" /></>)
-    expect(screen.getByRole('img', { name: 'Kâtip Çırağı' })).toBeInTheDocument()
-    expect(document.querySelector('svg[data-character="gezgin"]')).toHaveAttribute('aria-hidden', 'true')
+    render(<><KasifPortrait id="kadin" title="Kadın kâşif" /><KasifPortrait id="erkek" /></>)
+    expect(screen.getByRole('img', { name: 'Kadın kâşif' })).toBeInTheDocument()
+    expect(document.querySelector('img[data-character="erkek"]')).toHaveAttribute('aria-hidden', 'true')
   })
 })

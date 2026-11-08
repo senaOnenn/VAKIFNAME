@@ -1,0 +1,10 @@
+/* Kâşif görseli (Buse'nin çizimleri, saydam zemin): kabın içine sığar, alttan hizalanır. */
+.vk-kasif {
+  display: block;
+  object-fit: contain;
+  object-position: 50% 100%;
+  user-select: none;
+}
+.vk-kasif--bust {
+  object-position: 50% 20%;
+}

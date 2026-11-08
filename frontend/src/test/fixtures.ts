@@ -26,4 +26,4 @@ export const SIGNED_IN = { body: PLAYER }
 /** R6.4: sunucunun hesapladığı ilerleme (testlerde sabit). */
 export const progressOf = (xp: number, level = 1, levelXp = 0, next: number | null = 50, stage = 'baslangic', recent: unknown[] = []) =>
   ({ xp, level, level_xp: levelXp, next_level_xp: next, stage, max_level: 8, recent })
-export const PROFILE = { body: { character: { id: 'gezgin', chosen_at: '2026-11-01T10:00:00+00:00' }, progress: progressOf(0) } }
+export const PROFILE = { body: { character: { id: 'erkek', chosen_at: '2026-11-01T10:00:00+00:00' }, progress: progressOf(0) } }

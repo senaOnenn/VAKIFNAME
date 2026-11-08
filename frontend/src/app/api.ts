@@ -516,7 +516,8 @@ export const adminMediaUrl = (url: string) => (url.startsWith('/') ? `${API_BASE
 export const monumentOfFact = (factId: string) => factId.replace(/-F\d+$/, '')
 
 // --- Oyuncu profili (R6.3/R6.4): karakter, XP ve seviye. Kimlik oturumdan alınır. -----------------------------------
-export type CharacterId = 'gezgin' | 'nakkas' | 'katip'
+/** 8 Kasım: iki kâşif. Eski kayıtlarda `gezgin` / `nakkas` / `katip` gelebilir (erkek kâşif gösterilir). */
+export type CharacterId = 'kadin' | 'erkek'
 export type XpSource = 'first_discovery' | 'listened' | 'listen_and_ask' | 'knowledge' | 'visit'
 export type Stage = 'baslangic' | 'gezginlik' | 'arastirmaci' | 'muhafiz'
 /** R6.4: sunucunun doğrulanmış kayıtlardan hesapladığı XP ve seviye (istemci hesaplamaz, yazamaz). */
@@ -534,7 +535,7 @@ export interface PlayerProgress {
 }
 export interface PlayerProfile {
   /** Seçilmiş karakter; ilk girişte `null` (sunucu varsayılan karakter atamaz). */
-  character: { id: CharacterId; chosen_at: string } | null
+  character: { id: CharacterId | string; chosen_at: string } | null
   progress: PlayerProgress
 }
 export const getPlayerProfile = (signal?: AbortSignal) =>

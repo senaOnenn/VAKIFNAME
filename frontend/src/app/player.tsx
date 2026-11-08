@@ -13,10 +13,10 @@ export const usePlayer = () => useContext(PlayerContext)
 
 /** Görünüm aşamalarının adları (yalnızca kozmetik; seviyeden hesaplanır). */
 export const STAGE_LABEL: Record<Stage, string> = {
-  baslangic: 'Başlangıç',
-  gezginlik: 'Gezginlik',
-  arastirmaci: 'Araştırmacı',
-  muhafiz: 'Vakfiye Muhafızı',
+  baslangic: 'Çırak Kâşif',
+  gezginlik: 'Gezgin Seyyah',
+  arastirmaci: 'Vakıf Muhafızı',
+  muhafiz: 'Başkâşif',
 }
 
 /** XP kazanım nedenleri (sunucudaki `source`). */

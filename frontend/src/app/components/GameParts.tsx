@@ -50,7 +50,7 @@ export function PlayerCrest({ profile, size = 'hero', headingLevel = 2 }: {
         <p className="vk-crest__next">
           {nextStage
             ? t('{n}. seviyede yeni görünüm: {stage}', { n: STAGE_FROM[nextStage], stage: t(STAGE_LABEL[nextStage]) })
-            : t('Görünümün en üst aşamada: Vakfiye Muhafızı')}
+            : t('Görünümün en üst aşamada: Başkâşif')}
         </p>
       </div>
     </section>

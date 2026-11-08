@@ -8,7 +8,7 @@ import { INTRO_SEEN_KEY } from './screens/Intro'
 
 /** R6.4: XP ve seviye sunucudan gelir; arayüz yalnızca gösterir (sahte XP yok) ve artışta kısa bir not verir. */
 const CATALOG = { body: { published_count: 0, data_version: 't', generated_at: null, monuments: [] } }
-const profile = (progress: unknown, id = 'nakkas') => ({ body: { character: { id, chosen_at: '2026-11-01T10:00:00+00:00' }, progress } })
+const profile = (progress: unknown, id = 'kadin') => ({ body: { character: { id, chosen_at: '2026-11-01T10:00:00+00:00' }, progress } })
 
 function open(path: string, routes: Routes) {
   const f = stubFetch({ '/auth/me': SIGNED_IN, '/monuments': CATALOG, ...routes })
@@ -28,21 +28,21 @@ describe('XP ve seviye (R6.4)', () => {
   it('seviye, kozmetik aşama ve XP sunucudan gelir; seviye ilerlemesi erişilebilir bir göstergeyle söylenir', async () => {
     open('/oyun/sehir', { '/player/profile': profile(progressOf(205, 3, 150, 300, 'gezginlik')) })
     expect(await screen.findByText(/Seviye 3/)).toBeInTheDocument()
-    expect(screen.getByText(/Gezginlik/)).toBeInTheDocument()
+    expect(screen.getByText(/Gezgin Seyyah/)).toBeInTheDocument()
     expect(screen.getByText('205 / 300 XP')).toBeInTheDocument()
     const meter = screen.getByRole('progressbar', { name: 'Seviye 4 için ilerleme: 55 / 150 XP' })
     expect(meter).toHaveAttribute('max', '150')
     expect(meter).toHaveAttribute('value', '55')
     // Karakterin görünümü (geçici amblem) hesaplanan aşamaya bağlıdır.
     expect(document.querySelector('.vk-gamebar__portrait')).toHaveAttribute('data-stage', 'gezginlik')
-    expect(screen.getByRole('link', { name: 'Kâşifin Nakkaş Çırağı. Kâşifini değiştir' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Kâşifin Kadın kâşif. Kâşifini değiştir' })).toBeInTheDocument()
     expect(screen.queryByRole('status', { name: /XP/ })).toBeNull()
   })
 
-  it('en üst seviyede eşik yerine "en üst seviye" yazar; aşama Vakfiye Muhafızı', async () => {
+  it('en üst seviyede eşik yerine "en üst seviye" yazar; aşama Başkâşif', async () => {
     open('/oyun/sehir', { '/player/profile': profile(progressOf(1825, 8, 1500, null, 'muhafiz')) })
     expect(await screen.findByText('1825 XP · en üst seviye')).toBeInTheDocument()
-    expect(screen.getByText(/Vakfiye Muhafızı/)).toBeInTheDocument()
+    expect(screen.getByText(/Başkâşif/)).toBeInTheDocument()
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
     expect(document.querySelector('.vk-gamebar__portrait')).toHaveAttribute('data-stage', 'muhafiz')
   })

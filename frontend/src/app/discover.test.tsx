@@ -234,8 +234,8 @@ describe('Oyun paneli ve gezinme', () => {
     const gameNav = screen.getByRole('navigation', { name: 'Oyun menüsü' })
     expect(within(gameNav).getByRole('link', { name: 'Vakfiye Odası' })).toHaveAttribute('aria-current', 'page')
     const crest = screen.getByRole('region', { name: 'Kâşifin' })
-    expect(within(crest).getByRole('heading', { name: 'Gezgin' })).toBeInTheDocument()
-    expect(crest.querySelector('svg[data-character="gezgin"]')).not.toBeNull()
+    expect(within(crest).getByRole('heading', { name: 'Erkek kâşif' })).toBeInTheDocument()
+    expect(crest.querySelector('img[data-character="erkek"]')).not.toBeNull()
     // Tek ana eylem: sonraki keşif.
     const next = await screen.findByRole('region', { name: 'Sonraki keşif' })
     expect(within(next).getByRole('heading', { name: 'Koza Han' })).toBeInTheDocument()

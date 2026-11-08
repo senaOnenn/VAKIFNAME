@@ -22,10 +22,11 @@ from .xp import progression
 
 router = APIRouter(tags=["player"])
 
-# Geçici karakter kimlikleri (görselleri henüz yok; arayüzde "geçici görünüm" diye belirtilir). Kimlikler kalıcıdır;
-# adlar ve açıklamalar arayüzdedir ve değiştirilebilir.
-CHARACTERS = ("gezgin", "nakkas", "katip")
-CharacterId = Literal["gezgin", "nakkas", "katip"]
+# Kâşif kimlikleri (8 Kasım: Buse'nin çizimleri, kadın ve erkek kâşif). Adlar ve görseller arayüzdedir. 8 Kasım öncesi
+# kimlikler (gezgin, nakkas, katip) kayıtlarda kalabilir; okunurken olduğu gibi döner, arayüz erkek kâşif olarak gösterir.
+# Yeni seçimde yalnızca güncel kimlikler kabul edilir.
+CHARACTERS = ("kadin", "erkek")
+CharacterId = Literal["kadin", "erkek"]
 
 
 class CharacterRequest(BaseModel):

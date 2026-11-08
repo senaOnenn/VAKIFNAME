@@ -1,9 +1,10 @@
 import type { CharacterId } from './api'
 
 /**
- * Oyuncu kâşifleri (R6.3, R6.5). Yalnızca görünüştür: oyunda güç, avantaj veya farklı kural yoktur. Görünüm
- * `components/KasifPortrait.tsx` içindeki katmanlı vektör çizimdir (dört aşama, seviyeden). Kimlikler sunucudakiyle
- * aynıdır (`backend/app/player_routes.py`).
+ * Oyuncu kâşifleri (R6.3, R6.5; 8 Kasım: Buse'nin çizimleri). Yalnızca görünüştür: oyunda güç, avantaj veya farklı kural
+ * yoktur. Görsel `components/KasifPortrait.tsx` (dört aşama, seviyeden). Kimlikler sunucudakiyle aynıdır
+ * (`backend/app/player_routes.py`). Eski kimlikler (gezgin, nakkas, katip; 8 Kasım öncesi üç kâşif) erkek kâşif olarak
+ * gösterilir: oyuncu yeniden seçim yapmak zorunda kalmaz, isterse "Kâşifini değiştir"den değiştirir.
  */
 export interface CharacterDef {
   id: CharacterId
@@ -19,26 +20,25 @@ export interface CharacterDef {
 
 export const CHARACTERS: CharacterDef[] = [
   {
-    id: 'gezgin',
-    name: 'Gezgin',
-    description: 'Yol çantası ve pusulasıyla şehrin sokaklarını adım adım dolaşır.',
-    theme: 'Yolların ve hanların izinde',
-    tool: 'Pusula',
+    id: 'kadin',
+    name: 'Kadın kâşif',
+    description: 'Haritası ve yol çantasıyla şehrin vakıf eserlerini adım adım keşfeder.',
+    theme: 'Yolların ve eserlerin izinde',
+    tool: 'Harita',
   },
   {
-    id: 'nakkas',
-    name: 'Nakkaş Çırağı',
-    description: 'Kubbelerin, kalem işlerinin ve çinilerin desenlerini defterine işler.',
-    theme: 'Desenlerin ve renklerin izinde',
-    tool: 'Fırça',
-  },
-  {
-    id: 'katip',
-    name: 'Kâtip Çırağı',
-    description: 'Kitabeleri ve vakfiyeleri okur, gördüklerini kayda geçirir.',
-    theme: 'Yazıların ve belgelerin izinde',
-    tool: 'Kamış kalem',
+    id: 'erkek',
+    name: 'Erkek kâşif',
+    description: 'Haritası ve yol çantasıyla şehrin vakıf eserlerini adım adım keşfeder.',
+    theme: 'Yolların ve eserlerin izinde',
+    tool: 'Harita',
   },
 ]
 
-export const characterOf = (id: CharacterId | null | undefined) => CHARACTERS.find((c) => c.id === id) ?? null
+const LEGACY: Record<string, CharacterId> = { gezgin: 'erkek', nakkas: 'erkek', katip: 'erkek' }
+
+export const characterOf = (id: CharacterId | string | null | undefined) => {
+  if (!id) return null
+  const key = LEGACY[id] ?? id
+  return CHARACTERS.find((c) => c.id === key) ?? null
+}
