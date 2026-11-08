@@ -55,6 +55,8 @@ describe('karakter seçimi (R6.3)', () => {
     expect(paths(f).some(([p, m]) => p === '/player/character' && m === 'PUT')).toBe(false)
     // R6.5: her nişte kâşifin portresi çizilidir (geçici amblem ya da boş alan yok); karakterler yalnızca görünüştür.
     expect(document.querySelectorAll('.vk-cs__arch img[data-character]')).toHaveLength(2)
+    // 8 Kasım: seçim ekranında her zaman en üst seviye görseli (Başkâşif).
+    expect([...document.querySelectorAll('.vk-cs__arch img')].map((i) => i.getAttribute('data-stage'))).toEqual(['muhafiz', 'muhafiz'])
     expect(screen.queryByText('Geçici görünüm')).not.toBeInTheDocument()
     expect(screen.getAllByText('Yolların ve eserlerin izinde')).toHaveLength(2)
     expect(screen.getByText(/yalnızca görünüştür; oyunda ikisi de aynı kurallarla ilerler/)).toBeInTheDocument()

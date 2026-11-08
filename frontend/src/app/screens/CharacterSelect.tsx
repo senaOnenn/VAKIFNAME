@@ -86,7 +86,8 @@ export default function CharacterSelect() {
                     aria-labelledby={`${uid}-${c.id}-n`} aria-describedby={`${uid}-${c.id}`} />
                   <span className="vk-cs__arch" aria-hidden="true">
                     <span className="vk-cs__glow" />
-                    <KasifPortrait id={c.id} stage={current === c.id ? (data?.progress.stage ?? 'baslangic') : 'baslangic'} className="vk-cs__portrait" />
+                    {/* Seçim ekranında her zaman en üst seviye (Başkâşif) görünür; diğer ekranlarda oyuncunun seviyesi. */}
+                    <KasifPortrait id={c.id} stage="muhafiz" className="vk-cs__portrait" />
                     {on && <span className="vk-cs__mark">{t('Seçildi')}</span>}
                   </span>
                   <span id={`${uid}-${c.id}-n`} className="vk-cs__name">{t(c.name)}</span>
