@@ -30,7 +30,7 @@ küçük "canlandırma" etiketi; ekran görüntüsü yok; "sınav" denmez.
 
 1. ~~Sahne listesi ve metin~~ — onaylandı (30 Ekim).
 2. Müzik: telifsiz sakin bir parça (ney/ud tınılı ya da yalnız piyano) — seçenekler sonra dinletilir.
-3. ~~Ses~~ — rehberin klon sesi (Zülal, `zulal-1`).
+3. ~~Ses~~ — rehberin klon sesi (Zülal, `zulal-1`). **8 Kasım: kaldırıldı.** Sitedeki ve sunumdaki film sessiz, altyazılı (`~/vakifname-video-assets/film-sessiz/`, ses kanalı çıkarıldı; görüntü aynı). Derlemede `VAKIFNAME_FILM_DIR` bu klasörü gösterir.
 
 ## Üretim (30 Ekim)
 

@@ -37,7 +37,7 @@ describe('tanıtım filmi', () => {
     expect(video.hasAttribute('controls')).toBe(true)
     const tracks = [...video.querySelectorAll('track')]
     expect(tracks.map((tr) => [tr.getAttribute('srclang'), tr.hasAttribute('default')])).toEqual([['tr', true], ['en', false]])
-    expect(screen.getByText(/yapay zekâ ile üretildi/)).toBeInTheDocument()
+    expect(screen.getByText(/Film sessizdir; anlatım altyazıdadır/)).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Kapat' }))
     expect(document.querySelector('video.vk-film__video')).toBeNull()
   })

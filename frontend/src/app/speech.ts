@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { API_BASE_URL, apiGet, apiPost } from '../api/client'
-import { VOICE_ZULAL, type VoiceProfile } from './narratorVoice'
+import { VOICE_KADIN, type VoiceProfile } from './narratorVoice'
 
 /**
  * Satır satır seslendirme. Ses yalnızca kullanıcı başlatınca çalışır.
@@ -14,13 +14,13 @@ export type PlayState = 'idle' | 'playing' | 'paused' | 'done'
 const synth = (): SpeechSynthesis | null => (typeof window !== 'undefined' && 'speechSynthesis' in window ? window.speechSynthesis : null)
 
 /** Türkçe tarayıcı sesi: önce ses profiline uygun ad (varsayılan: önceki rehberin kadın sesleri), yoksa ilk Türkçe ses. */
-export function pickTurkishVoice(voices: SpeechSynthesisVoice[], profile: VoiceProfile = VOICE_ZULAL): SpeechSynthesisVoice | null {
+export function pickTurkishVoice(voices: SpeechSynthesisVoice[], profile: VoiceProfile = VOICE_KADIN): SpeechSynthesisVoice | null {
   const tr = voices.filter((v) => v.lang?.toLowerCase().startsWith('tr'))
   return tr.find((v) => profile.browserPrefer.tr.test(v.name)) ?? tr[0] ?? null
 }
 
 /** İngilizce anlatım için tarayıcı sesi (Faz 11): en-US/en-GB içinde önce profile uygun ad, sonra herhangi bir İngilizce ses. */
-export function pickVoice(voices: SpeechSynthesisVoice[], lang: 'tr' | 'en', profile: VoiceProfile = VOICE_ZULAL): SpeechSynthesisVoice | null {
+export function pickVoice(voices: SpeechSynthesisVoice[], lang: 'tr' | 'en', profile: VoiceProfile = VOICE_KADIN): SpeechSynthesisVoice | null {
   if (lang === 'tr') return pickTurkishVoice(voices, profile)
   const en = voices.filter((v) => v.lang?.toLowerCase().startsWith('en'))
   const main = en.filter((v) => /^en[-_](us|gb)$/i.test(v.lang))
@@ -44,7 +44,7 @@ export function useNarration(
   lines: { spoken: string; text: string }[],
   opts: { onDone?: () => void; monumentId?: string; lang?: 'tr' | 'en'; voiceProfile?: VoiceProfile } = {},
 ) {
-  const profile = opts.voiceProfile ?? VOICE_ZULAL
+  const profile = opts.voiceProfile ?? VOICE_KADIN
   const [state, setState] = useState<PlayState>('idle')
   const [index, setIndex] = useState(0)
   const [rate, setRate] = useState(1)

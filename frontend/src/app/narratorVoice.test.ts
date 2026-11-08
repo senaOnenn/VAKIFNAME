@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { FIGURE_VOICE } from './components/GuideFigure'
-import { VOICE_ERKEK, VOICE_ZULAL } from './narratorVoice'
+import { VOICE_ERKEK, VOICE_KADIN } from './narratorVoice'
 import { pickTurkishVoice, pickVoice } from './speech'
 
 // R3.3: anlatıcı ses profili rehber çizimine bağlıdır. Sistem sesi adları örnektir (Windows/macOS/Chrome).
@@ -17,9 +17,9 @@ describe('anlatıcı ses profili', () => {
     expect(VOICE_ERKEK.serverVoice).toEqual({ tr: null, en: null })
   })
 
-  it('önceki kadın anlatıcı profili ve izinli sesi (zulal-1) korunur', () => {
-    expect(VOICE_ZULAL.gender).toBe('female')
-    expect(VOICE_ZULAL.serverVoice.tr).toBe('zulal-1')
+  it('kadın anlatıcı profili tarayıcı sesine dayanır; klon ses kaldırıldı (8 Kasım)', () => {
+    expect(VOICE_KADIN.gender).toBe('female')
+    expect(VOICE_KADIN.serverVoice).toEqual({ tr: null, en: null })
     expect(pickTurkishVoice(SYSTEM)!.name).toBe('Yelda')  // varsayılan profil: eski davranış birebir
     expect(pickVoice([v('Yelda', 'tr-TR'), v('Microsoft Tolga', 'tr-TR')], 'tr')!.name).toBe('Yelda')
   })

@@ -11,9 +11,11 @@
  *    (anlatım yine çalışır), ses hiç yoksa altyazı okuma modunda ilerler.
  *
  * Kural: yalnızca izinli kayıttan üretilmiş ses kullanılır; gerçek tarihî kişilerin sesi taklit edilmez.
+ * 8 Kasım (Talha): ekip üyesinin klon sesi (`zulal-1`) kaldırıldı; hiçbir profilde sunucu sesi yok, anlatım tarayıcı
+ * sesi ve altyazıyla sürer.
  */
 export type VoiceProfile = {
-  id: 'zulal' | 'erkek'
+  id: 'kadin' | 'erkek'
   gender: 'female' | 'male'
   /** Sunucuda beklenen ses adı (`VAKIFNAME_TTS_VOICE` / `_EN`); `null`: izinli kayıt henüz yok. */
   serverVoice: { tr: string | null; en: string | null }
@@ -21,11 +23,11 @@ export type VoiceProfile = {
   browserPrefer: { tr: RegExp; en: RegExp }
 }
 
-/** Önceki rehber (SVG karakter): ekipten izinli kadın sesi `zulal-1` (30 Ekim, TASK.md). Tarayıcı yedeği kadın sesleri. */
-export const VOICE_ZULAL: VoiceProfile = {
-  id: 'zulal',
+/** Önceki rehber (SVG karakter): kadın anlatıcı. Sunucu sesi yok (8 Kasım); tarayıcı yedeğinde kadın sistem sesleri. */
+export const VOICE_KADIN: VoiceProfile = {
+  id: 'kadin',
   gender: 'female',
-  serverVoice: { tr: 'zulal-1', en: 'zulal-1' },
+  serverVoice: { tr: null, en: null },
   browserPrefer: { tr: /yelda|emel|filiz|female|kadın/i, en: /^$/ },
 }
 

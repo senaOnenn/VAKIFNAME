@@ -42,7 +42,7 @@ export function FilmDialog({ open, onClose }: { open: boolean; onClose: () => vo
         </video>
       )}
       <p className="vk-film__note">
-        {t('Seslendirme, ekip üyemizin sesinden izniyle yapay zekâ ile üretildi. Rehber bir canlandırmadır.')}
+        {t('Film sessizdir; anlatım altyazıdadır. Rehber bir canlandırmadır.')}
       </p>
     </dialog>
   )

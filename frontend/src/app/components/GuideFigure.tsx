@@ -1,5 +1,5 @@
 import type { Mouth } from '../lipsync'
-import { VOICE_ERKEK, VOICE_ZULAL, type VoiceProfile } from '../narratorVoice'
+import { VOICE_ERKEK, VOICE_KADIN, type VoiceProfile } from '../narratorVoice'
 import { GuideCharacter } from './GuideCharacter'
 import { GuidePortrait, PORTRAIT_LIP_SYNC } from './GuidePortrait'
 
@@ -10,7 +10,7 @@ import { GuidePortrait, PORTRAIT_LIP_SYNC } from './GuidePortrait'
  */
 const FIGURES: Record<'portrait' | 'legacy', { Component: typeof GuidePortrait; lipSync: boolean; voice: VoiceProfile }> = {
   portrait: { Component: GuidePortrait, lipSync: PORTRAIT_LIP_SYNC, voice: VOICE_ERKEK },
-  legacy: { Component: GuideCharacter, lipSync: true, voice: VOICE_ZULAL },
+  legacy: { Component: GuideCharacter, lipSync: true, voice: VOICE_KADIN },
 }
 const ACTIVE: keyof typeof FIGURES = 'portrait'
 

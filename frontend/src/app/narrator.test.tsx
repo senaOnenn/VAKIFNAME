@@ -156,7 +156,7 @@ describe('anlatıcı bileşeni', () => {
     resetSpeechStatusForTests()
     stubFetch({
       '/guide/status': { body: { enabled: false } },
-      '/speech/status': { body: { enabled: true, provider: 'files', voice: 'zulal-1' } },
+      '/speech/status': { body: { enabled: true, provider: 'files', voice: 'izinli-ses-1' } },
       '/monuments/BUR-1001/speech': { status: 404, body: { detail: 'Bu cümlenin sesi henüz hazır değil.' } },
     })
     vi.stubGlobal('Audio', class {})
@@ -180,7 +180,7 @@ describe('anlatıcı bileşeni', () => {
     resetSpeechStatusForTests()
     stubFetch({
       '/guide/status': { body: { enabled: false } },
-      '/speech/status': { body: { enabled: true, provider: 'files', voice: 'zulal-1' } },
+      '/speech/status': { body: { enabled: true, provider: 'files', voice: 'izinli-ses-1' } },
       '/monuments/BUR-1001/speech': { body: { url: `/speech/audio/${'a'.repeat(64)}.mp3` } },
     })
     const played: string[] = []
