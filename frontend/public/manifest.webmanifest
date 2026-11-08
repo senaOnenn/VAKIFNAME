@@ -1,0 +1,17 @@
+{
+  "name": "VAKIFNAME",
+  "short_name": "VAKIFNAME",
+  "description": "Vakıf eserlerini keşfet, dinle, mühürle.",
+  "lang": "tr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090c22",
+  "theme_color": "#0f1330",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
