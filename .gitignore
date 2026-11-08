@@ -250,3 +250,6 @@ local-mail/
 local-content/
 *.sqlite3-shm
 *.sqlite3-wal
+
+# Yerel test görselleri: klasör ya da ana repoya kısayol (sembolik bağ) olarak; hiçbir biçimde commit edilmez.
+backend/tests/ask_eval/media
